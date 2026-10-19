@@ -116,3 +116,26 @@ node whose removal would separate part of its component; this is not a
 claim that it is influential, trustworthy or essential to an organisation.
 Inferred edges are excluded and changing perspectives does not mutate source
 data. Optional outlines highlight junctions in the network.
+
+## Data health and import provenance (alpha 0.7)
+
+Before confirming an import, Mossline shows a **coverage report** with entity and
+relationship counts, missing descriptions and regions, unconnected entities,
+duplicate labels, and record provenance. The sidebar also has an expandable
+**Data health & provenance** report for the current dataset.
+
+This is descriptive coverage, **not a quality, truth, accuracy, trust, or impact score**.
+A record without a URL or description may be perfectly legitimate. Kumu views,
+layout positions, styles, attachments and full project backups remain unsupported.
+
+For CSV imports, `origin.fileName` and `origin.recordNumber` identify the
+original CSV file and **logical data record** (including the header as record 1,
+not the physical text line where a multiline CSV cell begins). Kumu blueprint
+arrays use their element/connection **array position** starting from 1. Those
+source references remain optional for old maps and survive portable JSON exports.
+Invalid HTTP(S) source/image URL values are reported and retained as original
+properties rather than silently discarded.
+
+The **Browse entities** expander makes visible nodes selectable through ordinary
+keyboard-focusable buttons. It is an alternative to canvas clicking; no server
+upload, database write or access to the user's existing Kumu project occurs.
