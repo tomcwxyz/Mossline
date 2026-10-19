@@ -11,3 +11,16 @@
 .collaboration-label{display:block;margin:20px 0 8px;color:#e4ebdf;font-size:12px;font-weight:650}
 @media(max-width:1100px){.workspace{grid-template-columns:210px minmax(0,1fr)}.inspector{grid-column:1/-1;border-left:0;border-top:1px solid var(--border)}.empty-inspector{padding:5px}.orbit{display:none}}
 @media(max-width:680px){.shell{padding:0 12px}.topbar{min-height:65px}.topbar-right .local-tag{display:none}.heading{display:block;padding:28px 0}.actions{margin-top:20px}.workspace{display:flex;flex-direction:column}.sidebar{border-right:0;border-bottom:1px solid var(--border)}.sidebar-bottom{margin-top:15px}.graph-canvas{min-height:480px;height:480px;flex:none}.map-topline,.map-bottomline{padding:12px;flex-wrap:wrap}.inspector{min-height:220px}.footer{flex-wrap:wrap}}
+
+
+/* Local import preview — data is not changed until confirmed */
+.import-preview { margin: 0 24px 20px; padding: 20px 24px; border: 1px solid #8aa993;
+  border-radius: 16px; background: #f3f8f0; color: #203e33; }
+.import-title { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.import-title h2 { margin: 4px 0; font-size: 20px; }
+.import-title p { margin: 4px 0 12px; }
+.import-issues { padding-left: 22px; margin: 12px 0; max-height: 180px; overflow-y: auto; }
+.import-issues li { margin: 6px 0; overflow-wrap: anywhere; }
+.import-issues li.error { color: #9f2e2e; }
+.import-issues li.warning { color: #815516; }
+.import-preview button:disabled { opacity: .4; cursor: not-allowed; }
