@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
+  auditGraph, collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, findRecordedRoutes, findStructuralJunctions,
   type ImportPreview,
-  type GraphDocument, type GraphEdge, type GraphNode, type EvidencePath, type ConnectionTrail,
+  type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
@@ -31,6 +31,45 @@ function saveJson(graph: GraphDocument) {
   anchor.download = "mossline-map.json";
   anchor.click();
   URL.revokeObjectURL(url);
+}
+
+function CoverageReport({ graph }: { graph: GraphDocument }) {
+  const audit: GraphAudit = useMemo(() => auditGraph(graph), [graph]);
+  const { coverage, totals } = audit;
+  return <div className="coverage-report">
+    <p className="coverage-disclaimer">Coverage describes fields in this dataset; it is not an assessment of truth, accuracy or impact.</p>
+    <div className="coverage-grid">
+      <div><strong>{totals.nodes}</strong><span>Entities</span></div>
+      <div><strong>{totals.recorded}</strong><span>Recorded links</span></div>
+      <div><strong>{coverage.nodesWithOrigin} / {totals.nodes}</strong><span>Entities with source ID</span></div>
+      <div><strong>{coverage.relationshipsWithOrigin} / {totals.relationships}</strong><span>Links with source ID</span></div>
+      <div><strong>{coverage.nodesWithDescription} / {totals.nodes}</strong><span>Descriptions</span></div>
+      <div><strong>{coverage.nodesWithRegion} / {totals.nodes}</strong><span>Regions</span></div>
+    </div>
+    <div className="coverage-details">
+      <p><strong>{audit.isolated.length}</strong> entities without a connection in this dataset</p>
+      <p><strong>{audit.duplicateLabels.length}</strong> labels shared by more than one entity</p>
+      <p><strong>{audit.categories.other}</strong> entities classified as Other</p>
+      {audit.isolated.length > 0 && <details>
+        <summary>Show unconnected entities</summary>
+        <ul>{audit.isolated.slice(0,15).map(n=><li key={n.id}>{n.label}</li>)}</ul>
+        {audit.isolated.length>15 && <p>Showing the first 15; use the source dataset for the full list.</p>}
+      </details>}
+      {audit.duplicateLabels.length > 0 && <details>
+        <summary>Show repeated labels</summary>
+        <ul>{audit.duplicateLabels.slice(0,15).map(group=><li key={group.label}>
+          {group.label} ({group.ids.length} entities)
+        </li>)}</ul>
+      </details>}
+      {audit.sources.length > 0 && <details>
+        <summary>Source files and record counts</summary>
+        <ul>{audit.sources.map(source=><li key={source.system+":"+source.fileName}>
+          {source.fileName ?? source.system.toUpperCase()} · {source.nodes} entities · {source.relationships} links
+        </li>)}</ul>
+        <p>CSV references use logical record numbers, not physical line numbers. Kumu references use array positions.</p>
+      </details>}
+    </div>
+  </div>;
 }
 
 function NodeInspector({ node, graph, source, onPick, onPickEdge }: {
@@ -61,7 +100,10 @@ function NodeInspector({ node, graph, source, onPick, onPickEdge }: {
     {node.tags.length>0 && <div className="inspector-tags">{node.tags.map(tag=>
       <span key={tag}>{tag}</span>)}</div>}
     {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
-    {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}</p>}
+    {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}
+      {node.origin.fileName && <> · file {node.origin.fileName}</>}
+      {node.origin.recordNumber && <> · record {node.origin.recordNumber}</>}
+    </p>}
     {node.properties && Object.keys(node.properties).length > 0 && <details className="original-fields">
       <summary>Original source fields ({Object.keys(node.properties).length})</summary>
       <dl>{Object.entries(node.properties).map(([key,value]) =>
@@ -125,7 +167,10 @@ function RelationshipInspector({ edge, source, onPick, onEvidence }: {
       <div className="relationship-facts">
         <p><strong>Relationship</strong> {edge.type}</p>
         <p><strong>Direction</strong> {edge.direction ?? "directed"}</p>
-        {edge.origin && <p><strong>Source record</strong> {edge.origin.system.toUpperCase()} · {edge.origin.recordId}</p>}
+        {edge.origin && <p><strong>Source record</strong> {edge.origin.system.toUpperCase()} · {edge.origin.recordId}
+          {edge.origin.fileName && <> · {edge.origin.fileName}</>}
+          {edge.origin.recordNumber && <> · record {edge.origin.recordNumber}</>}
+        </p>}
       </div>
       {edge.sourceUrl && <a href={edge.sourceUrl} target="_blank" rel="noreferrer">Inspect source record ↗</a>}
       {edge.properties && Object.keys(edge.properties).length > 0 &&
@@ -352,7 +397,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.6</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.7</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -384,7 +429,11 @@ export function MapStudio() {
         {importPreview.issues.map((issue,index) => <li key={index} className={issue.severity}>
           <strong>{issue.severity}:</strong> {issue.message}</li>)}
       </ul>}
-      {importPreview.issues.length === 0 && <p className="help">No issues detected in supported source fields.</p>}
+      {importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
+      {importPreview.graph && <div className="import-coverage">
+        <h3>Before you import: source coverage</h3>
+        <CoverageReport graph={importPreview.graph} />
+      </div>}
       <button className="button-primary"
         disabled={!importPreview.graph || importPreview.issues.some(i => i.severity === "error")}
         onClick={applyImport}>Replace current map with import</button>
@@ -520,6 +569,21 @@ export function MapStudio() {
             <span>{node.label}</span><small>{connections} links</small>
           </button>)}
         </div>}
+        <details className="browse-panel" aria-label="Browse visible entities">
+          <summary>Browse entities <span>{filtered.graph.nodes.length} in view</span></summary>
+          <p className="help">Keyboard-accessible alternative to selecting nodes on the canvas.</p>
+          <ul>{filtered.graph.nodes.slice(0,40).map(node=><li key={node.id}>
+            <button type="button" onClick={()=>pickNode(node.id)}>
+              <span className={"small-dot "+node.type}/>
+              <span>{node.label}</span><small>{node.type}</small>
+            </button>
+          </li>)}</ul>
+          {filtered.graph.nodes.length>40 && <p className="help">Showing the first 40. Narrow the results with search or filters.</p>}
+        </details>
+        <details className="audit-panel">
+          <summary>Data health & provenance</summary>
+          <CoverageReport graph={graph} />
+        </details>
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
           <p className="help">Imported JSON is kept in this browser only. MCP reads the bundled demo unless configured separately.</p>
