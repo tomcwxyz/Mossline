@@ -86,7 +86,18 @@ export function collaborationGraph(graph: GraphDocument, basis: CollaborationBas
   for (const item of graph.nodes) {
     if (item.type !== "project" && item.type !== "funder") continue;
     if (basis !== "all" && item.type !== basis) continue;
-    const linked = neighbours(graph, item.id).filter(n => n.type === "organisation");
+    const directlyLinked = neighbours(graph, item.id);
+    const linkedById = new Map(directlyLinked.filter(n => n.type === "organisation").map(n => [n.id, n]));
+    // Funders often fund projects rather than organisations directly.
+    // Follow funder -> project -> organisation as an association, not proof of collaboration.
+    if (item.type === "funder") {
+      for (const project of directlyLinked.filter(n => n.type === "project")) {
+        for (const org of neighbours(graph, project.id).filter(n => n.type === "organisation")) {
+          linkedById.set(org.id, org);
+        }
+      }
+    }
+    const linked = [...linkedById.values()];
     for (let i = 0; i < linked.length; i++) for (let j = i + 1; j < linked.length; j++) {
       const pair = [linked[i].id, linked[j].id].sort().join("|");
       if (!associations.has(pair)) associations.set(pair, { ids: new Set(), labels: new Set() });

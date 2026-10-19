@@ -49,3 +49,15 @@ test("relationship basis limits inferred links without removing organisations", 
 });
 test("rejects invalid evidence reference", () =>
   assert.throws(() => parseGraphDocument({ ...map, edges: [{ ...map.edges[0], evidenceNodeIds: ["missing"] }] })));
+
+test("shared funders include organisations reached via funded projects", () => {
+  const m = parseGraphDocument({ ...map,
+    nodes: [...map.nodes, { id: "f", label: "Funder", type: "funder" }],
+    edges: [...map.edges, { id: "e3", source: "f", target: "p", type: "funds" }]
+  });
+  const projected = collaborationGraph(m, "funder");
+  assert.equal(projected.nodes.length, 2);
+  assert.equal(projected.edges.length, 1);
+  assert.equal(projected.edges[0].inferred, true);
+  assert.deepEqual(projected.edges[0].evidenceNodeIds, ["f"]);
+});
