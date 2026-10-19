@@ -184,3 +184,40 @@
 .junction-item span {font-size:11px;display:block;}
 .junction-item small {font-size:10px;color:#b9c7b6;display:block;margin-top:4px;}
 .legend-symbol.junction {background:transparent;border:2px dashed #e7b77b;width:11px;height:11px;}
+
+/* Alpha 0.7 — inspectable evidence coverage and keyboard-first browsing */
+.import-coverage { margin-top: 16px; border-top: 1px solid #b4c8b7; padding-top: 13px; }
+.import-coverage h3 { font: 500 18px Georgia,serif; color: #264e3a; margin: 0 0 8px; }
+.coverage-report { margin: 9px 0; }
+.coverage-disclaimer { color: #b4cab5; font-size: 11px; line-height: 1.6; margin-bottom: 12px; }
+.coverage-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+.coverage-grid>div { border: 1px solid #4c7160; background: #1a3d32; padding: 9px; border-radius: 8px; min-width:0; }
+.coverage-grid strong { display:block; font-size: 16px; color:#eed9ac; font-family: Georgia,serif; font-weight:500; }
+.coverage-grid span { display:block; margin-top:4px; color:#c3d1c5; font-size:10px; line-height:1.35; }
+.coverage-details { padding-top: 12px; }
+.coverage-details>p { margin: 5px 0; color:#c6d3c3; font-size:11px; line-height:1.5; }
+.coverage-details strong { color:#ead5a7; }
+.coverage-details details { padding: 9px 0; border-bottom: 1px solid #527160; }
+.coverage-details summary { cursor:pointer; font-size:11px; font-weight:650; color:#d8e6d4; }
+.coverage-details ul { font-size:10px; line-height:1.7; color:#d0dbc8; padding-left: 17px; overflow-wrap:anywhere; }
+.coverage-details details p { font-size:10px; color:#b9cbb9; }
+.import-coverage .coverage-disclaimer,.import-coverage .coverage-details>p { color:#405e50; }
+.import-coverage .coverage-grid>div { background:#e6eee6; border-color:#bed3bf; }
+.import-coverage .coverage-grid strong,.import-coverage .coverage-details strong { color:#274f3a; }
+.import-coverage .coverage-grid span { color:#436353; }
+.import-coverage .coverage-details summary { color:#234633; }
+.import-coverage .coverage-details ul,.import-coverage .coverage-details details p { color:#38594a; }
+.import-coverage .coverage-details details { border-color:#bed3bf; }
+.audit-panel,.browse-panel { margin-top: 18px; padding: 12px; border-radius:9px;
+  border:1px solid #527760; background:#193b31; }
+.audit-panel summary,.browse-panel summary { font-size:12px; color:#e2eada; cursor:pointer; font-weight:650; }
+.browse-panel summary span { font-size:10px; color:#aac3ac; margin-left:5px; font-weight:400; }
+.browse-panel ul { list-style:none; padding:0; margin:10px 0; max-height:250px; overflow-y:auto; }
+.browse-panel li { border-top: 1px solid #40624e; }
+.browse-panel li button { display:flex; align-items:center; gap:7px; width:100%; text-align:left;
+  background:transparent; border:0; padding:9px 1px; color:#e1eada; font-size:11px; }
+.browse-panel li button>span:nth-child(2) { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.browse-panel li button small { margin-left:auto; color:#a8c3ae; font-size:10px; }
+.browse-panel li button:hover { color:#ebcf94; }
+.browse-panel li button:focus-visible,.audit-panel summary:focus-visible,.browse-panel summary:focus-visible,
+.coverage-details summary:focus-visible { outline:2px solid #e9cf94; outline-offset:3px; }
