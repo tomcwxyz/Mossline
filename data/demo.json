@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "title": "The Living Landscape",
+  "description": "Illustrative organisations, projects and funders. All names and relationships below are fictional demo data.",
+  "nodes": [
+    {
+      "id": "o1",
+      "label": "North Fields Collective",
+      "type": "organisation",
+      "region": "North East",
+      "description": "An illustrative co-operative supporting growers and food systems.",
+      "tags": [
+        "food",
+        "community"
+      ]
+    },
+    {
+      "id": "o2",
+      "label": "Common Ground Network",
+      "type": "organisation",
+      "region": "Yorkshire",
+      "description": "A fictional peer learning network for regenerative farming."
+    },
+    {
+      "id": "o3",
+      "label": "Riverbank Trust",
+      "type": "organisation",
+      "region": "North West",
+      "description": "A fictional catchment partnership working on soil and water."
+    },
+    {
+      "id": "o4",
+      "label": "Seedling Futures",
+      "type": "organisation",
+      "region": "Scotland",
+      "description": "A fictional community-led growing organisation."
+    },
+    {
+      "id": "o5",
+      "label": "West Moor Alliance",
+      "type": "organisation",
+      "region": "Wales",
+      "description": "A fictional collaboration between farms and land stewards."
+    },
+    {
+      "id": "p1",
+      "label": "Soil Stories",
+      "type": "project",
+      "region": "Yorkshire",
+      "description": "An illustrative learning project documenting changes in soil health."
+    },
+    {
+      "id": "p2",
+      "label": "Watershed Commons",
+      "type": "project",
+      "region": "North West",
+      "description": "An illustrative cross-region catchment learning project."
+    },
+    {
+      "id": "p3",
+      "label": "Growing Neighbours",
+      "type": "project",
+      "region": "North East",
+      "description": "An illustrative local food resilience project."
+    },
+    {
+      "id": "f1",
+      "label": "Open Land Fund",
+      "type": "funder",
+      "description": "A fictional grantmaker supporting land stewardship."
+    },
+    {
+      "id": "f2",
+      "label": "Shared Futures Foundation",
+      "type": "funder",
+      "description": "A fictional funder of community-led change."
+    },
+    {
+      "id": "h1",
+      "label": "Alex Green",
+      "type": "person",
+      "description": "A fictional facilitator connecting growing initiatives."
+    },
+    {
+      "id": "l1",
+      "label": "Northern England",
+      "type": "place",
+      "description": "An illustrative geographical anchor."
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "o1",
+      "target": "p3",
+      "type": "delivers"
+    },
+    {
+      "id": "e2",
+      "source": "o2",
+      "target": "p1",
+      "type": "delivers"
+    },
+    {
+      "id": "e3",
+      "source": "o3",
+      "target": "p2",
+      "type": "delivers"
+    },
+    {
+      "id": "e4",
+      "source": "o5",
+      "target": "p2",
+      "type": "contributes to"
+    },
+    {
+      "id": "e5",
+      "source": "o1",
+      "target": "p1",
+      "type": "contributes to"
+    },
+    {
+      "id": "e6",
+      "source": "o4",
+      "target": "p3",
+      "type": "contributes to"
+    },
+    {
+      "id": "e7",
+      "source": "f1",
+      "target": "p1",
+      "type": "funds"
+    },
+    {
+      "id": "e8",
+      "source": "f1",
+      "target": "p2",
+      "type": "funds"
+    },
+    {
+      "id": "e9",
+      "source": "f2",
+      "target": "p3",
+      "type": "funds"
+    },
+    {
+      "id": "e10",
+      "source": "h1",
+      "target": "o2",
+      "type": "supports"
+    },
+    {
+      "id": "e11",
+      "source": "h1",
+      "target": "o4",
+      "type": "supports"
+    },
+    {
+      "id": "e12",
+      "source": "o1",
+      "target": "l1",
+      "type": "based in"
+    },
+    {
+      "id": "e13",
+      "source": "o3",
+      "target": "l1",
+      "type": "active in"
+    },
+    {
+      "id": "e14",
+      "source": "o2",
+      "target": "o5",
+      "type": "shares learning with",
+      "description": "Demonstration of an explicitly recorded relationship."
+    }
+  ]
+}
