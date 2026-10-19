@@ -32,7 +32,7 @@ function saveJson(graph: GraphDocument) {
   URL.revokeObjectURL(url);
 }
 
-function NodeInspector({ node, graph, source, onPick }: {
+function NodeInspector({ node, graph, source, onPick, onPickEdge }: {
   node: GraphNode;
   graph: GraphDocument;
   source: GraphDocument;
