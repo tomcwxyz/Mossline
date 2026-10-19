@@ -39,6 +39,7 @@ export function searchNodes(graph: GraphDocument, query: string): GraphNode[] {
 export interface FilterOptions {
   types: NodeType[];
   query?: string;
+  region?: string;
   includeNeighbours?: boolean;
   focusId?: string | null;
 }
@@ -47,7 +48,7 @@ export interface FilteredGraph { graph: GraphDocument; contextNodeIds: string[];
 /** Type filters match seed entities; optional context retains one-hop neighbours. */
 export function filterGraph(graph: GraphDocument, opts: FilterOptions): FilteredGraph {
   const allTypesSelected = opts.types.length === 6;
-  const ids = new Set(graph.nodes.filter(n => opts.types.includes(n.type)).map(n => n.id));
+  const ids = new Set(graph.nodes.filter(n => opts.types.includes(n.type) && (!opts.region || n.region === opts.region)).map(n => n.id));
   const query = opts.query?.trim() ?? "";
   const matched = new Set(searchNodes(graph, query).map(n => n.id));
   for (const id of [...ids]) if (!matched.has(id)) ids.delete(id);
@@ -55,7 +56,7 @@ export function filterGraph(graph: GraphDocument, opts: FilterOptions): Filtered
     ids.clear(); ids.add(opts.focusId);
   }
   const context = new Set<string>();
-  const needContext = !!opts.includeNeighbours && (!allTypesSelected || !!query || !!opts.focusId);
+  const needContext = !!opts.includeNeighbours && (!allTypesSelected || !!query || !!opts.focusId || !!opts.region);
   if (needContext) {
     for (const edge of graph.edges) {
       if (ids.has(edge.source) && !ids.has(edge.target)) context.add(edge.target);
