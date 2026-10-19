@@ -7,7 +7,7 @@ import {
   type ImportPreview,
   type GraphDocument, type GraphNode, type NodeType, type CollaborationBasis
 } from "@mossline/graph-core";
-import { GraphCanvas } from "./GraphCanvas";
+import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
@@ -75,6 +75,10 @@ export function MapStudio() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [view, setView] = useState<ViewMode>("landscape");
   const [basis, setBasis] = useState<CollaborationBasis>("all");
+  const [region, setRegion] = useState("");
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const [layoutMode, setLayoutMode] = useState<NetworkLayout>("organic");
+  const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -91,9 +95,23 @@ export function MapStudio() {
   const current = useMemo(() => view === "collaborations" ? collaborationGraph(graph, basis) : graph, [graph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
   const filtered = useMemo(() => filterGraph(current, {
-    types: activeTypes, query, includeNeighbours: context
-  }), [current, activeTypes.join("|"), query, context]);
+    types: activeTypes, query, region, focusId, includeNeighbours: context
+  }), [current, activeTypes.join("|"), query, region, focusId, context]);
   const selected = current.nodes.find(n => n.id === selectedId) ?? null;
+  const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
+  const hubs = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const edge of filtered.graph.edges) {
+      counts.set(edge.source, (counts.get(edge.source) ?? 0) + 1);
+      counts.set(edge.target, (counts.get(edge.target) ?? 0) + 1);
+    }
+    return filtered.graph.nodes
+      .filter(n => n.type === "organisation" || n.type === "project")
+      .map(node => ({ node, connections: counts.get(node.id) ?? 0 }))
+      .filter(item => item.connections > 0)
+      .sort((a, b) => b.connections - a.connections || a.node.label.localeCompare(b.node.label))
+      .slice(0, 5);
+  }, [filtered.graph]);
   const totalTypes = useMemo(() => TYPE_KEYS.map(type => ({
     type, count: graph.nodes.filter(n => n.type === type).length
   })), [graph]);
@@ -108,6 +126,8 @@ export function MapStudio() {
     setSelectedId(null);
     setQuery("");
     setView("landscape");
+    setRegion("");
+    setFocusId(null);
     setTypes(TYPE_KEYS);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   }
@@ -148,7 +168,7 @@ export function MapStudio() {
     </header>
     <section className="heading">
       <div>
-        <p className="eyebrow">A place to understand what connects us</p>
+        <p className="eyebrow">A place to understand what connects us · <span className="demo-indicator">Fictional demonstration data</span></p>
         <h1>{graph.title}<span className="heading-period">.</span></h1>
         <p className="subtitle">{graph.description}</p>
       </div>
@@ -182,15 +202,20 @@ export function MapStudio() {
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
         <div className="view-switch">
-          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); }}>✳ <span>Landscape</span></button>
-          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); }}>◎ <span>Collaborations</span></button>
+          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
+          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
         </div>
         <div className="sidebar-divider" />
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
-          <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setSelectedId(null); }}>Clear</button>
+          <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
         </div>
         <input className="search" value={query} onChange={event => { setQuery(event.target.value); setSelectedId(null); }} placeholder="Search the landscape…" aria-label="Search entities" />
+        <label className="collaboration-label" htmlFor="region-lens">Explore by region</label>
+        <select id="region-lens" className="search" value={region} onChange={event => { setRegion(event.target.value); setSelectedId(null); setFocusId(null); }}>
+          <option value="">Whole landscape</option>
+          {regions.map(place => <option value={place} key={place}>{place}</option>)}
+        </select>
         {view === "collaborations" ? <>
           <label className="collaboration-label" htmlFor="collaboration-basis">Show relationships</label>
           <select id="collaboration-basis" className="search" value={basis} onChange={event => { setBasis(event.target.value as CollaborationBasis); setSelectedId(null); }}>
@@ -208,6 +233,17 @@ export function MapStudio() {
         </div>}
         <label className="context-toggle"><input type="checkbox" checked={context} onChange={e => setContext(e.target.checked)} /> Keep related context</label>
         <p className="help">Retain one-hop neighbours so filters do not erase the relationships you are exploring.</p>
+        {selected && <button className={"focus-button" + (focusId ? " on" : "")}
+          onClick={() => setFocusId(previous => previous === selected.id ? null : selected.id)}>
+          {focusId ? "← Show wider network" : "◎ Explore this entity’s connections"}
+        </button>}
+        {hubs.length > 0 && <div className="sidebar-highlights">
+          <p className="eyebrow">Well-connected in this view</p>
+          {hubs.map(({node, connections}) => <button key={node.id}
+            onClick={() => { setSelectedId(node.id); setFocusId(null); }}>
+            <span>{node.label}</span><small>{connections} links</small>
+          </button>)}
+        </div>}
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
           <p className="help">Imported JSON is kept in this browser only. MCP reads the bundled demo unless configured separately.</p>
@@ -215,9 +251,22 @@ export function MapStudio() {
         </div>
       </aside>
       <div className="map-panel">
-        <div className="map-topline"><span><span className="signal" /> {view === "landscape" ? "Living network" : "Shared associations"}</span>
-          <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span></div>
-        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds} selectedId={selectedId} onSelect={setSelectedId} />
+        <div className="map-topline">
+          <span><span className="signal" /> {view === "landscape" ? "Living network" : "Shared associations"}</span>
+          <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span>
+          <div className="map-options">
+            <label>Layout <select aria-label="Network layout" value={layoutMode}
+              onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
+              <option value="organic">Organic</option><option value="radial">Radial</option>
+            </select></label>
+            <label>Labels <select aria-label="Network labels" value={labelDensity}
+              onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
+              <option value="essential">Essential</option><option value="all">All</option>
+            </select></label>
+          </div>
+        </div>
+        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds} selectedId={selectedId}
+          onSelect={setSelectedId} view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
         <div className="map-bottomline"><span>Drag to explore · Scroll to zoom · Select an entity to discover more</span><span>Built with Cytoscape.js</span></div>
       </div>
       <aside className="inspector">
