@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { nodeTypeSchema, type GraphDocument } from "./schema.js";
+import { nodeTypeSchema, type GraphDocument } from "./schema";
 
 /** Pure presentation state, never a second copy of graph data. */
 export const perspectiveSchema = z.object({
