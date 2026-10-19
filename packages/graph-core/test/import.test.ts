@@ -57,3 +57,40 @@ test("extra Kumu top-level fields warn of incomplete migration", () => {
   assert.ok(result.graph);
   assert.ok(result.issues.some(x => x.severity==="warning" && x.message.includes("views")));
 });
+
+test("CSV source locations survive imported graph round trips",()=>{
+  const result=previewImport([
+    file("people.csv","Label,Type\nOrg One,Organisation\nOrg Two,Organisation\n"),
+    file("links.csv","From,To,Type\nOrg One,Org Two,partners with\n")
+  ]);
+  assert.ok(result.graph);
+  assert.deepEqual(result.graph.nodes[0].origin,{
+    system:"csv",recordId:"Org One",fileName:"people.csv",recordNumber:2
+  });
+  assert.deepEqual(result.graph.edges[0].origin,{
+    system:"csv",recordId:"1:0",fileName:"links.csv",recordNumber:2
+  });
+  const copy=previewImport([file("roundtrip.json",JSON.stringify(result.graph))]);
+  assert.deepEqual(copy.graph?.nodes[0].origin,result.graph.nodes[0].origin);
+});
+
+test("Kumu elements and connections have their own array index, not invented line numbers",()=>{
+  const result=previewImport([file("blueprint.json",JSON.stringify({elements:[
+    {id:"x",label:"X"},{id:"y",label:"Y"}],
+    connections:[{id:"a",from:"x",to:"y",type:"supports"}]
+  }))]);
+  assert.equal(result.graph?.nodes[1].origin?.recordNumber,2);
+  assert.equal(result.graph?.edges[0].origin?.recordNumber,1);
+  assert.equal(result.graph?.nodes[1].origin?.fileName,"blueprint.json");
+});
+
+test("invalid image/source URLs are visibly reported without deleting original fields",()=>{
+  const result=previewImport([file("bad-urls.csv",
+    "Label,Image URL,Source URL\nExample,ftp://unsupported,image-not-a-url\n")]);
+  assert.ok(result.graph);
+  assert.equal(result.graph.nodes[0].imageUrl,undefined);
+  assert.equal(result.graph.nodes[0].sourceUrl,undefined);
+  assert.equal(result.graph.nodes[0].properties?.["image url"],"ftp://unsupported");
+  assert.ok(result.issues.some(x=>x.message.includes("entity image URLs")));
+  assert.ok(result.issues.some(x=>x.message.includes("entity source URLs")));
+});
