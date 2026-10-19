@@ -25,3 +25,11 @@
 - [ ] Agent-suggested change proposal and review workflow.
 
 Deliberately excluded initially: simulations, causal loops and automatic agent writes.
+
+## Alpha 0.3 — visual polish and local perspectives
+- [x] Named perspectives store filters, layout, search and labels separately from canonical graph data.
+- [x] Dataset-scoped saved views with schema validation and local delete/restore.
+- [x] Richer original CSS botanical profile covers, optional source-provided photographs and relationship counts.
+- [ ] Cluster-grouped layout and position persistence across reloads.
+- [ ] Rights-cleared photograph selection and attribution.
+- [ ] Authenticated browser interaction review of the protected preview.

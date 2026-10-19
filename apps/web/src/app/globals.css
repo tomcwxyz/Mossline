@@ -65,3 +65,37 @@
   .graph-legend { gap: 9px; }
   .graph-tools { top: 10px; right: 10px; }
 }
+
+/* Saved perspectives and original botanical profile illustrations */
+.perspectives-panel {margin:17px 0 0;}
+.perspective-form {display:grid;gap:9px;padding:12px;margin:9px 0;border:1px solid #628570;border-radius:9px;background:#244838;}
+.perspective-form label {font-size:11px;color:#cddfcf;}
+.perspective-form>div {display:flex;align-items:center;gap:10px;}
+.perspective-form .button-primary {padding:8px 11px;}
+.saved-perspective {display:flex;align-items:stretch;border:1px solid #4b6d57;background:#1c4236;border-radius:8px;margin:7px 0;}
+.saved-perspective button {background:transparent;border:0;color:#eef2e8;}
+.saved-perspective button:first-child {padding:9px;text-align:left;flex:1;min-width:0;}
+.saved-perspective button:hover {background:#315a45;}
+.saved-perspective span {display:block;font-size:11px;text-overflow:ellipsis;overflow:hidden;}
+.saved-perspective small {display:block;margin-top:4px;color:#b0cbb4;font-size:10px;text-transform:capitalize;}
+.saved-perspective .remove-perspective {padding:6px 11px;font-size:19px;color:#e4c7aa;}
+.inspector-cover {height:155px;position:relative;overflow:hidden;border-radius:12px;border:1px solid #57856c;margin-bottom:20px;
+  background:radial-gradient(circle at 20% 5%,#9eb77b88,transparent 60%),
+    repeating-radial-gradient(ellipse at 70% 90%, transparent 0 18px,#b4dca43f 19px 21px,transparent 22px 36px),
+    linear-gradient(145deg,#487557,#16392f);}
+.inspector-cover.project {background:radial-gradient(circle at 70% 15%,#edcc8c88,transparent 55%),
+  repeating-radial-gradient(circle at 65% 85%,transparent 0 18px,#d3b2774d 19px 20px,transparent 21px 32px),
+  linear-gradient(145deg,#75613b,#1c3d33);}
+.inspector-cover.funder {background:radial-gradient(circle at 20% 25%,#b8d7ed88,transparent 57%),
+  repeating-radial-gradient(circle at 80% 80%,transparent 0 17px,#98c4e044 18px 20px,transparent 21px 37px),
+  linear-gradient(145deg,#3f7190,#1b3b42);}
+.inspector-cover img {width:100%;height:100%;object-fit:cover;display:block;}
+.inspector-cover-art {font:normal 78px Georgia,serif;color:#deedbe9c;text-align:center;line-height:145px;}
+.inspector-cover>span {position:absolute;bottom:10px;left:10px;background:#132f27df;color:#f4f1e2;
+  border-radius:20px;padding:5px 10px;font-size:10px;letter-spacing:.5px;text-transform:capitalize;}
+.inspector-stats {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0;}
+.inspector-stats div {padding:12px;background:#25483b;border:1px solid #537765;border-radius:9px;display:flex;flex-direction:column;gap:5px;}
+.inspector-stats strong {font:normal 27px Georgia,serif;color:#ead4a2;}
+.inspector-stats small {font-size:10px;color:#b7d0bb;}
+.inspector-tags {display:flex;flex-wrap:wrap;gap:5px;margin:15px 0;}
+.inspector-tags span {font-size:10px;color:#e2e9db;background:#315946;border:1px solid #60856c;border-radius:15px;padding:5px 9px;}

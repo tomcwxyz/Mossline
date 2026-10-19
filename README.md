@@ -66,3 +66,10 @@ tests. Keep the existing Kumu project unchanged.
 See docs/ROADMAP.md, docs/ARCHITECTURE.md, CONTRIBUTING.md and AGENTS.md. Migration requires real representative, rights-cleared Kumu and Sheets exports first. Keep the existing working Kumu project unchanged throughout prototyping.
 
 License: Apache-2.0. No mandatory proprietary AI service or database is required for the prototype.
+
+## Saved perspectives (alpha 0.3)
+Name and save filters, search, layout and label choices in the sidebar. These are local browser
+preferences, scoped to a fingerprint of graph topology, and do not create duplicate graph records.
+They are not hosted, shared, or exposed to MCP. Export your graph separately. Profile artwork
+is generated with CSS; an imported image URL can optionally replace it. Use only images you
+have permission to publish; there is not yet an attribution management workflow.

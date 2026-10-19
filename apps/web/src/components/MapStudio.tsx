@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import {
-  collaborationGraph, filterGraph, neighbours, parseGraphDocument, previewImport,
+  collaborationGraph, filterGraph, graphFingerprint, neighbours, parseGraphDocument, parsePerspectives, previewImport,
   type ImportPreview,
-  type GraphDocument, type GraphNode, type NodeType, type CollaborationBasis
+  type GraphDocument, type GraphNode, type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import demo from "../../../../data/demo.json";
@@ -17,6 +17,8 @@ const TYPE_LABELS: Record<NodeType, string> = {
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const STORAGE_KEY = "mossline-demo-graph-v1";
+const SAVED_KEY = "mossline-perspectives-v1";
+const DEMO_KEY = graphFingerprint(ORIGINAL);
 type ViewMode = "landscape" | "collaborations";
 
 function saveJson(graph: GraphDocument) {
@@ -38,10 +40,20 @@ function NodeInspector({ node, graph, source, onPick }: {
   const links = neighbours(graph, node.id);
   const related = graph.edges.filter(e => e.source === node.id || e.target === node.id);
   return <div className="inspector-inner">
-    <div className={"inspector-icon " + node.type}>{node.label.slice(0, 1)}</div>
+    <div className={"inspector-cover " + node.type}>
+      {node.imageUrl ? <img src={node.imageUrl} alt="" referrerPolicy="no-referrer" loading="lazy" /> :
+        <div className="inspector-cover-art" aria-hidden="true">✳</div>}
+      <span>{node.type}</span>
+    </div>
     <p className="eyebrow">{node.type}{node.region ? " · " + node.region : ""}</p>
     <h2>{node.label}</h2>
     <p className="description">{node.description ?? "No description yet. Add context to your data source."}</p>
+    <div className="inspector-stats">
+      <div><strong>{related.filter(e=>!e.inferred).length}</strong><small>Recorded links</small></div>
+      <div><strong>{related.filter(e=>e.inferred).length}</strong><small>Shared associations</small></div>
+    </div>
+    {node.tags.length>0 && <div className="inspector-tags">{node.tags.map(tag=>
+      <span key={tag}>{tag}</span>)}</div>
     {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
     {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}</p>}
     {node.properties && Object.keys(node.properties).length > 0 && <details className="original-fields">
@@ -79,6 +91,9 @@ export function MapStudio() {
   const [focusId, setFocusId] = useState<string | null>(null);
   const [layoutMode, setLayoutMode] = useState<NetworkLayout>("organic");
   const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
+  const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
+  const [showSave, setShowSave] = useState(false);
+  const [newName, setNewName] = useState("");
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -92,12 +107,21 @@ export function MapStudio() {
     }
   }, []);
 
+  useEffect(() => {
+    try {
+      const saved=window.localStorage.getItem(SAVED_KEY);
+      if(saved) setPerspectives(parsePerspectives(JSON.parse(saved)));
+    } catch { window.localStorage.removeItem(SAVED_KEY); }
+  }, []);
+  const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
+    .sort((a,b)=>b.createdAt-a.createdAt),[perspectives,graphKey]);
   const current = useMemo(() => view === "collaborations" ? collaborationGraph(graph, basis) : graph, [graph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
   const filtered = useMemo(() => filterGraph(current, {
     types: activeTypes, query, region, focusId, includeNeighbours: context
   }), [current, activeTypes.join("|"), query, region, focusId, context]);
-  const selected = current.nodes.find(n => n.id === selectedId) ?? null;
+  const selected = filtered.graph.nodes.find(n => n.id === selectedId) ?? null;
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
   const hubs = useMemo(() => {
     const counts = new Map<string, number>();
@@ -119,6 +143,37 @@ export function MapStudio() {
   function toggleType(type: NodeType) {
     setSelectedId(null);
     setTypes(previous => previous.includes(type) ? previous.filter(v => v !== type) : [...previous, type]);
+  }
+
+  function savePerspectives(next: SavedPerspective[]) {
+    try {
+      window.localStorage.setItem(SAVED_KEY,JSON.stringify(next));
+      setPerspectives(next);
+      return true;
+    } catch { setNotice("Unable to save views in browser storage."); return false; }
+  }
+
+  function saveCurrentPerspective(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const name=newName.trim().slice(0,60);
+    if(!name) return;
+    if(perspectives.length>=40){setNotice("40 saved views is the current local limit.");return;}
+    const record:SavedPerspective={
+      id:crypto.randomUUID(),name,graphKey,view,basis,region,query:query.slice(0,200),
+      types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now()
+    };
+    if(savePerspectives([...perspectives,record])){
+      setShowSave(false);setNewName("");
+      setNotice("Saved perspective ‘"+name+"’ in this browser.");
+    }
+  }
+
+  function openPerspective(item: SavedPerspective) {
+    if(item.graphKey!==graphKey) return;
+    setView(item.view);setBasis(item.basis);setRegion(item.region);setQuery(item.query);
+    setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
+    setLabelDensity(item.labels);setSelectedId(null);setFocusId(null);
+    setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function updateGraph(next: GraphDocument) {
@@ -161,14 +216,14 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.1</small></div>
-      <div className="topbar-right"><span className="local-tag"><span className="signal" /> Local prototype</span>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.3</small></div>
+      <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
     </header>
     <section className="heading">
       <div>
-        <p className="eyebrow">A place to understand what connects us · <span className="demo-indicator">Fictional demonstration data</span></p>
+        <p className="eyebrow">A place to understand what connects us {graphKey===DEMO_KEY && <>· <span className="demo-indicator">Fictional demonstration data</span></>}</p>
         <h1>{graph.title}<span className="heading-period">.</span></h1>
         <p className="subtitle">{graph.description}</p>
       </div>
@@ -205,6 +260,25 @@ export function MapStudio() {
           <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
           <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
         </div>
+        <section className="perspectives-panel" aria-label="Saved perspectives">
+          <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
+            <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":"My collaborations");}}>+ Save</button></div>
+          {showSave && <form className="perspective-form" onSubmit={saveCurrentPerspective}>
+            <label htmlFor="save-view-name">Name this perspective</label>
+            <input className="search" id="save-view-name" maxLength={60} required value={newName}
+              onChange={e=>setNewName(e.target.value)} placeholder="e.g. Northern connections"/>
+            <div><button className="button-primary" type="submit">Save view</button>
+              <button className="text-button" type="button" onClick={()=>setShowSave(false)}>Cancel</button></div>
+          </form>}
+          {savedForMap.length===0 && <p className="help">Save your layout, search and filters, then return to them later.</p>}
+          {savedForMap.map(item=><div key={item.id} className="saved-perspective">
+            <button type="button" onClick={()=>openPerspective(item)}>
+              <span>{item.name}</span><small>{item.view} · {item.layout}</small></button>
+            <button className="remove-perspective" type="button" aria-label={"Delete "+item.name}
+              onClick={()=>savePerspectives(perspectives.filter(p=>p.id!==item.id))}>×</button>
+          </div>)}
+          <p className="help">Only this browser · scoped to this dataset · no changes to source data</p>
+        </section>
         <div className="sidebar-divider" />
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
@@ -270,7 +344,7 @@ export function MapStudio() {
         <div className="map-bottomline"><span>Drag to explore · Scroll to zoom · Select an entity to discover more</span><span>Built with Cytoscape.js</span></div>
       </div>
       <aside className="inspector">
-        {selected ? <NodeInspector node={selected} graph={current} source={graph} onPick={setSelectedId} /> :
+        {selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph} onPick={setSelectedId} /> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
             <p className="eyebrow">The relationships matter</p>
@@ -281,6 +355,6 @@ export function MapStudio() {
           </div>}
       </aside>
     </section>
-    <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP included · Local-first prototype</span></footer>
+    <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
   </main>;
 }
