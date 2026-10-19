@@ -24,3 +24,44 @@
 .import-issues li.error { color: #9f2e2e; }
 .import-issues li.warning { color: #815516; }
 .import-preview button:disabled { opacity: .4; cursor: not-allowed; }
+
+
+/* Network exploration controls: readable at both dense and focused scales */
+.demo-indicator { color: #dfc38c; letter-spacing: .9px; }
+.map-topline { flex-wrap: wrap; min-height: 68px; }
+.map-options { display: flex; align-items: center; gap: 12px; margin-left: auto; flex-wrap: wrap; }
+.map-options label { font-size: 11px; color: #a9c5b7; display: inline-flex; gap: 7px; align-items: center; }
+.map-options select { background: #1b3d32; border: 1px solid #4f6b58; border-radius: 7px;
+  padding: 7px 9px; color: #f2f3e9; font-size: 11px; max-width: 115px; }
+.graph-stage { position: relative; flex: 1; min-height: 550px; height: 550px; overflow: hidden; }
+.graph-stage .graph-canvas { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; }
+.graph-tools { position: absolute; top: 17px; right: 17px; display: grid; gap: 5px; z-index: 2; }
+.graph-tools button { border: 1px solid #668473; border-radius: 8px; background: #17382fed;
+  color: #eaf0e5; width: 34px; height: 34px; font-size: 19px; box-shadow: 0 4px 15px #03171088; }
+.graph-tools button:hover,.graph-tools button:focus-visible { background: #365e48; outline: 2px solid #adcba4; outline-offset: 1px; }
+.graph-legend { position: absolute; bottom: 15px; left: 17px; z-index: 2; display: flex; gap: 12px;
+  background: #112b25de; border: 1px solid #456656; padding: 9px 12px; border-radius: 9px;
+  flex-wrap: wrap; max-width: calc(100% - 35px); box-shadow: 0 5px 18px #061a1466; }
+.graph-legend span { display: flex; gap: 7px; align-items: center; font-size: 10px; color: #c9d7c9; white-space: nowrap; }
+.legend-symbol { width: 10px; height: 10px; background: #88b793; border-radius: 50%; display: inline-block; flex: none; }
+.legend-symbol.project { background: #d9b675; border-radius: 2px; }
+.legend-symbol.funder { background: #80a8cb; border-radius: 2px; transform: rotate(45deg) scale(.8); }
+.legend-symbol.inferred { width: 16px; height: 2px; border-radius: 0; background: repeating-linear-gradient(to right,#d1b47a 0 4px,transparent 4px 7px); }
+.focus-button { color: #17382d; background: #c1d4b0; border: 1px solid #c1d4b0; padding: 11px;
+  margin-top: 20px; text-align: center; width: 100%; border-radius: 7px; font-size: 11px; font-weight: 700; }
+.focus-button.on { background: transparent; color: #d8e6d4; border-color: #82a08b; }
+.sidebar-highlights { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 23px; }
+.sidebar-highlights .eyebrow { margin-bottom: 8px; letter-spacing: 1.3px; }
+.sidebar-highlights button { border: 0; border-bottom: 1px solid #355347; padding: 9px 0; width: 100%;
+  text-align: left; background: transparent; display: flex; align-items: baseline; justify-content: space-between;
+  gap: 7px; color: #dbe8d9; font-size: 11px; }
+.sidebar-highlights button:hover { color: #e9ce98; }
+.sidebar-highlights button span { text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.sidebar-highlights button small { color: #a9c3b1; white-space: nowrap; font-size: 10px; }
+.sidebar-bottom { margin-top: 25px; }
+@media (max-width: 680px) {
+  .graph-stage { height: 480px; min-height: 480px; flex: none; }
+  .map-options { margin-left: 0; width: 100%; }
+  .graph-legend { gap: 9px; }
+  .graph-tools { top: 10px; right: 10px; }
+}
