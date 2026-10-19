@@ -53,7 +53,7 @@ function NodeInspector({ node, graph, source, onPick }: {
       <div><strong>{related.filter(e=>e.inferred).length}</strong><small>Shared associations</small></div>
     </div>
     {node.tags.length>0 && <div className="inspector-tags">{node.tags.map(tag=>
-      <span key={tag}>{tag}</span>)}</div>
+      <span key={tag}>{tag}</span>)}</div>}
     {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
     {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}</p>}
     {node.properties && Object.keys(node.properties).length > 0 && <details className="original-fields">
