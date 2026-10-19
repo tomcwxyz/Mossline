@@ -72,10 +72,13 @@ function csvTable(input: string): { headers: string[]; rows: Row[] } {
   }) };
 }
 
+type SourcePosition = { fileName: string; recordNumber: number };
 function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
-  issues: ImportIssue[], title: string): GraphDocument | null {
+  issues: ImportIssue[], title: string,
+  locations?: WeakMap<Row, SourcePosition>): GraphDocument | null {
   const nodes: GraphNode[] = [], edges: GraphEdge[] = [];
   const used = new Set<string>(), byId = new Map<string,string>(), byLabel = new Map<string,string[]>();
+  const rejectedUrls = { image: 0, nodeSource: 0, relationshipSource: 0 };
   for (const [index,row] of elements.entries()) {
     const label = value(field(row,"label","name")), original = value(field(row,"id"));
     if (!label) { issues.push({severity:"error",message:"Element row " + (index+1) + " has no label"}); continue; }
@@ -90,12 +93,16 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     const type = types[rawType.toLowerCase()] ?? "other";
     if (rawType && type === "other" && rawType.toLowerCase() !== "other")
       issues.push({severity:"warning",message:"Unrecognised type '" + rawType + "' on " + label + "; original retained"});
+    const rawImage = field(row,"imageurl","image url","image");
+    const rawSource = field(row,"sourceurl","source url","url","website");
+    const imageUrl = webUrl(rawImage), sourceUrl = webUrl(rawSource);
+    if (value(rawImage) && !imageUrl) rejectedUrls.image++;
+    if (value(rawSource) && !sourceUrl) rejectedUrls.nodeSource++;
     nodes.push({
       id,label,type,description:value(field(row,"description")) || undefined,
       region:value(field(row,"region")) || undefined,tags:tags(field(row,"tags")),
-      imageUrl:webUrl(field(row,"imageurl","image url","image")),
-      sourceUrl:webUrl(field(row,"sourceurl","source url","url","website")),
-      origin:{system:source,recordId:original || label},
+      imageUrl,sourceUrl,
+      origin:{system:source,recordId:original || label,...locations?.get(row)},
       properties:{...row}
     });
   }
@@ -132,11 +139,15 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
         "link:" + from + "|" + to + "|" + kind + "|" + rawDirection;
       const occurrence = edgeKeys.get(key) ?? 0;
       edgeKeys.set(key,occurrence+1);
+      const rawSource = field(row,"sourceurl","source url","url");
+      const sourceUrl = webUrl(rawSource);
+      if (targetIndex === 0 && value(rawSource) && !sourceUrl) rejectedUrls.relationshipSource++;
       edges.push({
         id:stable(source + ":edge",key + ":" + occurrence),source:from,target:to,type:kind,
         direction,description:value(field(row,"description")) || undefined,
-        sourceUrl:webUrl(field(row,"sourceurl","source url","url")),
-        origin:{system:source,recordId:original || String(index+1) + ":" + targetIndex},
+        sourceUrl,
+        origin:{system:source,recordId:original || String(index+1) + ":" + targetIndex,
+          ...locations?.get(row)},
         properties:{...row}
       });
     }
@@ -144,6 +155,14 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
   for (const [label,ids] of byLabel)
     if (ids.length > 1) issues.push({severity:"warning",message:"Duplicate label '" + label +
       "' requires connections to use element IDs"});
+  for (const [kind, count] of [
+    ["entity image URLs", rejectedUrls.image],
+    ["entity source URLs", rejectedUrls.nodeSource],
+    ["relationship source URLs", rejectedUrls.relationshipSource]
+  ] as const) {
+    if (count) issues.push({severity:"warning",message:count + " " + kind +
+      " were not valid HTTP(S) URLs; original values remain in source properties."});
+  }
   if (issues.some(i => i.severity === "error")) return null;
   return parseGraphDocument({version:1,title,description:"Imported from " + source.toUpperCase(),
     nodes,edges});
@@ -154,6 +173,10 @@ export function previewImport(files: ImportFile[]): ImportPreview {
   const issues: ImportIssue[] = [];
   let source: ImportPreview["source"] = "unknown";
   let counts = {nodes:0,edges:0};
+  const locations = new WeakMap<Row, SourcePosition>();
+  const mark = (rows: Row[], fileName: string, start: number) => {
+    rows.forEach((row, i) => locations.set(row, {fileName, recordNumber: start + i}));
+  };
   try {
     if (!files.length) throw new Error("Choose at least one file");
     if (files.length === 1 && files[0].name.toLowerCase().endsWith(".json")) {
@@ -172,10 +195,12 @@ export function previewImport(files: ImportFile[]): ImportPreview {
       if (![...elements,...connections].every(x => x && typeof x === "object" && !Array.isArray(x)))
         throw new Error("Kumu elements and connections must be objects");
       counts = {nodes:elements.length,edges:connections.length};
+      mark(elements,files[0].name,1); mark(connections,files[0].name,1);
       const extra = Object.keys(obj).filter(k => !["elements","connections"].includes(k));
       if (extra.length) issues.push({severity:"warning",message:"Not translated into Mossline views: " +
         extra.join(", ") + ". Retain the original backup."});
-      const graph = convert(elements,connections,"kumu",issues,files[0].name.replace(/\.json$/i,""));
+      const graph = convert(elements,connections,"kumu",issues,
+        files[0].name.replace(/\.json$/i,""),locations);
       return {graph,issues,source,counts:graph ? {nodes:graph.nodes.length,edges:graph.edges.length} : counts};
     }
     source = "csv";
@@ -184,14 +209,19 @@ export function previewImport(files: ImportFile[]): ImportPreview {
     const elements: Row[] = [], connections: Row[] = [];
     for (const file of files) {
       const table = csvTable(file.text), keys = new Set(table.headers);
-      if (keys.has("from") && keys.has("to")) connections.push(...table.rows);
-      else if (keys.has("label") || keys.has("name")) elements.push(...table.rows);
+      if (keys.has("from") && keys.has("to")) {
+        mark(table.rows,file.name,2);
+        connections.push(...table.rows);
+      } else if (keys.has("label") || keys.has("name")) {
+        mark(table.rows,file.name,2);
+        elements.push(...table.rows);
+      }
       else throw new Error(file.name + ": expected Label or From,To column headings");
     }
     if (!elements.length) throw new Error("An elements CSV is required to resolve connection endpoints");
     if (!connections.length) issues.push({severity:"warning",message:"No connections supplied: map will contain entities only"});
     counts = {nodes:elements.length,edges:connections.length};
-    const graph = convert(elements,connections,"csv",issues,"Imported landscape");
+    const graph = convert(elements,connections,"csv",issues,"Imported landscape",locations);
     return {graph,issues,source,counts:graph ? {nodes:graph.nodes.length,edges:graph.edges.length} : counts};
   } catch (error) {
     issues.push({severity:"error",message:error instanceof Error ? error.message : "Unrecognised input"});
