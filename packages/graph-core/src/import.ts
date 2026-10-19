@@ -1,4 +1,4 @@
-import { parseGraphDocument, type GraphDocument, type GraphNode, type GraphEdge, type NodeType } from "./schema.js";
+import { parseGraphDocument, type GraphDocument, type GraphNode, type GraphEdge, type NodeType } from "./schema";
 
 export type ImportIssue = { severity: "warning" | "error"; message: string };
 export type ImportFile = { name: string; text: string };
