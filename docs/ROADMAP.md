@@ -34,3 +34,11 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Persist manually adjusted node positions across reloads.
 - [ ] Rights-cleared photograph selection and attribution.
 - [ ] Authenticated browser interaction review of the protected preview.
+
+## Alpha 0.4 — explainable relationships
+- [x] Click-to-inspect relationship lines and accessible **Why?** buttons in the entity inspector.
+- [x] Separate recorded source assertions from inferred shared associations in the interface.
+- [x] Trace project and funder paths using actual canonical relationship IDs and names.
+- [x] Explicitly indicate when supporting records cannot be established.
+- [ ] Add persistent, independently verified provenance and confidence metadata.
+- [ ] Browser review of line hit targets and inspector keyboard accessibility on protected preview.

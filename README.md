@@ -79,3 +79,14 @@ Choose **Layout → Regions** to group records by the region text in the dataset
 are decorative Cytoscape compound nodes: they are not persisted to the graph and they
 do not imply proximity, collaboration or precise geography. Nodes without a region appear
 in **Across the landscape**. Regional grouping is distinct from the future MapLibre basemap.
+
+## Why are these connected? (alpha 0.4)
+
+Click a relationship line on the network, or select **Why?** beside an entity's connection.
+The evidence inspector differentiates source-recorded relationships from inferred associations.
+For inferred links, it shows the supporting projects or funders and the **actual recorded path**
+from each organisation to that item. Shared funders may be reached through funded projects.
+When there is no suitable direct or two-hop source path, the inspector says so rather than
+inventing a connection. Select **Explore in the landscape** to see a supporting node in context.
+These are explanations of what the source dataset says, *not independent verification*.
+No source data is changed by exploring evidence.

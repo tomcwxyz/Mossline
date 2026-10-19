@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  collaborationGraph, filterGraph, graphFingerprint, neighbours, parseGraphDocument, parsePerspectives, previewImport,
+  collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives, previewImport,
   type ImportPreview,
-  type GraphDocument, type GraphNode, type NodeType, type CollaborationBasis, type SavedPerspective
+  type GraphDocument, type GraphEdge, type GraphNode, type EvidencePath,
+  type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import demo from "../../../../data/demo.json";
@@ -36,9 +37,13 @@ function NodeInspector({ node, graph, source, onPick }: {
   graph: GraphDocument;
   source: GraphDocument;
   onPick: (id: string) => void;
+  onPickEdge: (id: string) => void;
 }) {
-  const links = neighbours(graph, node.id);
   const related = graph.edges.filter(e => e.source === node.id || e.target === node.id);
+  const links = related.flatMap(edge => {
+    const neighbour = graph.nodes.find(item => item.id === (edge.source === node.id ? edge.target : edge.source));
+    return neighbour ? [{ neighbour, edge }] : [];
+  });
   return <div className="inspector-inner">
     <div className={"inspector-cover " + node.type}>
       {node.imageUrl ? <img src={node.imageUrl} alt="" referrerPolicy="no-referrer" loading="lazy" /> :
@@ -64,18 +69,88 @@ function NodeInspector({ node, graph, source, onPick }: {
     <div className="inspector-section">
       <p className="eyebrow">Relationships · {links.length}</p>
       {links.length === 0 && <p className="muted">No connected entities in the current map.</p>}
-      {links.map(item => {
-        const edge = related.find(e => (e.source === item.id && e.target === node.id) || (e.source === node.id && e.target === item.id));
-        const supporting = (edge?.evidenceNodeIds ?? []).map(id => source.nodes.find(n => n.id === id)?.label ?? id).join(", ");
-        return <button className="relation" key={item.id} onClick={() => onPick(item.id)}>
-          <span className={"small-dot " + item.type} />
-          <span><strong>{item.label}</strong><small>{edge?.type ?? "connected"}{edge?.inferred ? " · inferred" : ""}</small>
-            {supporting && <small>Shared through: {supporting}</small>}
-          </span>
-          <span aria-hidden="true">↗</span>
-        </button>;
+      {links.map(({neighbour, edge}) => {
+        const supporting = (edge.evidenceNodeIds ?? []).map(id => source.nodes.find(n => n.id === id)?.label ?? id).join(", ");
+        return <div className="relation-row" key={edge.id}>
+          <button className="relation" onClick={() => onPick(neighbour.id)}>
+            <span className={"small-dot " + neighbour.type} />
+            <span><strong>{neighbour.label}</strong><small>{edge.type}{edge.inferred ? " · inferred" : ""}</small>
+              {supporting && <small>Shared through: {supporting}</small>}
+            </span>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <button className="relation-evidence" onClick={() => onPickEdge(edge.id)}
+            aria-label={"Explain relationship with " + neighbour.label}>Why?</button>
+        </div>;
       })}
     </div>
+  </div>;
+}
+
+function EvidenceTrail({ path, source }: { path: EvidencePath | null; source: GraphDocument }) {
+  if (!path) return <p className="relationship-unresolved">No supporting source-record path found.</p>;
+  const names = new Map(source.nodes.map(n => [n.id, n.label]));
+  const edges = new Map(source.edges.map(e => [e.id, e.type]));
+  return <ol className="relationship-trail">
+    {path.nodeIds.map((id, index) => <li key={id + "-" + index}>
+      {index > 0 && <span className="trail-verb">{edges.get(path.edgeIds[index - 1]) ?? "linked to"}</span>}
+      <span>{names.get(id) ?? id}</span>
+    </li>)}
+  </ol>;
+}
+
+function RelationshipInspector({ edge, source, onPick, onEvidence }: {
+  edge: GraphEdge;
+  source: GraphDocument;
+  onPick: (id: string) => void;
+  onEvidence: (id: string) => void;
+}) {
+  const explanation = explainRelationship(source, edge);
+  return <div className="inspector-inner relationship-inspector">
+    <div className="relationship-header-illustration" aria-hidden="true"><span>◎</span></div>
+    <p className="eyebrow">Why are these connected?</p>
+    <h2>{explanation.status === "inferred" ? "A shared association." : "A recorded relationship."}</h2>
+    <div className="relationship-parties">
+      <button type="button" onClick={() => onPick(edge.source)}>{explanation.source?.label ?? edge.source}</button>
+      <span aria-hidden="true">↔</span>
+      <button type="button" onClick={() => onPick(edge.target)}>{explanation.target?.label ?? edge.target}</button>
+    </div>
+    <div className={"relationship-status " + explanation.status}>
+      {explanation.status === "inferred" ? "Inferred from source records" : "Recorded in dataset"}
+    </div>
+    <p className="description">{explanation.summary}</p>
+    {edge.description && <p className="description">{edge.description}</p>}
+    {explanation.status === "recorded" ? <>
+      <div className="relationship-facts">
+        <p><strong>Relationship</strong> {edge.type}</p>
+        <p><strong>Direction</strong> {edge.direction ?? "directed"}</p>
+        {edge.origin && <p><strong>Source record</strong> {edge.origin.system.toUpperCase()} · {edge.origin.recordId}</p>}
+      </div>
+      {edge.sourceUrl && <a href={edge.sourceUrl} target="_blank" rel="noreferrer">Inspect source record ↗</a>}
+      {edge.properties && Object.keys(edge.properties).length > 0 &&
+        <details className="original-fields">
+          <summary>Original relationship fields</summary>
+          <dl>{Object.entries(edge.properties).map(([key, value]) => <div key={key}>
+            <dt>{key}</dt><dd>{typeof value === "string" ? value : JSON.stringify(value) ?? "—"}</dd>
+          </div>)}</dl>
+        </details>}
+    </> : <>
+      <div className="inspector-section">
+        <p className="eyebrow">Supporting records · {explanation.supports.length}</p>
+        {explanation.supports.length === 0 &&
+          <p className="relationship-unresolved">This association has no supporting record IDs. Treat it as unsubstantiated.</p>}
+        {explanation.supports.map(support => <section key={support.nodeId} className="evidence-card">
+          <p className="evidence-kind">{support.type}</p>
+          <h3>{support.label}</h3>
+          <div className="evidence-side"><p>First entity’s path</p><EvidenceTrail path={support.fromSource} source={source}/></div>
+          <div className="evidence-side"><p>Second entity’s path</p><EvidenceTrail path={support.fromTarget} source={source}/></div>
+          <button type="button" className="evidence-explore" onClick={() => onEvidence(support.nodeId)}>
+            Explore {support.type} in the landscape ↗
+          </button>
+        </section>)}
+      </div>
+    </>}
+    <p className="relationship-caveat">This view explains the records present in Mossline. It does not verify the underlying claims.</p>
   </div>;
 }
 
@@ -85,6 +160,7 @@ export function MapStudio() {
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
   const [context, setContext] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [view, setView] = useState<ViewMode>("landscape");
   const [basis, setBasis] = useState<CollaborationBasis>("all");
   const [region, setRegion] = useState("");
@@ -122,6 +198,20 @@ export function MapStudio() {
     types: activeTypes, query, region, focusId, includeNeighbours: context
   }), [current, activeTypes.join("|"), query, region, focusId, context]);
   const selected = filtered.graph.nodes.find(n => n.id === selectedId) ?? null;
+  const selectedEdge = filtered.graph.edges.find(e => e.id === selectedEdgeId) ?? null;
+  function pickNode(id: string | null) {
+    setSelectedId(id);
+    setSelectedEdgeId(null);
+  }
+  function pickEdge(id: string) {
+    setSelectedId(null);
+    setSelectedEdgeId(id);
+  }
+  function exploreEvidence(id: string) {
+    // Evidence objects are not included in an organisation-only collaboration projection.
+    setView("landscape"); setTypes(TYPE_KEYS); setRegion(""); setQuery(""); setFocusId(null);
+    setContext(true); setSelectedEdgeId(null); setSelectedId(id);
+  }
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
   const hubs = useMemo(() => {
     const counts = new Map<string, number>();
@@ -141,7 +231,7 @@ export function MapStudio() {
   })), [graph]);
 
   function toggleType(type: NodeType) {
-    setSelectedId(null);
+    setSelectedId(null);setSelectedEdgeId(null);
     setTypes(previous => previous.includes(type) ? previous.filter(v => v !== type) : [...previous, type]);
   }
 
@@ -172,13 +262,14 @@ export function MapStudio() {
     if(item.graphKey!==graphKey) return;
     setView(item.view);setBasis(item.basis);setRegion(item.region);setQuery(item.query);
     setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
-    setLabelDensity(item.labels);setSelectedId(null);setFocusId(null);
+    setLabelDensity(item.labels);setSelectedId(null);setSelectedEdgeId(null);setFocusId(null);
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function updateGraph(next: GraphDocument) {
     setGraph(next);
     setSelectedId(null);
+    setSelectedEdgeId(null);
     setQuery("");
     setView("landscape");
     setRegion("");
@@ -339,17 +430,22 @@ export function MapStudio() {
             </select></label>
           </div>
         </div>
-        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds} selectedId={selectedId}
-          onSelect={setSelectedId} view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
-        <div className="map-bottomline"><span>Drag to explore · Scroll to zoom · Select an entity to discover more</span><span>Built with Cytoscape.js</span></div>
+        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
+          selectedId={selectedId} selectedEdgeId={selectedEdgeId}
+          onSelect={pickNode} onSelectEdge={pickEdge}
+          view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
+        <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>
       </div>
       <aside className="inspector">
-        {selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph} onPick={setSelectedId} /> :
+        {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
+          onPick={pickNode} onEvidence={exploreEvidence} /> :
+        selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph}
+          onPick={pickNode} onPickEdge={pickEdge} /> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
             <p className="eyebrow">The relationships matter</p>
             <h2>Follow a thread.</h2>
-            <p>Select any node on the landscape to see what it represents and how it connects to the wider system.</p>
+            <p>Select a node to see its connections. Select a line, or use “Why?” beside a relationship, to see the recorded evidence behind it.</p>
             <div className="empty-rule"/>
             <p className="insight">“What can we understand by looking at the relationships, rather than simply the parts?”</p>
           </div>}

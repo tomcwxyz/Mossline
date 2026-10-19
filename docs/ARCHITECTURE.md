@@ -18,3 +18,13 @@ Local stdio and read-only MCP for alpha. Remote access will require authenticate
 ## Open source
 
 Apache-2.0 code; external assets and third-party data require their own rights clearance.
+
+## Relationship explanations
+
+`explainRelationship(canonicalGraph, projectedEdge)` lives in graph-core. It reads but never
+mutates the canonical data. Direct edges remain **recorded assertions**; inferred edges
+remain **associations**, never promoted to verified partnerships. Evidence is resolved
+through matching source relationships, limited to direct hops or organisation→project→funder
+patterns to prevent arbitrary graph paths from being presented as supporting evidence.
+The UI can navigate to supporting projects and funders even if a collaboration projection
+omits those entities. There is no claim of external verification at this stage.

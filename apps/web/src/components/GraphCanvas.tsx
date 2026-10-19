@@ -11,7 +11,9 @@ interface Props {
   graph: GraphDocument;
   contextNodeIds: string[];
   selectedId: string | null;
+  selectedEdgeId: string | null;
   onSelect: (id: string | null) => void;
+  onSelectEdge: (id: string) => void;
   view: "landscape" | "collaborations";
   layoutMode: NetworkLayout;
   labelDensity: LabelDensity;
@@ -21,11 +23,12 @@ type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, onSelect, view, layoutMode, labelDensity
+  graph, contextNodeIds, selectedId, selectedEdgeId, onSelect, onSelectEdge, view, layoutMode, labelDensity
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
   const onSelectRef = useRef(onSelect);
+  const onSelectEdgeRef = useRef(onSelectEdge);
   const viewKeyRef = useRef("");
   const positionCacheRef = useRef(new Map<string, Map<string, Point>>());
   const labelsRef = useRef(labelDensity);
@@ -33,6 +36,7 @@ export function GraphCanvas({
   const [ready, setReady] = useState(false);
 
   onSelectRef.current = onSelect;
+  onSelectEdgeRef.current = onSelectEdge;
   labelsRef.current = labelDensity;
   selectedRef.current = selectedId;
 
@@ -110,12 +114,17 @@ export function GraphCanvas({
             "target-arrow-shape": "none", "source-arrow-shape": "none", "opacity": 0.3 } },
           { selector: "edge.active", style: { "width": 2.5, "opacity": 0.95,
             "line-color": "#efd49a", "target-arrow-color": "#efd49a" } },
+          { selector: "edge.selected-relation", style: {
+            "width": 4, "opacity": 1, "z-index": 30,
+            "line-color": "#f8dea0", "target-arrow-color": "#f8dea0"
+          } },
           { selector: "edge.dimmed", style: { "opacity": 0.035 } }
         ]
       });
       cy.on("tap", "node", event => {
         if (!event.target.hasClass("region-group")) onSelectRef.current(event.target.id());
       });
+      cy.on("tap", "edge", event => onSelectEdgeRef.current(event.target.id()));
       cy.on("tap", event => { if (event.target === cy) onSelectRef.current(null); });
       cy.on("zoom", () => refreshLabels(cy));
       cy.on("dragfree", "node", event => {
@@ -224,8 +233,15 @@ export function GraphCanvas({
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy || !ready) return;
-    cy.elements().removeClass("active nearby dimmed");
-    if (selectedId) {
+    cy.elements().removeClass("active nearby dimmed selected-relation");
+    if (selectedEdgeId) {
+      const edge = cy.getElementById(selectedEdgeId);
+      if (edge.length) {
+        cy.elements().addClass("dimmed");
+        edge.removeClass("dimmed").addClass("selected-relation");
+        edge.connectedNodes().removeClass("dimmed").addClass("active");
+      }
+    } else if (selectedId) {
       const node = cy.getElementById(selectedId);
       if (node.length) {
         cy.elements().addClass("dimmed");
@@ -235,7 +251,7 @@ export function GraphCanvas({
       }
     }
     refreshLabels(cy);
-  }, [selectedId, graph, ready, labelDensity]);
+  }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
 
   const zoom = (factor: number) => {
     const cy = cyRef.current;
@@ -245,7 +261,7 @@ export function GraphCanvas({
   };
 
   return <div className="graph-stage">
-    <div ref={rootRef} aria-label="Interactive network map. Click an entity to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
+    <div ref={rootRef} aria-label="Interactive network map. Select a node or relationship line to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
     <div className="graph-tools" aria-label="Network navigation">
       <button type="button" onClick={() => zoom(1.35)} aria-label="Zoom in" title="Zoom in">+</button>
       <button type="button" onClick={() => zoom(1 / 1.35)} aria-label="Zoom out" title="Zoom out">−</button>

@@ -104,3 +104,39 @@
 .regional-hint {position:absolute;z-index:2;left:16px;top:13px;pointer-events:none;
   padding:6px 10px;border:1px solid #5d8168;border-radius:22px;font-size:10px;
   background:#142f27dc;color:#d7e6ce;max-width:65%;}
+
+/* Alpha 0.4 — evidence-first relationship navigation */
+.relation-row {display:flex;align-items:center;gap:8px;border-bottom:1px solid #355347;}
+.relation-row .relation {min-width:0;flex:1;border-bottom:0;}
+.relation-evidence {flex:none;border:1px solid #76947b;color:#f1ddb3;background:#305640;
+  padding:6px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+.relation-evidence:hover,.relation-evidence:focus-visible {background:#486b52;outline:2px solid #e5cda0;outline-offset:2px;}
+.relationship-header-illustration {height:95px;border-radius:12px;display:grid;place-items:center;
+  border:1px solid #537b68;margin-bottom:20px;background:radial-gradient(circle,#46755a,#1a4034);}
+.relationship-header-illustration span {font:normal 60px Georgia,serif;color:#ead8a7;}
+.relationship-parties {display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:18px 0 10px;}
+.relationship-parties button {border:1px solid #628471;border-radius:7px;background:#2a5340;
+  color:#f1f4ec;padding:8px 10px;text-align:left;font-size:11px;}
+.relationship-parties button:hover {background:#416b51;}
+.relationship-parties>span {color:#f5d99f;}
+.relationship-status {display:inline-block;border:1px solid #829b79;border-radius:20px;
+  padding:6px 10px;font-size:10px;letter-spacing:.3px;margin:6px 0 10px;color:#e8f0e6;background:#365947;}
+.relationship-status.inferred {border-color:#b7a178;background:#66543855;color:#f0d4a1;}
+.relationship-facts {border:1px solid #486b55;border-radius:8px;padding:9px 12px;margin:16px 0;}
+.relationship-facts p {font-size:11px;line-height:1.65;margin:5px 0;color:#e5e9df;overflow-wrap:anywhere;}
+.relationship-facts strong {display:block;color:#9bb7a4;font-size:10px;font-weight:600;letter-spacing:.5px;}
+.evidence-card {padding:13px 12px;border:1px solid #6b8265;border-radius:10px;margin:12px 0;background:#244437;}
+.evidence-kind {margin:0 0 6px!important;color:#e3c99b!important;text-transform:uppercase;letter-spacing:1px;font-size:10px!important;}
+.evidence-card h3 {font-family:Georgia,serif;font-weight:500;font-size:19px;margin:0 0 11px;color:#f0e8cf;}
+.evidence-side {border-top:1px solid #527361;padding:8px 0;}
+.evidence-side>p {font-size:10px!important;text-transform:uppercase;letter-spacing:.6px;color:#a8c9ad!important;margin:0 0 6px!important;}
+.relationship-trail {padding:0;margin:0;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:5px;}
+.relationship-trail li {display:flex;align-items:center;gap:5px;font-size:10px;color:#f1f0e3;line-height:1.5;}
+.relationship-trail li>span:last-child {border-radius:5px;border:1px solid #557661;padding:3px 5px;}
+.relationship-trail .trail-verb {font-style:italic;color:#dfc18a;font-size:10px;}
+.relationship-unresolved {color:#e3bca8!important;font-size:11px!important;}
+.evidence-explore {background:none;border:1px solid #a4b898;color:#e2eacb;padding:9px;
+  border-radius:7px;width:100%;font-size:11px;text-align:left;cursor:pointer;margin-top:8px;}
+.evidence-explore:hover {background:#3f6249;}
+.relationship-caveat {font-size:10px!important;line-height:1.6;color:#b7bea7!important;
+  margin:20px 0;border-top:1px solid #52705a;padding-top:14px;}
