@@ -61,3 +61,17 @@ test("shared funders include organisations reached via funded projects", () => {
   assert.equal(projected.edges[0].inferred, true);
   assert.deepEqual(projected.edges[0].evidenceNodeIds, ["f"]);
 });
+
+test("regional lens retains immediate connection context only when requested", () => {
+  const regional = parseGraphDocument({ ...map, nodes: [
+    { ...map.nodes[0], region: "Yorkshire" },
+    { ...map.nodes[1], region: "Wales" },
+    { ...map.nodes[2], region: "Yorkshire" }
+  ] });
+  const strict = filterGraph(regional, { types: ["organisation", "project"], region: "Yorkshire", includeNeighbours: false });
+  assert.deepEqual(strict.graph.nodes.map(n => n.id), ["a", "p"]);
+  assert.equal(strict.graph.edges.length, 1);
+  const contextual = filterGraph(regional, { types: ["organisation", "project"], region: "Yorkshire", includeNeighbours: true });
+  assert.equal(contextual.graph.nodes.length, 3);
+  assert.deepEqual(contextual.contextNodeIds, ["b"]);
+});
