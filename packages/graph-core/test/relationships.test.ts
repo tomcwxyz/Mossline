@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { collaborationGraph, explainRelationship, parseGraphDocument } from "../src/index.ts";
+import { collaborationGraph, explainRelationship, parseGraphDocument, traceRecordedConnection } from "../src/index.ts";
 
 const graph = parseGraphDocument({ version:1, title:"Evidence tests",
   nodes:[
@@ -57,4 +57,32 @@ test("unsupported evidence refs do not result in fabricated support",()=>{
   const explained=explainRelationship(graph,{id:"other",source:"a",target:"b",
     type:"association",inferred:true,evidenceNodeIds:["absent"]});
   assert.deepEqual(explained.supports,[]);
+});
+
+test("traces a multi-hop path using only source-recorded relationships",()=>{
+  const route=traceRecordedConnection(graph,"a","q",4);
+  assert.deepEqual(route?.nodeIds,["a","p","f","q"]);
+  assert.deepEqual(route?.steps.map(s=>s.edgeId),["ap","af","qf"]);
+  assert.deepEqual(route?.steps.map(s=>s.forward),[true,false,true]);
+});
+
+test("path limit bounds traversal and invalid endpoints return no trail",()=>{
+  assert.equal(traceRecordedConnection(graph,"a","q",2),null);
+  assert.equal(traceRecordedConnection(graph,"a","missing"),null);
+  assert.equal(traceRecordedConnection(graph,"a","q",-1),null);
+  assert.deepEqual(traceRecordedConnection(graph,"a","a"),{nodeIds:["a"],steps:[]});
+});
+
+test("inferred direct links never create shorter source-evidence paths",()=>{
+  const augmented=parseGraphDocument({...graph,edges:[...graph.edges,{
+    id:"projection",source:"a",target:"q",type:"shared association",inferred:true
+  }]});
+  assert.deepEqual(traceRecordedConnection(augmented,"a","q",4)?.nodeIds,["a","p","f","q"]);
+});
+
+test("a disconnected component has no documented path",()=>{
+  const disconnected=parseGraphDocument({...graph,nodes:[...graph.nodes,{
+    id:"orphan",label:"Orphan",type:"organisation"
+  }]});
+  assert.equal(traceRecordedConnection(disconnected,"a","orphan"),null);
 });
