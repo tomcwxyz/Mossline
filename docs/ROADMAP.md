@@ -56,3 +56,13 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Accessible structural-junction list and optional highlighting in the network.
 - [ ] Authenticated browser smoke test and visual refinement on larger real datasets.
 - [ ] Document stronger provenance and confidence measurements before claims of influence.
+
+## Alpha 0.7 — import assurance, provenance, accessibility
+- [x] Preserve import source filenames and logical record/array positions as optional provenance.
+- [x] Warn about unusable source and image URLs while retaining raw custom fields.
+- [x] Source coverage report before import acceptance and on the active map (not a quality score).
+- [x] Surface unconnected records, duplicated labels, classification gaps and source-file counts.
+- [x] Keyboard-focusable visible-entities browser as an alternative to canvas selection.
+- [ ] Authenticated Vercel preview visual/browser review for desktop and mobile.
+- [ ] Real representative, permissioned Kumu/Sheets fixture for import round-trip assurance.
+- [ ] Future mapping of Kumu styles, positions and metadata with an explicit loss report.
