@@ -77,3 +77,68 @@ export function explainRelationship(graph: GraphDocument, edge: GraphEdge): Rela
     summary: "These entities share a recorded association through the items below. This is not proof that they collaborate."
   };
 }
+
+
+/** A path through recorded source relationships, never inferred shortcuts. */
+export interface ConnectionStep {
+  edgeId: string;
+  fromId: string;
+  toId: string;
+  relation: string;
+  direction: "directed" | "undirected" | "mutual";
+  /** A directed assertion was followed from its stored source towards its target. */
+  forward: boolean;
+}
+export interface ConnectionTrail {
+  nodeIds: string[];
+  steps: ConnectionStep[];
+}
+
+/**
+ * Find a shortest documented connection using breadth-first search.
+ * Traversal is direction-agnostic for exploration; step metadata retains direction.
+ * Paths containing inferred associations are deliberately excluded.
+ * The maximum hop count bounds both cost and how far an interpretation can stretch.
+ */
+export function traceRecordedConnection(
+  graph: GraphDocument, startId: string, endId: string, maxHops = 5
+): ConnectionTrail | null {
+  const ids = new Set(graph.nodes.map(node => node.id));
+  if (!ids.has(startId) || !ids.has(endId) || !Number.isInteger(maxHops) || maxHops < 0) return null;
+  if (startId === endId) return { nodeIds: [startId], steps: [] };
+  const adjacent = new Map<string, ConnectionStep[]>();
+  for (const edge of graph.edges) {
+    if (edge.inferred) continue;
+    const direction = edge.direction ?? "directed";
+    for (const step of [
+      {edgeId:edge.id,fromId:edge.source,toId:edge.target,relation:edge.type,direction,forward:true},
+      {edgeId:edge.id,fromId:edge.target,toId:edge.source,relation:edge.type,direction,forward:false}
+    ]) adjacent.set(step.fromId,[...(adjacent.get(step.fromId)??[]),step]);
+  }
+  const previous = new Map<string, ConnectionStep>();
+  const distance = new Map<string, number>([[startId,0]]);
+  const queue = [startId];
+  for(let i=0;i<queue.length;i++){
+    const current=queue[i];
+    const hops=distance.get(current)!;
+    if(hops>=maxHops) continue;
+    for(const step of adjacent.get(current)??[]){
+      if(distance.has(step.toId)) continue;
+      previous.set(step.toId,step);
+      distance.set(step.toId,hops+1);
+      if(step.toId===endId){
+        const steps:ConnectionStep[]=[];
+        for(let at=endId;at!==startId;){
+          const part=previous.get(at);
+          if(!part) return null;
+          steps.push(part);
+          at=part.fromId;
+        }
+        steps.reverse();
+        return {nodeIds:[startId,...steps.map(part=>part.toId)],steps};
+      }
+      queue.push(step.toId);
+    }
+  }
+  return null;
+}
