@@ -43,6 +43,12 @@ function NodeInspector({ node, graph, source, onPick }: {
     <h2>{node.label}</h2>
     <p className="description">{node.description ?? "No description yet. Add context to your data source."}</p>
     {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
+    {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}</p>}
+    {node.properties && Object.keys(node.properties).length > 0 && <details className="original-fields">
+      <summary>Original source fields ({Object.keys(node.properties).length})</summary>
+      <dl>{Object.entries(node.properties).map(([key,value]) =>
+        <div key={key}><dt>{key}</dt><dd>{typeof value === "string" ? value : JSON.stringify(value) ?? "—"}</dd></div>)}</dl>
+    </details>}
     <div className="inspector-section">
       <p className="eyebrow">Relationships · {links.length}</p>
       {links.length === 0 && <p className="muted">No connected entities in the current map.</p>}
