@@ -15,17 +15,10 @@ const types: Record<string, NodeType> = {
   initiative: "project", funder: "funder", foundation: "funder", donor: "funder",
   person: "person", people: "person", place: "place", location: "place", region: "place"
 };
-const recognisedNodes = ["id","label","name","type","description","region","tags",
-  "image","imageurl","image url","sourceurl","source url","url","website"];
-const recognisedEdges = ["id","from","to","source","target","type","direction",
-  "description","sourceurl","source url","url"];
 const value = (v: unknown): string => v == null ? "" : String(v).trim();
 function field(row: Row, ...names: string[]): unknown {
   const key = Object.keys(row).find(k => names.includes(k.trim().toLowerCase()));
   return key === undefined ? undefined : row[key];
-}
-function extras(row: Row, names: string[]): Row {
-  return Object.fromEntries(Object.entries(row).filter(([k]) => !names.includes(k.toLowerCase())));
 }
 function webUrl(raw: unknown): string | undefined {
   const s = value(raw);
@@ -103,10 +96,11 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
       imageUrl:webUrl(field(row,"imageurl","image url","image")),
       sourceUrl:webUrl(field(row,"sourceurl","source url","url","website")),
       origin:{system:source,recordId:original || label},
-      properties:extras(row,recognisedNodes.filter(x => x !== "type"))
+      properties:{...row}
     });
   }
   const edgeKeys = new Map<string,number>();
+  const originalEdgeIds = new Set<string>();
   function resolve(raw: unknown, row: number): string | null {
     const ref = value(raw);
     if (byId.has(ref)) return byId.get(ref)!;
@@ -123,6 +117,10 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
       issues.push({severity:"error",message:"Connection row " + (index+1) + " has no To endpoint"}); continue;
     }
     const original = value(field(row,"id")), kind = value(field(row,"type")) || "connected";
+    if (original) {
+      if (originalEdgeIds.has(original)) issues.push({severity:"error",message:"Duplicate connection ID: " + original});
+      originalEdgeIds.add(original);
+    }
     const rawDirection = value(field(row,"direction")).toLowerCase();
     const direction = (["directed","undirected","mutual"] as const).find(x => x === rawDirection);
     if (rawDirection && !direction)
@@ -139,7 +137,7 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
         direction,description:value(field(row,"description")) || undefined,
         sourceUrl:webUrl(field(row,"sourceurl","source url","url")),
         origin:{system:source,recordId:original || String(index+1) + ":" + targetIndex},
-        properties:extras(row,recognisedEdges.filter(x => x !== "type" && x !== "direction"))
+        properties:{...row}
       });
     }
   }
