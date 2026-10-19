@@ -54,7 +54,9 @@ export function GraphCanvas({ graph, contextNodeIds, selectedId, onSelect }: Pro
             "curve-style": "bezier", "target-arrow-shape": "triangle",
             "target-arrow-color": "#66877a", "arrow-scale": 0.55
           } },
-          { selector: "edge[inferred]", style: { "line-style": "dashed", "line-color": "#c4aa78", "target-arrow-shape": "none" } },
+          { selector: 'edge[direction = "undirected"]', style: { "target-arrow-shape": "none" } },
+          { selector: 'edge[direction = "mutual"]', style: { "source-arrow-shape": "triangle", "source-arrow-color": "#66877a" } },
+          { selector: "edge[?inferred]", style: { "line-style": "dashed", "line-color": "#c4aa78", "target-arrow-shape": "none", "source-arrow-shape": "none" } },
           { selector: "edge.active", style: { "width": 3, "opacity": 1, "line-color": "#ecdbab", "target-arrow-color": "#ecdbab" } }
         ]
       });
@@ -77,7 +79,8 @@ export function GraphCanvas({ graph, contextNodeIds, selectedId, onSelect }: Pro
         classes: node.type + (context.has(node.id) ? " context" : "")
       })),
       ...graph.edges.map(edge => ({ data: {
-        id: edge.id, source: edge.source, target: edge.target, inferred: edge.inferred ?? false
+        id: edge.id, source: edge.source, target: edge.target, inferred: edge.inferred ?? false,
+        direction: edge.direction ?? "directed"
       } }))
     ]);
     if (cy.nodes().length) cy.layout({ name: "cose", animate: false, randomize: false, fit: true, padding: 75 }).run();
