@@ -12,7 +12,9 @@ export const graphNodeSchema = z.object({
   region: z.string().optional(),
   imageUrl: webUrl.optional(),
   tags: z.array(z.string()).default([]),
-  sourceUrl: webUrl.optional()
+  sourceUrl: webUrl.optional(),
+  origin: z.object({system:z.enum(["kumu","csv"]),recordId:z.string()}).optional(),
+  properties: z.record(z.string(),z.unknown()).optional()
 });
 export const graphEdgeSchema = z.object({
   id: z.string().min(1),
@@ -22,7 +24,10 @@ export const graphEdgeSchema = z.object({
   description: z.string().optional(),
   sourceUrl: webUrl.optional(),
   inferred: z.boolean().optional(),
-  evidenceNodeIds: z.array(z.string()).optional()
+  evidenceNodeIds: z.array(z.string()).optional(),
+  direction: z.enum(["directed","undirected","mutual"]).optional(),
+  origin: z.object({system:z.enum(["kumu","csv"]),recordId:z.string()}).optional(),
+  properties: z.record(z.string(),z.unknown()).optional()
 });
 export const graphDocumentSchema = z.object({
   version: z.literal(1),
