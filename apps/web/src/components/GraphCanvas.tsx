@@ -90,7 +90,7 @@ export function GraphCanvas({
             "label": "data(label)", "color": "#c9dec8", "font-size": 19,
             "font-family": "Georgia, serif", "font-weight": 600,
             "text-outline-width": 0, "text-valign": "top",
-            "text-margin-y": -16, "padding": 34, "text-opacity": 0.95
+            "text-margin-y": -16, "padding": "34px", "text-opacity": 0.95
           } },
           { selector: "node.key-node", style: { "border-width": 4, "width": 50, "height": 50,
             "font-weight": 700, "font-size": 13 } },
