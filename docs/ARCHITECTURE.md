@@ -45,3 +45,18 @@ candidates, not exhaustive searches. `findStructuralJunctions` finds
 cut vertices with Tarjan DFS over the undirected recorded graph; it remains
 view-independent and ignores inferred links. Rendering is opt-in and
 read-only. Neither feature asserts causal significance.
+
+## Import provenance and coverage (alpha 0.7)
+
+`GraphNode.origin` and `GraphEdge.origin` optionally include `fileName` and
+`recordNumber`. These are *source location hints*, not identity guarantees.
+For CSV the record number counts logical records from 1 (header) even when
+quoted values span physical lines; Kumu uses 1-based array positions. Original
+source IDs, preserved custom fields, and cross-record references remain
+part of the existing schema.
+
+`auditGraph` computes descriptive data coverage and disconnected entities,
+but does not infer accuracy, data quality, legal rights or confidence. The
+import preview reuses this report, without writing a graph until users confirm.
+A separate keyboard-focusable visible-entities list complements the
+Cytoscape canvas.
