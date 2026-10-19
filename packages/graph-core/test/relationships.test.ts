@@ -61,8 +61,8 @@ test("unsupported evidence refs do not result in fabricated support",()=>{
 
 test("traces a multi-hop path using only source-recorded relationships",()=>{
   const route=traceRecordedConnection(graph,"a","q",4);
-  assert.deepEqual(route?.nodeIds,["a","p","f","q"]);
-  assert.deepEqual(route?.steps.map(s=>s.edgeId),["ap","af","qf"]);
+  assert.deepEqual(route?.nodeIds,["a","p","b","q"]);
+  assert.deepEqual(route?.steps.map(s=>s.edgeId),["ap","bp","bq"]);
   assert.deepEqual(route?.steps.map(s=>s.forward),[true,false,true]);
 });
 
@@ -77,7 +77,7 @@ test("inferred direct links never create shorter source-evidence paths",()=>{
   const augmented=parseGraphDocument({...graph,edges:[...graph.edges,{
     id:"projection",source:"a",target:"q",type:"shared association",inferred:true
   }]});
-  assert.deepEqual(traceRecordedConnection(augmented,"a","q",4)?.nodeIds,["a","p","f","q"]);
+  assert.deepEqual(traceRecordedConnection(augmented,"a","q",4)?.nodeIds,["a","p","b","q"]);
 });
 
 test("a disconnected component has no documented path",()=>{
