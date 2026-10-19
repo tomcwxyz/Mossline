@@ -177,7 +177,7 @@ export function MapStudio() {
       <button className="button-primary"
         disabled={!importPreview.graph || importPreview.issues.some(i => i.severity === "error")}
         onClick={applyImport}>Replace current map with import</button>
-    </section>
+    </section>}
     <section className="workspace">
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
