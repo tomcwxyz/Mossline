@@ -102,3 +102,17 @@ are never used as shortcuts. No path within five steps is **not** proof that
 there is no relationship. An example links fictional North Fields Collective to
 Riverbank Trust through a project and funder. This remains browser-local and
 read-only. The MCP's separate path tool remains unchanged.
+
+## Alternative routes and structural junctions (alpha 0.6)
+The connection explorer can display up to three **distinct simple paths** using
+recorded links (shortest candidates first) and exclude an exact relationship
+type. The results are bounded and **not exhaustive**, and path arrows retain
+the source edge direction even when traversed in reverse. Select an alternative
+to highlight it and open its original records.
+
+**Structural junctions** use cut-vertex (articulation-point) analysis of the
+undirected recorded graph, across all connected components. A junction is a
+node whose removal would separate part of its component; this is not a
+claim that it is influential, trustworthy or essential to an organisation.
+Inferred edges are excluded and changing perspectives does not mutate source
+data. Optional outlines highlight junctions in the network.

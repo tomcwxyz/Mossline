@@ -167,3 +167,20 @@
 .trace-clear {color:#e8d2a5;border:0;background:transparent;text-decoration:underline;
   padding:7px 0;font-size:10px;}
 .legend-symbol.traced {width:16px;height:3px;border-radius:1px;background:#ffcf75;}
+
+/* Comparing alternative routes and critical structural junctions */
+.route-options {display:flex;gap:5px;flex-wrap:wrap;margin:10px 0;}
+.route-options button {flex:1;min-width:53px;padding:7px 5px;border-radius:7px;
+  border:1px solid #5a826d;background:#193d31;color:#e4ebdf;font-size:10px;}
+.route-options button.chosen {border-color:#e2c58b;background:#4d6040;color:#fff2cf;}
+.route-options small {display:block;font-size:9px;margin-top:2px;color:#c8d6c2;}
+.junction-panel {margin:19px 0 0;padding:12px;border:1px solid #688272;border-radius:10px;background:#1b3d32;}
+.junction-panel>summary {cursor:pointer;font-size:12px;font-weight:700;color:#f3e4c4;}
+.junction-panel>summary span {font-size:10px;font-weight:400;color:#b8c9b7;margin-left:5px;}
+.junction-panel .context-toggle {margin:11px 0;}
+.junction-item {display:block;width:100%;text-align:left;background:none;border:0;
+ border-bottom:1px solid #486856;color:#edf1e6;padding:9px 0;}
+.junction-item:hover {color:#efcf8a;}
+.junction-item span {font-size:11px;display:block;}
+.junction-item small {font-size:10px;color:#b9c7b6;display:block;margin-top:4px;}
+.legend-symbol.junction {background:transparent;border:2px dashed #e7b77b;width:11px;height:11px;}

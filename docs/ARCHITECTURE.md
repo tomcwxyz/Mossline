@@ -36,3 +36,12 @@ edges only. It skips inferred edges, retains direction metadata per hop, and
 returns null if either endpoint does not exist or no route is found within the
 hop limit. The frontend highlights those records without mutating their source.
 It remains an exploratory pathway rather than a proof of collaboration.
+
+## Advanced connection analysis
+`findRecordedRoutes` enumerates a bounded set of shortest-first simple
+recorded-edge routes, with excluded relation types matched exactly. It does
+not use projected inferred associations; returned routes are illustrative
+candidates, not exhaustive searches. `findStructuralJunctions` finds
+cut vertices with Tarjan DFS over the undirected recorded graph; it remains
+view-independent and ignores inferred links. Rendering is opt-in and
+read-only. Neither feature asserts causal significance.

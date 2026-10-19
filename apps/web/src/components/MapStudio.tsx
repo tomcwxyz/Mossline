@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
-  previewImport, traceRecordedConnection,
+  previewImport, findRecordedRoutes, findStructuralJunctions,
   type ImportPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective
@@ -164,8 +164,12 @@ export function MapStudio() {
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [traceFrom, setTraceFrom] = useState("");
   const [traceTo, setTraceTo] = useState("");
-  const [connectionTrail, setConnectionTrail] = useState<ConnectionTrail | null>(null);
+  const [connectionTrails, setConnectionTrails] = useState<ConnectionTrail[]>([]);
+  const [activeRouteIndex, setActiveRouteIndex] = useState(0);
+  const [excludedRelationType, setExcludedRelationType] = useState("");
+  const [showJunctions, setShowJunctions] = useState(false);
   const [connectionMessage, setConnectionMessage] = useState("");
+  const connectionTrail = connectionTrails[activeRouteIndex] ?? null;
   const [view, setView] = useState<ViewMode>("landscape");
   const [basis, setBasis] = useState<CollaborationBasis>("all");
   const [region, setRegion] = useState("");
@@ -219,21 +223,33 @@ export function MapStudio() {
   }
   const names = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
   const entityOptions = useMemo(() => [...graph.nodes].sort((a,b) => a.label.localeCompare(b.label)), [graph]);
+  const relationTypes = useMemo(() => [...new Set(graph.edges.filter(e=>!e.inferred).map(e=>e.type))].sort(), [graph]);
+  const junctions = useMemo(() => findStructuralJunctions(graph), [graph]);
+  const featuredJunctions = useMemo(() => junctions.filter(item =>
+    ["organisation","project"].includes(graph.nodes.find(n=>n.id===item.nodeId)?.type ?? "")).slice(0,6),
+  [junctions,graph]);
   function traceEntities(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const found = traceRecordedConnection(graph, traceFrom, traceTo, 5);
-    setConnectionTrail(found);
-    if (!found) {
-      setConnectionMessage("No path of five or fewer recorded links was found. A longer path may exist; this does not prove the entities are unrelated.");
+    const found = findRecordedRoutes(graph, traceFrom, traceTo, {
+      maxHops: 5, maxRoutes: 3, excludeTypes: excludedRelationType ? [excludedRelationType] : []
+    });
+    setConnectionTrails(found);
+    setActiveRouteIndex(0);
+    if (!found.length) {
+      setConnectionMessage("No recorded path within five steps was found with these settings. This does not prove the entities are unrelated.");
       return;
     }
-    setConnectionMessage(found.steps.length === 0 ? "You've selected the same entity twice." :
-      "This is a route through source records, not proof that the two entities collaborate.");
+    setConnectionMessage(found[0].steps.length === 0 ? "You've selected the same entity twice." :
+      "Up to three alternative routes are shown, shortest first. These are source-record pathways, not proof of collaboration.");
     setView("landscape"); setQuery(""); setRegion(""); setTypes(TYPE_KEYS);
     setContext(true); setFocusId(null); setSelectedId(null); setSelectedEdgeId(null);
   }
   function clearTrail() {
-    setConnectionTrail(null); setConnectionMessage("");
+    setConnectionTrails([]); setActiveRouteIndex(0); setConnectionMessage("");
+  }
+  function exploreJunction(id: string) {
+    setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
+    setContext(true);setFocusId(null);pickNode(id);clearTrail();
   }
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
   const hubs = useMemo(() => {
@@ -293,10 +309,12 @@ export function MapStudio() {
     setGraph(next);
     setSelectedId(null);
     setSelectedEdgeId(null);
-    setConnectionTrail(null);
+    setConnectionTrails([]);
+    setActiveRouteIndex(0);
     setConnectionMessage("");
     setTraceFrom("");
     setTraceTo("");
+    setExcludedRelationType("");
     setQuery("");
     setView("landscape");
     setRegion("");
@@ -334,7 +352,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.6</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -411,15 +429,29 @@ export function MapStudio() {
               <option value="">Choose an entity</option>
               {entityOptions.map(n => <option key={n.id} value={n.id}>{n.label} · {n.type}</option>)}
             </select>
-            <button type="submit" className="trace-action" disabled={!traceFrom || !traceTo}>Trace connection →</button>
+            <label htmlFor="trace-exclude">Leave out a relationship type</label>
+            <select id="trace-exclude" className="search" value={excludedRelationType}
+              onChange={event=>{setExcludedRelationType(event.target.value);clearTrail();}}>
+              <option value="">Use all recorded relationships</option>
+              {relationTypes.map(type=><option value={type} key={type}>Exclude: {type}</option>)}
+            </select>
+            <button type="submit" className="trace-action" disabled={!traceFrom || !traceTo}>Explore routes →</button>
           </form>
           {graphKey===DEMO_KEY && <button type="button" className="trace-example" onClick={() => {
             setTraceFrom("o1"); setTraceTo("o3"); clearTrail();
           }}>Try an example: North Fields → Riverbank</button>}
           {connectionMessage && <div role="status" className="trace-response">
             <p>{connectionMessage}</p>
+            {connectionTrails.length>1 && <div className="route-options" aria-label="Alternative recorded routes">
+              {connectionTrails.map((route,index)=><button type="button" key={index}
+                aria-pressed={activeRouteIndex===index}
+                className={activeRouteIndex===index ? "chosen" : ""}
+                onClick={()=>setActiveRouteIndex(index)}>
+                Route {index+1}<small>{route.steps.length} steps</small>
+              </button>)}
+            </div>}
             {connectionTrail && connectionTrail.steps.length>0 && <>
-              <p className="trace-caption">{connectionTrail.steps.length} recorded steps</p>
+              <p className="trace-caption">Route {activeRouteIndex+1} · {connectionTrail.steps.length} recorded steps</p>
               <ol className="trace-steps">
                 {connectionTrail.steps.map((step, i) => <li key={step.edgeId+"-"+i}>
                   <button type="button" onClick={() => pickNode(step.fromId)}>{names.get(step.fromId)??step.fromId}</button>
@@ -434,6 +466,21 @@ export function MapStudio() {
             <button type="button" className="trace-clear" onClick={clearTrail}>Clear path</button>
           </div>}
         </section>
+        <details className="junction-panel">
+          <summary>Structural junctions <span>{featuredJunctions.length} shown</span></summary>
+          <p className="help">Which organisations or projects hold different parts of the recorded network together? This is a structural test, not a judgement about importance or impact.</p>
+          <label className="context-toggle">
+            <input type="checkbox" checked={showJunctions} onChange={e=>setShowJunctions(e.target.checked)}/>
+            Highlight junctions on the map
+          </label>
+          {featuredJunctions.length===0 && <p className="help">No qualifying organisation or project junctions in this dataset.</p>}
+          {featuredJunctions.map(item => <button className="junction-item" key={item.nodeId}
+            onClick={()=>exploreJunction(item.nodeId)}>
+            <span>{names.get(item.nodeId) ?? item.nodeId}</span>
+            <small>{item.separatedGroups} connected parts if removed</small>
+          </button>)}
+          <p className="help">Computed on all recorded relationships, ignoring inferred associations and current view filters.</p>
+        </details>
         <div className="sidebar-divider" />
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
@@ -498,6 +545,7 @@ export function MapStudio() {
           selectedId={selectedId} selectedEdgeId={selectedEdgeId}
           pathNodeIds={connectionTrail?.nodeIds ?? []}
           pathEdgeIds={connectionTrail?.steps.map(step => step.edgeId) ?? []}
+          junctionNodeIds={showJunctions ? junctions.map(item=>item.nodeId) : []}
           onSelect={pickNode} onSelectEdge={pickEdge}
           view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
         <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>

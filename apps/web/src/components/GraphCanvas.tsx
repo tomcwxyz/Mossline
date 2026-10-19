@@ -14,6 +14,7 @@ interface Props {
   selectedEdgeId: string | null;
   pathNodeIds: string[];
   pathEdgeIds: string[];
+  junctionNodeIds: string[];
   onSelect: (id: string | null) => void;
   onSelectEdge: (id: string) => void;
   view: "landscape" | "collaborations";
@@ -25,7 +26,7 @@ type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -121,6 +122,10 @@ export function GraphCanvas({
             "line-color": "#f8dea0", "target-arrow-color": "#f8dea0"
           } },
           { selector: "edge.dimmed", style: { "opacity": 0.035 } },
+          { selector: "node.junction", style: {
+            "border-color": "#e7b77b", "border-width": 4,
+            "border-style": "dashed"
+          } },
           { selector: "node.path-step", style: {
             "border-color": "#ffd993", "border-width": 5, "opacity": 1,
             "text-opacity": 1, "z-index": 32
@@ -264,6 +269,14 @@ export function GraphCanvas({
     refreshLabels(cy);
   }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
 
+  const junctionIdentity = junctionNodeIds.join("|");
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || !ready) return;
+    cy.nodes().removeClass("junction");
+    for (const id of junctionNodeIds) cy.getElementById(id).addClass("junction");
+  }, [junctionIdentity, graph, ready, view, layoutMode]);
+
   const pathIdentity = pathEdgeIds.join("|") + "::" + pathNodeIds.join("|");
   useEffect(() => {
     const cy = cyRef.current;
@@ -297,6 +310,7 @@ export function GraphCanvas({
       <span><i className="legend-symbol funder" /> Funder</span>
       {view === "collaborations" && <span><i className="legend-symbol inferred" /> Shared association</span>}
       {pathEdgeIds.length>0 && <span><i className="legend-symbol traced" /> Recorded path</span>}
+      {junctionNodeIds.length>0 && <span><i className="legend-symbol junction" /> Structural junction</span>}
     </div>
   </div>;
 }

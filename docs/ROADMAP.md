@@ -48,3 +48,11 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Show each recorded relationship, direction and evidence inspector entry.
 - [x] Highlight a chosen pathway in the network without altering canonical records.
 - [ ] Compare several alternative pathways and choose an evidence-strength threshold.
+
+## Alpha 0.6 — alternative pathways and structural junctions
+- [x] Bounded search for up to three alternative, distinct simple recorded paths.
+- [x] Optional exact relationship-type exclusion; evidence and direction shown for each hop.
+- [x] Tarjan articulation-point detection on recorded, undirected graph components.
+- [x] Accessible structural-junction list and optional highlighting in the network.
+- [ ] Authenticated browser smoke test and visual refinement on larger real datasets.
+- [ ] Document stronger provenance and confidence measurements before claims of influence.
