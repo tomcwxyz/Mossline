@@ -38,9 +38,13 @@ export function GraphCanvas({
 
   function refreshLabels(cy: Core) {
     const all = labelsRef.current === "all" || cy.zoom() > 1.25 || cy.nodes().length < 22;
+    const relatedIds = new Set<string>();
+    if (selectedRef.current) {
+      cy.getElementById(selectedRef.current).connectedEdges().connectedNodes()
+        .forEach(neighbour => { relatedIds.add(neighbour.id()); });
+    }
     cy.nodes().forEach(node => {
-      const show = all || node.hasClass("key-node") || node.id() === selectedRef.current ||
-        (selectedRef.current !== null && node.connectedEdges().connectedNodes().some(n => n.id() === selectedRef.current));
+      const show = all || node.hasClass("key-node") || node.id() === selectedRef.current || relatedIds.has(node.id());
       if (show) node.removeClass("label-hidden");
       else node.addClass("label-hidden");
     });
@@ -66,7 +70,7 @@ export function GraphCanvas({
             "text-valign": "bottom", "width": 36, "height": 36,
             "text-outline-color": "#143028", "text-outline-width": 2.2,
             "overlay-opacity": 0, "transition-property": "opacity, border-width, border-color",
-            "transition-duration": "0.17s"
+            "transition-duration": 170
           } },
           { selector: "node[imageUrl]", style: {
             "background-image": "data(imageUrl)", "background-fit": "cover",
@@ -125,7 +129,7 @@ export function GraphCanvas({
     const oldKey = viewKeyRef.current;
     if (oldKey && oldKey !== key) {
       const snapshot = positionCacheRef.current.get(oldKey) ?? new Map<string, Point>();
-      cy.nodes().forEach(node => snapshot.set(node.id(), { ...node.position() }));
+      cy.nodes().forEach(node => { snapshot.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(oldKey, snapshot);
     }
     const cached = positionCacheRef.current.get(key);
@@ -167,7 +171,7 @@ export function GraphCanvas({
       }
       if (!reuse || oldKey !== key) cy.fit(undefined, 65);
       const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
-      cy.nodes().forEach(node => saved.set(node.id(), { ...node.position() }));
+      cy.nodes().forEach(node => { saved.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(key, saved);
     }
     viewKeyRef.current = key;
