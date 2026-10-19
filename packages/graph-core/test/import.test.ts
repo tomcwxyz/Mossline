@@ -90,7 +90,7 @@ test("invalid image/source URLs are visibly reported without deleting original f
   assert.ok(result.graph);
   assert.equal(result.graph.nodes[0].imageUrl,undefined);
   assert.equal(result.graph.nodes[0].sourceUrl,undefined);
-  assert.equal(result.graph.nodes[0].properties?.["image url"],"ftp://unsupported");
+  assert.equal(result.graph.nodes[0].properties?.["Image URL"],"ftp://unsupported");
   assert.ok(result.issues.some(x=>x.message.includes("entity image URLs")));
   assert.ok(result.issues.some(x=>x.message.includes("entity source URLs")));
 });
