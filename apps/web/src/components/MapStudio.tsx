@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import {
-  collaborationGraph, filterGraph, neighbours, parseGraphDocument,
+  collaborationGraph, filterGraph, neighbours, parseGraphDocument, previewImport,
+  type ImportPreview,
   type GraphDocument, type GraphNode, type NodeType, type CollaborationBasis
 } from "@mossline/graph-core";
 import { GraphCanvas } from "./GraphCanvas";
@@ -69,6 +70,7 @@ export function MapStudio() {
   const [view, setView] = useState<ViewMode>("landscape");
   const [basis, setBasis] = useState<CollaborationBasis>("all");
   const [notice, setNotice] = useState("");
+  const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -105,16 +107,25 @@ export function MapStudio() {
   }
 
   async function onImport(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    try {
-      const parsed = parseGraphDocument(JSON.parse(await file.text()));
-      updateGraph(parsed);
-      setNotice("Loaded " + parsed.nodes.length + " entities and " + parsed.edges.length + " relationships.");
-    } catch (error) {
-      setNotice("Import failed: " + (error instanceof Error ? error.message : "invalid graph JSON"));
-    }
+    const files = Array.from(event.target.files ?? []);
     event.target.value = "";
+    if (!files.length) return;
+    try {
+      const input = await Promise.all(files.map(async file => ({name:file.name,text:await file.text()})));
+      setImportPreview(previewImport(input));
+      setNotice("");
+    } catch (error) {
+      setNotice("Import failed: " + (error instanceof Error ? error.message : "unable to read files"));
+    }
+  }
+
+  function applyImport() {
+    const preview = importPreview;
+    if (!preview?.graph || preview.issues.some(i => i.severity === "error")) return;
+    updateGraph(preview.graph);
+    setNotice("Loaded " + preview.graph.nodes.length + " entities and " + preview.graph.edges.length +
+      " relationships. Changes stay in this browser.");
+    setImportPreview(null);
   }
 
   function resetDemo() {
@@ -136,12 +147,31 @@ export function MapStudio() {
         <p className="subtitle">{graph.description}</p>
       </div>
       <div className="actions">
-        <input aria-label="Import Mossline JSON" ref={fileRef} type="file" accept=".json,application/json" hidden onChange={onImport}/>
-        <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Import JSON</button>
+        <input aria-label="Import Kumu blueprint JSON or exported Sheets CSVs" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
+        <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Import data</button>
         <button className="button-primary" onClick={() => saveJson(graph)}>↓ Export map</button>
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
+    {importPreview && <section className="import-preview" aria-label="Import preview">
+      <div className="import-title">
+        <div><p className="eyebrow">Review before replacing the current map</p>
+          <h2>Import preview · {importPreview.source.toUpperCase()}</h2>
+          <p>{importPreview.counts.nodes} entities · {importPreview.counts.edges} relationships</p>
+        </div>
+        <button className="button-outline" onClick={() => setImportPreview(null)}>Close</button>
+      </div>
+      <p className="help">No changes yet. Confirming will replace this browser's map.
+        Export your current map first to keep a backup. Files are processed locally.</p>
+      {importPreview.issues.length > 0 && <ul className="import-issues">
+        {importPreview.issues.map((issue,index) => <li key={index} className={issue.severity}>
+          <strong>{issue.severity}:</strong> {issue.message}</li>)}
+      </ul>}
+      {importPreview.issues.length === 0 && <p className="help">No issues detected in supported source fields.</p>}
+      <button className="button-primary"
+        disabled={!importPreview.graph || importPreview.issues.some(i => i.severity === "error")}
+        onClick={applyImport}>Replace current map with import</button>
+    </section>
     <section className="workspace">
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
