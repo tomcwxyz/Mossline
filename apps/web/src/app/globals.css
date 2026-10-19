@@ -99,3 +99,8 @@
 .inspector-stats small {font-size:10px;color:#b7d0bb;}
 .inspector-tags {display:flex;flex-wrap:wrap;gap:5px;margin:15px 0;}
 .inspector-tags span {font-size:10px;color:#e2e9db;background:#315946;border:1px solid #60856c;border-radius:15px;padding:5px 9px;}
+
+/* Groups are visual containers, never data entities. */
+.regional-hint {position:absolute;z-index:2;left:16px;top:13px;pointer-events:none;
+  padding:6px 10px;border:1px solid #5d8168;border-radius:22px;font-size:10px;
+  background:#142f27dc;color:#d7e6ce;max-width:65%;}

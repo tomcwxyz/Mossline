@@ -73,3 +73,9 @@ preferences, scoped to a fingerprint of graph topology, and do not create duplic
 They are not hosted, shared, or exposed to MCP. Export your graph separately. Profile artwork
 is generated with CSS; an imported image URL can optionally replace it. Use only images you
 have permission to publish; there is not yet an attribution management workflow.
+
+### Grouped regional layout
+Choose **Layout → Regions** to group records by the region text in the dataset. Groups
+are decorative Cytoscape compound nodes: they are not persisted to the graph and they
+do not imply proximity, collaboration or precise geography. Nodes without a region appear
+in **Across the landscape**. Regional grouping is distinct from the future MapLibre basemap.

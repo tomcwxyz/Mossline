@@ -13,6 +13,7 @@ test("saved perspective validates all view controls",()=>{
     basis:"all",region:"",query:"",types:["organisation","project"],context:true,
     layout:"organic",labels:"essential",createdAt:1};
   assert.equal(parsePerspectives([perspective]).length,1);
+  assert.equal(parsePerspectives([{...perspective,layout:"regions"}])[0].layout,"regions");
   assert.throws(()=>parsePerspectives([{...perspective,layout:"unsupported"}]));
   assert.throws(()=>parsePerspectives([{...perspective,name:""}]));
 });

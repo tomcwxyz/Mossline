@@ -12,7 +12,7 @@ export const perspectiveSchema = z.object({
   query: z.string().max(200),
   types: z.array(nodeTypeSchema),
   context: z.boolean(),
-  layout: z.enum(["organic", "radial"]),
+  layout: z.enum(["organic", "radial", "regions"]),
   labels: z.enum(["essential", "all"]),
   createdAt: z.number().int().nonnegative()
 }).strict();

@@ -331,7 +331,7 @@ export function MapStudio() {
           <div className="map-options">
             <label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
-              <option value="organic">Organic</option><option value="radial">Radial</option>
+              <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
             </select></label>
             <label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>

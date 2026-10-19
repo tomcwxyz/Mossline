@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Core } from "cytoscape";
 import type { GraphDocument } from "@mossline/graph-core";
 
-export type NetworkLayout = "organic" | "radial";
+export type NetworkLayout = "organic" | "radial" | "regions";
 export type LabelDensity = "essential" | "all";
 
 interface Props {
@@ -37,7 +37,7 @@ export function GraphCanvas({
   selectedRef.current = selectedId;
 
   function refreshLabels(cy: Core) {
-    const all = labelsRef.current === "all" || cy.zoom() > 1.25 || cy.nodes().length < 22;
+    const all = labelsRef.current === "all" || cy.zoom() > 1.25 || cy.nodes().not(".region-group").length < 22;
     const relatedIds = new Set<string>();
     if (selectedRef.current) {
       cy.getElementById(selectedRef.current).connectedEdges().connectedNodes()
@@ -45,6 +45,7 @@ export function GraphCanvas({
     }
     cy.nodes().forEach(node => {
       const show = all || node.hasClass("key-node") || node.id() === selectedRef.current || relatedIds.has(node.id());
+      if (node.hasClass("region-group")) return;
       if (show) node.removeClass("label-hidden");
       else node.addClass("label-hidden");
     });
@@ -82,6 +83,15 @@ export function GraphCanvas({
           { selector: "node.person", style: { "background-color": "#cba5b5" } },
           { selector: "node.place", style: { "background-color": "#99b6a6", "shape": "hexagon", "width": 27, "height": 27 } },
           { selector: "node.context", style: { "opacity": 0.32 } },
+          { selector: "node.region-group", style: {
+            "shape": "round-rectangle", "background-color": "#3d7258",
+            "background-opacity": 0.12, "border-width": 1.4,
+            "border-color": "#779f7f", "border-style": "dashed",
+            "label": "data(label)", "color": "#c9dec8", "font-size": 19,
+            "font-family": "Georgia, serif", "font-weight": 600,
+            "text-outline-width": 0, "text-valign": "top",
+            "text-margin-y": -16, "padding": 34, "text-opacity": 0.95
+          } },
           { selector: "node.key-node", style: { "border-width": 4, "width": 50, "height": 50,
             "font-weight": 700, "font-size": 13 } },
           { selector: "node.label-hidden", style: { "text-opacity": 0 } },
@@ -103,7 +113,9 @@ export function GraphCanvas({
           { selector: "edge.dimmed", style: { "opacity": 0.035 } }
         ]
       });
-      cy.on("tap", "node", event => onSelectRef.current(event.target.id()));
+      cy.on("tap", "node", event => {
+        if (!event.target.hasClass("region-group")) onSelectRef.current(event.target.id());
+      });
       cy.on("tap", event => { if (event.target === cy) onSelectRef.current(null); });
       cy.on("zoom", () => refreshLabels(cy));
       cy.on("dragfree", "node", event => {
@@ -129,13 +141,39 @@ export function GraphCanvas({
     const oldKey = viewKeyRef.current;
     if (oldKey && oldKey !== key) {
       const snapshot = positionCacheRef.current.get(oldKey) ?? new Map<string, Point>();
-      cy.nodes().forEach(node => { snapshot.set(node.id(), { ...node.position() }); });
+      cy.nodes().not(".region-group").forEach(node => { snapshot.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(oldKey, snapshot);
     }
     const cached = positionCacheRef.current.get(key);
     const cachedCount = graph.nodes.filter(n => cached?.has(n.id)).length;
     const reuse = !!cached && cachedCount === graph.nodes.length && graph.nodes.length > 0;
     const context = new Set(contextNodeIds);
+    // These parent nodes exist in the rendering only, never in the canonical graph.
+    const groups = new Map<string, string[]>();
+    if (layoutMode === "regions") {
+      for (const node of graph.nodes) {
+        const name = node.region || "Across the landscape";
+        const ids = groups.get(name) ?? [];
+        ids.push(node.id);
+        groups.set(name, ids);
+      }
+    }
+    const grouped = [...groups.entries()].sort(([a],[b]) => a.localeCompare(b));
+    const groupIds = new Map(grouped.map(([name],i) => [name, "region-group:" + i]));
+    const regionCoordinates = new Map<string, Point>();
+    const columns = Math.max(1, Math.ceil(Math.sqrt(grouped.length)));
+    grouped.forEach(([,ids],index) => {
+      const cx = (index % columns) * 410;
+      const cy = Math.floor(index / columns) * 410;
+      ids.forEach((id,i) => {
+        const ring = Math.floor(i / 8);
+        const offset = i % 8;
+        const count = Math.min(8, ids.length - ring * 8);
+        const angle = offset * Math.PI * 2 / count - Math.PI / 2;
+        const radius = ids.length === 1 ? 0 : 80 + ring * 73;
+        regionCoordinates.set(id,{x:cx+Math.cos(angle)*radius,y:cy+Math.sin(angle)*radius});
+      });
+    });
     const degrees = new Map<string, number>();
     for (const e of graph.edges) {
       degrees.set(e.source, (degrees.get(e.source) ?? 0) + 1);
@@ -144,10 +182,14 @@ export function GraphCanvas({
     const degreeThreshold = [...degrees.values()].sort((a, b) => b - a)[Math.min(7, degrees.size - 1)] ?? Infinity;
     cy.elements().remove();
     cy.add([
+      ...grouped.map(([name],i) => ({
+        data: { id: "region-group:" + i, label: name }, classes: "region-group"
+      })),
       ...graph.nodes.map(node => ({
         data: { id: node.id, label: node.label, ...(node.imageUrl ? { imageUrl: node.imageUrl } : {}),
+          ...(layoutMode === "regions" ? {parent: groupIds.get(node.region || "Across the landscape")} : {}),
           degree: degrees.get(node.id) ?? 0 },
-        position: cached?.get(node.id),
+        position: layoutMode === "regions" ? regionCoordinates.get(node.id) : cached?.get(node.id),
         classes: [node.type, context.has(node.id) ? "context" : "",
           (degrees.get(node.id) ?? 0) > 1 && (degrees.get(node.id) ?? 0) >= degreeThreshold ? "key-node" : ""]
           .filter(Boolean).join(" ")
@@ -159,7 +201,7 @@ export function GraphCanvas({
     ]);
 
     if (cy.nodes().length) {
-      if (reuse) {
+      if (layoutMode === "regions" || reuse) {
         cy.layout({ name: "preset", fit: false }).run();
       } else if (layoutMode === "radial") {
         cy.layout({ name: "concentric", animate: false, fit: false, padding: 80,
@@ -171,7 +213,7 @@ export function GraphCanvas({
       }
       if (!reuse || oldKey !== key) cy.fit(undefined, 65);
       const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
-      cy.nodes().forEach(node => { saved.set(node.id(), { ...node.position() }); });
+      cy.nodes().not(".region-group").forEach(node => { saved.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(key, saved);
     }
     viewKeyRef.current = key;
@@ -209,6 +251,7 @@ export function GraphCanvas({
       <button type="button" onClick={() => zoom(1 / 1.35)} aria-label="Zoom out" title="Zoom out">−</button>
       <button type="button" onClick={() => cyRef.current?.fit(undefined, 65)} aria-label="Fit network to view" title="Fit to view">⤢</button>
     </div>
+    {layoutMode === "regions" && <span className="regional-hint">Grouped by region · not a geographic map</span>}
     <div className="graph-legend" aria-label="Network legend">
       <span><i className="legend-symbol organisation" /> Organisation</span>
       <span><i className="legend-symbol project" /> Project</span>

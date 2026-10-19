@@ -30,6 +30,7 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Named perspectives store filters, layout, search and labels separately from canonical graph data.
 - [x] Dataset-scoped saved views with schema validation and local delete/restore.
 - [x] Richer original CSS botanical profile covers, optional source-provided photographs and relationship counts.
-- [ ] Cluster-grouped layout and position persistence across reloads.
+- [x] Region-labelled grouping as a visual-only network layout.
+- [ ] Persist manually adjusted node positions across reloads.
 - [ ] Rights-cleared photograph selection and attribution.
 - [ ] Authenticated browser interaction review of the protected preview.
