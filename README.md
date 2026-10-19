@@ -90,3 +90,15 @@ When there is no suitable direct or two-hop source path, the inspector says so r
 inventing a connection. Select **Explore in the landscape** to see a supporting node in context.
 These are explanations of what the source dataset says, *not independent verification*.
 No source data is changed by exploring evidence.
+
+## Trace a connection (alpha 0.5)
+
+Use **Follow a connection** to choose two entities and find a pathway of up to five
+**recorded source relationships**. The canvas highlights the route, and each step
+has a **Why?** link to its underlying relationship record. Traversal can run
+against a directed assertion in either direction for exploration, but the
+arrow beside each step preserves the recorded direction. Inferred connections
+are never used as shortcuts. No path within five steps is **not** proof that
+there is no relationship. An example links fictional North Fields Collective to
+Riverbank Trust through a project and funder. This remains browser-local and
+read-only. The MCP's separate path tool remains unchanged.

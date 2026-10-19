@@ -140,3 +140,30 @@
 .evidence-explore:hover {background:#3f6249;}
 .relationship-caveat {font-size:10px!important;line-height:1.6;color:#b7bea7!important;
   margin:20px 0;border-top:1px solid #52705a;padding-top:14px;}
+
+/* Find recorded pathways between two entities */
+.trace-panel {margin:19px 0 0;padding:15px 12px;border:1px solid #5b8467;
+  border-radius:11px;background:linear-gradient(135deg,#234838,#163a30);}
+.trace-head {display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
+.trace-head span {font-size:10px;color:#decda6;white-space:nowrap;}
+.trace-head .eyebrow {margin-bottom:5px;}
+.trace-form {display:grid;gap:7px;margin-top:12px;}
+.trace-form label {font-size:10px;color:#d3e8d4;font-weight:700;}
+.trace-form select {min-width:0;white-space:nowrap;text-overflow:ellipsis;}
+.trace-action {border:1px solid #dbc28e;border-radius:7px;background:#dfcc9b;
+  color:#213729;padding:10px 8px;font-weight:700;font-size:11px;margin-top:7px;}
+.trace-action:disabled {opacity:.45;cursor:not-allowed;}
+.trace-example {background:transparent;color:#ebd4ac;font-size:10px;border:0;text-align:left;
+  padding:11px 0 0;text-decoration:underline;text-underline-offset:3px;}
+.trace-response {border-top:1px solid #6b8873;margin-top:13px;padding-top:12px;}
+.trace-response>p {color:#d8e4d5;font-size:11px;line-height:1.55;}
+.trace-response .trace-caption {font-weight:700;color:#edcf96;}
+.trace-steps {list-style:none;margin:10px 0 8px;padding:0;display:grid;gap:6px;}
+.trace-steps li {display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.trace-steps li>button:first-child {background:#2e5642;color:#f0f2e8;border:1px solid #708e74;
+  font-size:10px;border-radius:5px;text-align:left;padding:6px;max-width:100%;overflow-wrap:anywhere;}
+.trace-steps li>span {color:#e1c593;font-size:10px;}
+.trace-steps .trace-why {color:#e9daa6;background:transparent;border:0;text-decoration:underline;font-size:10px;}
+.trace-clear {color:#e8d2a5;border:0;background:transparent;text-decoration:underline;
+  padding:7px 0;font-size:10px;}
+.legend-symbol.traced {width:16px;height:3px;border-radius:1px;background:#ffcf75;}

@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives, previewImport,
+  collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
+  previewImport, traceRecordedConnection,
   type ImportPreview,
-  type GraphDocument, type GraphEdge, type GraphNode, type EvidencePath,
+  type GraphDocument, type GraphEdge, type GraphNode, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
@@ -161,6 +162,10 @@ export function MapStudio() {
   const [context, setContext] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const [traceFrom, setTraceFrom] = useState("");
+  const [traceTo, setTraceTo] = useState("");
+  const [connectionTrail, setConnectionTrail] = useState<ConnectionTrail | null>(null);
+  const [connectionMessage, setConnectionMessage] = useState("");
   const [view, setView] = useState<ViewMode>("landscape");
   const [basis, setBasis] = useState<CollaborationBasis>("all");
   const [region, setRegion] = useState("");
@@ -211,6 +216,24 @@ export function MapStudio() {
     // Evidence objects are not included in an organisation-only collaboration projection.
     setView("landscape"); setTypes(TYPE_KEYS); setRegion(""); setQuery(""); setFocusId(null);
     setContext(true); setSelectedEdgeId(null); setSelectedId(id);
+  }
+  const names = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
+  const entityOptions = useMemo(() => [...graph.nodes].sort((a,b) => a.label.localeCompare(b.label)), [graph]);
+  function traceEntities(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const found = traceRecordedConnection(graph, traceFrom, traceTo, 5);
+    setConnectionTrail(found);
+    if (!found) {
+      setConnectionMessage("No path of five or fewer recorded links was found. A longer path may exist; this does not prove the entities are unrelated.");
+      return;
+    }
+    setConnectionMessage(found.steps.length === 0 ? "You've selected the same entity twice." :
+      "This is a route through source records, not proof that the two entities collaborate.");
+    setView("landscape"); setQuery(""); setRegion(""); setTypes(TYPE_KEYS);
+    setContext(true); setFocusId(null); setSelectedId(null); setSelectedEdgeId(null);
+  }
+  function clearTrail() {
+    setConnectionTrail(null); setConnectionMessage("");
   }
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
   const hubs = useMemo(() => {
@@ -270,6 +293,10 @@ export function MapStudio() {
     setGraph(next);
     setSelectedId(null);
     setSelectedEdgeId(null);
+    setConnectionTrail(null);
+    setConnectionMessage("");
+    setTraceFrom("");
+    setTraceTo("");
     setQuery("");
     setView("landscape");
     setRegion("");
@@ -307,7 +334,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.3</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.5</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -369,6 +396,43 @@ export function MapStudio() {
               onClick={()=>savePerspectives(perspectives.filter(p=>p.id!==item.id))}>×</button>
           </div>)}
           <p className="help">Only this browser · scoped to this dataset · no changes to source data</p>
+        </section>
+        <section className="trace-panel" aria-label="Find connections between two entities">
+          <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Question-led explorer</span></div>
+          <p className="help">How are two entities linked through projects, funding and other recorded relationships?</p>
+          <form className="trace-form" onSubmit={traceEntities}>
+            <label htmlFor="trace-from">From</label>
+            <select id="trace-from" className="search" required value={traceFrom} onChange={e => {setTraceFrom(e.target.value);clearTrail();}}>
+              <option value="">Choose an entity</option>
+              {entityOptions.map(n => <option key={n.id} value={n.id}>{n.label} · {n.type}</option>)}
+            </select>
+            <label htmlFor="trace-to">To</label>
+            <select id="trace-to" className="search" required value={traceTo} onChange={e => {setTraceTo(e.target.value);clearTrail();}}>
+              <option value="">Choose an entity</option>
+              {entityOptions.map(n => <option key={n.id} value={n.id}>{n.label} · {n.type}</option>)}
+            </select>
+            <button type="submit" className="trace-action" disabled={!traceFrom || !traceTo}>Trace connection →</button>
+          </form>
+          {graphKey===DEMO_KEY && <button type="button" className="trace-example" onClick={() => {
+            setTraceFrom("o1"); setTraceTo("o3"); clearTrail();
+          }}>Try an example: North Fields → Riverbank</button>}
+          {connectionMessage && <div role="status" className="trace-response">
+            <p>{connectionMessage}</p>
+            {connectionTrail && connectionTrail.steps.length>0 && <>
+              <p className="trace-caption">{connectionTrail.steps.length} recorded steps</p>
+              <ol className="trace-steps">
+                {connectionTrail.steps.map((step, i) => <li key={step.edgeId+"-"+i}>
+                  <button type="button" onClick={() => pickNode(step.fromId)}>{names.get(step.fromId)??step.fromId}</button>
+                  <span>{step.direction==="undirected" || step.direction==="mutual" ? "↔" : step.forward ? "→" : "←"} {step.relation}</span>
+                  <button type="button" className="trace-why" onClick={() => pickEdge(step.edgeId)}>Why?</button>
+                </li>)}
+                <li><button type="button" onClick={() => pickNode(connectionTrail.nodeIds[connectionTrail.nodeIds.length-1])}>
+                  {names.get(connectionTrail.nodeIds[connectionTrail.nodeIds.length-1])}
+                </button></li>
+              </ol>
+            </>}
+            <button type="button" className="trace-clear" onClick={clearTrail}>Clear path</button>
+          </div>}
         </section>
         <div className="sidebar-divider" />
         <div className="filter-heading">
@@ -432,6 +496,8 @@ export function MapStudio() {
         </div>
         <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
           selectedId={selectedId} selectedEdgeId={selectedEdgeId}
+          pathNodeIds={connectionTrail?.nodeIds ?? []}
+          pathEdgeIds={connectionTrail?.steps.map(step => step.edgeId) ?? []}
           onSelect={pickNode} onSelectEdge={pickEdge}
           view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
         <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>

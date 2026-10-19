@@ -12,6 +12,8 @@ interface Props {
   contextNodeIds: string[];
   selectedId: string | null;
   selectedEdgeId: string | null;
+  pathNodeIds: string[];
+  pathEdgeIds: string[];
   onSelect: (id: string | null) => void;
   onSelectEdge: (id: string) => void;
   view: "landscape" | "collaborations";
@@ -23,7 +25,7 @@ type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, onSelect, onSelectEdge, view, layoutMode, labelDensity
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -118,7 +120,15 @@ export function GraphCanvas({
             "width": 4, "opacity": 1, "z-index": 30,
             "line-color": "#f8dea0", "target-arrow-color": "#f8dea0"
           } },
-          { selector: "edge.dimmed", style: { "opacity": 0.035 } }
+          { selector: "edge.dimmed", style: { "opacity": 0.035 } },
+          { selector: "node.path-step", style: {
+            "border-color": "#ffd993", "border-width": 5, "opacity": 1,
+            "text-opacity": 1, "z-index": 32
+          } },
+          { selector: "edge.path-step", style: {
+            "line-color": "#ffcf75", "target-arrow-color": "#ffcf75",
+            "source-arrow-color": "#ffcf75", "width": 4, "opacity": 1, "z-index": 32
+          } }
         ]
       });
       cy.on("tap", "node", event => {
@@ -250,8 +260,21 @@ export function GraphCanvas({
         node.connectedEdges().connectedNodes().removeClass("dimmed").addClass("nearby");
       }
     }
+    cy.elements(".path-step").removeClass("dimmed");
     refreshLabels(cy);
   }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
+
+  const pathIdentity = pathEdgeIds.join("|") + "::" + pathNodeIds.join("|");
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || !ready) return;
+    cy.elements().removeClass("path-step");
+    const routeNodes = cy.nodes().filter(n => pathNodeIds.includes(n.id()));
+    for (const id of pathEdgeIds) cy.getElementById(id).addClass("path-step");
+    routeNodes.addClass("path-step");
+    if (routeNodes.length > 0) cy.fit(routeNodes, 90);
+    refreshLabels(cy);
+  }, [pathIdentity, ready, graph, view, layoutMode]);
 
   const zoom = (factor: number) => {
     const cy = cyRef.current;
@@ -273,6 +296,7 @@ export function GraphCanvas({
       <span><i className="legend-symbol project" /> Project</span>
       <span><i className="legend-symbol funder" /> Funder</span>
       {view === "collaborations" && <span><i className="legend-symbol inferred" /> Shared association</span>}
+      {pathEdgeIds.length>0 && <span><i className="legend-symbol traced" /> Recorded path</span>}
     </div>
   </div>;
 }

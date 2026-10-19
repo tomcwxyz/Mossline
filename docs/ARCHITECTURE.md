@@ -28,3 +28,11 @@ through matching source relationships, limited to direct hops or organisation→
 patterns to prevent arbitrary graph paths from being presented as supporting evidence.
 The UI can navigate to supporting projects and funders even if a collaboration projection
 omits those entities. There is no claim of external verification at this stage.
+
+## Tracing connections
+
+`traceRecordedConnection` performs bounded breadth-first traversal of recorded source
+edges only. It skips inferred edges, retains direction metadata per hop, and
+returns null if either endpoint does not exist or no route is found within the
+hop limit. The frontend highlights those records without mutating their source.
+It remains an exploratory pathway rather than a proof of collaboration.

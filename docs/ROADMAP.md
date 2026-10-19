@@ -42,3 +42,9 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Explicitly indicate when supporting records cannot be established.
 - [ ] Add persistent, independently verified provenance and confidence metadata.
 - [ ] Browser review of line hit targets and inspector keyboard accessibility on protected preview.
+
+## Alpha 0.5 — question-centred exploration
+- [x] Follow connections between any two entities with bounded source-record traversals.
+- [x] Show each recorded relationship, direction and evidence inspector entry.
+- [x] Highlight a chosen pathway in the network without altering canonical records.
+- [ ] Compare several alternative pathways and choose an evidence-strength threshold.
