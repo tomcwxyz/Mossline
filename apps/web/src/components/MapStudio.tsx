@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
+  applyAssetPack, matchAssetPack, visualAssetUrl,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
@@ -11,6 +12,7 @@ import {
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
+import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
@@ -240,6 +242,7 @@ export function MapStudio() {
   const [region, setRegion] = useState("");
   const [focusId, setFocusId] = useState<string | null>(null);
   const [layoutMode, setLayoutMode] = useState<NetworkLayout>("organic");
+  const [illustrated, setIllustrated] = useState(true);
   const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
@@ -292,13 +295,20 @@ export function MapStudio() {
     } catch { window.localStorage.removeItem(SAVED_KEY); }
   }, []);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const pftAssets=useMemo(()=>matchAssetPack(graph,PFT_VISUAL_PACK),[graph]);
+  // Match exact source IDs, so artwork is never attached to another dataset by name.
+  const pftCompatible=pftAssets.matched>=5;
+  const showPftArtwork=pftCompatible&&illustrated;
+  const presentedGraph=useMemo(()=>showPftArtwork?
+    applyAssetPack(graph,PFT_VISUAL_PACK):graph,[graph,showPftArtwork]);
   const proposedChanges=useMemo(()=>importPreview?.graph?
     compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview]);
   const hasRemovals=!!proposedChanges &&
     (proposedChanges.nodes.removed>0 || proposedChanges.edges.removed>0);
   const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
     .sort((a,b)=>b.createdAt-a.createdAt),[perspectives,graphKey]);
-  const current = useMemo(() => view === "collaborations" ? collaborationGraph(graph, basis) : graph, [graph, view, basis]);
+  const current = useMemo(() => view === "collaborations" ?
+    collaborationGraph(presentedGraph, basis) : presentedGraph, [presentedGraph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
   const filtered = useMemo(() => filterGraph(current, {
     types: activeTypes, query, region, focusId, includeNeighbours: context
@@ -695,6 +705,19 @@ export function MapStudio() {
         </button>
       </div>}
     </section>}
+    {pftCompatible && <section className="pft-narrative" aria-label="PFT visual landscape introduction">
+      {PFT_VISUAL_PACK.frontPage && <img loading="lazy"
+        src={visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero)}
+        alt="An original illustration of a farming landscape" />}
+      <div className="pft-narrative-copy">
+        <p className="eyebrow">Visual companion · Progressive Farming Trust</p>
+        <h2>{PFT_VISUAL_PACK.frontPage?.title}</h2>
+        <p>{PFT_VISUAL_PACK.frontPage?.introduction}</p>
+        <p className="pft-guidance">{PFT_VISUAL_PACK.frontPage?.guidance}</p>
+        <span>{pftAssets.matched} original illustrations matched by exact source ID ·
+          Presentation only · Source records unchanged</span>
+      </div>
+    </section>}
     <section className="workspace">
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
@@ -872,7 +895,7 @@ export function MapStudio() {
           <button className="text-button" onClick={resetDemo}>Restore example landscape ↗</button>
         </div>
       </aside>
-      <div className="map-panel">
+      <div className={"map-panel"+(showPftArtwork?" pft-illustrated":"")}>
         <div className="map-topline">
           <span><span className="signal" /> {view === "landscape" ? "Living network" : "Shared associations"}</span>
           <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span>
@@ -885,6 +908,12 @@ export function MapStudio() {
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
             </select></label>
+            {pftCompatible && <label>Visual style <select aria-label="Visual style"
+              value={illustrated?"illustrated":"original"}
+              onChange={event=>setIllustrated(event.target.value==="illustrated")}>
+              <option value="illustrated">PFT illustrated</option>
+              <option value="original">Original imagery</option>
+            </select></label>
           </div>
         </div>
         <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
@@ -893,7 +922,8 @@ export function MapStudio() {
           pathEdgeIds={connectionTrail?.steps.map(step => step.edgeId) ?? []}
           junctionNodeIds={showJunctions ? junctions.map(item=>item.nodeId) : []}
           onSelect={pickNode} onSelectEdge={pickEdge}
-          view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
+          view={view} layoutMode={layoutMode} labelDensity={labelDensity}
+          illustrated={showPftArtwork} />
         <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>
       </div>
       <aside className="inspector">
