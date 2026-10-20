@@ -794,10 +794,10 @@ export function MapStudio() {
         </button>
       </div>}
     </section>}
-    {(pftCompatible||story) && <section className="pft-narrative" aria-label="Perspective story">
+    {(pftCompatible||story) && <section className="perspective-narrative" aria-label="Perspective story">
       {storyCoverUrl&&<img loading="lazy" src={storyCoverUrl}
         alt="Illustration introducing this network perspective" />}
-      <div className="pft-narrative-copy">
+      <div className="perspective-narrative-copy">
         <p className="eyebrow">{story?"Your saved story":"Visual companion · Progressive Farming Trust"}</p>
         <h2>{storyTitleText}</h2>
         <p>{storyIntroText}</p>
