@@ -153,3 +153,20 @@ test("mapped relationship identity survives reordered spreadsheet rows",()=>{
   assert.ok(a&&b);
   assert.deepEqual(new Set(a.edges.map(e=>e.id)),new Set(b.edges.map(e=>e.id)));
 });
+
+
+test("shared projects with different source regions are not arbitrarily placed",()=>{
+  const input={name:"connections.csv",text:
+    "Organisation,Project,Funder,Region\nFirst group,Shared project,Local fund,North\nSecond group,Shared project,Local fund,South\n"};
+  const info=discoverData(input);
+  if(info.kind!=="csv-table")throw Error("CSV expected");
+  const result=buildMappedGraph(input,info.mapping);
+  assert.ok(result.graph);
+  const shared=result.graph.nodes.find(n=>n.label==="Shared project");
+  assert.equal(shared?.region,undefined);
+  assert.ok(result.issues.some(x=>x.message.includes("Multiple regional values")));
+  // Other columns on a relationship row are not silently attached to the shared entity.
+  assert.deepEqual(shared?.properties,{Project:"Shared project"});
+  assert.equal(result.graph.edges[0]?.properties?.Region,"North");
+  assert.equal(result.graph.nodes.find(n=>n.label==="First group")?.region,"North");
+});
