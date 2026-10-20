@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
-  previewImport, discoverData, findRecordedRoutes, findStructuralJunctions,
+  previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective
@@ -84,12 +84,13 @@ function CoverageReport({ graph }: { graph: GraphDocument }) {
   </div>;
 }
 
-function NodeInspector({ node, graph, source, onPick, onPickEdge }: {
+function NodeInspector({ node, graph, source, onPick, onPickEdge, onTraceFrom }: {
   node: GraphNode;
   graph: GraphDocument;
   source: GraphDocument;
   onPick: (id: string) => void;
   onPickEdge: (id: string) => void;
+  onTraceFrom: (id: string) => void;
 }) {
   const related = graph.edges.filter(e => e.source === node.id || e.target === node.id);
   const links = related.flatMap(edge => {
@@ -104,6 +105,9 @@ function NodeInspector({ node, graph, source, onPick, onPickEdge }: {
     </div>
     <p className="eyebrow">{node.type}{node.region ? " · " + node.region : ""}</p>
     <h2>{node.label}</h2>
+    <button type="button" className="inspect-trace-start" onClick={()=>onTraceFrom(node.id)}>
+      Explore connections from here →
+    </button>
     <p className="description">{node.description ?? "No description yet. Add context to your data source."}</p>
     <div className="inspector-stats">
       <div><strong>{related.filter(e=>!e.inferred).length}</strong><small>Recorded links</small></div>
@@ -247,6 +251,7 @@ export function MapStudio() {
   const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
   const [mappingSession, setMappingSession] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
+  const tracePanelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let loaded=ORIGINAL;
@@ -315,29 +320,52 @@ export function MapStudio() {
   }
   const names = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
   const entityOptions = useMemo(() => [...graph.nodes].sort((a,b) => a.label.localeCompare(b.label)), [graph]);
+  const reachableDestinations = useMemo(() => traceFrom ?
+    findReachableDestinations(graph,traceFrom,{
+      maxHops:5,excludeTypes:excludedRelationType?[excludedRelationType]:[]
+    }):[],[graph,traceFrom,excludedRelationType]);
+  const distanceGroups = useMemo(() => {
+    const groups=new Map<number,typeof reachableDestinations>();
+    for(const entity of reachableDestinations)groups.set(entity.hops,[
+      ...(groups.get(entity.hops)??[]),entity
+    ]);
+    return [...groups.entries()];
+  },[reachableDestinations]);
   const relationTypes = useMemo(() => [...new Set(graph.edges.filter(e=>!e.inferred).map(e=>e.type))].sort(), [graph]);
   const junctions = useMemo(() => findStructuralJunctions(graph), [graph]);
   const featuredJunctions = useMemo(() => junctions.filter(item =>
     ["organisation","project"].includes(graph.nodes.find(n=>n.id===item.nodeId)?.type ?? "")).slice(0,6),
   [junctions,graph]);
-  function traceEntities(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const found = findRecordedRoutes(graph, traceFrom, traceTo, {
-      maxHops: 5, maxRoutes: 3, excludeTypes: excludedRelationType ? [excludedRelationType] : []
-    });
-    setConnectionTrails(found);
-    setActiveRouteIndex(0);
-    if (!found.length) {
-      setConnectionMessage("No recorded path within five steps was found with these settings. This does not prove the entities are unrelated.");
+  function exploreRoutes(fromId:string,toId:string,omitType=excludedRelationType) {
+    if(!fromId||!toId||fromId===toId ||
+      !findReachableDestinations(graph,fromId,{maxHops:5,
+        excludeTypes:omitType?[omitType]:[]}).some(item=>item.nodeId===toId)) {
+      clearTrail();
+      setConnectionMessage("Choose one of the reachable destinations below.");
       return;
     }
-    setConnectionMessage(found[0].steps.length === 0 ? "You've selected the same entity twice." :
-      "Up to three alternative routes are shown, shortest first. These are source-record pathways, not proof of collaboration.");
-    setView("landscape"); setQuery(""); setRegion(""); setTypes(TYPE_KEYS);
-    setContext(true); setFocusId(null); setSelectedId(null); setSelectedEdgeId(null);
+    const found=findRecordedRoutes(graph,fromId,toId,{
+      maxHops:5,maxRoutes:3,excludeTypes:omitType?[omitType]:[]
+    });
+    setConnectionTrails(found);setActiveRouteIndex(0);
+    if(!found.length) {
+      setConnectionMessage("A recorded route could not be displayed. Try another destination.");
+      return;
+    }
+    setConnectionMessage("Shortest recorded route first. Paths show source records, not independently verified collaborations.");
+    setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
+    setContext(true);setFocusId(null);setSelectedId(null);setSelectedEdgeId(null);
+  }
+  function traceEntities(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    exploreRoutes(traceFrom,traceTo);
   }
   function clearTrail() {
-    setConnectionTrails([]); setActiveRouteIndex(0); setConnectionMessage("");
+    setConnectionTrails([]);setActiveRouteIndex(0);setConnectionMessage("");
+  }
+  function startTraceFromNode(id:string) {
+    setTraceFrom(id);setTraceTo("");clearTrail();
+    tracePanelRef.current?.scrollIntoView({behavior:"smooth",block:"center"});
   }
   function exploreJunction(id: string) {
     setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
