@@ -52,3 +52,28 @@ Uploaded files and saved maps are browser-local; browser storage may be
 cleared by the user. No existing Kumu or Google Sheet is modified.
 Browser interaction, mobile visual QA, assistive technology review and
 independent novice evaluation remain pending.
+
+## Follow a connection — exploration-first acceptance test (alpha 1.2)
+
+1. Open the fictional landscape, select a starting entity using **1 · Start with**.
+   Check the **2 · Find connections to** dropdown: it must exclude the start,
+   include only destinations reachable within five *recorded* relationships,
+   and group them by minimum distance.
+2. Choose any offered destination. A source-record route should appear
+   immediately, without a pointless error or extra required click.
+3. Switch the starting entity: the previous destination/path must clear.
+4. Choose an excluded relationship type: unreachable destinations must vanish.
+   No choices should have an explanatory empty state, not a dead dropdown.
+5. Select an entity directly on the canvas and choose **Explore connections
+   from here** in the right inspector. The route panel should preselect that
+   entity and offer real destinations.
+6. Try one of the direct connection buttons; the path should be highlighted.
+7. Verify the **Try an example: North Fields → Riverbank** button still shows a
+   genuine recorded route from `o1` to `o3` (two steps in the demo).
+8. Check light-background buttons (**Not quite**, **Close**) for legible
+   contrast and visible keyboard focus at desktop and narrow viewport widths.
+
+Reachability traverses recorded source links both ways for exploration,
+but individual source-direction arrows are preserved in the route details.
+This does not independently verify a claim of collaboration or funding.
+No interactive protected-preview UI test has yet been performed.
