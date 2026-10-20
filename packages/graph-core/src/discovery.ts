@@ -201,6 +201,7 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
     const nodes=new Map<string,GraphDocument["nodes"][number]>();
     const edges:GraphDocument["edges"]=[];
     const duplicateEdgeCounts = new Map<string,number>();
+    const entityAttributeValues = new Map<string,{ regions:Set<string>; descriptions:Set<string> }>();
     let skipped=0,privateRows=0;
     const publicColumn = headers.find(h=>norm(h)==="public");
     const position=(i:number)=>({system:"csv" as const,fileName:file.name,recordNumber:i+2});
@@ -208,16 +209,26 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
       includeRegion:boolean) {
       const id=idFor(column,label);
       const existing=nodes.get(id);
+      const region=includeRegion && mapping.regionColumn ? value(row[mapping.regionColumn]):"";
+      const description=mapping.descriptionColumn ? value(row[mapping.descriptionColumn]):"";
+      const seen=entityAttributeValues.get(id)??{regions:new Set<string>(),descriptions:new Set<string>()};
+      if(region)seen.regions.add(region);
+      if(description)seen.descriptions.add(description);
+      entityAttributeValues.set(id,seen);
       if(existing) {
         if(existing.type!==nodeType) issues.push({severity:"warning",
           message:"Conflicting suggested types for '"+label+"'; first mapping is retained."});
+        // A shared entity must not inherit an arbitrary first relationship row's metadata.
+        existing.region=seen.regions.size===1?[...seen.regions][0]:undefined;
+        existing.description=seen.descriptions.size===1?[...seen.descriptions][0]:undefined;
         return id;
       }
-      const region=includeRegion && mapping.regionColumn ? value(row[mapping.regionColumn]):"";
-      const description=mapping.descriptionColumn ? value(row[mapping.descriptionColumn]):"";
       nodes.set(id,{
         id,label,type:nodeType,description:description||undefined,region:region||undefined,tags:[],
-        origin:{...position(index),recordId:column+":"+label},properties:{...row}
+        origin:{...position(index),recordId:column+":"+label},
+        // In a relationship table, other columns describe the record, not necessarily this entity.
+        // Complete row evidence is retained on the relationship records instead.
+        properties:mapping.mode==="entities"?{...row}:{[column]:label}
       });
       return id;
     }
@@ -253,6 +264,13 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
         }
         if(!created)skipped++;
       }
+    }
+    for(const [id,seen] of entityAttributeValues) {
+      const label=nodes.get(id)?.label??id;
+      if(seen.regions.size>1) issues.push({severity:"warning",
+        message:"Multiple regional values for '"+label+"'; no single region was assigned. Original rows are retained on relationships."});
+      if(seen.descriptions.size>1) issues.push({severity:"warning",
+        message:"Conflicting descriptions for '"+label+"'; no single description was assigned. Original rows are retained on relationships."});
     }
     if(privateRows)issues.push({severity:"warning",
       message:privateRows+" rows marked non-public were excluded before generating any nodes or relationships."});
