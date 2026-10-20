@@ -21,18 +21,24 @@ interface Props {
   layoutMode: NetworkLayout;
   labelDensity: LabelDensity;
   illustrated?: boolean;
+  /** Restored when opening a saved perspective, not part of source graph data. */
+  savedPositions?: Record<string, Point>;
+  positionRevision?: number;
+  onPositionsChange?: (positions: Record<string, Point>) => void;
 }
 
 type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, savedPositions, positionRevision=0, onPositionsChange
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
   const onSelectRef = useRef(onSelect);
   const onSelectEdgeRef = useRef(onSelectEdge);
+  const onPositionsChangeRef = useRef(onPositionsChange);
+  const positionRevisionRef = useRef(positionRevision);
   const viewKeyRef = useRef("");
   const positionCacheRef = useRef(new Map<string, Map<string, Point>>());
   const labelsRef = useRef(labelDensity);
@@ -41,8 +47,20 @@ export function GraphCanvas({
 
   onSelectRef.current = onSelect;
   onSelectEdgeRef.current = onSelectEdge;
+  onPositionsChangeRef.current = onPositionsChange;
   labelsRef.current = labelDensity;
   selectedRef.current = selectedId;
+
+  function publishPositions(cy: Core) {
+    const positions: Record<string, Point> = {};
+    cy.nodes().not(".region-group").forEach(node => {
+      const point = node.position();
+      if (Number.isFinite(point.x) && Number.isFinite(point.y)) {
+        positions[node.id()] = {x: point.x, y: point.y};
+      }
+    });
+    onPositionsChangeRef.current?.(positions);
+  }
 
   function refreshLabels(cy: Core) {
     const all = labelsRef.current === "all" || cy.zoom() > 1.25 || cy.nodes().not(".region-group").length < 22;
@@ -147,10 +165,12 @@ export function GraphCanvas({
       cy.on("tap", event => { if (event.target === cy) onSelectRef.current(null); });
       cy.on("zoom", () => refreshLabels(cy));
       cy.on("dragfree", "node", event => {
+        if (event.target.hasClass("region-group")) return;
         const key = viewKeyRef.current;
         const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
         saved.set(event.target.id(), { ...event.target.position() });
         positionCacheRef.current.set(key, saved);
+        publishPositions(cy);
       });
       cyRef.current = cy;
       setReady(true);
@@ -172,6 +192,8 @@ export function GraphCanvas({
       cy.nodes().not(".region-group").forEach(node => { snapshot.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(oldKey, snapshot);
     }
+    const restoring = positionRevisionRef.current !== positionRevision;
+    if (restoring) positionCacheRef.current.delete(key);
     const cached = positionCacheRef.current.get(key);
     const cachedCount = graph.nodes.filter(n => cached?.has(n.id)).length;
     const reuse = !!cached && cachedCount === graph.nodes.length && graph.nodes.length > 0;
@@ -239,15 +261,27 @@ export function GraphCanvas({
           nodeRepulsion: () => 130000, idealEdgeLength: () => 110,
           edgeElasticity: () => 85, gravity: 0.32, numIter: 1100 }).run();
       }
-      if (!reuse || oldKey !== key) cy.fit(undefined, 65);
+      // Saved positions override an automatic layout only when explicitly restored.
+      // Unknown/filtered-out IDs are ignored and never become graph records.
+      if (restoring || !cached) {
+        for (const [id, point] of Object.entries(savedPositions ?? {})) {
+          const element = cy.getElementById(id);
+          if (element.length && element.isNode() && !element.hasClass("region-group")) {
+            element.position(point);
+          }
+        }
+      }
+      if (!reuse || oldKey !== key || restoring) cy.fit(undefined, 65);
       const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
       cy.nodes().not(".region-group").forEach(node => { saved.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(key, saved);
     }
     viewKeyRef.current = key;
+    positionRevisionRef.current = positionRevision;
     cy.resize();
     refreshLabels(cy);
-  }, [graph, contextNodeIds, layoutMode, view, ready]);
+    publishPositions(cy);
+  }, [graph, contextNodeIds, layoutMode, view, ready, positionRevision]);
 
   useEffect(() => {
     const cy = cyRef.current;
