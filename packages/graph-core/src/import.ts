@@ -247,6 +247,15 @@ export function previewImport(files: ImportFile[]): ImportPreview {
       throw new Error("Choose one JSON file or one/more CSV files, not mixed types");
     const elements: Row[] = [], connections: Row[] = [];
     for (const file of files) {
+      // Kumu's coordinate and coastline helpers are a different layer from
+      // the directory network. Never silently import drawing points as entities.
+      const baseName = file.name.replace(/\.csv$/i,"").trim().toLowerCase();
+      if (["positions (ignore)","basemap","coast points","coast lines"].includes(baseName)) {
+        issues.push({severity:"warning",message:
+          "Excluded visual-only Kumu helper tab '"+file.name+
+          "'. Positions/coastline are not yet supported as a geographic layer."});
+        continue;
+      }
       const table = csvTable(file.text), keys = new Set(table.headers);
       if (keys.has("from") && keys.has("to")) {
         mark(table.rows,file.name,2);
