@@ -11,10 +11,14 @@ interface Props {
   selectedId:string|null;
   onSelect:(id:string|null)=>void;
   onPickEdge:(id:string)=>void;
+  mode:AtlasMode;
+  onModeChange:(mode:AtlasMode)=>void;
+  kind:KindFilter;
+  onKindChange:(kind:KindFilter)=>void;
 }
 type LocationGroup={key:string;x:number;y:number;ids:string[]};
-type KindFilter="all"|"project"|"organisation"|"funder"|"place";
-type AtlasMode="stories"|"places";
+export type KindFilter="all"|"project"|"organisation"|"funder"|"place";
+export type AtlasMode="stories"|"places";
 const W=UK_ATLAS_SIZE.width,H=UK_ATLAS_SIZE.height;
 const STORY_PAGE_SIZE=8;
 const categoryIcons:Record<string,string>={
@@ -38,9 +42,7 @@ function nearestGroups(points:ReturnType<typeof buildUkAtlas>["placed"],cellSize
   }
   return [...grid.values()];
 }
-export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge}:Props){
-  const [mode,setMode]=useState<AtlasMode>("stories");
-  const [kind,setKind]=useState<KindFilter>("project");
+export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeChange,kind,onKindChange}:Props){
   const [search,setSearch]=useState("");
   const [storyPage,setStoryPage]=useState(0);
   const [expandedGroup,setExpandedGroup]=useState<string|null>(null);
@@ -112,12 +114,12 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge}:Props){
         <div className="atlas-mode-switch" role="group" aria-label="Choose how to explore the atlas">
           <button type="button" className={isStories?"active":""}
             disabled={!projects.length} aria-pressed={isStories}
-            onClick={()=>{setMode("stories");setSearch("");setStoryPage(0);setExpandedGroup(null);}}>
+            onClick={()=>{onModeChange("stories");setSearch("");setStoryPage(0);setExpandedGroup(null);}}>
             <span aria-hidden="true">✳</span> Illustrated projects
           </button>
           <button type="button" className={!isStories?"active":""}
             aria-pressed={!isStories}
-            onClick={()=>{setMode("places");setSearch("");setExpandedGroup(null);}}>
+            onClick={()=>{onModeChange("places");setSearch("");setExpandedGroup(null);}}>
             <span aria-hidden="true">⌖</span> Explore places
           </button>
           <p>{isStories?"A visual introduction to the located projects":
@@ -127,7 +129,7 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge}:Props){
           {!isStories&&<div className="atlas-filter-types" role="group" aria-label="Show types of located entities">
             {choices.filter(x=>x.count>0).map(x=><button key={x.key} type="button"
               aria-pressed={kind===x.key} className={kind===x.key?"selected":""}
-              onClick={()=>{setKind(x.key);setExpandedGroup(null);}}>
+              onClick={()=>{onKindChange(x.key);setExpandedGroup(null);}}>
               {x.label} <span>{x.count}</span>
             </button>)}
           </div>}
