@@ -41,6 +41,8 @@ export interface ColumnMapping {
   typeColumn: string;
   regionColumn: string;
   regionTarget: "source" | "target" | "both";
+  /** For cross-entity tables, apply region only to values from this one entity column. */
+  regionEntityColumn?: string;
   descriptionColumn: string;
   rules: RelationshipRule[];
 }
@@ -136,7 +138,11 @@ export function discoverData(file: ImportFile): DataDiscovery {
     const funder=pick(headers,["funder","fundername","foundation","fundingbody","donor"]);
     const from=pick(headers,["from","source","sourceorganisation","sourceentity"])||organisations||project;
     const to=pick(headers,["to","target","targetorganisation","targetentity"])||project||funder;
-    const candidate=from&&to&&from!==to;
+    // Do not manufacture links just because an unrelated spreadsheet has two columns.
+    const explicitPair=!!pick(headers,["from","source","sourceorganisation","sourceentity"]) &&
+      !!pick(headers,["to","target","targetorganisation","targetentity"]);
+    const recognisedPair=!!((organisations&&project)||(project&&funder));
+    const candidate=!!(from&&to&&from!==to&&(explicitPair||recognisedPair));
     const nameColumn=pick(headers,["label","name","organisation","organization","project","title","entity"])||headers[0];
     const relationFrom = from || headers[0];
     const relationTo = to && to!==relationFrom ? to : headers.find(h=>h!==relationFrom) || "";
@@ -149,8 +155,9 @@ export function discoverData(file: ImportFile): DataDiscovery {
       typeColumn:pick(headers,["elementtype","entitytype","category","type"]),
       regionColumn:pick(headers,["region","geographicreach","geography"]),
       regionTarget:"source",
+      regionEntityColumn:candidate?(organisations||from):undefined,
       descriptionColumn:pick(headers,["description","summary","about"]),
-      rules:relationTo ? [
+      rules:candidate && relationTo ? [
         {fromColumn:relationFrom,toColumn:relationTo,
           fromType:typeForColumn(relationFrom),toType:typeForColumn(relationTo),type:relationType},
         ...(organisations && project && funder && relationFrom===organisations && relationTo===project ?
@@ -192,6 +199,14 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
       throw Error("Add at least one relationship rule");
     for(const column of required) if(!column || !columns.has(column))
       throw Error("Mapped column not present in source: "+(column||"(unselected)"));
+    for (const optional of [mapping.regionColumn,mapping.descriptionColumn,mapping.regionEntityColumn??""]) {
+      if(optional && !columns.has(optional))throw Error("Mapped column not present in source: "+optional);
+    }
+    if(mapping.regionColumn && mapping.descriptionColumn===mapping.regionColumn)
+      throw Error("The same column is being used for region and description. Choose a description column or leave it empty.");
+    if(mapping.mode==="relationships" && mapping.regionEntityColumn &&
+      !mapping.rules.some(r=>[r.fromColumn,r.toColumn].includes(mapping.regionEntityColumn!)))
+      throw Error("Choose the entity column that the region describes.");
     for(const rule of mapping.rules) {
       if(rule.fromColumn===rule.toColumn) throw Error("Select different source and target columns");
       if(!rule.type.trim()) throw Error("Give every relationship rule a meaningful description");
@@ -260,9 +275,11 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
           const from=value(row[rule.fromColumn]),to=value(row[rule.toColumn]);
           if(!from || !to) continue;
           const source=addNode(from,rule.fromColumn,rule.fromType,row,i,
-            mapping.regionTarget==="source" || mapping.regionTarget==="both");
+            mapping.regionEntityColumn?mapping.regionEntityColumn===rule.fromColumn:
+              mapping.regionTarget==="source" || mapping.regionTarget==="both");
           const target=addNode(to,rule.toColumn,rule.toType,row,i,
-            mapping.regionTarget==="target" || mapping.regionTarget==="both");
+            mapping.regionEntityColumn?mapping.regionEntityColumn===rule.toColumn:
+              mapping.regionTarget==="target" || mapping.regionTarget==="both");
           const baseKey = JSON.stringify([source,target,rule.type.trim(),ruleIndex]);
           // If two rows record the same relation, tie their identity to the
           // source row's contents rather than whichever one came first.

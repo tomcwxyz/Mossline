@@ -170,3 +170,34 @@ test("shared projects with different source regions are not arbitrarily placed",
   assert.equal(result.graph.edges[0]?.properties?.Region,"North");
   assert.equal(result.graph.nodes.find(n=>n.label==="First group")?.region,"North");
 });
+
+test("a generic list with Name and Region is not turned into fabricated relationships",()=>{
+  const discovery=discoverData({name:"contacts.csv",text:"Name,Region,Notes\nA,Northern England,One\nB,Wales,Two\n"});
+  assert.equal(discovery.kind,"csv-table");
+  if(discovery.kind!=="csv-table")return;
+  assert.equal(discovery.mapping.mode,"entities");
+  assert.equal(discovery.mapping.rules.length,0);
+});
+
+test("geographical values are attributed to the correct entity column across multiple rules",()=>{
+  const file={name:"funding.csv",text:
+    "Organisation,Project,Funder,Region\nA,Shared project,Fund X,North\nB,Shared project,Fund X,South\n"};
+  const discovery=discoverData(file);
+  if(discovery.kind!=="csv-table")throw Error("CSV required");
+  assert.equal(discovery.mapping.regionEntityColumn,"Organisation");
+  const result=buildMappedGraph(file,discovery.mapping);
+  assert.ok(result.graph);
+  assert.equal(result.graph.nodes.find(n=>n.label==="A")?.region,"North");
+  assert.equal(result.graph.nodes.find(n=>n.label==="B")?.region,"South");
+  assert.equal(result.graph.nodes.find(n=>n.label==="Shared project")?.region,undefined);
+  assert.equal(result.issues.some(x=>x.message.includes("Multiple regional values")),false);
+});
+
+test("a mistaken Region-to-Description mapping fails with a helpful message",()=>{
+  const file={name:"places.csv",text:"Organisation,Project,Region\nA,B,North\n"};
+  const d=discoverData(file);
+  if(d.kind!=="csv-table")throw Error("CSV expected");
+  const result=buildMappedGraph(file,{...d.mapping,descriptionColumn:"Region"});
+  assert.equal(result.graph,null);
+  assert.ok(result.issues.some(x=>x.severity==="error"&&x.message.includes("region and description")));
+});

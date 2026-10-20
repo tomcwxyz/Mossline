@@ -99,3 +99,10 @@ test("semantic changes to a recorded edge are not masked by stable identity",()=
   const diff=compareGraphDocuments(before,after);
   assert.equal(diff.edges.updated,1);
 });
+
+test("recipe serialisation supports explicit regional ownership",()=>{
+  const revision=makeMappingRecipe("Regions",columns,{...mapping,regionEntityColumn:"Organisation"},
+    undefined,"99999999-9999-4999-8999-999999999999",1);
+  assert.equal(parseMappingRecipe(revision).mapping.regionEntityColumn,"Organisation");
+  assert.equal(checkRecipeColumns(revision,columns.filter(x=>x!=="Organisation")).usable,false);
+});

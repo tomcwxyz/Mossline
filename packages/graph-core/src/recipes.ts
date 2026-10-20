@@ -11,6 +11,7 @@ export const columnMappingSchema = z.object({
   typeColumn: optionalColumn,
   regionColumn: optionalColumn,
   regionTarget: z.enum(["source", "target", "both"]),
+  regionEntityColumn: optionalColumn.optional(),
   descriptionColumn: optionalColumn,
   rules: z.array(z.object({
     fromColumn: column, toColumn: column,
@@ -66,7 +67,7 @@ export function checkRecipeColumns(recipe:MappingRecipe,current:string[]):Recipe
   const required = recipe.mapping.mode==="entities" ?
     [recipe.mapping.nameColumn,recipe.mapping.typeColumn,recipe.mapping.regionColumn,recipe.mapping.descriptionColumn] :
     [...recipe.mapping.rules.flatMap(r=>[r.fromColumn,r.toColumn]),
-      recipe.mapping.regionColumn,recipe.mapping.descriptionColumn];
+      recipe.mapping.regionColumn,recipe.mapping.regionEntityColumn??"",recipe.mapping.descriptionColumn];
   const existing = new Set(current);
   const missing=[...new Set(required.filter(Boolean).filter(c=>!existing.has(c)))];
   const old = new Set(recipe.columns);
