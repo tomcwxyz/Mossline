@@ -165,3 +165,18 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Vercel preview and CI production build/tests pass.
 - [ ] Authenticated browser confirmation that all images render and layout is attractive.
 - [ ] Import the real PFT 107/242 graph in-browser, then visually compare against Kumu.
+
+## Alpha 1.3 — UK atlas geographic exploration (second stage)
+- [x] Exact source `Atlas location` parsing with strict latitude/longitude checks.
+- [x] Shared UK projection for source points and simplified Natural Earth outlines.
+- [x] New UK atlas tab, with source-only location counts and explicit unlocated records.
+- [x] Approximate cluster aggregation for overlapping pins, with selectable member list.
+- [x] Show source-recorded connection lines only on selection, preserving all graph edges.
+- [x] Link markers to the existing Node and Relationship inspectors.
+- [x] Show owner's original PFT UK basemap as an unaligned artistic reference, not false geography.
+- [x] Allow atlas views to be saved with authored story headers and filters.
+- [x] Regression tests for invalid locations, no fake Kumu coordinate fallback, projection and perspective schema.
+- [ ] Authenticated desktop/mobile browser review of actual 70 placed PFT entities; adjust label and cluster legibility.
+- [ ] Georeference the PFT illustrated UK basemap or migrate to a licensed vector/tiled base layer.
+- [ ] Per-perspective manual node arrangement independent of immutable source geographic coordinates.
+- [ ] Improved geographic bounds/selection for source networks beyond the UK.
