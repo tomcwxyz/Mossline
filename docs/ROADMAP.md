@@ -192,3 +192,18 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Full manual per-perspective node placement with a separate authored-position model.
 - [ ] Genuine georeferencing of the PFT illustrated UK basemap, if wanted, with registration controls.
 - [ ] Label collision and clustering improvements for screen size, zoom level and large datasets.
+
+## Alpha 1.4 — general-purpose perspectives and layout authoring (development)
+- [x] Treat PFT as an optional illustration pack and example, not the default product experience.
+- [x] Add a wholly fictional community-network example with diverse entity types.
+- [x] Expose Editorial and Classic presentation modes for every dataset.
+- [x] Save and restore drag-adjusted coordinates separately from canonical graph records.
+- [x] Allow layout reset without modifying previously saved perspectives.
+- [x] Accept common explicit Latitude/Longitude and lat/lon pairs for the UK atlas.
+- [x] Show PFT reference artwork only for compatible PFT data.
+- [ ] Automated GitHub Actions test/build verification for the complete change set.
+- [ ] Protected-preview browser acceptance: restored positions on filters, across reloads, smaller screens.
+- [ ] Consider per-node locks, drag undo and saved-layout export/import.
+- [ ] General geography via a configurable MapLibre basemap rather than hard-coded UK bounds.
+- [ ] A user-selected illustration pack, independent of any bundled example.
+- [ ] Server-backed workspaces, sharing and user-controlled publication permissions.
