@@ -1,4 +1,5 @@
 import test from "node:test";
+import {readFileSync} from "node:fs";
 import assert from "node:assert/strict";
 import {readAtlasLocation, projectUkLocation, buildUkAtlas, parseGraphDocument} from "../src/index.ts";
 const node=(atlas:string,other:Record<string,string>={})=>({
@@ -38,4 +39,36 @@ test("missing coordinates stay unplaced, including methodology/topic types",()=>
  assert.deepEqual(x.withoutLocation.map(p=>p.id),["unknown"]);
  assert.deepEqual(x.outsideArea.map(p=>p.id),["non-uk"]);
  assert.equal(graph.nodes[1].properties?.["Atlas location"],"");
+});
+
+test("ordinary datasets can supply explicit latitude/longitude without PFT-specific fields",()=>{
+  const dataset=parseGraphDocument({version:1,title:"Neighbourhood connections",nodes:[
+    {id:"library",label:"Community library",type:"place",
+      properties:{Latitude:"54.62",Longitude:"-1.57"}},
+    {id:"hub",label:"Neighbourhood hub",type:"organisation",
+      properties:{lat:54.61,lng:-1.58}},
+    {id:"missing",label:"Needs a location",type:"organisation",
+      properties:{region:"North East",geo:"54.6, -1.5"}},
+    {id:"invalid",label:"Invalid coords",type:"project",
+      properties:{latitude:"100",longitude:"-1.5"}}
+  ],edges:[]});
+  assert.deepEqual(readAtlasLocation(dataset.nodes[0]),{latitude:54.62,longitude:-1.57});
+  assert.deepEqual(readAtlasLocation(dataset.nodes[1]),{latitude:54.61,longitude:-1.58});
+  assert.equal(readAtlasLocation(dataset.nodes[2]),null);
+  assert.equal(readAtlasLocation(dataset.nodes[3]),null);
+  assert.equal(buildUkAtlas(dataset).placed.length,2);
+  assert.deepEqual(dataset.nodes[0].properties,{Latitude:"54.62",Longitude:"-1.57"});
+});
+
+test("fictional community fixture is independent of the farming example",()=>{
+  const fixture=JSON.parse(readFileSync(new URL("../../../data/community-example.json",import.meta.url),"utf8"));
+  const graph=parseGraphDocument(fixture);
+  assert.equal(graph.nodes.length,15);
+  assert.equal(graph.edges.length,16);
+  assert.equal(new Set(graph.nodes.map(n=>n.type)).has("funder"),true);
+  assert.equal(new Set(graph.nodes.map(n=>n.type)).has("person"),true);
+  const atlas=buildUkAtlas(graph);
+  assert.equal(atlas.placed.length,10);
+  assert.equal(graph.nodes.some(n=>n.properties?.["Atlas location"]),false);
+  assert.equal(graph.nodes.some(n=>n.origin?.system==="kumu"),false);
 });

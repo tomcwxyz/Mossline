@@ -14,6 +14,12 @@ export const perspectiveSchema = z.object({
   context: z.boolean(),
   layout: z.enum(["organic", "radial", "regions"]),
   labels: z.enum(["essential", "all"]),
+  /** Dataset-scoped canvas coordinates; never written into source node properties. */
+  positions: z.record(z.string().min(1).max(200), z.object({
+    x: z.number().finite().min(-1000000).max(1000000),
+    y: z.number().finite().min(-1000000).max(1000000)
+  }).strict()).refine(value => Object.keys(value).length <= 2000,
+    "A saved layout may contain up to 2,000 node positions").optional(),
   /** Optional authoring overlay, completely separate from the source graph. */
   presentation: z.object({
     title: z.string().trim().max(100),

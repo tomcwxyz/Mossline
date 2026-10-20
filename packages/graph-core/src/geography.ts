@@ -6,18 +6,40 @@ export type AtlasPlacement = {nodeId:string;label:string;type:GraphNode["type"];
 export const UK_ATLAS_BOUNDS = {west:-11.5,east:4,south:49,north:60.5} as const;
 export const UK_ATLAS_SIZE = {width:960,height:720} as const;
 
-/** Strictly parse a `latitude, longitude` from the source Atlas location field. */
-export function readAtlasLocation(node:GraphNode):AtlasCoordinate|null {
-  const raw=node.properties?.["Atlas location"];
-  if(typeof raw!=="string")return null;
-  const pieces=raw.split(",");
-  if(pieces.length!==2)return null;
-  const numbers=pieces.map(v=>v.trim());
-  if(numbers.some(v=>!/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(v)))return null;
-  const [latitude,longitude]=numbers.map(Number);
-  if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||
-     latitude< -90||latitude>90||longitude< -180||longitude>180)return null;
+/** Coordinates must be provided explicitly by the data source, never inferred from names.
+ *  'Atlas location' takes precedence. Generic CSV/JSON data may use common latitude/longitude columns.
+ */
+const numericPart=(value:unknown):number|null=>{
+  if(typeof value==="number")return Number.isFinite(value)?value:null;
+  if(typeof value!=="string"||
+    !/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(value.trim()))return null;
+  const number=Number(value.trim());
+  return Number.isFinite(number)?number:null;
+};
+const coordinatePair=(lat:unknown,lon:unknown):AtlasCoordinate|null=>{
+  const latitude=numericPart(lat),longitude=numericPart(lon);
+  if(latitude===null||longitude===null||
+    latitude < -90||latitude > 90||longitude < -180||longitude > 180)return null;
   return {latitude,longitude};
+};
+export function readAtlasLocation(node:GraphNode):AtlasCoordinate|null {
+  const properties=node.properties??{};
+  if(Object.prototype.hasOwnProperty.call(properties,"Atlas location")){
+    const value=properties["Atlas location"];
+    if(typeof value!=="string")return null;
+    const pieces=value.split(",");
+    return pieces.length===2?coordinatePair(pieces[0],pieces[1]):null;
+  }
+  for(const [latitudeField,longitudeField] of [
+    ["Latitude","Longitude"],["latitude","longitude"],["lat","lon"],
+    ["lat","lng"],["Lat","Lon"],["Lat","Long"]
+  ]){
+    if(Object.prototype.hasOwnProperty.call(properties,latitudeField) &&
+      Object.prototype.hasOwnProperty.call(properties,longitudeField)){
+      return coordinatePair(properties[latitudeField],properties[longitudeField]);
+    }
+  }
+  return null;
 }
 
 /**

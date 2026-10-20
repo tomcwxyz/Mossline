@@ -6,6 +6,35 @@ Mossline is an Apache-2.0 open-source prototype for mapping relationships betwee
 
 > Alpha 0.1: local prototype, not production-ready. All included example entities and connections are fictional. No accounts, database, live Google Sheets sync, full Kumu backup import, geography, hosted MCP authentication or multi-user collaboration are implemented yet.
 
+## Built for any network — Alpha 1.4 preview
+
+Mossline is **not a PFT product**. The farming imagery and network are a separately
+owned, optional example showing one possible editorial treatment. A second fictional
+**Neighbourhood Connections** example demonstrates organisations, projects, funders,
+places, people, topics and outcomes without any PFT artwork or specialised schema.
+Open **Explore example networks** to try either example without replacing your map.
+
+The **Editorial / Classic** visual-style choice is available for *any* imported map.
+Source images are retained; special PFT imagery is only matched for the relevant
+dataset by original source IDs. The UK atlas works with explicit **Latitude** /
+**Longitude**, **lat/lon**, **lat/lng** or **Atlas location** source fields. It
+never geocodes names or uses Kumu visual-layout coordinates as geography, and
+still has deliberately UK-only coverage.
+
+**Arrange a network:** drag nodes in Landscape or Collaborations; select
+**Save view** to store all on-screen positions together with filters, layout,
+narrative and style in a named perspective. Reopening the perspective restores
+the manually arranged positions. **Reset arrangement** recalculates the current
+view without changing previously saved perspectives. The original graph,
+source records and imported coordinates are never altered. Older perspectives
+without saved node positions remain valid. Browser local storage is still the
+only persistence mechanism; no hosted accounts, collaborative editing or map
+publishing has been added yet.
+
+The Alpha 1.4 work is a feature branch stacked on Alpha 1.3 and has passed automated CI but awaits
+interactive browser acceptance. PFT-specific art attribution and licences are
+still governed separately from Mossline's Apache-2.0 code licence.
+
 ## Run locally
 
 Requires Node.js 22+ and npm 10+.
