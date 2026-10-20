@@ -9,3 +9,4 @@ export * from "./discovery";
 export * from "./recipes";
 export * from "./visual-assets";
 export * from "./geography";
+export * from "./arrangement-history";
