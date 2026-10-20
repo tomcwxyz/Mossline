@@ -14,6 +14,13 @@ export const perspectiveSchema = z.object({
   context: z.boolean(),
   layout: z.enum(["organic", "radial", "regions"]),
   labels: z.enum(["essential", "all"]),
+  /** Optional authoring overlay, completely separate from the source graph. */
+  presentation: z.object({
+    title: z.string().trim().max(100),
+    introduction: z.string().trim().max(1200),
+    coverUrl: z.string().url().refine(url=>/^https:\/\//.test(url)).optional(),
+    illustrated: z.boolean()
+  }).strict().optional(),
   createdAt: z.number().int().nonnegative()
 }).strict();
 export type SavedPerspective = z.infer<typeof perspectiveSchema>;
