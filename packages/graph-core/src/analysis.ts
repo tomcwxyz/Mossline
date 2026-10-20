@@ -8,6 +8,54 @@ export interface RouteOptions {
   excludeTypes?: string[];
 }
 
+export interface ReachableDestination {
+  nodeId: string;
+  label: string;
+  type: GraphDocument["nodes"][number]["type"];
+  /** The shortest number of recorded relationships needed to reach this entity. */
+  hops: number;
+}
+
+/**
+ * All destinations reachable from a chosen entity within a bounded number
+ * of SOURCE-RECORDED relationships, ignoring inferred collaboration shortcuts.
+ * Discovery is undirected, but following a path still shows the original
+ * direction of every source record. Every offered destination has a path.
+ */
+export function findReachableDestinations(
+  graph: GraphDocument, fromId: string, options: Pick<RouteOptions,"maxHops"|"excludeTypes"> = {}
+): ReachableDestination[] {
+  const maxHops=options.maxHops??5;
+  if(!Number.isInteger(maxHops)||maxHops<1||maxHops>8)return [];
+  const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
+  if(!nodes.has(fromId))return [];
+  const blocked=new Set(options.excludeTypes??[]);
+  const adjacent=new Map<string,Set<string>>();
+  for(const edge of graph.edges) {
+    if(edge.inferred||blocked.has(edge.type)||edge.source===edge.target||
+      !nodes.has(edge.source)||!nodes.has(edge.target))continue;
+    if(!adjacent.has(edge.source))adjacent.set(edge.source,new Set());
+    if(!adjacent.has(edge.target))adjacent.set(edge.target,new Set());
+    adjacent.get(edge.source)!.add(edge.target);
+    adjacent.get(edge.target)!.add(edge.source);
+  }
+  const queue=[fromId],visited=new Map([[fromId,0]]);
+  for(let i=0;i<queue.length;i++) {
+    const id=queue[i],hops=visited.get(id)!;
+    if(hops>=maxHops)continue;
+    for(const target of adjacent.get(id)??[]) {
+      if(visited.has(target))continue;
+      visited.set(target,hops+1);
+      queue.push(target);
+    }
+  }
+  return [...visited].filter(([id])=>id!==fromId)
+    .map(([id,hops])=>({nodeId:id,label:nodes.get(id)!.label,
+      type:nodes.get(id)!.type,hops}))
+    .sort((a,b)=>a.hops-b.hops||a.label.localeCompare(b.label)||
+      a.nodeId.localeCompare(b.nodeId));
+}
+
 /**
  * Return a small set of distinct simple routes (shortest first) through recorded
  * relationships. Edges are traversed both ways for discovery but retain their
@@ -43,9 +91,32 @@ export function findRecordedRoutes(
   for (const links of adjacent.values()) links.sort((a, b) =>
     a.toId.localeCompare(b.toId) || a.edgeId.localeCompare(b.edgeId));
 
+  // Find one shortest path without enumerating exponentially many alternatives.
+  // This guarantees that every reachable destination offered by the selector
+  // can actually be opened, even in dense datasets.
+  const visited=new Set([from]);
+  const trailTo=new Map<string,ConnectionStep>();
+  const queue=[from];
+  for(let i=0;i<queue.length&&!visited.has(to);i++) {
+    const current=queue[i];
+    let hops=0;
+    for(let node=current;node!==from;node=trailTo.get(node)!.fromId)hops++;
+    if(hops>=maxHops)continue;
+    for(const step of adjacent.get(current)??[]) {
+      if(visited.has(step.toId))continue;
+      visited.add(step.toId);trailTo.set(step.toId,step);queue.push(step.toId);
+    }
+  }
+  if(!visited.has(to))return [];
+  const shortestSteps:ConnectionStep[]=[];
+  for(let node=to;node!==from;node=trailTo.get(node)!.fromId)shortestSteps.push(trailTo.get(node)!);
+  shortestSteps.reverse();
+  const shortest:ConnectionTrail={nodeIds:[from,...shortestSteps.map(s=>s.toId)],steps:shortestSteps};
+  if(maxRoutes===1)return [shortest];
+
   const pending: ConnectionTrail[] = [{ nodeIds: [from], steps: [] }];
-  const results: ConnectionTrail[] = [];
-  const seenRoutes = new Set<string>();
+  const results: ConnectionTrail[] = [shortest];
+  const seenRoutes = new Set<string>([shortest.nodeIds.join("\u0000")]);
   const MAX_CANDIDATES = 20000;
   let expanded = 0;
   for (let i = 0; i < pending.length && expanded < MAX_CANDIDATES; i++, expanded++) {
