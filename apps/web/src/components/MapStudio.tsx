@@ -721,30 +721,47 @@ export function MapStudio() {
           </div>)}
           <p className="help">Only this browser · scoped to this dataset · no changes to source data</p>
         </section>
-        <section className="trace-panel" aria-label="Find connections between two entities">
-          <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Question-led explorer</span></div>
-          <p className="help">How are two entities linked through projects, funding and other recorded relationships?</p>
+        <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
+          <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Explore what’s reachable</span></div>
+          <p className="help">Choose something you know. Mossline shows who and what is connected through recorded relationships.</p>
           <form className="trace-form" onSubmit={traceEntities}>
-            <label htmlFor="trace-from">From</label>
-            <select id="trace-from" className="search" required value={traceFrom} onChange={e => {setTraceFrom(e.target.value);clearTrail();}}>
-              <option value="">Choose an entity</option>
+            <label htmlFor="trace-from">1 · Start with</label>
+            <select id="trace-from" className="search" required value={traceFrom} onChange={e => {setTraceFrom(e.target.value);setTraceTo("");clearTrail();}}>
+              <option value="">Choose your starting point</option>
               {entityOptions.map(n => <option key={n.id} value={n.id}>{n.label} · {n.type}</option>)}
             </select>
-            <label htmlFor="trace-to">To</label>
-            <select id="trace-to" className="search" required value={traceTo} onChange={e => {setTraceTo(e.target.value);clearTrail();}}>
-              <option value="">Choose an entity</option>
-              {entityOptions.map(n => <option key={n.id} value={n.id}>{n.label} · {n.type}</option>)}
+            <label htmlFor="trace-to">2 · Find connections to</label>
+            <select id="trace-to" className="search" required
+              disabled={!traceFrom || !reachableDestinations.length}
+              value={reachableDestinations.some(n=>n.nodeId===traceTo)?traceTo:""}
+              onChange={e=>{setTraceTo(e.target.value);clearTrail();if(e.target.value)exploreRoutes(traceFrom,e.target.value);}}>
+              <option value="">{!traceFrom?"Choose a starting point first":
+                reachableDestinations.length?"Choose a reachable destination":"No destinations within five links"}</option>
+              {distanceGroups.map(([hops,entities])=><optgroup key={hops}
+                label={hops===1?"Directly connected · 1 link":hops+" recorded links away"}>
+                {entities.map(n=><option key={n.nodeId} value={n.nodeId}>{n.label} · {n.type}</option>)}
+              </optgroup>)}
             </select>
-            <label htmlFor="trace-exclude">Leave out a relationship type</label>
+            {traceFrom&&<p className="trace-destinations" role="status">
+              {reachableDestinations.length>0 ? <>
+                {reachableDestinations.length} reachable {reachableDestinations.length===1?"entity":"entities"} within five links.
+                {" "}{distanceGroups[0]?.[0]===1?distanceGroups[0][1].length:0} directly connected.
+              </> : <>No reachable destinations with these settings. Try another starting point or filter.</>}
+            </p>}
+            <label htmlFor="trace-exclude">Optional · Exclude a relationship type</label>
             <select id="trace-exclude" className="search" value={excludedRelationType}
-              onChange={event=>{setExcludedRelationType(event.target.value);clearTrail();}}>
+              onChange={event=>{setExcludedRelationType(event.target.value);setTraceTo("");clearTrail();}}>
               <option value="">Use all recorded relationships</option>
               {relationTypes.map(type=><option value={type} key={type}>Exclude: {type}</option>)}
             </select>
-            <button type="submit" className="trace-action" disabled={!traceFrom || !traceTo}>Explore routes →</button>
+            <button type="submit" className="trace-action"
+              disabled={!traceFrom || !reachableDestinations.some(n=>n.nodeId===traceTo)}>
+              Explore selected route →
+            </button>
           </form>
           {graphKey===DEMO_KEY && <button type="button" className="trace-example" onClick={() => {
-            setTraceFrom("o1"); setTraceTo("o3"); clearTrail();
+            setTraceFrom("o1");setExcludedRelationType("");setTraceTo("o3");
+            exploreRoutes("o1","o3","");
           }}>Try an example: North Fields → Riverbank</button>}
           {connectionMessage && <div role="status" className="trace-response">
             <p>{connectionMessage}</p>
@@ -875,7 +892,7 @@ export function MapStudio() {
         {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
           onPick={pickNode} onEvidence={exploreEvidence} /> :
         selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph}
-          onPick={pickNode} onPickEdge={pickEdge} /> :
+          onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode} /> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
             <p className="eyebrow">The relationships matter</p>
