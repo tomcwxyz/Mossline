@@ -512,3 +512,13 @@ source coordinates cannot be adjusted through this editor.
 
 This draft requires CI and manual protected-preview desktop/mobile usability
 review before merge.
+
+
+### Undo and redo for arranged nodes
+
+Dragging a node now records a bounded arrangement history for the active map
+and layout. Use **Undo** and **Redo** above the canvas; new movements clear
+redo history. Reset arrangement recalculates the layout without editing any
+saved perspective or underlying source data. Undo/redo is session-local,
+available for up to 20 manual movements, and is intentionally separate
+from the names and versions of saved perspectives.
