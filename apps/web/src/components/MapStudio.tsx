@@ -4,11 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
+  emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
-  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride
+  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
@@ -258,6 +259,10 @@ export function MapStudio() {
   }>({key:"",positions:{}});
   const [positionRevision,setPositionRevision] = useState(0);
   const [nodeStyles,setNodeStyles]=useState<Record<string,NodeStyleOverride>>({});
+  const [arrangementState,setArrangementState]=useState<{key:string;history:LayoutHistory}>({
+    key:"",history:emptyLayoutHistory()
+  });
+  const dragStartRef=useRef<{key:string;positions:LayoutPositions}|null>(null);
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
@@ -315,14 +320,45 @@ export function MapStudio() {
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
   const positionKey=[graphKey,view,layoutMode,basis].join(":");
   const activePositions=positionState.key===positionKey?positionState.positions:{};
+  const movementHistory=arrangementState.key===positionKey?
+    arrangementState.history:emptyLayoutHistory();
   function capturePositions(positions:Record<string,{x:number;y:number}>) {
     setPositionState(previous=>({
       key:positionKey,
       positions:{...(previous.key===positionKey?previous.positions:{}),...positions}
     }));
   }
+  function beginNodeMovement(positions:LayoutPositions) {
+    dragStartRef.current={key:positionKey,positions:{...activePositions,...positions}};
+  }
+  function finishNodeMovement(positions:LayoutPositions) {
+    const from=dragStartRef.current;
+    dragStartRef.current=null;
+    if(!from||from.key!==positionKey)return;
+    const next={...activePositions,...positions};
+    setArrangementState(previous=>({
+      key:positionKey,history:recordLayoutMovement(
+        previous.key===positionKey?previous.history:emptyLayoutHistory(),
+        from.positions,next)
+    }));
+  }
+  function undoNodeMovement() {
+    const change=undoLayoutMovement(movementHistory,activePositions);
+    if(!change)return;
+    setArrangementState({key:positionKey,history:change.history});
+    setPositionState({key:positionKey,positions:change.positions});
+    setPositionRevision(value=>value+1);
+  }
+  function redoNodeMovement() {
+    const change=redoLayoutMovement(movementHistory,activePositions);
+    if(!change)return;
+    setArrangementState({key:positionKey,history:change.history});
+    setPositionState({key:positionKey,positions:change.positions});
+    setPositionRevision(value=>value+1);
+  }
   function resetNodeArrangement() {
     setPositionState({key:positionKey,positions:{}});
+    setArrangementState({key:positionKey,history:emptyLayoutHistory()});
     setPositionRevision(value=>value+1);
     setNotice("Reset the on-screen arrangement. Saved perspectives remain unchanged.");
   }
@@ -505,12 +541,14 @@ export function MapStudio() {
     setAtlasMode(item.presentation?.atlasMode??"stories");
     setAtlasKind(item.presentation?.atlasKind??"project");
     setNodeStyles(item.nodeStyles??{});
+    setArrangementState({key:"",history:emptyLayoutHistory()});
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function resetExplorer(next:GraphDocument) {
     setGraph(next);setActiveStory(undefined);
     setNodeStyles({});
+    setArrangementState({key:"",history:emptyLayoutHistory()});
     setPositionState({key:"",positions:{}});
     setPositionRevision(value=>value+1);
     setAtlasMode("stories");setAtlasKind("project");
@@ -1037,8 +1075,13 @@ export function MapStudio() {
               <option value="editorial">Editorial</option>
               <option value="classic">Classic</option>
             </select></label>}
-            {view!=="atlas"&&<button type="button" className="reset-layout"
-              onClick={resetNodeArrangement}>Reset arrangement</button>}
+            {view!=="atlas"&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
+              <button type="button" disabled={!movementHistory.past.length}
+                onClick={undoNodeMovement} title="Undo last manual node movement">↶ Undo</button>
+              <button type="button" disabled={!movementHistory.future.length}
+                onClick={redoNodeMovement} title="Redo manual node movement">↷ Redo</button>
+              <button type="button" onClick={resetNodeArrangement}>Reset arrangement</button>
+            </div>}
           </div>
         </div>
         {view==="atlas" ?
@@ -1057,7 +1100,8 @@ export function MapStudio() {
             view={view} layoutMode={layoutMode} labelDensity={labelDensity}
             illustrated={illustrated} nodeStyles={nodeStyles}
             savedPositions={activePositions} positionRevision={positionRevision}
-            onPositionsChange={capturePositions} />}
+            onPositionsChange={capturePositions}
+            onDragBegin={beginNodeMovement} onDragCommit={finishNodeMovement} />}
         <div className="map-bottomline"><span>{view==="atlas"?
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
