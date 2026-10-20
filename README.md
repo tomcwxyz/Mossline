@@ -304,3 +304,28 @@ This is a real UI implementation and automated model/build test, **not yet
 a completed authenticated browser usability or accessibility trial**.
 No hosted multi-user workspaces, server data storage or model/API inference
 have been added.
+
+## Alpha 1.2 — follow only real recorded connections
+
+**Follow a connection** now starts with one selected entity, then limits the
+second dropdown to destinations reachable within **five recorded links**.
+Destinations are grouped by minimum hop count and sorted by name within each
+group. Inferred shared associations are not used to calculate reachability.
+Choosing a destination immediately opens its shortest recorded route and can
+display alternative routes and original source relationship direction.
+
+The optional relationship-type exclusion updates this list immediately.
+Changing the start or filter clears the old destination, preventing stale or
+impossible route selections. Unreachable, disconnected, self, and inferred-only
+destinations never appear. No options means no path *within this limit and
+these settings*, not that the entities have no relationship at all.
+
+The entity inspector includes **Explore connections from here**, and the
+sidebar offers quick links to up to four directly connected entities. Users
+do not have to know destination names in advance.
+
+The import screen has also received contrast/focus and spacing fixes: light
+background secondary/close buttons have dark accessible text, and the
+connection sidebar uses more readable labels, inputs and responsive widths.
+These styles and controls need a protected-preview desktop/mobile visual
+review before the branch is approved for merge.
