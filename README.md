@@ -139,3 +139,60 @@ properties rather than silently discarded.
 The **Browse entities** expander makes visible nodes selectable through ordinary
 keyboard-focusable buttons. It is an alternative to canvas clicking; no server
 upload, database write or access to the user's existing Kumu project occurs.
+
+## Bring your data as it is — guided mapping (alpha 0.8)
+
+**Discover your data** accepts a Kumu project JSON or a CSV file. It separates
+source inspection from import acceptance: no network data is changed until a
+populated, validated graph is previewed and explicitly confirmed.
+
+### Kumu configuration
+A Kumu project export can define attributes, perspectives, styles and
+externally connected data even with **zero embedded elements and connections**.
+For this case Mossline shows:
+- the number of defined fields and Kumu perspectives
+- candidate entity types and relationship vocabulary
+- field-by-field recommendations (mapped, needs review, preserve as custom)
+- whether a linked Google Sheets source was referenced
+- a clear blocker explaining that the spreadsheet rows must be supplied separately
+
+A configuration-only Kumu file **cannot replace the current map with an empty
+graph**. The linked Sheets source is not fetched by Mossline and its connection
+identifier is not displayed in the mapping panel. Full Kumu CSS/styles,
+geographic overlays, asset management and view recreation are future work.
+
+When a Kumu blueprint **does contain** embedded records, the importer understands
+`Element Type`, `Connection Type`, `Topics`, `Geographic reach`, and
+`Website` alongside earlier Mossline/CSV headings. Unmapped source attributes
+remain available as custom properties.
+
+### Ordinary spreadsheet columns
+For a single CSV with familiar headings (e.g. `Organisation`,
+`Project`, `Funder`, `Region`), the guided workbench:
+
+1. Profiles headers, populated/distinct counts and a few sample values.
+2. Suggests entity and relationship column roles (not facts).
+3. Lets you choose an **entity list** or **relationships between columns**.
+4. Allows multiple relationship rules, with editable entity types, direction
+   through source/target columns, and user-approved relationship labels.
+5. Lets you map description and region, including which side of a relationship
+   a region refers to, before building a graph preview.
+6. Shows errors and skipped rows, followed by the existing provenance/coverage
+   report and an explicit confirmation to replace the current browser map.
+
+The basic mapping is deterministic and browser-local. **It does not use AI, read
+your Google account, infer trust or causality, or send uploaded rows to a server.**
+Users must review relationship semantics; appearing in the same row alone does
+not establish a partnership or funding relationship.
+
+Rows explicitly marked `Public=FALSE`, `No`, `0`, or `Private` are excluded
+from both Kumu and guided CSV imports by default, including Kumu relationships
+that point to hidden elements. Retained raw custom fields and imports are
+still browser-local, **not guaranteed suitable for public publication**:
+review permissions and data-sharing rights before sharing exports.
+
+**Current limits:** CSV and Kumu-project JSON discovery only, no XLSX,
+no direct Sheets/Excel connection, no reusable mapping recipes, no semantic
+LLM suggestions, no source merge/sync, and no full project-level Kumu migration.
+A real populated source export and authenticated browser interaction test are
+still required before this branch is ready to merge.
