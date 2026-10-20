@@ -913,7 +913,7 @@ export function MapStudio() {
               onChange={event=>setIllustrated(event.target.value==="illustrated")}>
               <option value="illustrated">PFT illustrated</option>
               <option value="original">Original imagery</option>
-            </select></label>
+            </select></label>}
           </div>
         </div>
         <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
