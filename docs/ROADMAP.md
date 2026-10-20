@@ -215,6 +215,11 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Save/restore node appearance in browser-local named perspectives.
 - [x] Preserve original images, graph identifiers and recorded relationships.
 - [ ] CI tests/typecheck/build and protected-preview browser acceptance.
-- [ ] Undo/redo manual positioning and node locking.
+- [x] Undo/redo manual positioning in the active view.
+- [ ] Node locking and more complex authoring controls.
 - [ ] User-managed asset library with attribution and licence information.
 - [ ] Shareable public perspectives and hosted workspace permissions.
+
+
+- [x] Undo and redo up to 20 manual node movements per active map/layout.
+- [x] Restore saved perspectives without treating layout replay as a new user movement.
