@@ -523,13 +523,15 @@ export function MapStudio() {
     try {
       const input = await Promise.all(files.map(async file => ({name:file.name,text:await file.text()})));
       const analysis = input.length===1 ? discoverData(input[0]) : null;
-      setDiscovery(analysis);
+      const preview=analysis?.kind==="csv-table"?null:previewImport(input);
+      // A valid native Mossline graph is not an unsupported Kumu configuration.
+      setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
       setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
       setMappingSession(previous=>previous+1);
       setAcknowledgeRemovals(false);
       setImportMode("new");
       setImportMapName(input.length===1?input[0].name.replace(/\.(csv|json)$/i,""):"Imported network");
-      setImportPreview(analysis?.kind==="csv-table" ? null : previewImport(input));
+      setImportPreview(preview);
       setNotice("");
     } catch (error) {
       setImportPreview(null);
