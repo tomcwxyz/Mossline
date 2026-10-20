@@ -164,7 +164,8 @@ test("shared projects with different source regions are not arbitrarily placed",
   assert.ok(result.graph);
   const shared=result.graph.nodes.find(n=>n.label==="Shared project");
   assert.equal(shared?.region,undefined);
-  assert.ok(result.issues.some(x=>x.message.includes("Multiple regional values")));
+  assert.equal(result.issues.some(x=>x.message.includes("Multiple regional values")),false);
+  // Region belongs to the Organisation column, so no invented project region or conflict.
   // Other columns on a relationship row are not silently attached to the shared entity.
   assert.deepEqual(shared?.properties,{Project:"Shared project"});
   assert.equal(result.graph.edges[0]?.properties?.Region,"North");
