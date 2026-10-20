@@ -24,11 +24,11 @@ const SAVED_KEY = "mossline-perspectives-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
   name:"fictional-farming-relationships.csv",
-  text:"Organisation,Project,Funder,Region,Public\\n" +
-    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\\n" +
-    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\\n" +
-    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\\n" +
-    "Hidden Example,Private Project,Private Funder,South West,FALSE\\n"
+  text:"Organisation,Project,Funder,Region,Public\n" +
+    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\n" +
+    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\n" +
+    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n" +
+    "Hidden Example,Private Project,Private Funder,South West,FALSE\n"
 };
 type ViewMode = "landscape" | "collaborations";
 
