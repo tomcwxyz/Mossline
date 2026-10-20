@@ -1,0 +1,24 @@
+{
+  "name": "mossline",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace @mossline/web",
+    "build": "npm run build --workspace @mossline/web",
+    "mcp": "npm run start --workspace @mossline/mcp",
+    "test": "tsx --test packages/graph-core/test/*.test.ts",
+    "typecheck": "tsc -p packages/graph-core/tsconfig.json --noEmit && tsc -p apps/mcp/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "tsx": "^4.20.0",
+    "@types/node": "^22.0.0"
+  }
+}
