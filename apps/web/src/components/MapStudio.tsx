@@ -465,7 +465,14 @@ export function MapStudio() {
             discovery.elementTypes.join(" · ") : "No categories defined"}</p></div>
           <div><h3>Relationship vocabulary</h3><p>{discovery.connectionTypes.length ?
             discovery.connectionTypes.join(" · ") : "No relation labels defined"}</p></div>
-          <div><h3>Defined fields</h3><p>{discovery.attributes.join(" · ") || "None"}</p></div>
+          <div className="kumu-field-recommendations"><h3>How these fields could fit Mossline</h3>
+            <p>Recommendations describe a possible destination. Review them against the actual spreadsheet data.</p>
+            <ul>{discovery.fieldSuggestions.map(suggestion=><li key={suggestion.field}>
+              <strong>{suggestion.field}</strong><span>{suggestion.role}</span>
+              <small>{suggestion.treatment==="mapped" ? "Suggested mapping" :
+                suggestion.treatment==="review" ? "Needs review" : "Preserve as custom field"}</small>
+            </li>)}</ul>
+          </div>
           <div><h3>Existing perspectives</h3>
             <ul>{discovery.perspectives.map((name,index)=><li key={index}>{name}</li>)}</ul>
           </div>
