@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { findRecordedRoutes, findStructuralJunctions, parseGraphDocument } from "../src/index.ts";
+import { findRecordedRoutes, findReachableDestinations, findStructuralJunctions, parseGraphDocument } from "../src/index.ts";
 
 const network = parseGraphDocument({version:1,title:"Alternative routes",nodes:[
   {id:"a",label:"A",type:"organisation"},
@@ -80,4 +80,52 @@ test("cycles do not create junctions, and star centres separate distinct groups"
     ["hub","a","b","c"].map(id=>({id,label:id,type:"other"})),edges:
     ["a","b","c"].map(id=>({id:"h-"+id,source:"hub",target:id,type:"knows"}))});
   assert.deepEqual(findStructuralJunctions(star),[{nodeId:"hub",degree:3,separatedGroups:3}]);
+});
+
+test("the destination selector only offers source-connected entities reachable in five or fewer hops",()=>{
+  const destinations=findReachableDestinations(network,"a");
+  assert.deepEqual(destinations.map(x=>[x.nodeId,x.hops]),[
+    ["b",1],["c",1],["d",2]
+  ]);
+  assert.equal(destinations.some(x=>x.nodeId==="e"||x.nodeId==="a"),false);
+  for(const dest of destinations) {
+    const routes=findRecordedRoutes(network,"a",dest.nodeId,{maxHops:5,maxRoutes:1});
+    assert.equal(routes.length,1);
+    assert.equal(routes[0].steps.length,dest.hops);
+  }
+});
+
+test("reaching a destination never treats an inferred link as a shortcut",()=>{
+  const results=findReachableDestinations(network,"a",{maxHops:1});
+  assert.deepEqual(results.map(x=>x.nodeId),["b","c"]);
+  assert.equal(results.some(x=>x.nodeId==="d"),false);
+});
+
+test("relationship-type exclusions and hop limits apply identically to the destination selector",()=>{
+  const withinOne=findReachableDestinations(network,"a",{maxHops:1});
+  assert.equal(withinOne.length,2);
+  const noSupports=findReachableDestinations(network,"a",{excludeTypes:["supports"]});
+  assert.deepEqual(noSupports,[]);
+  const noFunding=findReachableDestinations(network,"a",{excludeTypes:["funds"]});
+  assert.equal(noFunding.find(x=>x.nodeId==="d")?.hops,2);
+  assert.deepEqual(findReachableDestinations(network,"a",{maxHops:0}),[]);
+  assert.deepEqual(findReachableDestinations(network,"a",{maxHops:100}),[]);
+  assert.deepEqual(findReachableDestinations(network,"missing"),[]);
+  assert.deepEqual(findReachableDestinations(network,"e"),[]);
+});
+
+test("a directed source link can be explored backwards but its direction is preserved in the route",()=>{
+  const backwards=findReachableDestinations(network,"d",{maxHops:1});
+  assert.deepEqual(backwards.map(x=>x.nodeId),["b","c"]);
+  const trail=findRecordedRoutes(network,"d","b",{maxHops:1,maxRoutes:1})[0];
+  assert.equal(trail.steps[0].forward,false);
+});
+
+test("destination discovery deduplicates multiple records for the same pair",()=>{
+  const duplicates=parseGraphDocument({...network,edges:[
+    ...network.edges,
+    {id:"second-ab",source:"a",target:"b",type:"supports"}
+  ]});
+  const destinations=findReachableDestinations(duplicates,"a",{maxHops:1});
+  assert.equal(destinations.filter(d=>d.nodeId==="b").length,1);
 });
