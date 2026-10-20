@@ -26,19 +26,23 @@ interface Props {
   savedPositions?: Record<string, Point>;
   positionRevision?: number;
   onPositionsChange?: (positions: Record<string, Point>) => void;
+  onDragBegin?: (positions: Record<string, Point>) => void;
+  onDragCommit?: (positions: Record<string, Point>) => void;
 }
 
 type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, nodeStyles={}, savedPositions, positionRevision=0, onPositionsChange
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, nodeStyles={}, savedPositions, positionRevision=0, onPositionsChange, onDragBegin, onDragCommit
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
   const onSelectRef = useRef(onSelect);
   const onSelectEdgeRef = useRef(onSelectEdge);
   const onPositionsChangeRef = useRef(onPositionsChange);
+  const onDragBeginRef = useRef(onDragBegin);
+  const onDragCommitRef = useRef(onDragCommit);
   const positionRevisionRef = useRef(positionRevision);
   const nodeStylesRef = useRef(nodeStyles);
   const viewKeyRef = useRef("");
@@ -50,11 +54,13 @@ export function GraphCanvas({
   onSelectRef.current = onSelect;
   onSelectEdgeRef.current = onSelectEdge;
   onPositionsChangeRef.current = onPositionsChange;
+  onDragBeginRef.current = onDragBegin;
+  onDragCommitRef.current = onDragCommit;
   nodeStylesRef.current = nodeStyles;
   labelsRef.current = labelDensity;
   selectedRef.current = selectedId;
 
-  function publishPositions(cy: Core) {
+  function snapshotPositions(cy: Core) {
     const positions: Record<string, Point> = {};
     cy.nodes().not(".region-group").forEach(node => {
       const point = node.position();
@@ -62,7 +68,10 @@ export function GraphCanvas({
         positions[node.id()] = {x: point.x, y: point.y};
       }
     });
-    onPositionsChangeRef.current?.(positions);
+    return positions;
+  }
+  function publishPositions(cy:Core){
+    onPositionsChangeRef.current?.(snapshotPositions(cy));
   }
 
   function refreshLabels(cy: Core) {
@@ -173,6 +182,10 @@ export function GraphCanvas({
       cy.on("tap", "edge", event => onSelectEdgeRef.current(event.target.id()));
       cy.on("tap", event => { if (event.target === cy) onSelectRef.current(null); });
       cy.on("zoom", () => refreshLabels(cy));
+      cy.on("grab", "node", event => {
+        if(!event.target.hasClass("region-group"))
+          onDragBeginRef.current?.(snapshotPositions(cy));
+      });
       cy.on("dragfree", "node", event => {
         if (event.target.hasClass("region-group")) return;
         const key = viewKeyRef.current;
@@ -180,6 +193,7 @@ export function GraphCanvas({
         saved.set(event.target.id(), { ...event.target.position() });
         positionCacheRef.current.set(key, saved);
         publishPositions(cy);
+        onDragCommitRef.current?.(snapshotPositions(cy));
       });
       cyRef.current = cy;
       setReady(true);
