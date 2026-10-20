@@ -221,3 +221,51 @@
 .browse-panel li button:hover { color:#ebcf94; }
 .browse-panel li button:focus-visible,.audit-panel summary:focus-visible,.browse-panel summary:focus-visible,
 .coverage-details summary:focus-visible { outline:2px solid #e9cf94; outline-offset:3px; }
+
+/* Alpha 0.8 – discover and map existing data instead of demanding Kumu-shaped tables */
+.kumu-discovery,.mapping-workbench { margin:15px 0;padding:18px;border:1px solid #acc2b1;border-radius:13px;
+  background:linear-gradient(135deg,#f2f5ec,#e9f1e8);color:#244936; }
+.kumu-discovery .eyebrow,.mapping-workbench .eyebrow { color:#3b7454; }
+.kumu-discovery-stats { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:13px 0 19px; }
+.kumu-discovery-stats>div { background:#dcebdd;border:1px solid #b1cbb6;border-radius:9px;padding:11px; }
+.kumu-discovery-stats strong { display:block;font:normal 24px Georgia,serif;color:#274a35; }
+.kumu-discovery-stats span { display:block;font-size:10px;color:#47624d; }
+.kumu-discovery-parts {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.kumu-discovery-parts>div {border-top:1px solid #b4c7b7;padding-top:8px;}
+.kumu-discovery-parts h3 {font:normal 16px Georgia,serif;color:#274936;margin:0 0 5px;}
+.kumu-discovery-parts p,.kumu-discovery-parts ul {font-size:11px;line-height:1.6;color:#3c5c4a;padding-left:0;}
+.kumu-discovery-parts ul {padding-left:18px;}
+.mapping-important {background:#fff0d1;color:#644c21;border-left:3px solid #b18a43;
+  font-size:12px;line-height:1.65;padding:13px;margin:14px 0;}
+.mapping-intro h3 {font:normal 23px Georgia,serif;margin:6px 0 7px;color:#244532;}
+.mapping-intro p:not(.eyebrow) {color:#45604c;font-size:12px;line-height:1.65;}
+.mapping-columns {margin:18px 0;padding:12px;background:#f8faf5;border:1px solid #c4d7c4;border-radius:8px;}
+.mapping-columns summary {cursor:pointer;font-weight:650;font-size:12px;color:#34563e;}
+.mapping-column-list {display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:13px;}
+.mapping-column-list>div {background:#ecf3e9;padding:10px;border:1px solid #d1dfcc;border-radius:7px;min-width:0;}
+.mapping-column-list strong {display:block;font-size:12px;color:#2f503c;overflow-wrap:anywhere;}
+.mapping-column-list span {display:block;font-size:10px;color:#5c7463;margin:4px 0;}
+.mapping-column-list small {font-size:11px;color:#405e4c;overflow-wrap:anywhere;}
+.mapping-controls {display:grid;gap:17px;}
+.mapping-controls label {display:grid;gap:5px;color:#395840;font-size:11px;font-weight:650;min-width:0;}
+.mapping-controls select,.mapping-controls input {width:100%;min-width:0;border:1px solid #a5c4ab;border-radius:7px;
+  color:#243d2d;background:#fff;padding:9px;font-size:12px;font-weight:400;}
+.mapping-controls select:focus-visible,.mapping-controls input:focus-visible {outline:2px solid #427859;outline-offset:1px;}
+.mapping-rules {display:grid;gap:12px;}
+.mapping-field-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
+.mapping-wide {grid-column:1/-1;}
+.mapping-rule {padding:13px;background:#e0ece0;border:1px solid #b4cbb8;border-radius:10px;}
+.mapping-rule-heading {display:flex;justify-content:space-between;align-items:center;margin:0 0 13px;}
+.mapping-rule-heading strong {font:normal 17px Georgia,serif;color:#254b38;}
+.mapping-rule-heading button {border:0;background:transparent;text-decoration:underline;color:#775239;font-size:11px;}
+.mapping-explainer,.mapping-caution {font-size:12px;line-height:1.6;color:#51634e;}
+.mapping-caution {padding:11px 0;border-top:1px solid #b5cbb5;margin-top:16px;}
+.mapping-add {border:1px dashed #819b84;border-radius:8px;padding:10px;background:transparent;
+  font-size:12px;color:#345f41;text-align:left;}
+.mapping-add:hover {background:#dce9d9;}
+.mapping-last {color:#31523b;font-size:12px;margin:12px 0;line-height:1.6;}
+.mapping-workbench .button-primary {display:inline-block;}
+@media(max-width:650px) {
+  .kumu-discovery-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .kumu-discovery-parts,.mapping-field-grid {grid-template-columns:1fr;}
+}
