@@ -85,3 +85,15 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Entity identity matching/deduplication with human review before importing into an existing graph.
 - [ ] Public/private visibility governance, independent of styling/presentation.
 - [ ] Authenticated browser interaction/keyboard/mobile testing behind Vercel protection.
+
+## PFT live-source structure review (alpha 0.9)
+- [x] Read the linked PFT Kumu feed read-only; confirmed 107 entities and 242
+      valid recorded connections, with seven distinct source categories.
+- [x] Add dedicated topic, methodology and outcome types and map Geography to Place.
+- [x] Honour Atlas region as a separate higher-priority grouping than Geographic reach.
+- [x] Exclude identified position/basemap/coastline helper CSV tabs from network import.
+- [x] Add synthetic PFT-shaped importer regression tests; CI and preview build pass.
+- [ ] Authenticated browser import of populated Elements + Connections CSVs.
+- [ ] Preservation and controlled rendering of Kumu geographic basemap and layout details.
+- [ ] Rights and distribution audit for photographic sources before public publishing.
+- [ ] Live Sheets import with read-only OAuth, diff preview, mapping recipe versioning and safe sync.
