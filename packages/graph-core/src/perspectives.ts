@@ -6,7 +6,7 @@ export const perspectiveSchema = z.object({
   id: z.string().min(1).max(100),
   name: z.string().trim().min(1).max(60),
   graphKey: z.string().min(1).max(100),
-  view: z.enum(["landscape", "collaborations"]),
+  view: z.enum(["landscape", "collaborations", "atlas"]),
   basis: z.enum(["all", "project", "funder", "recorded"]),
   region: z.string().max(150),
   query: z.string().max(200),
