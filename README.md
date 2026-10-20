@@ -329,3 +329,39 @@ background secondary/close buttons have dark accessible text, and the
 connection sidebar uses more readable labels, inputs and responsive widths.
 These styles and controls need a protected-preview desktop/mobile visual
 review before the branch is approved for merge.
+
+## Alpha 1.3 — source-ID visual packs and narrated perspectives
+
+The **PFT illustrated farming landscape** is a separate visual companion to
+source records. When at least five node SOURCE IDs match the curated manifest,
+Mossline offers an **illustrated** visual style and uses up to 82 original
+owner-created illustrations. Images are served from a commit-pinned public
+asset repository, not copied into Mossline's source code. Any prior `Image`
+or `imageUrl` value remains unchanged in imported JSON and exports.
+
+The companion includes the original PFT front-page hero, introductory text,
+and a reference to the UK basemap for a future geographic perspective.
+Illustrations only depict subject matter; they are not evidence that the
+fictional/prototype entities or relationships exist in reality.
+Unmatched entities retain their original images or category symbols.
+
+The **Save view** form now also offers a story title, introductory paragraph
+and an optional HTTPS cover illustration. This narrative and visual style are
+saved as optional *presentation* properties on a browser-local perspective.
+Older saved perspectives remain valid; no entity or relationship changes
+when opening a saved story. All saved views remain scoped to the exact
+network and are local to this browser.
+
+**Artwork ownership:** the user confirmed ownership of
+`tomcwxyz/pft-network-images`, but the repository doesn't yet publish a
+machine-readable reuse licence. The Mossline implementation references
+the separately hosted original files rather than bundling/relicensing them
+under the Mossline code licence. No generic right to redistribute this
+companion pack is implied. Future distribution should have its own explicit
+terms, independent of the open-source software licence.
+
+**Next:** a proper geographic layer using validated Atlas location (lat/lon)
+separately from Kumu's authored `mapx/mapy` positions; configurable
+perspective positioning; mobile visual and authenticated browser review.
+The included basemap is registered as an asset but not yet geo-referenced
+or rendered as a geographical network background.
