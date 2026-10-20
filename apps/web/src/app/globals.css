@@ -497,3 +497,12 @@
   .pft-narrative>img{max-height:210px;min-height:0;aspect-ratio:16/7;object-fit:cover;}
   .pft-narrative-copy{padding:19px;}
 }
+
+/* Saved perspective narrative editor */
+.perspective-form textarea.search {display:block;min-height:86px;width:100%;resize:vertical;
+  padding:9px 10px;line-height:1.5;font:12px/1.5 sans-serif;
+  border-radius:7px;background:#133a2b;color:#f3f5e9;
+  border:1px solid #5a7c66;}
+.perspective-form textarea.search:focus-visible {outline:2px solid #eed292;outline-offset:2px;}
+.perspective-form label {line-height:1.4;}
+.perspective-form .help {font-size:10px;line-height:1.45;}
