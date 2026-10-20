@@ -17,6 +17,7 @@ import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
 import demo from "../../../../data/demo.json";
+import communityExample from "../../../../data/community-example.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
   organisation: "Organisations", project: "Projects", funder: "Funders",
@@ -24,6 +25,7 @@ const TYPE_LABELS: Record<NodeType, string> = {
 };
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
+const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
 const STORAGE_KEY = "mossline-demo-graph-v1";
 const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 type LocalMap = { id:string; createdAt:number; title:string; graph:GraphDocument };
@@ -326,6 +328,8 @@ export function MapStudio() {
   const atlasCoverage=useMemo(()=>buildUkAtlas(graph),[graph]);
   // Match exact source IDs, so artwork is never attached to another dataset by name.
   const pftCompatible=pftAssets.matched>=5;
+  const pftMapReference=pftCompatible&&PFT_VISUAL_PACK.basemap?
+    visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.basemap):undefined;
   const showPftArtwork=pftCompatible&&illustrated;
   const story=activeStory?.title||activeStory?.introduction ? activeStory : undefined;
   const storyCoverUrl=story?.coverUrl || (pftCompatible&&PFT_VISUAL_PACK.frontPage?
@@ -615,6 +619,12 @@ export function MapStudio() {
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
+  function openCommunityExample() {
+    if(createNewMap(COMMUNITY_EXAMPLE)) {
+      setNotice("Opened a separate fictional community network. Try Landscape, Collaborations and UK atlas; your other maps are preserved.");
+      closeImport();
+    }
+  }
   function openPftVisualExample() {
     if(createNewMap(PFT_VISUAL_EXAMPLE)) {
       setIllustrated(true);
@@ -650,12 +660,18 @@ export function MapStudio() {
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
-    {!pftCompatible && <details className="example-library">
-      <summary>Explore an optional illustrated example · PFT farming network</summary>
-      <p>Mossline works with any connected dataset. This is one example of a visual companion,
-        not a template or requirement for your own maps.</p>
+    <details className="example-library">
+      <summary>Explore example networks · community and farming</summary>
+      <p>Examples demonstrate what Mossline can do with different kinds of data.
+        They are fictional, optional and never overwrite your current map.</p>
+      <div className="example-community">
+        <div><strong>Neighbourhood Connections</strong>
+          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
+        <button type="button" className="button-outline" onClick={openCommunityExample}>
+          Open community example →</button>
+      </div>
       <PftVisualShowcase onOpenSample={openPftVisualExample}/>
-    </details>}
+    </details>
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Explore what Mossline found</p>
@@ -1014,7 +1030,9 @@ export function MapStudio() {
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
             onSelect={pickNode} onPickEdge={pickEdge}
             mode={atlasMode} onModeChange={setAtlasMode}
-            kind={atlasKind} onKindChange={setAtlasKind}/> :
+            kind={atlasKind} onKindChange={setAtlasKind}
+            referenceArtwork={pftMapReference?{url:pftMapReference,
+              label:"PFT illustrated UK map"}:undefined}/> :
           <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
             selectedId={selectedId} selectedEdgeId={selectedEdgeId}
             pathNodeIds={connectionTrail?.nodeIds ?? []}
