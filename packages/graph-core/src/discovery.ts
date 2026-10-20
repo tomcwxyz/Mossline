@@ -44,14 +44,36 @@ export interface ColumnMapping {
   descriptionColumn: string;
   rules: RelationshipRule[];
 }
+export interface KumuFieldSuggestion { field: string; role: string; treatment: "mapped" | "review" | "preserved"; }
 export type DataDiscovery =
-  | { kind:"kumu-configuration"; fileName:string; title:string; attributes:string[];
+  | { kind:"kumu-configuration"; fileName:string; title:string; attributes:string[]; fieldSuggestions:KumuFieldSuggestion[];
       elementTypes:string[]; connectionTypes:string[]; perspectives:string[];
       embeddedNodes:number; embeddedEdges:number; externalSheets:boolean;
       advice:string[] }
   | { kind:"csv-table"; fileName:string; rowCount:number; columns:DataColumn[];
       mapping:ColumnMapping; advice:string[] }
   | { kind:"unsupported"; fileName:string; reason:string };
+
+function suggestKumuField(field:string):KumuFieldSuggestion {
+  const roles:Record<string,[string,KumuFieldSuggestion["treatment"]]>={
+    label:["Entity label","mapped"],
+    elementtype:["Entity category; uncommon classes stay in custom fields","mapped"],
+    connectiontype:["Relationship category","mapped"],
+    description:["Entity or relationship description","mapped"],
+    region:["Regional grouping","mapped"],
+    geographicreach:["Geographical reach: check if multiple values","review"],
+    image:["Entity image URL or media reference","review"],
+    website:["Entity source/website URL","mapped"],
+    tags:["Entity tags","mapped"],
+    topics:["Topic tags; also candidates for topic entities","review"],
+    public:["Visibility guard; FALSE records must not become public","mapped"],
+    mapx:["Visual coordinate from a Kumu-specific view","preserved"],
+    mapy:["Visual coordinate from a Kumu-specific view","preserved"],
+    geo:["Potential geographical metadata; inspect source values","review"]
+  };
+  const [role,treatment]=roles[norm(field)]??["Custom attribute retained as source data","preserved"];
+  return {field,role,treatment};
+}
 
 function readTable(file: ImportFile): {headers:string[];rows:Record<string,string>[]} {
   const lines = parseCsv(file.text);
@@ -97,7 +119,8 @@ export function discoverData(file: ImportFile): DataDiscovery {
       ];
       return {
         kind:"kumu-configuration",fileName:file.name,title:value(data.name)||file.name,
-        attributes:names,elementTypes:values("Element Type"),connectionTypes:values("Connection Type"),
+        attributes:names,fieldSuggestions:names.map(suggestKumuField),
+        elementTypes:values("Element Type"),connectionTypes:values("Connection Type"),
         perspectives:views,embeddedNodes,embeddedEdges,externalSheets,advice
       };
     }
