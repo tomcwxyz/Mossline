@@ -97,3 +97,17 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Preservation and controlled rendering of Kumu geographic basemap and layout details.
 - [ ] Rights and distribution audit for photographic sources before public publishing.
 - [ ] Live Sheets import with read-only OAuth, diff preview, mapping recipe versioning and safe sync.
+
+## Alpha 1.0 — repeatable mapping and changes-before-import
+- [x] Schema-validated portable, browser-local field/relationship mapping recipes.
+- [x] Save immutable revisions, reuse older revisions, import/export recipe JSON and delete local revisions.
+- [x] Exact required-header compatibility checks before loading an old recipe.
+- [x] Stable mapped relationship identity under spreadsheet row reorder.
+- [x] Identity-based added/updated/removed graph summary in every import preview.
+- [x] Additional explicit acknowledgement before replacing any currently stored entities/relationships.
+- [x] Automated tests for recipe validation, schema drift, graph changes and stable IDs.
+- [ ] Authenticated browser interaction review (including imported recipe file selection and destructive confirmation).
+- [ ] More sophisticated identity resolution where names vary but external source IDs remain stable.
+- [ ] Preserve entity-specific metadata from multiple relationship rows rather than first-row-wins.
+- [ ] Merge rather than replace the existing graph, with conflict review and change provenance.
+- [ ] Google Sheets read-only connections, sync proposals and schedule-aware change histories.
