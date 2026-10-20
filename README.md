@@ -428,3 +428,38 @@ continue to load.
 **Out of scope for this phase:** true georeferencing of the original PFT
 illustrated basemap, a live tile-map view, advanced map projections, persistent
 per-view manual positioning, and authenticated hands-on/mobile visual QA.
+
+## Alpha 1.3 — refined illustrated UK atlas
+
+The UK atlas offers two complementary ways of seeing the *same* source data:
+
+- **Illustrated projects:** starts with projects that have an original
+  `Atlas location`. It shows the owner's illustrations as a curated,
+  paginated editorial strip under the UK outline. Select a project to
+  highlight its exact source location using a gold location thread.
+  This thread represents **position, not a relationship**. Related entities
+  and evidence links appear in the adjacent inspector.
+- **Explore places:** zooms conceptually back out to the source-located
+  network. Filter to projects, organisations, funders, places or all,
+  search by entity name, and inspect clustered locations and selectively
+  revealed original source relationships.
+
+The country outlines were regenerated directly from Natural Earth
+1:110m public-domain feature coordinates, using the *same bounding
+transform* as the pins rather than hand-positioned illustrative silhouettes.
+They remain appropriately labelled as regional/approximate.
+
+The atlas avoids showing all possible relationship lines at once, and
+keeps 37 currently unlocated PFT entities accessible in Landscape.
+The current PFT source snapshot has 20 located projects among 70
+located entities; **none are geocoded by guessing place names**.
+Saved perspectives retain the illustrated/places choice and selected
+entity category alongside the existing narrative and filters.
+
+The authored PFT illustration repository is still referenced as an
+externally owned asset pack. The original PFT basemap is visible for
+artistic comparison but is not silently used as a georeferenced map.
+
+Known limits: project cards are a responsive editorial presentation,
+not saved Kumu `mapx/mapy` coordinates; the geographic rendering
+still needs authenticated desktop/mobile/browser acceptance.
