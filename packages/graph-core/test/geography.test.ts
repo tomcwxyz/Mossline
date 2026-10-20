@@ -39,3 +39,22 @@ test("missing coordinates stay unplaced, including methodology/topic types",()=>
  assert.deepEqual(x.outsideArea.map(p=>p.id),["non-uk"]);
  assert.equal(graph.nodes[1].properties?.["Atlas location"],"");
 });
+
+test("ordinary datasets can supply explicit latitude/longitude without PFT-specific fields",()=>{
+  const dataset=parseGraphDocument({version:1,title:"Neighbourhood connections",nodes:[
+    {id:"library",label:"Community library",type:"place",
+      properties:{Latitude:"54.62",Longitude:"-1.57"}},
+    {id:"hub",label:"Neighbourhood hub",type:"organisation",
+      properties:{lat:54.61,lng:-1.58}},
+    {id:"missing",label:"Needs a location",type:"organisation",
+      properties:{region:"North East",geo:"54.6, -1.5"}},
+    {id:"invalid",label:"Invalid coords",type:"project",
+      properties:{latitude:"100",longitude:"-1.5"}}
+  ],edges:[]});
+  assert.deepEqual(readAtlasLocation(dataset.nodes[0]),{latitude:54.62,longitude:-1.57});
+  assert.deepEqual(readAtlasLocation(dataset.nodes[1]),{latitude:54.61,longitude:-1.58});
+  assert.equal(readAtlasLocation(dataset.nodes[2]),null);
+  assert.equal(readAtlasLocation(dataset.nodes[3]),null);
+  assert.equal(buildUkAtlas(dataset).placed.length,2);
+  assert.deepEqual(dataset.nodes[0].properties,{Latitude:"54.62",Longitude:"-1.57"});
+});
