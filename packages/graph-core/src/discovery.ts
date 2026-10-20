@@ -200,6 +200,7 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
     }
     const nodes=new Map<string,GraphDocument["nodes"][number]>();
     const edges:GraphDocument["edges"]=[];
+    const duplicateEdgeCounts = new Map<string,number>();
     let skipped=0,privateRows=0;
     const publicColumn = headers.find(h=>norm(h)==="public");
     const position=(i:number)=>({system:"csv" as const,fileName:file.name,recordNumber:i+2});
@@ -239,8 +240,12 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
             mapping.regionTarget==="source" || mapping.regionTarget==="both");
           const target=addNode(to,rule.toColumn,rule.toType,row,i,
             mapping.regionTarget==="target" || mapping.regionTarget==="both");
+          const edgeKey = JSON.stringify([source,target,rule.type.trim(),ruleIndex]);
+          const number = duplicateEdgeCounts.get(edgeKey) ?? 0;
+          duplicateEdgeCounts.set(edgeKey,number+1);
           edges.push({
-            id:"mapped:edge:"+i+":"+ruleIndex,source,target,type:rule.type.trim(),
+            id:"mapped:edge:"+encodeURIComponent(edgeKey)+":"+number,
+            source,target,type:rule.type.trim(),
             origin:{...position(i),recordId:"row:"+String(i+2)+":rule:"+String(ruleIndex+1)},
             properties:{...row}
           });

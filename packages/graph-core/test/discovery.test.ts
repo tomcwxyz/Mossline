@@ -141,3 +141,15 @@ test("Kumu import excludes explicit private elements and links pointing to them"
   assert.deepEqual(result.graph.edges.map(e=>e.type),["funded_by"]);
   assert.ok(result.issues.some(i=>i.message.includes("non-public")));
 });
+
+test("mapped relationship identity survives reordered spreadsheet rows",()=>{
+  const rows=["Organisation,Project","Growers A,Project A","Growers B,Project B"];
+  const first=file("before.csv",rows.join("\n"));
+  const second=file("after.csv",[rows[0],rows[2],rows[1]].join("\n"));
+  const analysed=discoverData(first);
+  if(analysed.kind!=="csv-table") throw Error("Expected tabular data");
+  const a=buildMappedGraph(first,analysed.mapping).graph;
+  const b=buildMappedGraph(second,analysed.mapping).graph;
+  assert.ok(a&&b);
+  assert.deepEqual(new Set(a.edges.map(e=>e.id)),new Set(b.edges.map(e=>e.id)));
+});
