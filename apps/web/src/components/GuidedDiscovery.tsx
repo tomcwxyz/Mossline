@@ -123,7 +123,7 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
       <div className="discovery-adjust-grid">
         <label>Where is the location or region (if anywhere)?
           {select(mapping.regionColumn,v=>update({...mapping,regionColumn:v,
-            descriptionColumn:mapping.descriptionColumn===v?"":mapping.descriptionColumn}}),
+            descriptionColumn:mapping.descriptionColumn===v?"":mapping.descriptionColumn}),
             "No region information")}
         </label>
         <label>Is there a column describing something?
