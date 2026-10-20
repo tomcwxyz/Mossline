@@ -10,7 +10,7 @@ import {
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
-import { DataMappingWorkbench } from "./DataMappingWorkbench";
+import { GuidedDiscovery } from "./GuidedDiscovery";
 import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
@@ -590,7 +590,7 @@ export function MapStudio() {
       {discovery?.kind==="unsupported" && !importPreview?.graph &&
         <p className="mapping-important">{discovery.reason}</p>}
       {discovery?.kind==="csv-table" && mappingFile &&
-        <DataMappingWorkbench key={mappingSession} file={mappingFile} discovery={discovery}
+        <GuidedDiscovery key={mappingSession} file={mappingFile} discovery={discovery}
           onPreview={previewMappedGraph} onChange={()=>{
             setImportPreview(null);setAcknowledgeRemovals(false);
           }}/>}
@@ -611,7 +611,7 @@ export function MapStudio() {
             <strong>{issue.severity}:</strong> {issue.message}</li>)}</ul>
         </details>
       </div>}
-      {importPreview && importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
+      {importPreview && importPreview.issues.length === 0 && <p className="help">No import blockers found in the fields checked. This doesn't verify the source claims.</p>}
       {importMode==="replace" && proposedChanges && <div className="import-change-report">
         <h3>What changes compared with this browser's current map?</h3>
         <p>Counts use stable record identities. Reordered source rows aren't treated as new links.
