@@ -71,3 +71,18 @@ test("atlas perspectives preserve curated project mode and type filter choices",
   assert.throws(()=>parsePerspectives([{...base,presentation:{
     ...places.presentation,atlasKind:"fantasy"}}]));
 });
+
+test("saved node arrangements are validated separately from source graph records",()=>{
+  const base={id:"custom",name:"My community network",graphKey:graphFingerprint(graph),
+    view:"landscape",basis:"all",region:"",query:"",
+    types:["organisation","project"],context:true,layout:"organic",labels:"all",createdAt:8};
+  const positions={"a":{x:130.25,y:-20},"b":{x:240,y:100}};
+  const parsed=parsePerspectives([{...base,positions}])[0];
+  assert.deepEqual(parsed.positions,positions);
+  assert.deepEqual(parsePerspectives([base])[0].positions,undefined);
+  assert.equal(graph.nodes[0].id,"a");
+  assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:Infinity,y:5}}}]));
+  assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:5,y:NaN}}}]));
+  assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:5,y:3,source:"changed"}}}]));
+  assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:1000001,y:5}}}]));
+});
