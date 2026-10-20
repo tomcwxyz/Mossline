@@ -13,6 +13,8 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
+import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
+import { PftVisualShowcase } from "./PftVisualShowcase";
 import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
@@ -577,10 +579,17 @@ export function MapStudio() {
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
+  function openPftVisualExample() {
+    if(createNewMap(PFT_VISUAL_EXAMPLE)) {
+      setIllustrated(true);
+      setNotice("Opened the PFT illustration showcase. Links are SYNTHETIC layout examples, not recorded PFT connections. Your other maps are saved.");
+      closeImport();
+    }
+  }
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.1</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.3</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -605,6 +614,7 @@ export function MapStudio() {
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
+    {!pftCompatible && <PftVisualShowcase onOpenSample={openPftVisualExample} />}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Explore what Mossline found</p>
