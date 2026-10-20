@@ -53,3 +53,21 @@ test("geographic atlas is a valid saved view without changing source topology",(
   assert.equal(parsed[0].view,"atlas");
   assert.equal(graphFingerprint(graph),record.graphKey);
 });
+
+test("atlas perspectives preserve curated project mode and type filter choices",()=>{
+  const base={
+    id:"uk-project-stories",name:"Projects around the UK",graphKey:graphFingerprint(graph),
+    view:"atlas",basis:"all",region:"",query:"",types:["organisation","project"],
+    context:true,layout:"organic",labels:"essential",createdAt:4
+  };
+  const illustrated={...base,presentation:{title:"UK projects",introduction:"",illustrated:true,
+    atlasMode:"stories",atlasKind:"project"}};
+  const places={...base,presentation:{title:"Organisations",introduction:"",illustrated:true,
+    atlasMode:"places",atlasKind:"organisation"}};
+  assert.equal(parsePerspectives([illustrated])[0].presentation?.atlasMode,"stories");
+  assert.equal(parsePerspectives([places])[0].presentation?.atlasKind,"organisation");
+  assert.throws(()=>parsePerspectives([{...base,presentation:{
+    ...illustrated.presentation,atlasMode:"unsupported"}}]));
+  assert.throws(()=>parsePerspectives([{...base,presentation:{
+    ...places.presentation,atlasKind:"fantasy"}}]));
+});
