@@ -88,3 +88,22 @@ The demo/source Google Sheets connection indicated inside a Kumu configuration
 file is not dereferenced. Users must provide separately exported rows if the
 project's `elements` and `connections` arrays are empty. Styling, views,
 positions, attachments and full Kumu backups are not converted.
+
+## PFT feed reconciliation
+
+A Kumu configuration backup with zero elements/connections must not be treated
+as the complete network. The PFT network's rows are supplied by Google
+Sheets and use separate `Elements` / `Connections` tabs. The canonical
+model now preserves the original category semantics (including topics,
+methodologies, outcomes and places), and the source connection IDs.
+`Atlas region` is the preferred visual group; `Geographic reach` remains
+part of original source properties and is not silently conflated.
+
+The sheet also contains coordinate and geometry support tabs. They are not
+network entities, so the CSV importer excludes them with a warning instead
+of adding hundreds of spurious basemap nodes or coastline connections.
+Future geography rendering should use a separately modelled display layer,
+never append synthetic geometry into the source relationship network.
+
+This is a read-only snapshot compatibility exercise. No live data has been
+committed to the repository, and no Kumu or Sheets configuration was updated.
