@@ -94,3 +94,62 @@ test("invalid image/source URLs are visibly reported without deleting original f
   assert.ok(result.issues.some(x=>x.message.includes("entity image URLs")));
   assert.ok(result.issues.some(x=>x.message.includes("entity source URLs")));
 });
+
+
+test("PFT-shaped Elements and Connections retain seven categories and atlas grouping",()=>{
+  const files=[
+    file("Elements.csv", [
+      "ID,Label,Type,Description,Public,Topics,Geographic reach,Atlas region,Website",
+      "org-x,Sample growers,Organisation,A fictional organisation,TRUE,Soil health,England,Northern England,https://example.org",
+      "proj-x,Sample project,Project,Work on soil,TRUE,Soil health,England,Northern England,",
+      "fund-x,Sample funder,Funder,Funding examples,TRUE,,UK-wide,UK-wide,",
+      "topic-x,Soil health,Topic,Subject,TRUE,,,,",
+      "place-x,Example county,Geography,Location,TRUE,,,,",
+      "method-x,Peer learning,ToC Methodology,Method,TRUE,,,,",
+      "output-x,Better practice,ToC Output,Outcome,TRUE,,,,"
+    ].join("\n")),
+    file("Connections.csv", [
+      "ID,From,To,Type,Role,Public,Source relationship ID",
+      "rel-1,proj-x,org-x,delivered_by,Lead,TRUE,source_1",
+      "rel-2,proj-x,fund-x,funded_by,,TRUE,source_2",
+      "rel-3,proj-x,topic-x,about,,TRUE,source_3",
+      "rel-4,method-x,output-x,enables,,TRUE,source_4",
+      "rel-5,output-x,proj-x,contributes_to,,TRUE,source_5",
+      "rel-6,proj-x,place-x,operates_in,,TRUE,source_6"
+    ].join("\n"))
+  ];
+  const result=previewImport(files);
+  assert.ok(result.graph);
+  assert.equal(result.graph.nodes.length,7);
+  assert.equal(result.graph.edges.length,6);
+  const count=(kind:string)=>result.graph!.nodes.filter(n=>n.type===kind).length;
+  for(const kind of ["organisation","project","funder","topic","place","methodology","outcome"])
+    assert.equal(count(kind),1);
+  const org=result.graph.nodes.find(n=>n.label==="Sample growers");
+  assert.equal(org?.region,"Northern England");
+  assert.deepEqual(org?.tags,["Soil health"]);
+  assert.equal(org?.sourceUrl,"https://example.org");
+  assert.equal(result.graph.edges[0].type,"delivered_by");
+  assert.equal(result.graph.edges[0].origin?.recordId,"rel-1");
+  assert.equal(result.graph.edges[0].properties?.Role,"Lead");
+});
+
+test("network sheets import without swallowing Kumu basemap and coastline helper CSVs",()=>{
+  const result=previewImport([
+    file("Elements.csv","ID,Label,Type\ne1,Example,Organisation\ne2,Example project,Project\n"),
+    file("Connections.csv","ID,From,To,Type\nr1,e1,e2,delivered_by\n"),
+    file("Positions (ignore).csv","ID,mapx,mapy\ne1,120,340\n"),
+    file("Basemap.csv","ID,Label,Type\nbasemap,Base map,Basemap\n"),
+    file("Coast points.csv","ID,Label,Type\ncoast-1,.,Basemap\n"),
+    file("Coast lines.csv","From,To,Type\ncoast-1,coast-2,coastline\n")
+  ]);
+  assert.ok(result.graph);
+  assert.equal(result.graph.nodes.length,2);
+  assert.equal(result.graph.edges.length,1);
+  assert.equal(result.issues.filter(x=>x.message.includes("visual-only")).length,4);
+});
+
+test("a helper-only CSV does not produce a fake network",()=>{
+  const result=previewImport([file("Coast points.csv","ID,Label,Type\ncoast-1,.,Basemap\n")]);
+  assert.equal(result.graph,null);
+});
