@@ -365,3 +365,27 @@ separately from Kumu's authored `mapx/mapy` positions; configurable
 perspective positioning; mobile visual and authenticated browser review.
 The included basemap is registered as an asset but not yet geo-referenced
 or rendered as a geographical network background.
+
+### Alpha 1.3 — visible artwork smoke test
+
+The initial Alpha 1.3 preview appeared unchanged because the visible header
+still said "alpha 1.1" and the PFT visual pack only activated **after** a
+PFT graph containing at least five exact source IDs had been loaded. This
+made the feature impossible to evaluate on the built-in non-PFT demo.
+
+The header now correctly reads **alpha 1.3**. A conspicuous **PFT artwork
+preview** is visible on the first screen even with a non-PFT map open:
+it shows the real owner-created hero, a browseable artwork gallery and
+**Open illustrated example map**. The button creates a separate map with
+20 illustrated entity examples, without overwriting any existing local maps.
+
+**The example is deliberately synthetic**. Its 20 connections are
+`inferred=true` so source-record searches and evidence inspectors do
+not present them as actual PFT relationships. To test the real PFT
+network, use **Discover your data** with the separate PFT Elements +
+Connections CSVs or the previously prepared portable Mossline JSON.
+The images should then appear automatically wherever source IDs match.
+
+This is a testable preview, not a claim of a completed authenticated visual
+browser walkthrough. The owner-hosted images load from a public, revision-
+pinned GitHub raw URL, and are not packaged under Mossline's code licence.
