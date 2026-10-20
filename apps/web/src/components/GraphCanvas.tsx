@@ -128,7 +128,7 @@ export function GraphCanvas({
           } },
           { selector: "node.key-node", style: { "border-width": 4, "width": 50, "height": 50,
             "font-weight": 700, "font-size": 13 } },
-          { selector: "node.label-hidden", style: { "text-opacity": 0 } },
+
           { selector: "node.view-highlight", style: {
             "border-color": "#ffd67f", "border-width": 6, "z-index": 19
           } },
@@ -163,7 +163,8 @@ export function GraphCanvas({
           { selector: "edge.path-step", style: {
             "line-color": "#ffcf75", "target-arrow-color": "#ffcf75",
             "source-arrow-color": "#ffcf75", "width": 4, "opacity": 1, "z-index": 32
-          } }
+          } },
+          { selector: "node.label-hidden", style: { "text-opacity": 0 } }
         ]
       });
       cy.on("tap", "node", event => {
