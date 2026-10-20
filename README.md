@@ -9,7 +9,7 @@ Mossline is an Apache-2.0 open-source prototype for mapping relationships betwee
 ## Built for any network — Alpha 1.4 preview
 
 Mossline is **not a PFT product**. The farming imagery and network are a separately
-owned, opt-in example showing one possible editorial treatment. A second fictional
+owned, optional example showing one possible editorial treatment. A second fictional
 **Neighbourhood Connections** example demonstrates organisations, projects, funders,
 places, people, topics and outcomes without any PFT artwork or specialised schema.
 Open **Explore example networks** to try either example without replacing your map.
@@ -31,7 +31,7 @@ without saved node positions remain valid. Browser local storage is still the
 only persistence mechanism; no hosted accounts, collaborative editing or map
 publishing has been added yet.
 
-The Alpha 1.4 work is a feature branch stacked on Alpha 1.3 and awaits CI and
+The Alpha 1.4 work is a feature branch stacked on Alpha 1.3 and has passed automated CI but awaits
 interactive browser acceptance. PFT-specific art attribution and licences are
 still governed separately from Mossline's Apache-2.0 code licence.
 
