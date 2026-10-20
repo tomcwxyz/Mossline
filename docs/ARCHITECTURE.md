@@ -195,3 +195,22 @@ overlay without registration would introduce false spatial claims.
 Atlas view and narrative are user-saved presentation state, never written
 into or substituted for original source records. The full PFT source
 dataset remains outside this public code repository.
+
+## Two ways of exploring geographic source records
+
+The UK atlas separates *editorial display* from the source's geographic
+facts. Illustrated projects show PFT artwork from source-matched entity
+IDs, with a selected-location thread. These threads are **not**
+network edges and never alter source records. Explore places shows
+category-filtered source pins and projects recorded relationships
+between selected visible endpoints. Missing source locations are not
+created from labels, region names or Kumu layout coordinates.
+
+Land-outline SVG paths are projected from Natural Earth 1:110m
+United Kingdom and Ireland public-domain boundary features, using
+the same equirectangular transform as points. Approximate rendering
+does not replace proper cartographic projection or survey boundaries.
+
+Saved perspective `presentation` optionally includes `atlasMode`
+(stories/places) and `atlasKind` (all/project/organisation/funder/place).
+Existing saved views without these optional fields remain valid.
