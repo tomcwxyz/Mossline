@@ -506,3 +506,38 @@
 .perspective-form textarea.search:focus-visible {outline:2px solid #eed292;outline-offset:2px;}
 .perspective-form label {line-height:1.4;}
 .perspective-form .help {font-size:10px;line-height:1.45;}
+
+/* Alpha 1.3 discoverability fix: show the actual PFT art without requiring a source import. */
+.visual-showcase {display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.8fr);
+  margin:15px 0 20px;border-radius:16px;border:1px solid #cad7c0;
+  background:#f6f3e8;color:#254b35;overflow:hidden;}
+.visual-showcase-hero{display:block;width:100%;height:100%;min-height:220px;max-height:330px;
+  object-fit:cover;background:#dde4d3;}
+.visual-showcase-intro{display:flex;flex-direction:column;justify-content:center;gap:9px;padding:22px 27px;}
+.visual-showcase-intro .eyebrow{color:#53795b;font-size:10px;letter-spacing:.12em;margin:0;}
+.visual-showcase-intro h2{color:#264d35;font:normal clamp(22px,2vw,30px)/1.2 Georgia,serif;margin:0;}
+.visual-showcase-intro>p:not(.eyebrow){color:#446449;font-size:12px;line-height:1.65;margin:0;}
+.visual-showcase-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:6px;}
+.visual-showcase-actions button {font-size:12px;min-height:40px;white-space:normal;}
+.visual-showcase-actions .button-outline {color:#274b36;background:#fdfcf7;border:1px solid #648772;
+  font-weight:700;opacity:1;}
+.visual-showcase-actions .button-outline:hover {color:#173d2b;background:#e2efdc;}
+.visual-showcase-intro .visual-showcase-warning {font-size:10px!important;color:#6f6b52!important;line-height:1.5!important;}
+.visual-showcase-gallery {grid-column:1/-1;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:12px;padding:18px;background:#edf2e7;border-top:1px solid #c9d8c3;}
+.visual-showcase-gallery figure {min-width:0;margin:0;padding:7px;background:#fafbf6;border:1px solid #d3dfcc;
+  border-radius:12px;text-align:center;}
+.visual-showcase-gallery figure img {width:100%;aspect-ratio:1;object-fit:cover;display:block;
+  border-radius:9px;background:#e2e9d8;}
+.visual-showcase-gallery figcaption {font-size:10px;line-height:1.4;color:#365440;margin-top:7px;}
+.visual-showcase-gallery>p{grid-column:1/-1;font-size:11px;color:#49634d;margin:0;}
+.visual-showcase-gallery a{color:#2d6243;text-decoration:underline;}
+@media(max-width:960px){
+  .visual-showcase-gallery{grid-template-columns:repeat(4,minmax(0,1fr));}
+}
+@media(max-width:690px){
+  .visual-showcase{grid-template-columns:1fr;}
+  .visual-showcase-hero{aspect-ratio:16/7;min-height:0;max-height:210px;}
+  .visual-showcase-intro{padding:18px;}
+  .visual-showcase-gallery{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
