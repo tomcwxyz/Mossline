@@ -201,7 +201,7 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Allow layout reset without modifying previously saved perspectives.
 - [x] Accept common explicit Latitude/Longitude and lat/lon pairs for the UK atlas.
 - [x] Show PFT reference artwork only for compatible PFT data.
-- [ ] Automated GitHub Actions test/build verification for the complete change set.
+- [x] GitHub Actions tests, TypeScript checks and production build pass (run 39490750503).
 - [ ] Protected-preview browser acceptance: restored positions on filters, across reloads, smaller screens.
 - [ ] Consider per-node locks, drag undo and saved-layout export/import.
 - [ ] General geography via a configurable MapLibre basemap rather than hard-coded UK bounds.
