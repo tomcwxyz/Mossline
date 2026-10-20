@@ -4,12 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   auditGraph, collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
-  previewImport, findRecordedRoutes, findStructuralJunctions,
-  type ImportPreview,
+  previewImport, discoverData, findRecordedRoutes, findStructuralJunctions,
+  type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
+import { DataMappingWorkbench } from "./DataMappingWorkbench";
 import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
@@ -226,6 +227,9 @@ export function MapStudio() {
   const [newName, setNewName] = useState("");
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
+  const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
+  const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
+  const [mappingSession, setMappingSession] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -374,11 +378,29 @@ export function MapStudio() {
     if (!files.length) return;
     try {
       const input = await Promise.all(files.map(async file => ({name:file.name,text:await file.text()})));
-      setImportPreview(previewImport(input));
+      const analysis = input.length===1 ? discoverData(input[0]) : null;
+      setDiscovery(analysis);
+      setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
+      setMappingSession(previous=>previous+1);
+      setImportPreview(analysis?.kind==="csv-table" ? null : previewImport(input));
       setNotice("");
     } catch (error) {
+      setImportPreview(null);
+      setDiscovery(null);
+      setMappingFile(null);
       setNotice("Import failed: " + (error instanceof Error ? error.message : "unable to read files"));
     }
+  }
+
+  function previewMappedGraph(result: MappedPreview) {
+    setImportPreview({
+      graph:result.graph, issues:result.issues,source:"csv",
+      counts:{nodes:result.counts.nodes,edges:result.counts.edges}
+    });
+  }
+
+  function closeImport() {
+    setImportPreview(null);setDiscovery(null);setMappingFile(null);
   }
 
   function applyImport() {
@@ -387,7 +409,7 @@ export function MapStudio() {
     updateGraph(preview.graph);
     setNotice("Loaded " + preview.graph.nodes.length + " entities and " + preview.graph.edges.length +
       " relationships. Changes stay in this browser.");
-    setImportPreview(null);
+    closeImport();
   }
 
   function resetDemo() {
@@ -397,7 +419,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.7</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.8</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -409,34 +431,65 @@ export function MapStudio() {
         <p className="subtitle">{graph.description}</p>
       </div>
       <div className="actions">
-        <input aria-label="Import Kumu blueprint JSON or exported Sheets CSVs" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
-        <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Import data</button>
+        <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
+        <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Discover your data</button>
         <button className="button-primary" onClick={() => saveJson(graph)}>↓ Export map</button>
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
-    {importPreview && <section className="import-preview" aria-label="Import preview">
+    {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Review before replacing the current map</p>
-          <h2>Import preview · {importPreview.source.toUpperCase()}</h2>
-          <p>{importPreview.counts.nodes} entities · {importPreview.counts.edges} relationships</p>
+          <h2>{discovery?.kind==="kumu-configuration" ? "Understanding your Kumu project" :
+            discovery?.kind==="csv-table" ? "Map your existing data" : "Import preview"}</h2>
+          {importPreview && <p>{importPreview.counts.nodes} entities · {importPreview.counts.edges} relationships</p>}
         </div>
-        <button className="button-outline" onClick={() => setImportPreview(null)}>Close</button>
+        <button className="button-outline" onClick={closeImport}>Close</button>
       </div>
-      <p className="help">No changes yet. Confirming will replace this browser's map.
-        Export your current map first to keep a backup. Files are processed locally.</p>
-      {importPreview.issues.length > 0 && <ul className="import-issues">
+      <p className="help">No changes yet. You will explicitly confirm before replacing this browser's map.
+        Export the current map first to keep a backup. Files are processed locally.</p>
+      {discovery?.kind==="kumu-configuration" && <div className="kumu-discovery">
+        <p className="eyebrow">Configuration discovered · {discovery.title}</p>
+        <div className="kumu-discovery-stats">
+          <div><strong>{discovery.attributes.length}</strong><span>Defined fields</span></div>
+          <div><strong>{discovery.perspectives.length}</strong><span>Perspectives</span></div>
+          <div><strong>{discovery.embeddedNodes}</strong><span>Embedded entities</span></div>
+          <div><strong>{discovery.embeddedEdges}</strong><span>Embedded links</span></div>
+        </div>
+        {discovery.externalSheets && <p className="mapping-important">
+          Linked Google Sheets source detected. The project's configuration is present, but the spreadsheet rows
+          must be exported separately before Mossline can reconstruct the network. No Google account is accessed here.
+        </p>}
+        <div className="kumu-discovery-parts">
+          <div><h3>Entity categories</h3><p>{discovery.elementTypes.length ?
+            discovery.elementTypes.join(" · ") : "No categories defined"}</p></div>
+          <div><h3>Relationship vocabulary</h3><p>{discovery.connectionTypes.length ?
+            discovery.connectionTypes.join(" · ") : "No relation labels defined"}</p></div>
+          <div><h3>Defined fields</h3><p>{discovery.attributes.join(" · ") || "None"}</p></div>
+          <div><h3>Existing perspectives</h3>
+            <ul>{discovery.perspectives.map((name,index)=><li key={index}>{name}</li>)}</ul>
+          </div>
+        </div>
+        {discovery.advice.map((line,index)=><p className="help" key={index}>{line}</p>)}
+      </div>}
+      {discovery?.kind==="unsupported" && !importPreview?.graph &&
+        <p className="mapping-important">{discovery.reason}</p>}
+      {discovery?.kind==="csv-table" && mappingFile &&
+        <DataMappingWorkbench key={mappingSession} file={mappingFile} discovery={discovery}
+          onPreview={previewMappedGraph} onChange={()=>setImportPreview(null)}/>}
+      {importPreview && importPreview.issues.length > 0 && <ul className="import-issues">
         {importPreview.issues.map((issue,index) => <li key={index} className={issue.severity}>
           <strong>{issue.severity}:</strong> {issue.message}</li>)}
       </ul>}
-      {importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
-      {importPreview.graph && <div className="import-coverage">
+      {importPreview && importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
+      {importPreview?.graph && <div className="import-coverage">
         <h3>Before you import: source coverage</h3>
         <CoverageReport graph={importPreview.graph} />
       </div>}
-      <button className="button-primary"
-        disabled={!importPreview.graph || importPreview.issues.some(i => i.severity === "error")}
-        onClick={applyImport}>Replace current map with import</button>
+      {importPreview && <button className="button-primary"
+        disabled={!importPreview.graph || importPreview.graph.nodes.length===0 ||
+          importPreview.issues.some(i => i.severity === "error")}
+        onClick={applyImport}>Confirm and replace current browser map</button>}
     </section>}
     <section className="workspace">
       <aside className="sidebar">
