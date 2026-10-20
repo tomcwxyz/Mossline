@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { graphFingerprint, parsePerspectives, parseGraphDocument } from "../src/index.ts";
+import { graphFingerprint, parsePerspectives, parseGraphDocument, applyNodeStyleImages } from "../src/index.ts";
 const graph=parseGraphDocument({version:1,title:"Example",nodes:[
   {id:"a",label:"First",type:"organisation"},{id:"b",label:"Second",type:"project"}
 ],edges:[{id:"e",source:"a",target:"b",type:"supports"}]});
@@ -85,4 +85,25 @@ test("saved node arrangements are validated separately from source graph records
   assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:5,y:NaN}}}]));
   assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:5,y:3,source:"changed"}}}]));
   assert.throws(()=>parsePerspectives([{...base,positions:{a:{x:1000001,y:5}}}]));
+});
+
+test("visual annotation validates and round-trips independently of source records",()=>{
+  const base={id:"generic",name:"Neighbourhood map",graphKey:graphFingerprint(graph),
+    view:"landscape",basis:"all",region:"",query:"",types:["organisation"],
+    context:true,layout:"organic",labels:"essential",createdAt:20};
+  const nodeStyles={a:{label:"show",size:"large",highlight:true,
+    imageUrl:"https://example.org/library.jpg"},b:{label:"hide",size:"small"}};
+  assert.deepEqual(parsePerspectives([{...base,nodeStyles}])[0].nodeStyles,nodeStyles);
+  assert.equal(parsePerspectives([base])[0].nodeStyles,undefined);
+  assert.throws(()=>parsePerspectives([{...base,nodeStyles:{a:{label:"always"}}}]));
+  assert.throws(()=>parsePerspectives([{...base,nodeStyles:{a:{imageUrl:"http://example.org/a.jpg"}}}]));
+  assert.throws(()=>parsePerspectives([{...base,nodeStyles:{a:{another:"field"}}}]));
+});
+test("view picture projection never changes graph data, source image or edges",()=>{
+  const before=JSON.stringify(graph);
+  const changed=applyNodeStyleImages(graph,{a:{imageUrl:"https://example.org/different.png"}});
+  assert.equal(changed.nodes[0].imageUrl,"https://example.org/different.png");
+  assert.equal(JSON.stringify(graph),before);
+  assert.deepEqual(changed.edges,graph.edges);
+  assert.equal(graphFingerprint(changed),graphFingerprint(graph));
 });
