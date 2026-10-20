@@ -22,6 +22,14 @@ const ORIGINAL = parseGraphDocument(demo);
 const STORAGE_KEY = "mossline-demo-graph-v1";
 const SAVED_KEY = "mossline-perspectives-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
+const DISCOVERY_EXAMPLE: ImportFile = {
+  name:"fictional-farming-relationships.csv",
+  text:"Organisation,Project,Funder,Region,Public\\n" +
+    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\\n" +
+    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\\n" +
+    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\\n" +
+    "Hidden Example,Private Project,Private Funder,South West,FALSE\\n"
+};
 type ViewMode = "landscape" | "collaborations";
 
 function saveJson(graph: GraphDocument) {
@@ -403,6 +411,15 @@ export function MapStudio() {
     setImportPreview(null);setDiscovery(null);setMappingFile(null);
   }
 
+  function tryExampleDiscovery() {
+    const analysis=discoverData(DISCOVERY_EXAMPLE);
+    setDiscovery(analysis);
+    setMappingFile(DISCOVERY_EXAMPLE);
+    setMappingSession(previous=>previous+1);
+    setImportPreview(null);
+    setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
+  }
+
   function applyImport() {
     const preview = importPreview;
     if (!preview?.graph || preview.issues.some(i => i.severity === "error")) return;
@@ -433,6 +450,7 @@ export function MapStudio() {
       <div className="actions">
         <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
         <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Discover your data</button>
+        <button className="button-outline" onClick={tryExampleDiscovery}>Try sample spreadsheet</button>
         <button className="button-primary" onClick={() => saveJson(graph)}>↓ Export map</button>
       </div>
     </section>
