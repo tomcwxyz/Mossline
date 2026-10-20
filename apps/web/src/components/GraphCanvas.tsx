@@ -20,13 +20,14 @@ interface Props {
   view: "landscape" | "collaborations";
   layoutMode: NetworkLayout;
   labelDensity: LabelDensity;
+  illustrated?: boolean;
 }
 
 type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -272,6 +273,35 @@ export function GraphCanvas({
     refreshLabels(cy);
   }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
 
+  // Presentation state changes the canvas palette, not canonical node records.
+  useEffect(() => {
+    const cy=cyRef.current;
+    if(!cy||!ready)return;
+    const styling=cy.style();
+    styling.selector("node").style({
+      color:illustrated?"#284835":"#f0f5e9",
+      "text-outline-color":illustrated?"#f5f1e6":"#143028",
+      "text-outline-width":illustrated?2.4:2.2,
+      "font-family":illustrated?"Georgia, serif":"Arial, sans-serif"
+    });
+    styling.selector("edge").style({
+      "line-color":illustrated?"#789d7d":"#8ca497",
+      "target-arrow-color":illustrated?"#789d7d":"#8ca497",
+      opacity:illustrated?0.48:0.43
+    });
+    styling.selector("node[imageUrl]").style({
+      shape:illustrated?"ellipse":"ellipse",
+      "border-color":illustrated?"#608966":"#d0e0c9",
+      "border-width":illustrated?3.5:3,
+      width:illustrated?61:54,height:illustrated?61:54,
+      "background-image":"data(imageUrl)",
+      "background-fit":"cover",
+      "background-clip":"node"
+    });
+    styling.update();
+    refreshLabels(cy);
+  },[illustrated,ready,graph]);
+
   const junctionIdentity = junctionNodeIds.join("|");
   useEffect(() => {
     const cy = cyRef.current;
@@ -299,7 +329,7 @@ export function GraphCanvas({
       renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
   };
 
-  return <div className="graph-stage">
+  return <div className={"graph-stage"+(illustrated?" illustrated":"")}>
     <div ref={rootRef} aria-label="Interactive network map. Select a node or relationship line to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
     <div className="graph-tools" aria-label="Network navigation">
       <button type="button" onClick={() => zoom(1.35)} aria-label="Zoom in" title="Zoom in">+</button>
