@@ -3,16 +3,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  applyAssetPack, matchAssetPack, visualAssetUrl, buildUkAtlas,
+  applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
-  type NodeType, type CollaborationBasis, type SavedPerspective
+  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
+import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
@@ -256,6 +257,7 @@ export function MapStudio() {
     key:string;positions:Record<string,{x:number;y:number}>
   }>({key:"",positions:{}});
   const [positionRevision,setPositionRevision] = useState(0);
+  const [nodeStyles,setNodeStyles]=useState<Record<string,NodeStyleOverride>>({});
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
@@ -336,8 +338,10 @@ export function MapStudio() {
     visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero):undefined);
   const storyTitleText=story?.title || (pftCompatible?PFT_VISUAL_PACK.frontPage?.title:graph.title);
   const storyIntroText=story?.introduction || (pftCompatible?PFT_VISUAL_PACK.frontPage?.introduction:graph.description);
-  const presentedGraph=useMemo(()=>showPftArtwork?
-    applyAssetPack(graph,PFT_VISUAL_PACK):graph,[graph,showPftArtwork]);
+  const presentedGraph=useMemo(()=>{
+    const withArtwork=showPftArtwork?applyAssetPack(graph,PFT_VISUAL_PACK):graph;
+    return applyNodeStyleImages(withArtwork,nodeStyles);
+  },[graph,showPftArtwork,nodeStyles]);
   const proposedChanges=useMemo(()=>importPreview?.graph?
     compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview]);
   const hasRemovals=!!proposedChanges &&
@@ -352,6 +356,14 @@ export function MapStudio() {
   }), [current, activeTypes.join("|"), query, region, focusId, context]);
   const selected = filtered.graph.nodes.find(n => n.id === selectedId) ?? null;
   const selectedEdge = filtered.graph.edges.find(e => e.id === selectedEdgeId) ?? null;
+  function changeNodeAppearance(id:string,value:NodeStyleOverride|undefined) {
+    setNodeStyles(current=>{
+      const next={...current};
+      if(!value||Object.keys(value).length===0)delete next[id];
+      else next[id]=value;
+      return next;
+    });
+  }
   function pickNode(id: string | null) {
     setSelectedId(id);
     setSelectedEdgeId(null);
@@ -463,6 +475,7 @@ export function MapStudio() {
       id:crypto.randomUUID(),name,graphKey,view,basis,region,query:query.slice(0,200),
       types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now(),
       ...(view==="atlas"?{}:{positions:activePositions}),
+      ...(Object.keys(nodeStyles).length?{nodeStyles}:{}),
       presentation:{
         title:storyTitle.trim().slice(0,100),
         introduction:storyIntroduction.trim().slice(0,1200),
@@ -491,11 +504,13 @@ export function MapStudio() {
     setActiveStory(item.presentation);setIllustrated(item.presentation?.illustrated??true);
     setAtlasMode(item.presentation?.atlasMode??"stories");
     setAtlasKind(item.presentation?.atlasKind??"project");
+    setNodeStyles(item.nodeStyles??{});
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function resetExplorer(next:GraphDocument) {
     setGraph(next);setActiveStory(undefined);
+    setNodeStyles({});
     setPositionState({key:"",positions:{}});
     setPositionRevision(value=>value+1);
     setAtlasMode("stories");setAtlasKind("project");
@@ -635,7 +650,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.4</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.5</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -836,13 +851,13 @@ export function MapStudio() {
             <input className="search" id="perspective-story-cover" type="url"
               value={storyCover} onChange={e=>setStoryCover(e.target.value)}
               placeholder="https://…"/>
-            <p className="help">Your filters, style, story and node arrangement are saved here.
+            <p className="help">Your filters, story, node appearance and arrangement are saved here.
               Drag nodes on Landscape or Collaborations before saving.
               Positions belong to this view only; source data is unchanged.</p>
             <div><button className="button-primary" type="submit">Save view</button>
               <button className="text-button" type="button" onClick={()=>setShowSave(false)}>Cancel</button></div>
           </form>}
-          {savedForMap.length===0 && <p className="help">Save your network arrangement, search and filters, then return to them later.</p>}
+          {savedForMap.length===0 && <p className="help">Save a named perspective to keep your network arrangement, node styling, search and filters.</p>}
           {savedForMap.map(item=><div key={item.id} className="saved-perspective">
             <button type="button" onClick={()=>openPerspective(item)}>
               <span>{item.name}</span><small>{item.view} · {item.layout}</small></button>
@@ -1040,7 +1055,7 @@ export function MapStudio() {
             junctionNodeIds={showJunctions?junctions.map(item=>item.nodeId):[]}
             onSelect={pickNode} onSelectEdge={pickEdge}
             view={view} layoutMode={layoutMode} labelDensity={labelDensity}
-            illustrated={illustrated}
+            illustrated={illustrated} nodeStyles={nodeStyles}
             savedPositions={activePositions} positionRevision={positionRevision}
             onPositionsChange={capturePositions} />}
         <div className="map-bottomline"><span>{view==="atlas"?
@@ -1051,8 +1066,12 @@ export function MapStudio() {
       <aside className="inspector">
         {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
           onPick={pickNode} onEvidence={exploreEvidence} /> :
-        selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph}
-          onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode} /> :
+        selected ? <>
+          <NodeInspector node={selected} graph={filtered.graph} source={graph}
+            onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode}/>
+          {view!=="atlas"&&<NodeAppearanceEditor node={selected}
+            value={nodeStyles[selected.id]??{}} onChange={changeNodeAppearance}/>}
+        </> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
             <p className="eyebrow">The relationships matter</p>
