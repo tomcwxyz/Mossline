@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Core } from "cytoscape";
-import type { GraphDocument } from "@mossline/graph-core";
+import type { GraphDocument, NodeStyleOverride } from "@mossline/graph-core";
 
 export type NetworkLayout = "organic" | "radial" | "regions";
 export type LabelDensity = "essential" | "all";
@@ -21,6 +21,7 @@ interface Props {
   layoutMode: NetworkLayout;
   labelDensity: LabelDensity;
   illustrated?: boolean;
+  nodeStyles?: Record<string,NodeStyleOverride>;
   /** Restored when opening a saved perspective, not part of source graph data. */
   savedPositions?: Record<string, Point>;
   positionRevision?: number;
@@ -31,7 +32,7 @@ type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, savedPositions, positionRevision=0, onPositionsChange
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, nodeStyles={}, savedPositions, positionRevision=0, onPositionsChange
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -39,6 +40,7 @@ export function GraphCanvas({
   const onSelectEdgeRef = useRef(onSelectEdge);
   const onPositionsChangeRef = useRef(onPositionsChange);
   const positionRevisionRef = useRef(positionRevision);
+  const nodeStylesRef = useRef(nodeStyles);
   const viewKeyRef = useRef("");
   const positionCacheRef = useRef(new Map<string, Map<string, Point>>());
   const labelsRef = useRef(labelDensity);
@@ -48,6 +50,7 @@ export function GraphCanvas({
   onSelectRef.current = onSelect;
   onSelectEdgeRef.current = onSelectEdge;
   onPositionsChangeRef.current = onPositionsChange;
+  nodeStylesRef.current = nodeStyles;
   labelsRef.current = labelDensity;
   selectedRef.current = selectedId;
 
@@ -70,7 +73,9 @@ export function GraphCanvas({
         .forEach(neighbour => { relatedIds.add(neighbour.id()); });
     }
     cy.nodes().forEach(node => {
-      const show = all || node.hasClass("key-node") || node.id() === selectedRef.current || relatedIds.has(node.id());
+      const labelChoice=nodeStylesRef.current[node.id()]?.label ?? "auto";
+      const show=labelChoice==="show" || (labelChoice!=="hide" &&
+        (all || node.hasClass("key-node") || node.id()===selectedRef.current || relatedIds.has(node.id())));
       if (node.hasClass("region-group")) return;
       if (show) node.removeClass("label-hidden");
       else node.addClass("label-hidden");
@@ -124,6 +129,9 @@ export function GraphCanvas({
           { selector: "node.key-node", style: { "border-width": 4, "width": 50, "height": 50,
             "font-weight": 700, "font-size": 13 } },
           { selector: "node.label-hidden", style: { "text-opacity": 0 } },
+          { selector: "node.view-highlight", style: {
+            "border-color": "#ffd67f", "border-width": 6, "z-index": 19
+          } },
           { selector: "node.active", style: { "border-color": "#f7e9b4", "border-width": 6, "opacity": 1,
             "z-index": 20, "text-opacity": 1 } },
           { selector: "node.nearby", style: { "opacity": 1, "text-opacity": 1 } },
@@ -335,6 +343,21 @@ export function GraphCanvas({
     styling.update();
     refreshLabels(cy);
   },[illustrated,ready,graph]);
+
+  // Overrides are view-only: the graph model remains the authority for relationships.
+  useEffect(()=>{
+    const cy=cyRef.current;
+    if(!cy||!ready)return;
+    cy.nodes().not(".region-group").forEach(node=>{
+      const style=nodeStyles[node.id()];
+      node.removeClass("view-highlight");
+      node.removeStyle("width height");
+      if(style?.highlight)node.addClass("view-highlight");
+      if(style?.size==="small")node.style({width:26,height:26});
+      if(style?.size==="large")node.style({width:86,height:86});
+    });
+    refreshLabels(cy);
+  },[nodeStyles,graph,illustrated,ready]);
 
   const junctionIdentity = junctionNodeIds.join("|");
   useEffect(() => {
