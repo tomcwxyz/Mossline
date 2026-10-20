@@ -462,3 +462,38 @@
 .trace-quick-picks button:hover {background:#406f50;border-color:#b0d1ab;}
 .trace-quick-picks button span {color:#e6ce93;}
 .trace-quick-picks button:focus-visible {outline:3px solid #e0bc74;outline-offset:2px;}
+
+/* Alpha 1.3: the owner-authored PFT visual companion pack */
+.pft-narrative {display:grid;grid-template-columns:minmax(180px,.8fr) minmax(0,1.65fr);
+  overflow:hidden;gap:0;border:1px solid #d9d7c7;border-radius:17px;
+  background:#f6f2e8;margin:18px 0 20px;color:#233d2d;}
+.pft-narrative>img{width:100%;height:100%;min-height:205px;max-height:340px;object-fit:cover;
+  background:#e6e9cf;display:block;}
+.pft-narrative-copy{padding:24px 30px;display:flex;flex-direction:column;justify-content:center;gap:9px;}
+.pft-narrative-copy .eyebrow{color:#67816c;margin:0;font-size:11px;letter-spacing:.12em;}
+.pft-narrative-copy h2{font:normal clamp(23px,2.5vw,35px) Georgia,serif;
+  line-height:1.18;color:#244132;margin:0;}
+.pft-narrative-copy p{font:normal 14px/1.65 Georgia,serif;color:#40533f;margin:0;}
+.pft-narrative-copy .pft-guidance{font:12px/1.6 sans-serif;color:#506c53;margin-top:4px;}
+.pft-narrative-copy span{font:10px/1.4 sans-serif;color:#667c67;margin-top:5px;}
+.map-panel.pft-illustrated{border-color:#c9d1bb;background:#faf7ed;}
+.map-panel.pft-illustrated .map-topline{color:#34533a;background:#ebeedd;
+  border-bottom:1px solid #d5dbc8;}
+.map-panel.pft-illustrated .map-topline>span{color:#3f6548;}
+.map-panel.pft-illustrated .map-topline label{color:#476249;}
+.map-panel.pft-illustrated .map-topline select{color:#244431;background:#fdfcf7;border-color:#adc3ac;}
+.map-panel.pft-illustrated .map-bottomline{background:#f0f2e6;color:#456b51;}
+.graph-stage.illustrated,.graph-stage.illustrated .graph-canvas{background:#f5f1e6;}
+.graph-stage.illustrated .graph-canvas{background-image:radial-gradient(#81987a22 1px,transparent 1px);
+  background-size:26px 26px;}
+.graph-stage.illustrated .graph-tools button{background:#fdfbf4;color:#30563e;
+  border-color:#b9c9af;}
+.graph-stage.illustrated .graph-tools button:hover{background:#dbe9d4;}
+.graph-stage.illustrated .graph-legend{background:#fcfaf2ed;border:1px solid #d2ddc9;
+  color:#3d5c41;}
+.graph-stage.illustrated .regional-hint{background:#fdfcf1;color:#36533b;}
+@media(max-width:750px){
+  .pft-narrative{grid-template-columns:1fr;}
+  .pft-narrative>img{max-height:210px;min-height:0;aspect-ratio:16/7;object-fit:cover;}
+  .pft-narrative-copy{padding:19px;}
+}
