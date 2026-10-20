@@ -12,7 +12,7 @@ export const UK_ATLAS_SIZE = {width:960,height:720} as const;
 const numericPart=(value:unknown):number|null=>{
   if(typeof value==="number")return Number.isFinite(value)?value:null;
   if(typeof value!=="string"||
-    !/^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$/.test(value.trim()))return null;
+    !/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(value.trim()))return null;
   const number=Number(value.trim());
   return Number.isFinite(number)?number:null;
 };
