@@ -3,8 +3,6 @@
 import { useMemo, useState } from "react";
 import { buildUkAtlas, UK_ATLAS_SIZE, type GraphDocument, type GraphNode } from "@mossline/graph-core";
 import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
-import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
-import { visualAssetUrl } from "@mossline/graph-core";
 
 interface Props {
   graph:GraphDocument;
@@ -15,6 +13,8 @@ interface Props {
   onModeChange:(mode:AtlasMode)=>void;
   kind:KindFilter;
   onKindChange:(kind:KindFilter)=>void;
+  /** Optional example-specific material; never displayed for unrelated networks. */
+  referenceArtwork?:{url:string;label:string};
 }
 type LocationGroup={key:string;x:number;y:number;ids:string[]};
 export type KindFilter="all"|"project"|"organisation"|"funder"|"place";
@@ -42,7 +42,7 @@ function nearestGroups(points:ReturnType<typeof buildUkAtlas>["placed"],cellSize
   }
   return [...grid.values()];
 }
-export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeChange,kind,onKindChange}:Props){
+export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeChange,kind,onKindChange,referenceArtwork}:Props){
   const [search,setSearch]=useState("");
   const [storyPage,setStoryPage]=useState(0);
   const [expandedGroup,setExpandedGroup]=useState<string|null>(null);
@@ -94,7 +94,7 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
     <header className="uk-atlas-intro">
       <div>
         <p className="eyebrow">A place to explore · UK network atlas</p>
-        <h3>Where the work happens</h3>
+        <h3>Places and connections</h3>
         <p>Places give this network its shape. Follow the projects, find an organisation, and explore what the source records say connects them.</p>
       </div>
       <div className="atlas-counts" aria-label="Source coordinate coverage">
@@ -106,16 +106,16 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
     {atlas.placed.length===0?
       <div className="atlas-no-locations">
         <p>No UK locations recorded in this map yet.</p>
-        <p>Import the PFT Elements and Connections tables, or its portable Mossline JSON.
-          This atlas only uses <strong>Atlas location</strong> coordinates.
-          We don't invent positions from names, regions or Kumu layout data.</p>
+        <p>Import a map with explicit coordinates, such as <strong>Latitude</strong> and
+          <strong> Longitude</strong> columns or an <strong>Atlas location</strong> field.
+          We never guess positions from names, regions or Kumu visual layout data.</p>
       </div>:
       <>
         <div className="atlas-mode-switch" role="group" aria-label="Choose how to explore the atlas">
           <button type="button" className={isStories?"active":""}
             disabled={!projects.length} aria-pressed={isStories}
             onClick={()=>{onModeChange("stories");setSearch("");setStoryPage(0);setExpandedGroup(null);}}>
-            <span aria-hidden="true">✳</span> Illustrated projects
+            <span aria-hidden="true">✳</span> Project stories
           </button>
           <button type="button" className={!isStories?"active":""}
             aria-pressed={!isStories}
@@ -140,7 +140,7 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
           </label>
           <p className="atlas-filter-feedback" role="status">
             {filtered.length} {filtered.length===1?"location":"locations"} shown
-            {isStories?" · Project artwork from source IDs":""}
+            {isStories?" · Source images where available":""}
           </p>
         </div>
         <div className="atlas-body">
@@ -200,7 +200,7 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
                 </div>;
               })()}
             </div>
-            {isStories&&<section className="atlas-story-strip" aria-label="Illustrated located projects">
+            {isStories&&<section className="atlas-story-strip" aria-label="Located project stories">
               <div className="atlas-story-strip-heading">
                 <div>
                   <p className="eyebrow">The projects · Explore their locations</p>
@@ -208,10 +208,10 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
                 </div>
                 <div className="atlas-pagination">
                   <button type="button" onClick={()=>setStoryPage(p=>Math.max(0,p-1))}
-                    disabled={page===0} aria-label="Previous illustrated projects">←</button>
+                    disabled={page===0} aria-label="Previous projects">←</button>
                   <span>{page+1} / {pages}</span>
                   <button type="button" onClick={()=>setStoryPage(p=>Math.min(pages-1,p+1))}
-                    disabled={page===pages-1} aria-label="Next illustrated projects">→</button>
+                    disabled={page===pages-1} aria-label="Next projects">→</button>
                 </div>
               </div>
               <div className="atlas-story-cards">
@@ -237,7 +237,7 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
               <p className="eyebrow">Follow a place</p>
               <h4>{selected?.label??"Where shall we begin?"}</h4>
               <p>{selected?(selected.type+" · "+(selectedPoint?"Source location recorded":"Not located in this atlas")):
-                "Choose an illustrated project or a map marker to explore what connects it to the wider landscape."}</p>
+                "Choose a project or a map marker to explore what connects it to the wider landscape."}</p>
             </div>
             {selected&&<div className="atlas-selected-summary">
               {selected.imageUrl&&<img src={selected.imageUrl} loading="lazy" alt=""/>}
@@ -260,16 +260,17 @@ export function AtlasCanvas({graph,selectedId,onSelect,onPickEdge,mode,onModeCha
               })}
               {attached.length>8&&<p>Showing eight connections. Use Landscape to explore the entire network.</p>}
             </div>}
-            <div className="atlas-reference">
-              <button type="button" onClick={()=>setShowReference(v=>!v)} aria-expanded={showReference}>
-                {showReference?"Hide":"View"} PFT’s original illustrated UK map ↗
+            {referenceArtwork&&<div className="atlas-reference">
+              <button type="button" onClick={()=>setShowReference(value=>!value)}
+                aria-expanded={showReference}>
+                {showReference?"Hide":"View"} {referenceArtwork.label} ↗
               </button>
               {showReference&&<>
-                <img loading="lazy" src={visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.basemap!)}
-                  alt="Original PFT illustrated UK map, shown as an artistic reference"/>
-                <p>The artwork is not georeferenced, so it is displayed separately from source-location markers.</p>
+                <img loading="lazy" src={referenceArtwork.url}
+                  alt={referenceArtwork.label+" (artistic reference only)"}/>
+                <p>This artistic reference is not georeferenced and is shown separately from the map markers.</p>
               </>}
-            </div>
+            </div>}
             <div className="atlas-explanation">
               <strong>Not everything has a location</strong>
               <p>{atlas.withoutLocation.length} entities have no source Atlas location.
