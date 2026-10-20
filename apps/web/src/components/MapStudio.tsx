@@ -11,7 +11,7 @@ import {
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
-import { AtlasCanvas } from "./AtlasCanvas";
+import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
@@ -246,6 +246,8 @@ export function MapStudio() {
   const [focusId, setFocusId] = useState<string | null>(null);
   const [layoutMode, setLayoutMode] = useState<NetworkLayout>("organic");
   const [illustrated, setIllustrated] = useState(true);
+  const [atlasMode,setAtlasMode]=useState<AtlasMode>("stories");
+  const [atlasKind,setAtlasKind]=useState<KindFilter>("project");
   const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
@@ -441,7 +443,9 @@ export function MapStudio() {
         title:storyTitle.trim().slice(0,100),
         introduction:storyIntroduction.trim().slice(0,1200),
         ...(cover?{coverUrl:cover}:{}),
-        illustrated
+        illustrated,
+        atlasMode,
+        atlasKind
       }
     };
     if(savePerspectives([...perspectives,record])){
@@ -458,11 +462,14 @@ export function MapStudio() {
     setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
     setLabelDensity(item.labels);setSelectedId(null);setSelectedEdgeId(null);setFocusId(null);
     setActiveStory(item.presentation);setIllustrated(item.presentation?.illustrated??true);
+    setAtlasMode(item.presentation?.atlasMode??"stories");
+    setAtlasKind(item.presentation?.atlasKind??"project");
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function resetExplorer(next:GraphDocument) {
     setGraph(next);setActiveStory(undefined);
+    setAtlasMode("stories");setAtlasKind("project");
     setSelectedId(null);
     setSelectedEdgeId(null);
     setConnectionTrails([]);
@@ -971,7 +978,9 @@ export function MapStudio() {
         </div>
         {view==="atlas" ?
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
-            onSelect={pickNode} onPickEdge={pickEdge}/> :
+            onSelect={pickNode} onPickEdge={pickEdge}
+            mode={atlasMode} onModeChange={setAtlasMode}
+            kind={atlasKind} onKindChange={setAtlasKind}/> :
           <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
             selectedId={selectedId} selectedEdgeId={selectedEdgeId}
             pathNodeIds={connectionTrail?.nodeIds ?? []}
