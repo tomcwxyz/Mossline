@@ -203,3 +203,41 @@ Organisation/Project/Funder/Region CSV in the local discovery workspace.
 The sample deliberately includes a `Public=FALSE` row so its exclusion is
 visible in the preview. Suggested relationship rules are editable; no import
 takes place until you build a preview and confirm replacing the browser map.
+
+## PFT feed compatibility review (alpha 0.9)
+
+We checked the user-provided Kumu project configuration against a **separately
+connected PFT Google Sheets feed**, without modifying either source. The
+project JSON contains attribute definitions and perspectives but no embedded
+graph records. The linked spreadsheet supplies two actual network tabs:
+
+- **Elements:** 107 populated rows (30 organisations, 25 projects,
+  10 funders, 16 geographies, 12 topics, 5 theory-of-change
+  methodologies and 9 theory-of-change outputs).
+- **Connections:** 242 populated relationship rows, all resolving
+  against an element ID in this snapshot.
+
+All rows in this particular feed are marked public, but explicitly labelled
+**prototype/demonstration and unverified**. The feed is a snapshot, not a
+verified directory. Do not interpret connections as endorsements or confirmed
+partnerships.
+
+The importer now maps the seven categories to dedicated canonical types
+(`Geography` → `place`, `ToC Methodology` → `methodology`,
+`ToC Output` → `outcome`). `Atlas region` takes precedence over
+`Geographic reach` for the visible regional grouping, while original
+columns remain in properties. This distinction was caught by a
+PFT-shaped regression test, which now passes.
+
+Four visual-only helper tabs — `Positions (ignore)`, `Basemap`,
+`Coast points`, `Coast lines` — are explicitly skipped with warnings
+during multi-CSV network import. They are **not discarded from the original
+Sheet**: their geographic overlay/placement rendering is simply outside
+this alpha. To import via the UI, download only the **Elements** and
+**Connections** tabs as CSV (or use the separately prepared portable
+Mossline JSON snapshot). No raw client spreadsheet or actual records have
+been committed to the public repository.
+
+This compatibility check covers structure and source references. A protected
+preview browser smoke test, verification of image rights, map recreation
+and shared/live Google Sheets synchronisation remain outstanding.
