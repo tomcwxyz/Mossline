@@ -19,8 +19,14 @@ const types: Record<string, NodeType> = {
 };
 const value = (v: unknown): string => v == null ? "" : String(v).trim();
 function field(row: Row, ...names: string[]): unknown {
-  const key = Object.keys(row).find(k => names.includes(k.trim().toLowerCase()));
-  return key === undefined ? undefined : row[key];
+  // Respect the caller's semantic precedence, not the order of CSV headings.
+  // This matters when a record has both Atlas region and Geographic reach.
+  const keys = Object.keys(row);
+  for (const name of names) {
+    const key = keys.find(k => k.trim().toLowerCase() === name);
+    if (key !== undefined && value(row[key])) return row[key];
+  }
+  return undefined;
 }
 function webUrl(raw: unknown): string | undefined {
   const s = value(raw);
