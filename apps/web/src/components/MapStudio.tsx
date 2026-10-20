@@ -247,6 +247,10 @@ export function MapStudio() {
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
+  const [storyTitle,setStoryTitle]=useState("");
+  const [storyIntroduction,setStoryIntroduction]=useState("");
+  const [storyCover,setStoryCover]=useState("");
+  const [activeStory,setActiveStory]=useState<SavedPerspective["presentation"]>();
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
@@ -299,6 +303,11 @@ export function MapStudio() {
   // Match exact source IDs, so artwork is never attached to another dataset by name.
   const pftCompatible=pftAssets.matched>=5;
   const showPftArtwork=pftCompatible&&illustrated;
+  const story=activeStory?.title||activeStory?.introduction ? activeStory : undefined;
+  const storyCoverUrl=story?.coverUrl || (pftCompatible&&PFT_VISUAL_PACK.frontPage?
+    visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero):undefined);
+  const storyTitleText=story?.title || PFT_VISUAL_PACK.frontPage?.title;
+  const storyIntroText=story?.introduction || PFT_VISUAL_PACK.frontPage?.introduction;
   const presentedGraph=useMemo(()=>showPftArtwork?
     applyAssetPack(graph,PFT_VISUAL_PACK):graph,[graph,showPftArtwork]);
   const proposedChanges=useMemo(()=>importPreview?.graph?
@@ -417,12 +426,24 @@ export function MapStudio() {
     const name=newName.trim().slice(0,60);
     if(!name) return;
     if(perspectives.length>=40){setNotice("40 saved views is the current local limit.");return;}
+    const cover=storyCover.trim();
+    if(cover&&!/^https:\/\/[^\s]+$/i.test(cover)) {
+      setNotice("Cover images must use HTTPS.");return;
+    }
     const record:SavedPerspective={
       id:crypto.randomUUID(),name,graphKey,view,basis,region,query:query.slice(0,200),
-      types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now()
+      types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now(),
+      presentation:{
+        title:storyTitle.trim().slice(0,100),
+        introduction:storyIntroduction.trim().slice(0,1200),
+        ...(cover?{coverUrl:cover}:{}),
+        illustrated
+      }
     };
     if(savePerspectives([...perspectives,record])){
       setShowSave(false);setNewName("");
+      setActiveStory(record.presentation);
+      setStoryTitle("");setStoryIntroduction("");setStoryCover("");
       setNotice("Saved perspective ‘"+name+"’ in this browser.");
     }
   }
@@ -432,11 +453,12 @@ export function MapStudio() {
     setView(item.view);setBasis(item.basis);setRegion(item.region);setQuery(item.query);
     setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
     setLabelDensity(item.labels);setSelectedId(null);setSelectedEdgeId(null);setFocusId(null);
+    setActiveStory(item.presentation);setIllustrated(item.presentation?.illustrated??true);
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function resetExplorer(next:GraphDocument) {
-    setGraph(next);
+    setGraph(next);setActiveStory(undefined);
     setSelectedId(null);
     setSelectedEdgeId(null);
     setConnectionTrails([]);
@@ -705,16 +727,15 @@ export function MapStudio() {
         </button>
       </div>}
     </section>}
-    {pftCompatible && <section className="pft-narrative" aria-label="PFT visual landscape introduction">
-      {PFT_VISUAL_PACK.frontPage && <img loading="lazy"
-        src={visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero)}
-        alt="An original illustration of a farming landscape" />}
+    {(pftCompatible||story) && <section className="pft-narrative" aria-label="Perspective story">
+      {storyCoverUrl&&<img loading="lazy" src={storyCoverUrl}
+        alt="Illustration introducing this network perspective" />}
       <div className="pft-narrative-copy">
-        <p className="eyebrow">Visual companion · Progressive Farming Trust</p>
-        <h2>{PFT_VISUAL_PACK.frontPage?.title}</h2>
-        <p>{PFT_VISUAL_PACK.frontPage?.introduction}</p>
-        <p className="pft-guidance">{PFT_VISUAL_PACK.frontPage?.guidance}</p>
-        <span>{pftAssets.matched} original illustrations matched by exact source ID ·
+        <p className="eyebrow">{story?"Your saved story":"Visual companion · Progressive Farming Trust"}</p>
+        <h2>{storyTitleText}</h2>
+        <p>{storyIntroText}</p>
+        {!story&&pftCompatible&&<p className="pft-guidance">{PFT_VISUAL_PACK.frontPage?.guidance}</p>}
+        <span>{pftCompatible?pftAssets.matched+" original illustrations available · ":""}
           Presentation only · Source records unchanged</span>
       </div>
     </section>}
@@ -732,6 +753,20 @@ export function MapStudio() {
             <label htmlFor="save-view-name">Name this perspective</label>
             <input className="search" id="save-view-name" maxLength={60} required value={newName}
               onChange={e=>setNewName(e.target.value)} placeholder="e.g. Northern connections"/>
+            <label htmlFor="perspective-story-title">Story heading (optional)</label>
+            <input className="search" id="perspective-story-title" maxLength={100}
+              value={storyTitle} onChange={e=>setStoryTitle(e.target.value)}
+              placeholder="What are we exploring?"/>
+            <label htmlFor="perspective-story-text">Introduce this view</label>
+            <textarea id="perspective-story-text" className="search" rows={3}
+              maxLength={1200} value={storyIntroduction}
+              onChange={e=>setStoryIntroduction(e.target.value)}
+              placeholder="Give readers a story or question to explore"/>
+            <label htmlFor="perspective-story-cover">Cover artwork (HTTPS URL)</label>
+            <input className="search" id="perspective-story-cover" type="url"
+              value={storyCover} onChange={e=>setStoryCover(e.target.value)}
+              placeholder="https://…"/>
+            <p className="help">Only presentation is saved — original source records are unchanged.</p>
             <div><button className="button-primary" type="submit">Save view</button>
               <button className="text-button" type="button" onClick={()=>setShowSave(false)}>Cancel</button></div>
           </form>}
