@@ -20,6 +20,9 @@ const TYPE_LABELS: Record<NodeType, string> = {
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const STORAGE_KEY = "mossline-demo-graph-v1";
+const MAP_LIBRARY_KEY="mossline-local-maps-v1";
+type LocalMap = { id:string; createdAt:number; title:string; graph:GraphDocument };
+const MAX_LOCAL_MAPS=8;
 const SAVED_KEY = "mossline-perspectives-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
@@ -211,6 +214,10 @@ function RelationshipInspector({ edge, source, onPick, onEvidence }: {
 
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
+  const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
+  const [activeMapId,setActiveMapId] = useState<string|null>(null);
+  const [importMode,setImportMode]=useState<"new"|"replace">("new");
+  const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
   const [context, setContext] = useState(true);
@@ -242,12 +249,35 @@ export function MapStudio() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    let loaded=ORIGINAL;
     try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) setGraph(parseGraphDocument(JSON.parse(saved)));
+      const saved=window.localStorage.getItem(STORAGE_KEY);
+      if(saved)loaded=parseGraphDocument(JSON.parse(saved));
     } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
+      // A damaged single-map cache must not destroy a valid map library.
     }
+    try {
+      const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
+      if(raw) {
+        const data=JSON.parse(raw) as {activeId:string;maps:unknown[]};
+        if(Array.isArray(data.maps)&&data.maps.length>0&&data.maps.length<=MAX_LOCAL_MAPS) {
+          const maps:LocalMap[]=data.maps.map(item=>{
+            if(!item||typeof item!=="object")throw Error("Invalid stored map");
+            const entry=item as LocalMap;
+            if(typeof entry.id!=="string"||typeof entry.title!=="string"||
+              typeof entry.createdAt!=="number")throw Error("Invalid stored map");
+            return {...entry,graph:parseGraphDocument(entry.graph)};
+          });
+          const active=maps.find(m=>m.id===data.activeId)??maps[0];
+          setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
+          return;
+        }
+      }
+    } catch {
+      setNotice("Your browser's saved map collection could not be read. The previous single-map data remains available.");
+    }
+    const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
+    setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
   }, []);
 
   useEffect(() => {
@@ -367,7 +397,7 @@ export function MapStudio() {
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
-  function updateGraph(next: GraphDocument) {
+  function resetExplorer(next:GraphDocument) {
     setGraph(next);
     setSelectedId(null);
     setSelectedEdgeId(null);
@@ -382,7 +412,44 @@ export function MapStudio() {
     setRegion("");
     setFocusId(null);
     setTypes(TYPE_KEYS);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  }
+
+  function persistMapLibrary(nextMaps:LocalMap[],nextActive:LocalMap):boolean {
+    try {
+      // Persist the entire collection first, so a failed write cannot pretend success.
+      window.localStorage.setItem(MAP_LIBRARY_KEY,JSON.stringify({
+        activeId:nextActive.id,maps:nextMaps
+      }));
+      window.localStorage.setItem(STORAGE_KEY,JSON.stringify(nextActive.graph));
+      setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
+      return true;
+    } catch {
+      setNotice("Unable to save the map collection in browser storage. Export your current map before continuing.");
+      return false;
+    }
+  }
+  function updateGraph(next:GraphDocument):boolean {
+    const current=localMaps.find(x=>x.id===activeMapId);
+    const entry:LocalMap=current?
+      {...current,title:next.title,graph:next}:
+      {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next};
+    const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
+    return persistMapLibrary(updated,entry);
+  }
+  function createNewMap(next:GraphDocument):boolean {
+    if(localMaps.length>=MAX_LOCAL_MAPS) {
+      setNotice("This browser has eight maps. Export one before creating another.");
+      return false;
+    }
+    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next};
+    return persistMapLibrary([...localMaps,entry],entry);
+  }
+  function selectLocalMap(id:string) {
+    const entry=localMaps.find(x=>x.id===id);
+    if(entry&&persistMapLibrary(localMaps,entry)) {
+      setNotice("Opened ‘"+entry.title+"’. Your other maps are still saved in this browser.");
+      closeImport();
+    }
   }
 
   async function onImport(event: ChangeEvent<HTMLInputElement>) {
@@ -396,6 +463,8 @@ export function MapStudio() {
       setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
       setMappingSession(previous=>previous+1);
       setAcknowledgeRemovals(false);
+      setImportMode("new");
+      setImportMapName(input.length===1?input[0].name.replace(/\.(csv|json)$/i,""):"Imported network");
       setImportPreview(analysis?.kind==="csv-table" ? null : previewImport(input));
       setNotice("");
     } catch (error) {
@@ -416,7 +485,7 @@ export function MapStudio() {
 
   function closeImport() {
     setImportPreview(null);setDiscovery(null);setMappingFile(null);
-    setAcknowledgeRemovals(false);
+    setAcknowledgeRemovals(false);setImportMode("new");setImportMapName("");
   }
 
   function tryExampleDiscovery() {
@@ -426,27 +495,32 @@ export function MapStudio() {
     setMappingSession(previous=>previous+1);
     setImportPreview(null);
     setAcknowledgeRemovals(false);
+    setImportMode("new");
+    setImportMapName("Fictional farming network");
     setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
   }
 
   function applyImport() {
-    const preview = importPreview;
-    if (!preview?.graph || preview.issues.some(i => i.severity === "error") ||
-      preview.graph.nodes.length===0 || (hasRemovals && !acknowledgeRemovals)) return;
-    updateGraph(preview.graph);
-    setNotice("Loaded " + preview.graph.nodes.length + " entities and " + preview.graph.edges.length +
-      " relationships. Changes stay in this browser.");
+    const preview=importPreview;
+    if(!preview?.graph||preview.issues.some(i=>i.severity==="error")||
+      preview.graph.nodes.length===0||
+      (importMode==="replace"&&hasRemovals&&!acknowledgeRemovals))return;
+    const proposed={...preview.graph,title:importMapName.trim().slice(0,100)||preview.graph.title};
+    const success=importMode==="new"?createNewMap(proposed):updateGraph(proposed);
+    if(!success)return;
     closeImport();
+    setNotice((importMode==="new"?"Created new map ‘":"Updated map ‘")+proposed.title+
+      "’ with "+proposed.nodes.length+" entities and "+proposed.edges.length+
+      " relationships. Other maps remain in this browser.");
   }
 
   function resetDemo() {
-    updateGraph(ORIGINAL);
-    setNotice("Illustrative landscape restored.");
+    if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.0</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.1</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -458,6 +532,12 @@ export function MapStudio() {
         <p className="subtitle">{graph.description}</p>
       </div>
       <div className="actions">
+        <label className="map-library-chooser">Your maps
+          <select value={activeMapId??""} onChange={e=>selectLocalMap(e.target.value)}
+            aria-label="Switch between maps saved in this browser">
+            {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
+          </select>
+        </label>
         <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
         <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Discover your data</button>
         <button className="button-outline" onClick={tryExampleDiscovery}>Try sample spreadsheet</button>
@@ -467,15 +547,15 @@ export function MapStudio() {
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
-        <div><p className="eyebrow">Review before replacing the current map</p>
+        <div><p className="eyebrow">Explore what Mossline found</p>
           <h2>{discovery?.kind==="kumu-configuration" ? "Understanding your Kumu project" :
             discovery?.kind==="csv-table" ? "Map your existing data" : "Import preview"}</h2>
           {importPreview && <p>{importPreview.counts.nodes} entities · {importPreview.counts.edges} relationships</p>}
         </div>
         <button className="button-outline" onClick={closeImport}>Close</button>
       </div>
-      <p className="help">No changes yet. You will explicitly confirm before replacing this browser's map.
-        Export the current map first to keep a backup. Files are processed locally.</p>
+      <p className="help">Nothing has been changed. We can create a separate map from this data, keeping your
+        current map safely in Your maps. Your files are processed in this browser.</p>
       {discovery?.kind==="kumu-configuration" && <div className="kumu-discovery">
         <p className="eyebrow">Configuration discovered · {discovery.title}</p>
         <div className="kumu-discovery-stats">
@@ -514,12 +594,25 @@ export function MapStudio() {
           onPreview={previewMappedGraph} onChange={()=>{
             setImportPreview(null);setAcknowledgeRemovals(false);
           }}/>}
-      {importPreview && importPreview.issues.length > 0 && <ul className="import-issues">
-        {importPreview.issues.map((issue,index) => <li key={index} className={issue.severity}>
-          <strong>{issue.severity}:</strong> {issue.message}</li>)}
-      </ul>}
+      {importPreview && importPreview.issues.length>0 && <div className="friendly-import-findings">
+        <h3>Things worth knowing</h3>
+        {importPreview.issues.some(i=>/non-public/i.test(i.message)) &&
+          <p>Some records were marked non-public, so we've left those out.</p>}
+        {importPreview.issues.some(i=>/region|description/i.test(i.message)) &&
+          <p>Some places or descriptions could mean different things across rows.
+            We've preserved the source evidence rather than making arbitrary choices.</p>}
+        {importPreview.issues.some(i=>/relationship pair\(s\)|duplicate/i.test(i.message)) &&
+          <p>Some relationships appear more than once. Their original records remain available to inspect.</p>}
+        {importPreview.issues.some(i=>i.severity==="error") &&
+          <p>We couldn't build a usable map yet. Expand the technical details below for the specific issue.</p>}
+        <details className="technical-import-findings">
+          <summary>Technical details · {importPreview.issues.length} findings</summary>
+          <ul>{importPreview.issues.map((issue,index)=><li key={index}>
+            <strong>{issue.severity}:</strong> {issue.message}</li>)}</ul>
+        </details>
+      </div>}
       {importPreview && importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
-      {proposedChanges && <div className="import-change-report">
+      {importMode==="replace" && proposedChanges && <div className="import-change-report">
         <h3>What changes compared with this browser's current map?</h3>
         <p>Counts use stable record identities. Reordered source rows aren't treated as new links.
           Differences in data fields count as updates; source row numbers do not.</p>
@@ -542,15 +635,37 @@ export function MapStudio() {
           I have reviewed or exported the existing map.
         </label>}
       </div>}
-      {importPreview?.graph && <div className="import-coverage">
-        <h3>Before you import: source coverage</h3>
+      {importPreview?.graph && <details className="import-coverage">
+        <summary>Explore detailed data coverage</summary>
         <CoverageReport graph={importPreview.graph} />
+      </details>}
+      {importPreview?.graph && <div className="import-destination">
+        <h3>What would you like to do with this network?</h3>
+        <label className="import-choice">
+          <input type="radio" checked={importMode==="new"} onChange={()=>{
+            setImportMode("new");setAcknowledgeRemovals(false);
+          }}/>
+          <span><strong>Create a new map</strong><small>Keep your existing map. Recommended when exploring a new dataset.</small></span>
+        </label>
+        <label className="import-choice">
+          <input type="radio" checked={importMode==="replace"} onChange={()=>setImportMode("replace")}/>
+          <span><strong>Update the map I'm viewing</strong><small>Review differences and explicitly approve any removals.</small></span>
+        </label>
+        <label htmlFor="import-map-name">Map name
+          <input id="import-map-name" value={importMapName} maxLength={100}
+            onChange={e=>setImportMapName(e.target.value)} placeholder="Give this map a name"/>
+        </label>
+        {importMode==="new"&&localMaps.length>=MAX_LOCAL_MAPS&&
+          <p role="alert">This browser already has eight maps. Export one before creating another.</p>}
+        <button className="button-primary" type="button"
+          disabled={!importPreview.graph || !importPreview.graph.nodes.length ||
+            importPreview.issues.some(i=>i.severity==="error") ||
+            (importMode==="new"&&localMaps.length>=MAX_LOCAL_MAPS) ||
+            (importMode==="replace"&&hasRemovals&&!acknowledgeRemovals)}
+          onClick={applyImport}>
+          {importMode==="new"?"Create new map and explore →":"Confirm updates to current map →"}
+        </button>
       </div>}
-      {importPreview && <button className="button-primary"
-        disabled={!importPreview.graph || importPreview.graph.nodes.length===0 ||
-          importPreview.issues.some(i => i.severity === "error") ||
-          (hasRemovals && !acknowledgeRemovals)}
-        onClick={applyImport}>Confirm and replace current browser map</button>}
     </section>}
     <section className="workspace">
       <aside className="sidebar">
