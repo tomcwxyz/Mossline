@@ -19,7 +19,9 @@ export const perspectiveSchema = z.object({
     title: z.string().trim().max(100),
     introduction: z.string().trim().max(1200),
     coverUrl: z.string().url().refine(url=>/^https:\/\//.test(url)).optional(),
-    illustrated: z.boolean()
+    illustrated: z.boolean(),
+    atlasMode: z.enum(["stories","places"]).optional(),
+    atlasKind: z.enum(["all","project","organisation","funder","place"]).optional()
   }).strict().optional(),
   createdAt: z.number().int().nonnegative()
 }).strict();
