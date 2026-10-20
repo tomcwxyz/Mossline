@@ -282,3 +282,35 @@
   linear-gradient(150deg,#355e72,#173834); }
 .inspector-cover.outcome { background:radial-gradient(circle at 23% 15%,#a7d4c999,transparent 58%),
   linear-gradient(150deg,#326b60,#173e35); }
+
+/* Alpha 1.0 — portable, revisioned recipe controls and non-destructive refresh review */
+.mapping-recipe-panel {padding:17px;margin:15px 0;border:1px solid #b4c6ae;background:#f6f7ed;border-radius:12px;}
+.mapping-recipe-intro h4 {font:normal 22px Georgia,serif;color:#294d36;margin:0 0 7px;}
+.mapping-recipe-intro p,.mapping-recipe-caveat {font-size:11px;color:#506754;line-height:1.6;margin:7px 0 15px;}
+.mapping-recipe-panel .mapping-field-grid label {display:grid;gap:5px;font-size:11px;color:#355a41;}
+.mapping-recipe-panel input,.mapping-recipe-panel select {min-width:0;width:100%;background:#fff;
+  color:#284531;border:1px solid #a9c2a8;border-radius:7px;padding:9px;font-size:12px;}
+.mapping-recipe-actions {display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+.mapping-recipe-actions button {border:1px solid #668771;background:#e4ece0;border-radius:6px;
+  color:#275038;font-size:11px;padding:9px 10px;}
+.mapping-recipe-actions button:first-child {background:#2e6043;color:#f7f6e9;}
+.mapping-recipe-actions button:disabled {opacity:.42;cursor:not-allowed;}
+.mapping-recipe-actions button:not(:disabled):hover {filter:brightness(.94);}
+.recipe-compatibility {padding:10px;border-radius:7px;font-size:11px;margin-top:11px;line-height:1.5;
+  border:1px solid #abccaa;background:#e2eee1;color:#29533c;}
+.recipe-compatibility.incompatible {border-color:#d3b180;background:#f9e8d3;color:#704529;}
+.recipe-compatibility small {display:block;margin-top:5px;font-size:10px;}
+.mapping-recipe-feedback {color:#305844;font-size:11px;line-height:1.5;}
+.mapping-recipe-panel :is(button,input,select):focus-visible {outline:2px solid #2c704a;outline-offset:2px;}
+.import-change-report {padding:18px;margin:17px 0;background:#eff4e8;border:1px solid #c3d4bd;border-radius:12px;}
+.import-change-report h3 {font:normal 21px Georgia,serif;margin:0 0 9px;color:#254938;}
+.import-change-report p {font-size:11px;line-height:1.55;color:#395e46;margin:9px 0;overflow-wrap:anywhere;}
+.change-metrics {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:13px 0;}
+.change-metrics>div {padding:12px;border:1px solid #c0d3bc;background:#f9faf5;border-radius:9px;}
+.change-metrics strong {display:block;color:#294b36;font-size:12px;margin-bottom:8px;}
+.change-metrics span {display:block;font-size:11px;color:#415d49;margin:4px 0;}
+.import-removal-consent {display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:13px;
+  color:#624127;background:#fff0db;border:1px solid #e3be8b;border-radius:9px;
+  font-size:12px;line-height:1.5;font-weight:650;}
+.import-removal-consent input {flex:none;margin:3px 0 0;width:18px;height:18px;accent-color:#35704a;}
+@media (max-width:620px){.change-metrics {grid-template-columns:1fr;}}
