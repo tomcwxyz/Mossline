@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  auditGraph, collaborationGraph, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
+  auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
@@ -235,6 +235,7 @@ export function MapStudio() {
   const [newName, setNewName] = useState("");
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
+  const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
   const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
   const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
   const [mappingSession, setMappingSession] = useState(0);
@@ -256,6 +257,10 @@ export function MapStudio() {
     } catch { window.localStorage.removeItem(SAVED_KEY); }
   }, []);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const proposedChanges=useMemo(()=>importPreview?.graph?
+    compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview]);
+  const hasRemovals=!!proposedChanges &&
+    (proposedChanges.nodes.removed>0 || proposedChanges.edges.removed>0);
   const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
     .sort((a,b)=>b.createdAt-a.createdAt),[perspectives,graphKey]);
   const current = useMemo(() => view === "collaborations" ? collaborationGraph(graph, basis) : graph, [graph, view, basis]);
@@ -390,6 +395,7 @@ export function MapStudio() {
       setDiscovery(analysis);
       setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
       setMappingSession(previous=>previous+1);
+      setAcknowledgeRemovals(false);
       setImportPreview(analysis?.kind==="csv-table" ? null : previewImport(input));
       setNotice("");
     } catch (error) {
@@ -401,6 +407,7 @@ export function MapStudio() {
   }
 
   function previewMappedGraph(result: MappedPreview) {
+    setAcknowledgeRemovals(false);
     setImportPreview({
       graph:result.graph, issues:result.issues,source:"csv",
       counts:{nodes:result.counts.nodes,edges:result.counts.edges}
@@ -409,6 +416,7 @@ export function MapStudio() {
 
   function closeImport() {
     setImportPreview(null);setDiscovery(null);setMappingFile(null);
+    setAcknowledgeRemovals(false);
   }
 
   function tryExampleDiscovery() {
@@ -417,12 +425,14 @@ export function MapStudio() {
     setMappingFile(DISCOVERY_EXAMPLE);
     setMappingSession(previous=>previous+1);
     setImportPreview(null);
+    setAcknowledgeRemovals(false);
     setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
   }
 
   function applyImport() {
     const preview = importPreview;
-    if (!preview?.graph || preview.issues.some(i => i.severity === "error")) return;
+    if (!preview?.graph || preview.issues.some(i => i.severity === "error") ||
+      preview.graph.nodes.length===0 || (hasRemovals && !acknowledgeRemovals)) return;
     updateGraph(preview.graph);
     setNotice("Loaded " + preview.graph.nodes.length + " entities and " + preview.graph.edges.length +
       " relationships. Changes stay in this browser.");
@@ -436,7 +446,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 0.9</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.0</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -501,19 +511,45 @@ export function MapStudio() {
         <p className="mapping-important">{discovery.reason}</p>}
       {discovery?.kind==="csv-table" && mappingFile &&
         <DataMappingWorkbench key={mappingSession} file={mappingFile} discovery={discovery}
-          onPreview={previewMappedGraph} onChange={()=>setImportPreview(null)}/>}
+          onPreview={previewMappedGraph} onChange={()=>{
+            setImportPreview(null);setAcknowledgeRemovals(false);
+          }}/>}
       {importPreview && importPreview.issues.length > 0 && <ul className="import-issues">
         {importPreview.issues.map((issue,index) => <li key={index} className={issue.severity}>
           <strong>{issue.severity}:</strong> {issue.message}</li>)}
       </ul>}
       {importPreview && importPreview.issues.length === 0 && <p className="help">No issues detected in supported fields. This is not a complete data-quality or Kumu-project audit.</p>}
+      {proposedChanges && <div className="import-change-report">
+        <h3>What changes compared with this browser's current map?</h3>
+        <p>Counts use stable record identities. Reordered source rows aren't treated as new links.
+          Differences in data fields count as updates; source row numbers do not.</p>
+        <div className="change-metrics">
+          <div><strong>Entities</strong><span>+{proposedChanges.nodes.added} added</span>
+            <span>~{proposedChanges.nodes.updated} updated</span>
+            <span>−{proposedChanges.nodes.removed} removed</span></div>
+          <div><strong>Relationships</strong><span>+{proposedChanges.edges.added} added</span>
+            <span>~{proposedChanges.edges.updated} updated</span>
+            <span>−{proposedChanges.edges.removed} removed</span></div>
+        </div>
+        {proposedChanges.nodes.addedExamples.length>0 && <p><strong>New entities:</strong> {proposedChanges.nodes.addedExamples.join(" · ")}</p>}
+        {proposedChanges.nodes.removedExamples.length>0 && <p><strong>Missing from proposed map:</strong> {proposedChanges.nodes.removedExamples.join(" · ")}</p>}
+        {proposedChanges.edges.removedExamples.length>0 && <p><strong>Removed links (examples):</strong> {proposedChanges.edges.removedExamples.join(" · ")}</p>}
+        {hasRemovals && <label className="import-removal-consent">
+          <input type="checkbox" checked={acknowledgeRemovals}
+            onChange={event=>setAcknowledgeRemovals(event.target.checked)}/>
+          I understand this replacement will remove {proposedChanges.nodes.removed} entities and
+          {" "}{proposedChanges.edges.removed} relationships from the current browser map.
+          I have reviewed or exported the existing map.
+        </label>}
+      </div>}
       {importPreview?.graph && <div className="import-coverage">
         <h3>Before you import: source coverage</h3>
         <CoverageReport graph={importPreview.graph} />
       </div>}
       {importPreview && <button className="button-primary"
         disabled={!importPreview.graph || importPreview.graph.nodes.length===0 ||
-          importPreview.issues.some(i => i.severity === "error")}
+          importPreview.issues.some(i => i.severity === "error") ||
+          (hasRemovals && !acknowledgeRemovals)}
         onClick={applyImport}>Confirm and replace current browser map</button>}
     </section>}
     <section className="workspace">
