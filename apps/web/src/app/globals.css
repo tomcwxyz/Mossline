@@ -269,3 +269,16 @@
   .kumu-discovery-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
   .kumu-discovery-parts,.mapping-field-grid {grid-template-columns:1fr;}
 }
+
+/* PFT category differentiation for concepts, methods and outcomes */
+.small-dot.topic,.legend-symbol.topic { background:#a2b777; }
+.small-dot.methodology,.legend-symbol.methodology { background:#72939f; }
+.small-dot.outcome,.legend-symbol.outcome { background:#7fa7a3; }
+.legend-symbol.methodology { border-radius:3px; transform:rotate(45deg) scale(.75); }
+.legend-symbol.outcome { border-radius:2px; transform:rotate(45deg) scale(.75); }
+.inspector-cover.topic { background:radial-gradient(circle at 28% 20%,#cad79899,transparent 55%),
+  linear-gradient(150deg,#586a37,#193b30); }
+.inspector-cover.methodology { background:radial-gradient(circle at 23% 15%,#a7c2ca99,transparent 58%),
+  linear-gradient(150deg,#355e72,#173834); }
+.inspector-cover.outcome { background:radial-gradient(circle at 23% 15%,#a7d4c999,transparent 58%),
+  linear-gradient(150deg,#326b60,#173e35); }
