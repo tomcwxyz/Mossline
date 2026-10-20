@@ -180,3 +180,15 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Georeference the PFT illustrated UK basemap or migrate to a licensed vector/tiled base layer.
 - [ ] Per-perspective manual node arrangement independent of immutable source geographic coordinates.
 - [ ] Improved geographic bounds/selection for source networks beyond the UK.
+
+## Alpha 1.3 — illustrated atlas refinements
+- [x] Replace hand-rounded UK outline with geometry directly derived from Natural Earth public-domain data.
+- [x] Add Illustrated projects and Explore places presentations within UK atlas.
+- [x] Curate source-located projects with PFT artwork, paginated project cards and a selected-place location thread.
+- [x] Make category filters and search available for located entities without displaying every possible relationship.
+- [x] Clarify which lines indicate geographical placement versus source-recorded relationships.
+- [x] Preserve atlas mode and category in browser-saved perspectives and validate the new presentation fields.
+- [ ] Authenticate and visually inspect project cards/markers at desktop and mobile sizes.
+- [ ] Full manual per-perspective node placement with a separate authored-position model.
+- [ ] Genuine georeferencing of the PFT illustrated UK basemap, if wanted, with registration controls.
+- [ ] Label collision and clustering improvements for screen size, zoom level and large datasets.
