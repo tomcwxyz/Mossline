@@ -151,3 +151,26 @@ The browser-local map collection (`mossline-local-maps-v1`) stores
 named graph snapshots in localStorage; a legacy single-map snapshot is
 bootstrapped once on first load. This is not shared, hosted, synced,
 encrypted or production durability. Eight stored maps is an initial cap.
+
+## Separately licensed visual asset packs and narrative overlays
+
+`VisualAssetPack` is a manifest that references an external revision-pinned
+asset repository. `matchAssetPack` only considers exact source record IDs;
+`applyAssetPack` returns a disposable, image-enriched projection of the
+canonical graph, never changing source records or exports. Unknown assets
+fall back to source pictures and category symbols. An automatic PFT option
+is shown only if at least five source IDs match the curated manifest.
+No asset files are included in the open-source code repository.
+
+A `SavedPerspective` optionally carries `presentation`: story heading,
+introduction, HTTPS cover URL and illustrated-mode flag. It remains scoped
+by the existing graph fingerprint. This is local browser persistence, not
+published editorial content or a hosted multi-user permissions system.
+Older perspectives without presentation retain backwards compatibility.
+
+PFT image filenames match 82 of 107 current network element IDs. The PFT
+feed's `Atlas location` field contains latitude/longitude strings, while
+`mapx/mapy` and `geo` are different Kumu layout/geography metadata and
+must not be silently used interchangeably. The asset pack registers the
+original basemap but no geographic overlay is claimed until coordinates
+are properly projected and independently tested.
