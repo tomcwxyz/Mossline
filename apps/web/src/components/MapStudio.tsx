@@ -306,8 +306,8 @@ export function MapStudio() {
   const story=activeStory?.title||activeStory?.introduction ? activeStory : undefined;
   const storyCoverUrl=story?.coverUrl || (pftCompatible&&PFT_VISUAL_PACK.frontPage?
     visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero):undefined);
-  const storyTitleText=story?.title || PFT_VISUAL_PACK.frontPage?.title;
-  const storyIntroText=story?.introduction || PFT_VISUAL_PACK.frontPage?.introduction;
+  const storyTitleText=story?.title || (pftCompatible?PFT_VISUAL_PACK.frontPage?.title:graph.title);
+  const storyIntroText=story?.introduction || (pftCompatible?PFT_VISUAL_PACK.frontPage?.introduction:graph.description);
   const presentedGraph=useMemo(()=>showPftArtwork?
     applyAssetPack(graph,PFT_VISUAL_PACK):graph,[graph,showPftArtwork]);
   const proposedChanges=useMemo(()=>importPreview?.graph?
