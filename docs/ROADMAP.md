@@ -155,3 +155,13 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Geographical basemap and regional filters using explicit valid coordinates.
 - [ ] Author-controlled node placement, edge styles, badges and per-perspective node display.
 - [ ] Written explicit artwork-pack usage/licensing terms before public redistribution.
+
+## Alpha 1.3 — artwork visibility correction
+- [x] Fix stale "alpha 1.1" header on the Alpha 1.3 branch.
+- [x] Make the real PFT hero/artwork gallery visible without importing PFT network data.
+- [x] Offer a separate 20-entity illustrated **synthetic** showcase map on one click.
+- [x] Verify all 20 example IDs match files in the 82-asset manifest.
+- [x] Mark all mock links inferred so they cannot masquerade as recorded source relationships.
+- [x] Vercel preview and CI production build/tests pass.
+- [ ] Authenticated browser confirmation that all images render and layout is attractive.
+- [ ] Import the real PFT 107/242 graph in-browser, then visually compare against Kumu.
