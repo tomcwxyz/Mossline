@@ -273,3 +273,34 @@ rows remain indistinguishable and should be reviewed if source evidence differs.
 A review is required for every replacement. Existing paired Kumu Elements/
 Connections CSV import still uses its dedicated importer; saved recipes
 currently apply to single generic CSV discovery/mapping only.
+
+## Alpha 1.1 — show the network before asking users to model it
+
+**Discover your data** now begins with a visual, source-derived sample of
+the possible entities and relationships. Users can select **Yes — show me
+the network** or **Not quite — help me adjust it**. The latter offers
+plain-language corrections to which columns describe connections, regions
+and descriptions. Full entity-type/rule editing and the Alpha 1.0 saved
+mapping recipes remain available under **Advanced mapping and saved recipes**.
+
+Suggestions use **deterministic, local heuristics**, not an AI model.
+Mossline does not infer a relationship merely from unrelated Name and Region
+columns. For ordinary Organisation/Project/Funder rows, it suggests plausible
+relationships while always requiring review. If a region applies to an
+organisation, the same row no longer assigns that location to its project
+or funder. Choosing Region as both the region and description field raises
+a clear error instead of producing contradictory output.
+
+**Create a new map** is now the default after preview. The current map is
+saved in a small browser-local **Your maps** collection, and users can
+switch back without export/re-import. The browser currently supports eight
+saved maps; localStorage limits can be smaller, so export important work as
+JSON. The previous **update current map** path remains available explicitly,
+with a descriptive change report and additional consent for removals.
+Warnings are summarised in normal language; original detailed findings are
+available behind a technical disclosure.
+
+This is a real UI implementation and automated model/build test, **not yet
+a completed authenticated browser usability or accessibility trial**.
+No hosted multi-user workspaces, server data storage or model/API inference
+have been added.

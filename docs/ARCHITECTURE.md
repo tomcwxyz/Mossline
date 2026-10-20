@@ -129,3 +129,25 @@ The generic CSV mapping path now emits identity-stable relationship IDs
 rather than row-index IDs. Identical duplicate relation instances cannot be
 distinguished without a user-supplied row-level stable identifier; this is
 explicitly a future identity resolution task.
+
+## Alpha 1.1 — novice discovery boundary
+
+`GuidedDiscovery` presents small actual example paths from
+`buildMappedGraph` with an explicit heuristic/verification caveat. It
+separates user-facing interpretation from advanced field/graph modelling.
+No network is created until the user previews and accepts the import.
+A beginner's first import uses `createNewMap`; replacement is a
+deliberate alternative with change review and removal confirmation.
+
+The `regionEntityColumn` optional mapping field gives regional
+metadata one specific entity column, preventing shared projects/funders
+from inheriting regional values across multiple relationship rules.
+Older mapping recipes without it still use the previous `regionTarget`
+semantics, and can be updated through the review workflow.
+Generic spreadsheets are conservatively classified as entity lists
+unless known relation-column patterns or explicit endpoints are present.
+
+The browser-local map collection (`mossline-local-maps-v1`) stores
+named graph snapshots in localStorage; a legacy single-map snapshot is
+bootstrapped once on first load. This is not shared, hosted, synced,
+encrypted or production durability. Eight stored maps is an initial cap.

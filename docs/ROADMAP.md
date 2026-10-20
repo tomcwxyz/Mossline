@@ -111,3 +111,18 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Preserve entity-specific metadata from multiple relationship rows rather than first-row-wins.
 - [ ] Merge rather than replace the existing graph, with conflict review and change provenance.
 - [ ] Google Sheets read-only connections, sync proposals and schedule-aware change histories.
+
+## Alpha 1.1 — discovery first, advanced mapping second
+- [x] Show real source-derived example relationships before asking users to map tables.
+- [x] Plain-language approve or adjust entry point; detailed mapping and recipes collapsed by default.
+- [x] No synthetic links for spreadsheets that only contain entity name and region columns.
+- [x] Keep location on the correct entity category across multi-relationship rules.
+- [x] Validate ambiguous region/description reuse before building.
+- [x] Create new maps by default; preserve existing local maps in a switchable browser library.
+- [x] Reserve change reports, removal confirmation and destructive controls for explicit update actions.
+- [x] Group findings into understandable explanations, with technical details available if requested.
+- [x] Regression test fictional spreadsheet: 7 entities, 6 links, 1 private row excluded.
+- [ ] Authenticated browser and mobile keyboard/screen-reader walkthrough of the whole import.
+- [ ] Independent novice user test of a first map in 5 minutes, without graph terminology.
+- [ ] Further polish of visual map preview for large/ambiguous source tables.
+- [ ] Hosted named workspaces, proper map library and non-destructive database-backed sync.

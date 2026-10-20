@@ -202,3 +202,25 @@ test("a mistaken Region-to-Description mapping fails with a helpful message",()=
   assert.equal(result.graph,null);
   assert.ok(result.issues.some(x=>x.severity==="error"&&x.message.includes("region and description")));
 });
+
+test("the beginner farming sample produces seven entities, six links and no invented regional conflicts",()=>{
+  const input={name:"fictional-farming-relationships.csv",text:
+    "Organisation,Project,Funder,Region,Public\n"+
+    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\n"+
+    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\n"+
+    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n"+
+    "Hidden Example,Private Project,Private Funder,South West,FALSE\n"};
+  const suggested=discoverData(input);
+  if(suggested.kind!=="csv-table")throw Error("CSV expected");
+  const proposal=buildMappedGraph(input,suggested.mapping);
+  assert.ok(proposal.graph);
+  assert.equal(proposal.counts.nodes,7);
+  assert.equal(proposal.counts.edges,6);
+  assert.equal(proposal.counts.skipped,1);
+  assert.equal(proposal.graph.nodes.find(n=>n.label==="Living Soil Trials")?.region,undefined);
+  assert.equal(proposal.graph.nodes.find(n=>n.label==="Common Acre Fund")?.region,undefined);
+  assert.equal(proposal.graph.nodes.find(n=>n.label==="Moorland Co-operative")?.region,"North East");
+  assert.equal(proposal.issues.some(x=>x.message.includes("Multiple regional values")),false);
+  assert.equal(proposal.issues.some(x=>x.message.includes("Conflicting descriptions")),false);
+  assert.equal(proposal.graph.nodes.some(n=>n.label==="Hidden Example"),false);
+});
