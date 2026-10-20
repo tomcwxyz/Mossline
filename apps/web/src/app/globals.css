@@ -729,3 +729,10 @@
 .map-options .reset-layout:hover {background:#c9dbcb;color:#1c3f2a;}
 .map-panel.editorial-style .map-options .reset-layout {border-color:#a4c2a6;color:#244b33;}
 .map-panel.editorial-style .map-options .reset-layout:hover {background:#dce9d8;}
+
+/* The legend follows the categories in the current dataset, including community maps. */
+.legend-symbol.person {background:#cba5b5;}
+.legend-symbol.place {background:#99b6a6;border-radius:3px;transform:rotate(45deg) scale(.8);}
+.legend-symbol.other {background:#b2b9a9;}
+.small-dot.other {background:#b2b9a9;}
+.graph-legend {flex-wrap:wrap;max-width:calc(100% - 35px);}
