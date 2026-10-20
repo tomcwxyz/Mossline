@@ -174,3 +174,24 @@ feed's `Atlas location` field contains latitude/longitude strings, while
 must not be silently used interchangeably. The asset pack registers the
 original basemap but no geographic overlay is claimed until coordinates
 are properly projected and independently tested.
+
+## UK geographic projection (Alpha 1.3)
+
+`geography.ts` strictly parses an original node property called
+`Atlas location` as `latitude, longitude` and checks the regional UK
+viewport. It intentionally does not use Kumu `geo`, `mapx`/`mapy`,
+regional labels or geocoding guesses. `buildUkAtlas` returns located,
+unlocated and outside-viewport records separately, preserving graph data.
+
+The client renders public-domain Natural Earth simplified land outlines
+in the same equirectangular projection as source-derived pins. Nearby
+points are grouped by screen-cell for readability; underlying coordinates
+remain unchanged in the graph. Only edges originally recorded in the
+graph, with two plotted endpoints, become highlighted connection lines
+on node selection. A standalone PFT basemap is shown as decoration and
+is **not** georeferenced; compositing it directly behind the coordinate
+overlay without registration would introduce false spatial claims.
+
+Atlas view and narrative are user-saved presentation state, never written
+into or substituted for original source records. The full PFT source
+dataset remains outside this public code repository.
