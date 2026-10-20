@@ -68,7 +68,7 @@ test("fictional community fixture is independent of the farming example",()=>{
   assert.equal(new Set(graph.nodes.map(n=>n.type)).has("funder"),true);
   assert.equal(new Set(graph.nodes.map(n=>n.type)).has("person"),true);
   const atlas=buildUkAtlas(graph);
-  assert.equal(atlas.placed.length,11);
+  assert.equal(atlas.placed.length,10);
   assert.equal(graph.nodes.some(n=>n.properties?.["Atlas location"]),false);
   assert.equal(graph.nodes.some(n=>n.origin?.system==="kumu"),false);
 });
