@@ -453,3 +453,12 @@
 @media(max-width:900px) {
   .trace-panel {padding:14px 12px;}
 }
+
+.trace-quick-picks {margin:13px 0 3px;padding-top:10px;border-top:1px solid #547760;display:grid;gap:7px;}
+.trace-quick-picks p {font-size:11px;line-height:1.4;font-weight:650;color:#dce8d6;margin:0 0 2px;}
+.trace-quick-picks button {background:#2b5340;border:1px solid #6b9175;border-radius:7px;
+  padding:9px 10px;color:#f2f3e7;font-size:11px;text-align:left;line-height:1.35;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.trace-quick-picks button:hover {background:#406f50;border-color:#b0d1ab;}
+.trace-quick-picks button span {color:#e6ce93;}
+.trace-quick-picks button:focus-visible {outline:3px solid #e0bc74;outline-offset:2px;}
