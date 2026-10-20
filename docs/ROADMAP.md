@@ -140,3 +140,18 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Protected-preview authenticated browser and mobile keyboard/accessibility walkthrough.
 - [ ] Typeahead/virtualised destination choices for very large imported maps.
 - [ ] Offer a broader depth control and advanced directed-only exploration.
+
+## Alpha 1.3 — owner-authored PFT visual companion (first stage)
+- [x] Inspect PFT visual repository and map 82 exact image IDs to 107 PFT network records.
+- [x] Keep the artwork in its owned repository; pin referenced asset revision.
+- [x] General visual pack interface and pure presentation-only projection.
+- [x] Apply owner-created illustration overrides without overwriting source image values.
+- [x] PFT intro banner with original hero and evidence/prototype caveat.
+- [x] Illustrated canvas palette and photographic circular nodes, with original-style switch.
+- [x] Saved perspectives can include an authored title, introduction, cover HTTPS URL and style.
+- [x] Schema and regression checks preserve older locally saved perspectives.
+- [ ] Authenticated browser verification of imported PFT 107-node/242-edge preview and artwork.
+- [ ] Illustrated UK atlas with tested geographic projection and separate custom positions.
+- [ ] Geographical basemap and regional filters using explicit valid coordinates.
+- [ ] Author-controlled node placement, edge styles, badges and per-perspective node display.
+- [ ] Written explicit artwork-pack usage/licensing terms before public redistribution.
