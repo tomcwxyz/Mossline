@@ -60,3 +60,31 @@ but does not infer accuracy, data quality, legal rights or confidence. The
 import preview reuses this report, without writing a graph until users confirm.
 A separate keyboard-focusable visible-entities list complements the
 Cytoscape canvas.
+
+## Guided discovery and mapping (alpha 0.8)
+
+`discoverData(file)` inspects a single Kumu JSON export or CSV locally.
+Kumu configuration is modelled separately from populated graph records:
+attribute definitions, accepted values, perspective names and linked Sheets
+metadata do **not** count as imported entities or relationships. The importer
+refuses to apply Kumu exports that contain no embedded graph records.
+
+For CSV, the discovery layer profiles columns and returns **suggested mapping
+rules**. `buildMappedGraph(file, mapping)` converts a deliberately reviewed
+entity-list or relationship-rule configuration into a portable graph preview.
+Multiple rules may map different pairs of columns into one canonical graph.
+Generated IDs are deterministic by source column plus value. Source rows,
+file names and logical record numbers are retained as provenance.
+No semantic claim is auto-approved and no uploaded content is sent to an AI
+service. A same-row value is not itself proof of a specific relationship.
+
+A `Public` field explicitly equal to false/no/0/private causes the input
+record to be excluded; relationships referencing hidden Kumu elements are
+also excluded. This is a migration safety default, not a full permissions
+system. Public publication and workspace-level access control must have
+independent enforcement.
+
+The demo/source Google Sheets connection indicated inside a Kumu configuration
+file is not dereferenced. Users must provide separately exported rows if the
+project's `elements` and `connections` arrays are empty. Styling, views,
+positions, attachments and full Kumu backups are not converted.
