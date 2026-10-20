@@ -76,7 +76,7 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] User-approved multiple relationship rules, optional region/description mapping and staged previews.
 - [x] Local provenance and explicit confirmation before replacing the current graph.
 - [x] Preserve and exclude rows explicitly marked non-public in Kumu/CSV.
-- [x] Synthetic regression fixtures based on a Kumu project with 27 attributes, multiple perspectives and a linked source.
+- [x] Synthetic regression fixtures based on the structure of a Kumu project with multiple attributes, perspectives and a linked source.
 - [ ] Test with representative, rights-cleared populated Kumu and Google Sheets exports.
 - [ ] Mapping recipes: save, version, reuse, compare transformations and export a mapping report.
 - [ ] Map attributes that vary across rows (multi-region) without accidentally implying one fixed location.
