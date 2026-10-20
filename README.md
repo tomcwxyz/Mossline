@@ -389,3 +389,42 @@ The images should then appear automatically wherever source IDs match.
 This is a testable preview, not a claim of a completed authenticated visual
 browser walkthrough. The owner-hosted images load from a public, revision-
 pinned GitHub raw URL, and are not packaged under Mossline's code licence.
+
+## Alpha 1.3 — UK geographic atlas (second stage)
+
+The studio now provides a third **UK atlas** view alongside Landscape and
+Collaborations. Atlas positions come **only** from the entity's original
+`Atlas location` property, parsed as `latitude, longitude`. No
+geocoding is guessed from names, region labels, Kumu `geo`,
+`mapx` or `mapy`. Records without this field stay unlocated.
+
+The map uses public-domain simplified Natural Earth outlines of Great Britain
+and Ireland, projected with exactly the same UK-bounded equirectangular
+transform as the plotted source locations. This is an **approximate
+geographic exploration**, not a survey-grade map or licensed base-map tiles.
+Any records outside this regional viewport are counted separately rather
+than moved to invented border coordinates.
+
+To reduce clutter, nearby entities are grouped into selectable clusters;
+click a cluster to choose the exact entity and see its source links.
+Relationship lines appear when an entity is selected, for source-recorded
+connections whose endpoints also have locations. Unlocated entities and
+relationships remain accessible via Landscape and the inspector. The original
+PFT UK basemap illustration is available **as an artistic reference only**,
+explicitly not aligned to the coordinate frame.
+
+**Test with real PFT data:** Select **Discover your data**, upload the
+PFT-Mossline-network.json snapshot (or Elements/Connections CSVs) and
+**Create a new map**. Select **UK atlas** in the left navigation. With the
+currently supplied PFT snapshot, 70 of 107 nodes have valid `Atlas location`
+coordinates and 37 remain unlocated. The 242 original network relationships
+are preserved. The smaller 20-entity illustration showcase intentionally
+has no geographic coordinates and should show the atlas empty state.
+
+Saved browser-local perspectives now support `view: "atlas"`, including
+the custom title, narrative and selected categories. Existing perspectives
+continue to load.
+
+**Out of scope for this phase:** true georeferencing of the original PFT
+illustrated basemap, a live tile-map view, advanced map projections, persistent
+per-view manual positioning, and authenticated hands-on/mobile visual QA.
