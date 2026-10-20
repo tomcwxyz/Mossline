@@ -29,6 +29,8 @@ function tags(raw: unknown): string[] {
   return (Array.isArray(raw) ? raw : value(raw).split("|")).map(value).filter(Boolean);
 }
 const stable = (prefix: string, key: string) => prefix + ":" + encodeURIComponent(key);
+const isWithheld = (row: Row): boolean => ["false","no","0","private"].includes(
+  value(field(row,"public")).toLowerCase());
 
 /** Handles RFC-style CSV quotes, escaped quotes, newlines and BOM. */
 export function parseCsv(input: string): string[][] {
@@ -79,8 +81,16 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
   const nodes: GraphNode[] = [], edges: GraphEdge[] = [];
   const used = new Set<string>(), byId = new Map<string,string>(), byLabel = new Map<string,string[]>();
   const rejectedUrls = { image: 0, nodeSource: 0, relationshipSource: 0 };
+  const excludedRefs = new Set<string>();
+  let privateNodes = 0, privateEdges = 0;
   for (const [index,row] of elements.entries()) {
     const label = value(field(row,"label","name")), original = value(field(row,"id"));
+    if (isWithheld(row)) {
+      privateNodes++;
+      if (label) excludedRefs.add(label);
+      if (original) excludedRefs.add(original);
+      continue;
+    }
     if (!label) { issues.push({severity:"error",message:"Element row " + (index+1) + " has no label"}); continue; }
     const id = stable(source, original ? "id:" + original : "label:" + label);
     if (used.has(id)) {
@@ -114,11 +124,13 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     if (byId.has(ref)) return byId.get(ref)!;
     const labels = byLabel.get(ref) ?? [];
     if (labels.length === 1) return labels[0];
+    if (!labels.length && excludedRefs.has(ref)) return null;
     issues.push({severity:"error",message:"Connection row " + (row+1) + ": " +
       (labels.length ? "ambiguous" : "missing") + " endpoint '" + ref + "'. Use unique IDs."});
     return null;
   }
   for (const [index,row] of connections.entries()) {
+    if (isWithheld(row)) { privateEdges++; continue; }
     const from = resolve(field(row,"from","source"),index);
     const destinations = value(field(row,"to","target")).split("|").map(x => x.trim()).filter(Boolean);
     if (!destinations.length) {
@@ -135,7 +147,11 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
       issues.push({severity:"warning",message:"Unknown direction '" + rawDirection + "' retained in properties"});
     for (const [targetIndex,destination] of destinations.entries()) {
       const to = resolve(destination,index);
-      if (!from || !to) continue;
+      if (!from || !to) {
+        if (excludedRefs.has(value(field(row,"from","source"))) || excludedRefs.has(destination))
+          privateEdges++;
+        continue;
+      }
       const key = original ? "id:" + original + ":" + targetIndex :
         "link:" + from + "|" + to + "|" + kind + "|" + rawDirection;
       const occurrence = edgeKeys.get(key) ?? 0;
@@ -153,6 +169,9 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
       });
     }
   }
+  if (privateNodes || privateEdges) issues.push({severity:"warning",
+    message:privateNodes+" non-public entities and "+privateEdges+
+      " non-public or withheld-endpoint relationships were excluded by the Public field."});
   for (const [label,ids] of byLabel)
     if (ids.length > 1) issues.push({severity:"warning",message:"Duplicate label '" + label +
       "' requires connections to use element IDs"});
