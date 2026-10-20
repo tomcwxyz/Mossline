@@ -249,6 +249,11 @@ export function MapStudio() {
   const [atlasMode,setAtlasMode]=useState<AtlasMode>("stories");
   const [atlasKind,setAtlasKind]=useState<KindFilter>("project");
   const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
+  // Authorable view positions, never stored in the canonical graph.
+  const [positionState,setPositionState] = useState<{
+    key:string;positions:Record<string,{x:number;y:number}>
+  }>({key:"",positions:{}});
+  const [positionRevision,setPositionRevision] = useState(0);
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
@@ -304,6 +309,19 @@ export function MapStudio() {
     } catch { window.localStorage.removeItem(SAVED_KEY); }
   }, []);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const positionKey=[graphKey,view,layoutMode,basis].join(":");
+  const activePositions=positionState.key===positionKey?positionState.positions:{};
+  function capturePositions(positions:Record<string,{x:number;y:number}>) {
+    setPositionState(previous=>({
+      key:positionKey,
+      positions:{...(previous.key===positionKey?previous.positions:{}),...positions}
+    }));
+  }
+  function resetNodeArrangement() {
+    setPositionState({key:positionKey,positions:{}});
+    setPositionRevision(value=>value+1);
+    setNotice("Reset the on-screen arrangement. Saved perspectives remain unchanged.");
+  }
   const pftAssets=useMemo(()=>matchAssetPack(graph,PFT_VISUAL_PACK),[graph]);
   const atlasCoverage=useMemo(()=>buildUkAtlas(graph),[graph]);
   // Match exact source IDs, so artwork is never attached to another dataset by name.
@@ -421,8 +439,9 @@ export function MapStudio() {
 
   function savePerspectives(next: SavedPerspective[]) {
     try {
-      window.localStorage.setItem(SAVED_KEY,JSON.stringify(next));
-      setPerspectives(next);
+      const validated=parsePerspectives(next);
+      window.localStorage.setItem(SAVED_KEY,JSON.stringify(validated));
+      setPerspectives(validated);
       return true;
     } catch { setNotice("Unable to save views in browser storage."); return false; }
   }
@@ -439,6 +458,7 @@ export function MapStudio() {
     const record:SavedPerspective={
       id:crypto.randomUUID(),name,graphKey,view,basis,region,query:query.slice(0,200),
       types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now(),
+      ...(view==="atlas"?{}:{positions:activePositions}),
       presentation:{
         title:storyTitle.trim().slice(0,100),
         introduction:storyIntroduction.trim().slice(0,1200),
@@ -461,6 +481,9 @@ export function MapStudio() {
     setView(item.view);setBasis(item.basis);setRegion(item.region);setQuery(item.query);
     setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
     setLabelDensity(item.labels);setSelectedId(null);setSelectedEdgeId(null);setFocusId(null);
+    setPositionState({key:[graphKey,item.view,item.layout,item.basis].join(":"),
+      positions:item.positions??{}});
+    setPositionRevision(value=>value+1);
     setActiveStory(item.presentation);setIllustrated(item.presentation?.illustrated??true);
     setAtlasMode(item.presentation?.atlasMode??"stories");
     setAtlasKind(item.presentation?.atlasKind??"project");
@@ -469,6 +492,8 @@ export function MapStudio() {
 
   function resetExplorer(next:GraphDocument) {
     setGraph(next);setActiveStory(undefined);
+    setPositionState({key:"",positions:{}});
+    setPositionRevision(value=>value+1);
     setAtlasMode("stories");setAtlasKind("project");
     setSelectedId(null);
     setSelectedEdgeId(null);
@@ -600,7 +625,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.3</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.4</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -625,7 +650,12 @@ export function MapStudio() {
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
-    {!pftCompatible && <PftVisualShowcase onOpenSample={openPftVisualExample} />}
+    {!pftCompatible && <details className="example-library">
+      <summary>Explore an optional illustrated example · PFT farming network</summary>
+      <p>Mossline works with any connected dataset. This is one example of a visual companion,
+        not a template or requirement for your own maps.</p>
+      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
+    </details>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Explore what Mossline found</p>
@@ -790,11 +820,13 @@ export function MapStudio() {
             <input className="search" id="perspective-story-cover" type="url"
               value={storyCover} onChange={e=>setStoryCover(e.target.value)}
               placeholder="https://…"/>
-            <p className="help">Only presentation is saved — original source records are unchanged.</p>
+            <p className="help">Your filters, style, story and node arrangement are saved here.
+              Drag nodes on Landscape or Collaborations before saving.
+              Positions belong to this view only; source data is unchanged.</p>
             <div><button className="button-primary" type="submit">Save view</button>
               <button className="text-button" type="button" onClick={()=>setShowSave(false)}>Cancel</button></div>
           </form>}
-          {savedForMap.length===0 && <p className="help">Save your layout, search and filters, then return to them later.</p>}
+          {savedForMap.length===0 && <p className="help">Save your network arrangement, search and filters, then return to them later.</p>}
           {savedForMap.map(item=><div key={item.id} className="saved-perspective">
             <button type="button" onClick={()=>openPerspective(item)}>
               <span>{item.name}</span><small>{item.view} · {item.layout}</small></button>
@@ -954,7 +986,7 @@ export function MapStudio() {
           <button className="text-button" onClick={resetDemo}>Restore example landscape ↗</button>
         </div>
       </aside>
-      <div className={"map-panel"+(showPftArtwork?" pft-illustrated":"")}>
+      <div className={"map-panel"+(illustrated?" editorial-style":"")}>
         <div className="map-topline">
           <span><span className="signal" /> {view === "landscape" ? "Living network" :
             view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
@@ -968,12 +1000,14 @@ export function MapStudio() {
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
             </select></label>}
-            {pftCompatible && <label>Visual style <select aria-label="Visual style"
-              value={illustrated?"illustrated":"original"}
-              onChange={event=>setIllustrated(event.target.value==="illustrated")}>
-              <option value="illustrated">PFT illustrated</option>
-              <option value="original">Original imagery</option>
+            {view!=="atlas"&&<label>Style <select aria-label="Network visual style"
+              value={illustrated?"editorial":"classic"}
+              onChange={event=>setIllustrated(event.target.value==="editorial")}>
+              <option value="editorial">Editorial</option>
+              <option value="classic">Classic</option>
             </select></label>}
+            {view!=="atlas"&&<button type="button" className="reset-layout"
+              onClick={resetNodeArrangement}>Reset arrangement</button>}
           </div>
         </div>
         {view==="atlas" ?
@@ -988,10 +1022,12 @@ export function MapStudio() {
             junctionNodeIds={showJunctions?junctions.map(item=>item.nodeId):[]}
             onSelect={pickNode} onSelectEdge={pickEdge}
             view={view} layoutMode={layoutMode} labelDensity={labelDensity}
-            illustrated={showPftArtwork} />}
+            illustrated={illustrated}
+            savedPositions={activePositions} positionRevision={positionRevision}
+            onPositionsChange={capturePositions} />}
         <div className="map-bottomline"><span>{view==="atlas"?
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
-          "Drag to explore · Select a node or a relationship line to inspect its evidence"}</span>
+          "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
           <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
