@@ -756,3 +756,13 @@
 .node-appearance-editor .appearance-active-image{color:#dce8b8;font-size:10px;margin:0;}
 .node-appearance-editor .appearance-error{color:#ffb8a9;font-size:11px;margin:0;}
 .node-appearance-editor :is(button,select,input):focus-visible{outline:3px solid #e3c57f;outline-offset:2px;}
+
+
+.arrangement-tools{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.map-options .arrangement-tools button{border:1px solid #7b9983;border-radius:7px;
+  padding:8px 10px;background:transparent;color:inherit;font-size:11px;cursor:pointer;}
+.map-options .arrangement-tools button:hover:not(:disabled){background:#638670;color:#fff;}
+.map-options .arrangement-tools button:disabled{opacity:.4;cursor:not-allowed;}
+.map-options .arrangement-tools button:focus-visible{outline:3px solid #e1c37a;outline-offset:2px;}
+.map-panel.editorial-style .arrangement-tools button{border-color:#adc4ac;color:#315640;}
+.map-panel.editorial-style .arrangement-tools button:hover:not(:disabled){background:#dbe8d2;color:#294d36;}
