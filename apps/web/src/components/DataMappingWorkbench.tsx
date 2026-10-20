@@ -112,6 +112,15 @@ export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
         <label>Description column (optional)
           <select value={mapping.descriptionColumn} onChange={e=>update({...mapping,descriptionColumn:e.target.value})}>{columnOptions(true)}</select>
         </label>
+        {mapping.mode==="relationships" && mapping.regionColumn && <label className="mapping-wide">
+          Which kind of entity does that region describe?
+          <select value={mapping.regionTarget}
+            onChange={e=>update({...mapping,regionTarget:e.target.value as ColumnMapping["regionTarget"]})}>
+            <option value="source">From-column entities</option>
+            <option value="target">To-column entities</option>
+            <option value="both">Both (only if truly applicable)</option>
+          </select>
+        </label>}
       </div>
     </div>
     <p className="mapping-caution">A shared row is not necessarily proof of collaboration, funding or causation.
