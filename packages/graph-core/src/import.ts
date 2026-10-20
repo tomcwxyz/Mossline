@@ -89,7 +89,7 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     used.add(id);
     if (original) byId.set(original,id);
     byLabel.set(label,[...(byLabel.get(label) ?? []),id]);
-    const rawType = value(field(row,"type"));
+    const rawType = value(field(row,"element type","type"));
     const type = types[rawType.toLowerCase()] ?? "other";
     if (rawType && type === "other" && rawType.toLowerCase() !== "other")
       issues.push({severity:"warning",message:"Unrecognised type '" + rawType + "' on " + label + "; original retained"});
@@ -100,7 +100,8 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     if (value(rawSource) && !sourceUrl) rejectedUrls.nodeSource++;
     nodes.push({
       id,label,type,description:value(field(row,"description")) || undefined,
-      region:value(field(row,"region")) || undefined,tags:tags(field(row,"tags")),
+      region:value(field(row,"region","geographic reach")) || undefined,
+      tags:tags(field(row,"tags","topics")),
       imageUrl,sourceUrl,
       origin:{system:source,recordId:original || label,...locations?.get(row)},
       properties:{...row}
@@ -123,7 +124,7 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     if (!destinations.length) {
       issues.push({severity:"error",message:"Connection row " + (index+1) + " has no To endpoint"}); continue;
     }
-    const original = value(field(row,"id")), kind = value(field(row,"type")) || "connected";
+    const original = value(field(row,"id")), kind = value(field(row,"connection type","type")) || "connected";
     if (original) {
       if (originalEdgeIds.has(original)) issues.push({severity:"error",message:"Duplicate connection ID: " + original});
       originalEdgeIds.add(original);
@@ -192,13 +193,30 @@ export function previewImport(files: ImportFile[]): ImportPreview {
       if (!Array.isArray(obj.elements) || !Array.isArray(obj.connections))
         throw new Error("Unsupported Kumu backup structure. Expected blueprint arrays 'elements' and 'connections'.");
       const elements = obj.elements as Row[], connections = obj.connections as Row[];
+      if (elements.length===0 && connections.length===0) {
+        const maps = Array.isArray(obj.maps) ? obj.maps as Row[] : [];
+        const linkedSheets = maps.some(m => typeof m.src==="string" &&
+          m.src.toLowerCase().startsWith("auth:googlesheets:"));
+        issues.push({severity:"error",message:linkedSheets ?
+          "This Kumu export contains configuration but no elements or connections. The map is backed by linked Google Sheets: export its data tabs as CSV to build the network. Your current Mossline map has not been changed." :
+          "This Kumu project contains no embedded entities or connections. Import is blocked to prevent replacing your map with an empty graph."});
+        return {graph:null,issues,source,counts};
+      }
       if (![...elements,...connections].every(x => x && typeof x === "object" && !Array.isArray(x)))
         throw new Error("Kumu elements and connections must be objects");
       counts = {nodes:elements.length,edges:connections.length};
       mark(elements,files[0].name,1); mark(connections,files[0].name,1);
       const extra = Object.keys(obj).filter(k => !["elements","connections"].includes(k));
-      if (extra.length) issues.push({severity:"warning",message:"Not translated into Mossline views: " +
-        extra.join(", ") + ". Retain the original backup."});
+      const recognised = new Set(["version","name","description","proxyImages","defaultMap","defaultPerspective",
+        "attributeRelevance","attributes","elements","connections","loops","maps","perspectives"]);
+      const omitted = extra.filter(k => !recognised.has(k));
+      if (Array.isArray(obj.perspectives) && obj.perspectives.length)
+        issues.push({severity:"warning",message:obj.perspectives.length +
+          " Kumu perspectives and their CSS styling cannot yet be converted; preserve this file."});
+      if (Array.isArray(obj.maps) && obj.maps.length)
+        issues.push({severity:"warning",message:"Map settings and linked sources are configuration only; map styling is not imported."});
+      if (omitted.length) issues.push({severity:"warning",message:"Unrecognised top-level fields: " +
+        omitted.join(", ") + ". Retain the original backup."});
       const graph = convert(elements,connections,"kumu",issues,
         files[0].name.replace(/\.json$/i,""),locations);
       return {graph,issues,source,counts:graph ? {nodes:graph.nodes.length,edges:graph.edges.length} : counts};
