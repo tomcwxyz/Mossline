@@ -126,3 +126,17 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Independent novice user test of a first map in 5 minutes, without graph terminology.
 - [ ] Further polish of visual map preview for large/ambiguous source tables.
 - [ ] Hosted named workspaces, proper map library and non-destructive database-backed sync.
+
+## Alpha 1.2 — discoverable recorded connections and readability
+- [x] Calculate reachable nodes within five recorded hops; exclude inferred-only links and source self.
+- [x] Group destination choices by nearest route length; include entity category in each option.
+- [x] Filter the destination selector by relationship-type exclusions.
+- [x] Reset outdated destination and paths when start or exclusions change.
+- [x] Guarantee a first shortest recorded route even where alternative-path search is bounded.
+- [x] Select a node, then choose **Explore connections from here** in its inspector.
+- [x] Offer one-click direct-connection options as alternatives to guessing endpoint names.
+- [x] Fix low-contrast secondary actions and crowded connection panel labels.
+- [x] Add tests for hop bounds, excluded types, direction, disconnected entities, inferred edges and duplicate links.
+- [ ] Protected-preview authenticated browser and mobile keyboard/accessibility walkthrough.
+- [ ] Typeahead/virtualised destination choices for very large imported maps.
+- [ ] Offer a broader depth control and advanced directed-only exploration.
