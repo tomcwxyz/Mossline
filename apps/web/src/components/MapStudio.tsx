@@ -759,6 +759,14 @@ export function MapStudio() {
               Explore selected route →
             </button>
           </form>
+          {traceFrom&&reachableDestinations.some(d=>d.hops===1)&&
+            <div className="trace-quick-picks" aria-label="Quick picks from direct connections">
+              <p>Or start with a direct connection</p>
+              {reachableDestinations.filter(d=>d.hops===1).slice(0,4).map(d=>
+                <button type="button" key={d.nodeId} onClick={()=>{
+                  setTraceTo(d.nodeId);exploreRoutes(traceFrom,d.nodeId);
+                }}>{d.label} <span aria-hidden="true">↗</span></button>)}
+            </div>}
           {graphKey===DEMO_KEY && <button type="button" className="trace-example" onClick={() => {
             setTraceFrom("o1");setExcludedRelationType("");setTraceTo("o3");
             exploreRoutes("o1","o3","");
