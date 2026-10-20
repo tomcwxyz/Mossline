@@ -541,3 +541,90 @@
   .visual-showcase-intro{padding:18px;}
   .visual-showcase-gallery{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
+
+/* Alpha 1.3 – geographic UK atlas. Natural Earth geography is approximate.
+   Source-provided coordinates are never overwritten or approximated from layout positions. */
+.uk-atlas {min-width:0;display:flex;flex-direction:column;background:#f6f4ea;color:#2f4938;min-height:650px;}
+.uk-atlas-intro {display:flex;justify-content:space-between;gap:20px;align-items:flex-start;
+  padding:22px 25px 14px;background:linear-gradient(130deg,#f8f6eb,#e9eddf);border-bottom:1px solid #d8dfd0;}
+.uk-atlas-intro .eyebrow{color:#58795c;font-size:10px;letter-spacing:.13em;margin:0 0 6px;}
+.uk-atlas-intro h3{font:normal 28px Georgia,serif;line-height:1.15;color:#254b35;margin:0 0 8px;}
+.uk-atlas-intro p:not(.eyebrow){max-width:550px;font-size:12px;line-height:1.6;color:#55705a;margin:0;}
+.atlas-counts {display:flex;align-items:stretch;flex-wrap:wrap;gap:7px;flex:none;}
+.atlas-counts span{min-width:80px;border-radius:9px;padding:9px 12px;text-align:center;
+  border:1px solid #c5d5c4;background:#fdfbf4;color:#607763;font-size:10px;}
+.atlas-counts strong{font:normal 23px Georgia,serif;display:block;color:#34563d;}
+.atlas-body {min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 245px;
+  flex:1;gap:0;}
+.uk-atlas-stage {position:relative;overflow:hidden;min-height:580px;aspect-ratio:960/720;
+  background:#e4ede9;border-right:1px solid #d0dccf;isolation:isolate;}
+.atlas-land {display:block;width:100%;height:100%;position:absolute;inset:0;}
+.atlas-hint {position:absolute;top:15px;left:15px;z-index:3;font-size:10px;
+  color:#3e6050;background:#fbfaf0e8;border:1px solid #cfddcc;
+  border-radius:20px;padding:7px 11px;}
+.atlas-pin {position:absolute;z-index:4;transform:translate(-50%,-50%);min-width:33px;height:37px;
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid #f9f7ed;border-radius:50%;padding:0;background:#4c8560;
+  color:#fff;box-shadow:0 1px 9px #31524069;cursor:pointer;
+  transition:transform .14s ease,box-shadow .14s ease;}
+.atlas-pin img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+.atlas-pin>span:not(.atlas-cluster-count){font-size:15px;}
+.atlas-pin.organisation{width:39px;height:39px;border-color:#e9f3e0;background:#4c8764;}
+.atlas-pin.project{width:43px;height:43px;border-color:#faeed8;background:#c69b56;}
+.atlas-pin.funder{width:39px;height:39px;border-color:#e5eff6;background:#7299b3;}
+.atlas-pin.place{width:29px;height:29px;border-color:#e6f0e6;background:#43745e;}
+.atlas-pin.topic{width:36px;height:36px;background:#a3b37d;}
+.atlas-pin.grouped{background:#325e49;border-color:#fff2cd;width:43px;height:43px;}
+.atlas-cluster-count{font:700 13px/1 sans-serif;color:#fff6de;}
+.atlas-pin:hover,.atlas-pin.selected{transform:translate(-50%,-50%) scale(1.14);
+  z-index:9;box-shadow:0 0 0 4px #e8cb85aa,0 4px 13px #213e275c;}
+.atlas-pin:focus-visible{outline:3px solid #ac7532;outline-offset:5px;}
+.atlas-group-list{position:absolute;z-index:11;left:16px;bottom:15px;max-width:min(420px,calc(100% - 30px));
+  max-height:230px;overflow:auto;background:#fffdf5;color:#2f4b35;
+  border:1px solid #b6caad;box-shadow:0 8px 24px #2143313a;border-radius:12px;padding:12px;}
+.atlas-group-list>div{display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:13px;
+  padding:0 1px 8px;margin-bottom:6px;border-bottom:1px solid #dfebd8;}
+.atlas-group-list>div button{font-size:21px;background:none;border:0;color:#385c46;}
+.atlas-group-list>button{display:flex;width:100%;justify-content:space-between;gap:12px;text-align:left;
+  border:0;background:transparent;border-radius:6px;padding:9px 7px;color:#315c40;font-size:12px;}
+.atlas-group-list>button:hover{background:#ecf3e7;}
+.atlas-group-list small{color:#789079;}
+.atlas-detail{display:flex;flex-direction:column;gap:17px;padding:23px 19px;background:#faf8ee;}
+.atlas-detail-top h4{font:normal 23px/1.2 Georgia,serif;color:#31563e;margin:0 0 9px;}
+.atlas-detail-top>p,.atlas-relationships>p,.atlas-explanation p,.atlas-reference p{
+  color:#5b735b;font-size:11px;line-height:1.65;margin:0;}
+.atlas-relationships{display:grid;gap:7px;}
+.atlas-relationships>p{margin:0 0 8px;}
+.atlas-relationship{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px;
+  border-bottom:1px solid #d9e3d4;padding:7px 0;}
+.atlas-relationship button:first-child{font-size:11px;text-align:left;border:0;background:none;
+  color:#335b3d;font-weight:650;overflow-wrap:anywhere;}
+.atlas-relationship span{font-size:10px;color:#6d7962;grid-column:1;grid-row:2;}
+.atlas-relationship button:last-child{grid-column:2;grid-row:1/3;border:1px solid #aac2a5;
+  border-radius:6px;color:#31563f;font-size:10px;padding:6px;background:#e9f0e2;}
+.atlas-reference{margin-top:4px;padding-top:14px;border-top:1px solid #d9e4d4;}
+.atlas-reference button{background:none;border:0;text-decoration:underline;font-size:11px;
+  color:#42684e;font-weight:650;text-align:left;}
+.atlas-reference img{display:block;width:100%;max-height:185px;object-fit:contain;margin:12px 0 7px;
+  border-radius:7px;background:#ebecdf;}
+.atlas-explanation{margin-top:auto;padding:12px;background:#edf1e5;border:1px solid #d8e3cf;border-radius:9px;}
+.atlas-explanation strong{color:#365740;font-size:12px;display:block;margin-bottom:6px;}
+.atlas-no-locations{margin:auto;padding:42px 24px;max-width:530px;text-align:center;}
+.atlas-no-locations p{font-size:13px;line-height:1.75;color:#44624a;}
+.atlas-no-locations p:first-child{font:normal 21px Georgia,serif;}
+@media(max-width:1150px){
+ .atlas-body{grid-template-columns:minmax(0,1fr);}
+ .uk-atlas-stage{border-right:0;border-bottom:1px solid #d1dccf;min-height:440px;}
+ .atlas-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+ .atlas-detail-top{grid-column:1/-1;}
+}
+@media(max-width:710px){
+ .uk-atlas-intro{padding:17px;flex-direction:column;gap:12px;}
+ .uk-atlas-intro h3{font-size:25px;}
+ .atlas-counts{width:100%;}
+ .atlas-counts span{flex:1;min-width:75px;}
+ .uk-atlas-stage{min-height:330px;aspect-ratio:4/5;}
+ .atlas-pin.organisation,.atlas-pin.project,.atlas-pin.grouped,.atlas-pin.funder{width:32px;height:32px;}
+ .atlas-pin.place{width:25px;height:25px;}
+ .atlas-detail{grid-template-columns:1fr;padding:18px;}
+}
