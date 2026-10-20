@@ -196,3 +196,10 @@ no direct Sheets/Excel connection, no reusable mapping recipes, no semantic
 LLM suggestions, no source merge/sync, and no full project-level Kumu migration.
 A real populated source export and authenticated browser interaction test are
 still required before this branch is ready to merge.
+
+### Try the mapper without another file
+Click **Try sample spreadsheet** to load a wholly fictional farming
+Organisation/Project/Funder/Region CSV in the local discovery workspace.
+The sample deliberately includes a `Public=FALSE` row so its exclusion is
+visible in the preview. Suggested relationship rules are editable; no import
+takes place until you build a preview and confirm replacing the browser map.
