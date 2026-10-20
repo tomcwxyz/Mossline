@@ -372,9 +372,12 @@ export function GraphCanvas({
     </div>
     {layoutMode === "regions" && <span className="regional-hint">Grouped by region · not a geographic map</span>}
     <div className="graph-legend" aria-label="Network legend">
-      <span><i className="legend-symbol organisation" /> Organisation</span>
-      <span><i className="legend-symbol project" /> Project</span>
-      <span><i className="legend-symbol funder" /> Funder</span>
+      {graph.nodes.some(n=>n.type==="organisation")&&<span><i className="legend-symbol organisation"/> Organisation</span>}
+      {graph.nodes.some(n=>n.type==="project")&&<span><i className="legend-symbol project"/> Project</span>}
+      {graph.nodes.some(n=>n.type==="funder")&&<span><i className="legend-symbol funder"/> Funder</span>}
+      {graph.nodes.some(n=>n.type==="person")&&<span><i className="legend-symbol person"/> Person</span>}
+      {graph.nodes.some(n=>n.type==="place")&&<span><i className="legend-symbol place"/> Place</span>}
+      {graph.nodes.some(n=>n.type==="other")&&<span><i className="legend-symbol other"/> Other</span>}
       {graph.nodes.some(n=>n.type==="topic")&&<span><i className="legend-symbol topic" /> Topic</span>}
       {graph.nodes.some(n=>n.type==="methodology")&&<span><i className="legend-symbol methodology" /> Method</span>}
       {graph.nodes.some(n=>n.type==="outcome")&&<span><i className="legend-symbol outcome" /> Outcome</span>}
