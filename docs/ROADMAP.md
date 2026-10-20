@@ -66,3 +66,22 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Authenticated Vercel preview visual/browser review for desktop and mobile.
 - [ ] Real representative, permissioned Kumu/Sheets fixture for import round-trip assurance.
 - [ ] Future mapping of Kumu styles, positions and metadata with an explicit loss report.
+
+## Alpha 0.8 — data discovery and schema-mapping assistant
+- [x] Separate Kumu project configuration from embedded network records.
+- [x] Detect externally linked Sheets without exposing or dereferencing source credentials.
+- [x] Prevent configuration-only projects from overwriting a working map with an empty graph.
+- [x] Suggest original Kumu fields, element categories, connection types and custom-attribute handling.
+- [x] Profile arbitrary CSV columns and recommend entity/relationship roles.
+- [x] User-approved multiple relationship rules, optional region/description mapping and staged previews.
+- [x] Local provenance and explicit confirmation before replacing the current graph.
+- [x] Preserve and exclude rows explicitly marked non-public in Kumu/CSV.
+- [x] Synthetic regression fixtures based on a Kumu project with 27 attributes, multiple perspectives and a linked source.
+- [ ] Test with representative, rights-cleared populated Kumu and Google Sheets exports.
+- [ ] Mapping recipes: save, version, reuse, compare transformations and export a mapping report.
+- [ ] Map attributes that vary across rows (multi-region) without accidentally implying one fixed location.
+- [ ] XLSX, pasted tables, direct Google Sheets/Excel connectors and synchronisation previews.
+- [ ] Optional AI-assisted semantic suggestions, explainable and explicitly approved; privacy-first.
+- [ ] Entity identity matching/deduplication with human review before importing into an existing graph.
+- [ ] Public/private visibility governance, independent of styling/presentation.
+- [ ] Authenticated browser interaction/keyboard/mobile testing behind Vercel protection.
