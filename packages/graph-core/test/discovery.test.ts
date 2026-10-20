@@ -24,6 +24,8 @@ test("Kumu project configuration is analysed without treating missing Google She
   assert.deepEqual(discovered.connectionTypes,["delivered_by","funded_by","operates_in"]);
   assert.equal(discovered.attributes.length,4);
   assert.equal(discovered.perspectives.length,2);
+  assert.equal(discovered.fieldSuggestions.find(s=>s.field==="Element Type")?.treatment,"mapped");
+  assert.equal(discovered.fieldSuggestions.find(s=>s.field==="Image")?.treatment,"review");
   assert.equal(discovered.embeddedNodes,0);
   const preview=previewImport([input]);
   assert.equal(preview.graph,null);
@@ -52,6 +54,10 @@ test("detects a straightforward existing spreadsheet and suggests possible netwo
   assert.equal(result.mapping.mode,"relationships");
   assert.equal(result.mapping.rules[0].fromColumn,"Organisation");
   assert.equal(result.mapping.rules[0].toColumn,"Project");
+  assert.equal(result.mapping.rules.length,2);
+  assert.deepEqual(result.mapping.rules[1],{
+    fromColumn:"Project",toColumn:"Funder",fromType:"project",toType:"funder",type:"funded by"
+  });
   assert.equal(result.columns.find(c=>c.name==="Project")?.distinct,1);
   assert.equal(result.mapping.regionColumn,"Region");
 });
@@ -77,7 +83,7 @@ test("reviewed, two-rule mapping builds graph entities from ordinary columns wit
 
 test("mapping mode entities works without a connection table and preserves basic provenance",()=>{
   const input=file("names.csv","Entity,Category,Summary\nFarm A,Organisation,A local farm\nFarm B,Organisation,Another farm");
-  const plan:ColumnMapping={mode:"entities",nameColumn:"Entity",nodeType:"other",typeColumn:"Category",
+  const plan:ColumnMapping={mode:"entities",nameColumn:"Entity",nodeType:"other",typeColumn:"Category",regionTarget:"source",
     descriptionColumn:"Summary",regionColumn:"",rules:[]};
   const result=buildMappedGraph(input,plan);
   assert.equal(result.graph?.nodes.length,2);
@@ -101,4 +107,37 @@ test("bad mappings and missing endpoints are surfaced, never quietly guessed",()
   assert.equal(buildMappedGraph(input,{...discovered.mapping,rules:[
     {...discovered.mapping.rules[0],type:""}
   ]}).graph,null);
+});
+
+test("reviewed mappings refuse to expose rows explicitly marked non-public",()=>{
+  const input=file("records.csv",
+    "Organisation,Project,Public\nVisible farm,Project A,TRUE\nHidden farm,Project Secret,FALSE\n");
+  const discovered=discoverData(input);
+  if(discovered.kind!=="csv-table")throw Error("Expected tabular input");
+  const preview=buildMappedGraph(input,discovered.mapping);
+  assert.ok(preview.graph);
+  assert.equal(preview.graph.nodes.length,2);
+  assert.equal(preview.graph.edges.length,1);
+  assert.equal(preview.counts.skipped,1);
+  assert.equal(preview.graph.nodes.some(n=>n.label==="Hidden farm"),false);
+  assert.ok(preview.issues.some(i=>i.message.includes("non-public")));
+});
+
+test("Kumu import excludes explicit private elements and links pointing to them",()=>{
+  const result=previewImport([file("example.json",JSON.stringify({
+    elements:[
+      {id:"a",label:"Visible",Public:"TRUE","Element Type":"Organisation"},
+      {id:"b",label:"Hidden",Public:"FALSE","Element Type":"Project"},
+      {id:"c",label:"Also visible",Public:"TRUE","Element Type":"Funder"}
+    ],
+    connections:[
+      {id:"a-b",from:"a",to:"b","Connection Type":"works_on"},
+      {id:"a-c",from:"a",to:"c","Connection Type":"funded_by"},
+      {id:"c-a",from:"c",to:"a","Connection Type":"funds",Public:"FALSE"}
+    ]
+  }))]);
+  assert.ok(result.graph);
+  assert.deepEqual(result.graph.nodes.map(n=>n.label),["Visible","Also visible"]);
+  assert.deepEqual(result.graph.edges.map(e=>e.type),["funded_by"]);
+  assert.ok(result.issues.some(i=>i.message.includes("non-public")));
 });
