@@ -1,4 +1,4 @@
-import { nodeTypeSchema, type GraphDocument, type GraphEdge, type GraphNode, type NodeType } from "./schema.js";
+import { nodeTypeSchema, type GraphDocument, type GraphEdge, type GraphNode, type NodeType } from "./schema";
 
 export function neighbours(graph: GraphDocument, nodeId: string): GraphNode[] {
   const related = new Set<string>();
