@@ -107,3 +107,25 @@ never append synthetic geometry into the source relationship network.
 
 This is a read-only snapshot compatibility exercise. No live data has been
 committed to the repository, and no Kumu or Sheets configuration was updated.
+
+## Recipes, source identity and refresh review
+
+`recipes.ts` defines a strict version-1 recipe format with explicit
+mapping semantics, source column names, recipe family, revision and
+creation timestamp; it contains no row data. Recipes are validated on
+read and can be exported/imported as independent JSON files. Browser storage
+is a local convenience, not a multi-user workspace or a synchronisation system.
+
+`checkRecipeColumns` checks *exact required fields*, not heuristic aliases,
+before allowing a stored mapping to be applied. This avoids silent drift when
+source headings change. Reusing a recipe still requires a fresh preview and
+explicit user confirmation.
+
+`compareGraphDocuments` compares graph records by stable IDs and semantic
+properties, excluding source record positions. If any IDs would disappear,
+the user must additionally acknowledge that loss before replacing the graph.
+The comparison is a descriptive change proposal, not verified provenance.
+The generic CSV mapping path now emits identity-stable relationship IDs
+rather than row-index IDs. Identical duplicate relation instances cannot be
+distinguished without a user-supplied row-level stable identifier; this is
+explicitly a future identity resolution task.
