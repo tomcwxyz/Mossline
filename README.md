@@ -241,3 +241,35 @@ been committed to the public repository.
 This compatibility check covers structure and source references. A protected
 preview browser smoke test, verification of image rights, map recreation
 and shared/live Google Sheets synchronisation remain outstanding.
+
+## Alpha 1.0 — mapping recipes and reviewed refreshes
+
+The **Discover your data** CSV mapping workbench can save the currently reviewed
+field/relationship interpretation as a local recipe, then **use**, **revise**,
+**delete**, **export JSON** or **import JSON** for reuse. Each save of a selected
+recipe name creates a new revision in the same family and retains its earlier
+revisions. A recipe is versioned and schema-validated; it stores **column names
+and user-approved mapping rules only**, not spreadsheet rows, values, source
+credentials or the user's graph. Browser-local storage holds at most 40
+revisions. JSON export makes the recipe portable across browsers.
+
+When applied to a newer CSV, a recipe checks for *required exact column names*.
+Reordered columns are compatible; additional columns produce a review notice;
+renamed or missing required columns block use until the mapping is revised.
+Matching headings do not guarantee that the meaning of the new rows is unchanged.
+
+Before any import replaces the currently displayed graph, Mossline now
+shows an identity-based change summary: added, removed and changed entities and
+relationships, with examples of differences. Source row numbers are excluded
+from semantic comparisons. Proposed removals require **explicit additional
+confirmation**. The user can always export the existing graph first.
+
+Guided-mapping relationship IDs now depend on the entity pair, relationship
+semantics and duplicate occurrence, rather than spreadsheet row position.
+This reduces false changes when rows are reordered. Distinct identical duplicate
+rows remain indistinguishable and should be reviewed if source evidence differs.
+
+**No live sync, background monitoring or automatic writes are performed.**
+A review is required for every replacement. Existing paired Kumu Elements/
+Connections CSV import still uses its dedicated importer; saved recipes
+currently apply to single generic CSV discovery/mapping only.
