@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
-  applyAssetPack, matchAssetPack, visualAssetUrl,
+  applyAssetPack, matchAssetPack, visualAssetUrl, buildUkAtlas,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
@@ -11,6 +11,7 @@ import {
   type NodeType, type CollaborationBasis, type SavedPerspective
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
+import { AtlasCanvas } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
@@ -37,7 +38,7 @@ const DISCOVERY_EXAMPLE: ImportFile = {
     "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n" +
     "Hidden Example,Private Project,Private Funder,South West,FALSE\n"
 };
-type ViewMode = "landscape" | "collaborations";
+type ViewMode = "landscape" | "collaborations" | "atlas";
 
 function saveJson(graph: GraphDocument) {
   const blob = new Blob([JSON.stringify(graph, null, 2)], { type: "application/json" });
@@ -302,6 +303,7 @@ export function MapStudio() {
   }, []);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
   const pftAssets=useMemo(()=>matchAssetPack(graph,PFT_VISUAL_PACK),[graph]);
+  const atlasCoverage=useMemo(()=>buildUkAtlas(graph),[graph]);
   // Match exact source IDs, so artwork is never attached to another dataset by name.
   const pftCompatible=pftAssets.matched>=5;
   const showPftArtwork=pftCompatible&&illustrated;
@@ -755,10 +757,13 @@ export function MapStudio() {
         <div className="view-switch">
           <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
           <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
+          <button className={view === "atlas" ? "on" : ""} onClick={() => {setView("atlas");setSelectedId(null);setFocusId(null);}}>
+            ◉ <span>UK atlas{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
+          </button>
         </div>
         <section className="perspectives-panel" aria-label="Saved perspectives">
           <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
-            <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":"My collaborations");}}>+ Save</button></div>
+            <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":view==="atlas"?"My UK atlas":"My collaborations");}}>+ Save</button></div>
           {showSave && <form className="perspective-form" onSubmit={saveCurrentPerspective}>
             <label htmlFor="save-view-name">Name this perspective</label>
             <input className="search" id="save-view-name" maxLength={60} required value={newName}
@@ -942,17 +947,18 @@ export function MapStudio() {
       </aside>
       <div className={"map-panel"+(showPftArtwork?" pft-illustrated":"")}>
         <div className="map-topline">
-          <span><span className="signal" /> {view === "landscape" ? "Living network" : "Shared associations"}</span>
+          <span><span className="signal" /> {view === "landscape" ? "Living network" :
+            view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
           <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span>
           <div className="map-options">
-            <label>Layout <select aria-label="Network layout" value={layoutMode}
+            {view!=="atlas"&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
               <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
-            </select></label>
-            <label>Labels <select aria-label="Network labels" value={labelDensity}
+            </select></label>}
+            {view!=="atlas"&&<label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
-            </select></label>
+            </select></label>}
             {pftCompatible && <label>Visual style <select aria-label="Visual style"
               value={illustrated?"illustrated":"original"}
               onChange={event=>setIllustrated(event.target.value==="illustrated")}>
@@ -961,15 +967,21 @@ export function MapStudio() {
             </select></label>}
           </div>
         </div>
-        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
-          selectedId={selectedId} selectedEdgeId={selectedEdgeId}
-          pathNodeIds={connectionTrail?.nodeIds ?? []}
-          pathEdgeIds={connectionTrail?.steps.map(step => step.edgeId) ?? []}
-          junctionNodeIds={showJunctions ? junctions.map(item=>item.nodeId) : []}
-          onSelect={pickNode} onSelectEdge={pickEdge}
-          view={view} layoutMode={layoutMode} labelDensity={labelDensity}
-          illustrated={showPftArtwork} />
-        <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>
+        {view==="atlas" ?
+          <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
+            onSelect={pickNode} onPickEdge={pickEdge}/> :
+          <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
+            selectedId={selectedId} selectedEdgeId={selectedEdgeId}
+            pathNodeIds={connectionTrail?.nodeIds ?? []}
+            pathEdgeIds={connectionTrail?.steps.map(step=>step.edgeId)??[]}
+            junctionNodeIds={showJunctions?junctions.map(item=>item.nodeId):[]}
+            onSelect={pickNode} onSelectEdge={pickEdge}
+            view={view} layoutMode={layoutMode} labelDensity={labelDensity}
+            illustrated={showPftArtwork} />}
+        <div className="map-bottomline"><span>{view==="atlas"?
+          "Source-provided locations only · Choose a marker to see its recorded relationships" :
+          "Drag to explore · Select a node or a relationship line to inspect its evidence"}</span>
+          <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
         {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
