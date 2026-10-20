@@ -1,6 +1,27 @@
 import { z } from "zod";
 import { nodeTypeSchema, type GraphDocument } from "./schema";
 
+/** Visual treatment belongs to the perspective, not the source entity. */
+export const nodeStyleSchema = z.object({
+  label: z.enum(["auto", "show", "hide"]).optional(),
+  size: z.enum(["normal", "small", "large"]).optional(),
+  highlight: z.boolean().optional(),
+  imageUrl: z.url().max(2048).refine(value=>value.startsWith("https://"),
+    "Image overrides must use HTTPS").optional()
+}).strict();
+export type NodeStyleOverride = z.infer<typeof nodeStyleSchema>;
+const nodeStylesSchema = z.record(z.string().min(1).max(200),nodeStyleSchema)
+  .refine(value=>Object.keys(value).length<=2000,"Maximum 2,000 per-node overrides");
+
+/** A display-only projection. Never mutate source pictures, links or provenance. */
+export function applyNodeStyleImages(graph:GraphDocument,
+  overrides:Record<string,NodeStyleOverride>):GraphDocument {
+  return {...graph,nodes:graph.nodes.map(node=>{
+    const imageUrl=overrides[node.id]?.imageUrl;
+    return imageUrl?{...node,imageUrl}:node;
+  })};
+}
+
 /** Pure presentation state, never a second copy of graph data. */
 export const perspectiveSchema = z.object({
   id: z.string().min(1).max(100),
@@ -14,6 +35,7 @@ export const perspectiveSchema = z.object({
   context: z.boolean(),
   layout: z.enum(["organic", "radial", "regions"]),
   labels: z.enum(["essential", "all"]),
+  nodeStyles: nodeStylesSchema.optional(),
   /** Dataset-scoped canvas coordinates; never written into source node properties. */
   positions: z.record(z.string().min(1).max(200), z.object({
     x: z.number().finite().min(-1000000).max(1000000),

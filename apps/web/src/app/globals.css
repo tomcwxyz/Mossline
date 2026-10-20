@@ -736,3 +736,33 @@
 .legend-symbol.other {background:#b2b9a9;}
 .small-dot.other {background:#b2b9a9;}
 .graph-legend {flex-wrap:wrap;max-width:calc(100% - 35px);}
+
+
+/* Alpha 1.5: reusable controls for source-independent node presentation */
+.node-appearance-editor{border-top:1px solid #567665;margin-top:22px;padding-top:18px;display:grid;gap:12px;}
+.node-appearance-editor .eyebrow{margin:0;color:#d9ce9f;}
+.node-appearance-editor h3{font:normal 22px/1.2 Georgia,serif;color:#f2f1e7;margin:0 0 4px;}
+.node-appearance-editor label{display:grid;gap:6px;font-size:11px;font-weight:600;line-height:1.5;color:#e3eadd;}
+.node-appearance-editor select,.appearance-picture-form input{min-width:0;width:100%;max-width:100%;padding:10px;
+  background:#113126;color:#edf1e4;border:1px solid #719483;border-radius:7px;font-size:12px;}
+.appearance-emphasis{display:flex!important;align-items:center;gap:10px!important;}
+.appearance-emphasis input{width:17px;height:17px;accent-color:#b9d2a2;}
+.appearance-picture-form{display:grid;gap:9px;}
+.appearance-picture-form button,.appearance-reset{border:1px solid #719483;border-radius:7px;
+  background:#2f5b46;color:#f4f2e6;font-size:11px;padding:10px;text-align:left;}
+.appearance-reset{background:transparent;border-color:#698579;color:#e9d09b;}
+.appearance-picture-form button:hover,.appearance-reset:hover{background:#426c51;}
+.node-appearance-editor .appearance-explanation{color:#b7cab7;font-size:10px;line-height:1.6;margin:0;}
+.node-appearance-editor .appearance-active-image{color:#dce8b8;font-size:10px;margin:0;}
+.node-appearance-editor .appearance-error{color:#ffb8a9;font-size:11px;margin:0;}
+.node-appearance-editor :is(button,select,input):focus-visible{outline:3px solid #e3c57f;outline-offset:2px;}
+
+
+.arrangement-tools{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.map-options .arrangement-tools button{border:1px solid #7b9983;border-radius:7px;
+  padding:8px 10px;background:transparent;color:inherit;font-size:11px;cursor:pointer;}
+.map-options .arrangement-tools button:hover:not(:disabled){background:#638670;color:#fff;}
+.map-options .arrangement-tools button:disabled{opacity:.4;cursor:not-allowed;}
+.map-options .arrangement-tools button:focus-visible{outline:3px solid #e1c37a;outline-offset:2px;}
+.map-panel.editorial-style .arrangement-tools button{border-color:#adc4ac;color:#315640;}
+.map-panel.editorial-style .arrangement-tools button:hover:not(:disabled){background:#dbe8d2;color:#294d36;}

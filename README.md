@@ -492,3 +492,33 @@ artistic comparison but is not silently used as a georeferenced map.
 Known limits: project cards are a responsive editorial presentation,
 not saved Kumu `mapx/mapy` coordinates; the geographic rendering
 still needs authenticated desktop/mobile/browser acceptance.
+
+
+## Alpha 1.5 — authoring individual node appearance (draft)
+
+Mossline now supports per-node presentation overrides **for any network**.
+In Landscape or Collaborations select a node, then choose **How should this
+appear?** Set the label to automatic/always visible/hidden, change its size
+to compact or featured, highlight it, or apply an HTTPS image URL.
+Save a named perspective to retain these choices alongside manual positions,
+filters, labels and story settings. Reopening the perspective restores them.
+
+Visual overrides never update the canonical graph, source-provided images,
+relationships or exported data. HTTPS image links are display-only, not uploads
+or licences, and users must have rights to use the artwork. Existing saved
+perspectives without overrides remain readable. The feature is deliberately
+available for all graph entity types, not only farming datasets; geographic
+source coordinates cannot be adjusted through this editor.
+
+This draft requires CI and manual protected-preview desktop/mobile usability
+review before merge.
+
+
+### Undo and redo for arranged nodes
+
+Dragging a node now records a bounded arrangement history for the active map
+and layout. Use **Undo** and **Redo** above the canvas; new movements clear
+redo history. Reset arrangement recalculates the layout without editing any
+saved perspective or underlying source data. Undo/redo is session-local,
+available for up to 20 manual movements, and is intentionally separate
+from the names and versions of saved perspectives.
