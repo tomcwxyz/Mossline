@@ -40,6 +40,7 @@ export interface ColumnMapping {
   nodeType: NodeType;
   typeColumn: string;
   regionColumn: string;
+  regionTarget: "source" | "target" | "both";
   descriptionColumn: string;
   rules: RelationshipRule[];
 }
@@ -124,9 +125,15 @@ export function discoverData(file: ImportFile): DataDiscovery {
       nameColumn,nodeType:typeForColumn(nameColumn),
       typeColumn:pick(headers,["elementtype","entitytype","category","type"]),
       regionColumn:pick(headers,["region","geographicreach","geography"]),
+      regionTarget:"source",
       descriptionColumn:pick(headers,["description","summary","about"]),
-      rules:relationTo ? [{fromColumn:relationFrom,toColumn:relationTo,
-        fromType:typeForColumn(relationFrom),toType:typeForColumn(relationTo),type:relationType}]:[]
+      rules:relationTo ? [
+        {fromColumn:relationFrom,toColumn:relationTo,
+          fromType:typeForColumn(relationFrom),toType:typeForColumn(relationTo),type:relationType},
+        ...(organisations && project && funder && relationFrom===organisations && relationTo===project ?
+          [{fromColumn:project,toColumn:funder,
+            fromType:"project" as NodeType,toType:"funder" as NodeType,type:"funded by"}] : [])
+      ]:[]
     };
     const advice=[
       "Column suggestions come from headings and sample values, not independently verified facts.",
@@ -170,9 +177,11 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
     }
     const nodes=new Map<string,GraphDocument["nodes"][number]>();
     const edges:GraphDocument["edges"]=[];
-    let skipped=0;
+    let skipped=0,privateRows=0;
+    const publicColumn = headers.find(h=>norm(h)==="public");
     const position=(i:number)=>({system:"csv" as const,fileName:file.name,recordNumber:i+2});
-    function addNode(label:string,column:string,nodeType:NodeType,row:Record<string,string>,index:number) {
+    function addNode(label:string,column:string,nodeType:NodeType,row:Record<string,string>,index:number,
+      includeRegion:boolean) {
       const id=idFor(column,label);
       const existing=nodes.get(id);
       if(existing) {
@@ -180,7 +189,7 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
           message:"Conflicting suggested types for '"+label+"'; first mapping is retained."});
         return id;
       }
-      const region=mapping.regionColumn ? value(row[mapping.regionColumn]):"";
+      const region=includeRegion && mapping.regionColumn ? value(row[mapping.regionColumn]):"";
       const description=mapping.descriptionColumn ? value(row[mapping.descriptionColumn]):"";
       nodes.set(id,{
         id,label,type:nodeType,description:description||undefined,region:region||undefined,tags:[],
@@ -189,19 +198,24 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
       return id;
     }
     for(const [i,row] of rows.entries()){
+      if(publicColumn && ["false","no","0","private"].includes(value(row[publicColumn]).toLowerCase())) {
+        privateRows++; skipped++; continue;
+      }
       if(mapping.mode==="entities"){
         const label=value(row[mapping.nameColumn]);
         if(!label){skipped++;continue;}
         const nodeType=mapping.typeColumn&&columns.has(mapping.typeColumn)?
           typeForValue(row[mapping.typeColumn],mapping.nodeType):mapping.nodeType;
-        addNode(label,mapping.nameColumn,nodeType,row,i);
+        addNode(label,mapping.nameColumn,nodeType,row,i,true);
       }else{
         let created=false;
         for(const [ruleIndex,rule] of mapping.rules.entries()) {
           const from=value(row[rule.fromColumn]),to=value(row[rule.toColumn]);
           if(!from || !to) continue;
-          const source=addNode(from,rule.fromColumn,rule.fromType,row,i);
-          const target=addNode(to,rule.toColumn,rule.toType,row,i);
+          const source=addNode(from,rule.fromColumn,rule.fromType,row,i,
+            mapping.regionTarget==="source" || mapping.regionTarget==="both");
+          const target=addNode(to,rule.toColumn,rule.toType,row,i,
+            mapping.regionTarget==="target" || mapping.regionTarget==="both");
           edges.push({
             id:"mapped:edge:"+i+":"+ruleIndex,source,target,type:rule.type.trim(),
             origin:{...position(i),recordId:"row:"+String(i+2)+":rule:"+String(ruleIndex+1)},
@@ -212,8 +226,10 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
         if(!created)skipped++;
       }
     }
-    if(skipped)issues.push({severity:"warning",
-      message:skipped+" rows contained no values for the selected mapping and were skipped."});
+    if(privateRows)issues.push({severity:"warning",
+      message:privateRows+" rows marked non-public were excluded before generating any nodes or relationships."});
+    if(skipped-privateRows>0)issues.push({severity:"warning",
+      message:(skipped-privateRows)+" rows contained no values for the selected mapping and were skipped."});
     if(nodes.size===0)throw Error("No nodes could be built using the chosen columns");
     if(mapping.mode==="relationships" && !edges.length)
       throw Error("No complete relationship pairs matched the selected columns");
