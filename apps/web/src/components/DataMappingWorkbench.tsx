@@ -7,7 +7,7 @@ import {
 } from "@mossline/graph-core";
 
 type CsvDiscovery = Extract<DataDiscovery, {kind:"csv-table"}>;
-const types:NodeType[]=["organisation","project","funder","person","place","other"];
+const types:NodeType[]=["organisation","project","funder","person","place","topic","methodology","outcome","other"];
 const labelType=(value:NodeType)=>value.charAt(0).toUpperCase()+value.slice(1);
 
 export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{

@@ -1,4 +1,4 @@
-import type { GraphDocument, GraphEdge, GraphNode, NodeType } from "./schema.js";
+import { nodeTypeSchema, type GraphDocument, type GraphEdge, type GraphNode, type NodeType } from "./schema.js";
 
 export function neighbours(graph: GraphDocument, nodeId: string): GraphNode[] {
   const related = new Set<string>();
@@ -47,7 +47,7 @@ export interface FilteredGraph { graph: GraphDocument; contextNodeIds: string[];
 
 /** Type filters match seed entities; optional context retains one-hop neighbours. */
 export function filterGraph(graph: GraphDocument, opts: FilterOptions): FilteredGraph {
-  const allTypesSelected = opts.types.length === 6;
+  const allTypesSelected = nodeTypeSchema.options.every(type => opts.types.includes(type));
   const ids = new Set(graph.nodes.filter(n => opts.types.includes(n.type) && (!opts.region || n.region === opts.region)).map(n => n.id));
   const query = opts.query?.trim() ?? "";
   const matched = new Set(searchNodes(graph, query).map(n => n.id));

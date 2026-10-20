@@ -15,7 +15,7 @@ import demo from "../../../../data/demo.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
   organisation: "Organisations", project: "Projects", funder: "Funders",
-  person: "People", place: "Places", other: "Other"
+  person: "People", place: "Places", topic: "Topics", methodology: "Methods", outcome: "Outcomes", other: "Other"
 };
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);

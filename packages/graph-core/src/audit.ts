@@ -22,7 +22,7 @@ export interface GraphAudit {
 
 export function auditGraph(graph: GraphDocument): GraphAudit {
   const categories: GraphAudit["categories"] = {
-    organisation: 0, project: 0, funder: 0, person: 0, place: 0, other: 0
+    organisation: 0, project: 0, funder: 0, person: 0, place: 0, topic: 0, methodology: 0, outcome: 0, other: 0
   };
   const connected = new Set<string>();
   for (const edge of graph.edges) {

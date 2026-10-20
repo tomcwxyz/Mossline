@@ -3,13 +3,13 @@ import { parseGraphDocument, type GraphDocument, type NodeType } from "./schema"
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const value = (v: unknown) => v == null ? "" : String(v).trim();
-const nodeTypes: NodeType[] = ["organisation","project","funder","person","place","other"];
+const nodeTypes: NodeType[] = ["organisation","project","funder","person","place","topic","methodology","outcome","other"];
 const classify: Record<string,NodeType> = {
   organisation:"organisation",organization:"organisation",charity:"organisation",network:"organisation",
   project:"project",programme:"project",program:"project",initiative:"project",
   funder:"funder",fundingbody:"funder",foundation:"funder",donor:"funder",
   person:"person",contact:"person",people:"person",place:"place",location:"place",
-  geography:"place",region:"place"
+  geography:"place",region:"place",topic:"topic",tocmethodology:"methodology",tocoutput:"outcome"
 };
 function typeForColumn(name: string): NodeType {
   return classify[norm(name).replace(/name$/,"")] ?? "other";

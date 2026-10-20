@@ -13,7 +13,9 @@ const types: Record<string, NodeType> = {
   organisation: "organisation", organization: "organisation", company: "organisation",
   charity: "organisation", project: "project", programme: "project", program: "project",
   initiative: "project", funder: "funder", foundation: "funder", donor: "funder",
-  person: "person", people: "person", place: "place", location: "place", region: "place"
+  person: "person", people: "person", place: "place", location: "place", region: "place",
+  geography: "place", topic: "topic", subject: "topic",
+  "toc methodology": "methodology", "toc output": "outcome"
 };
 const value = (v: unknown): string => v == null ? "" : String(v).trim();
 function field(row: Row, ...names: string[]): unknown {
@@ -110,7 +112,7 @@ function convert(elements: Row[], connections: Row[], source: "kumu" | "csv",
     if (value(rawSource) && !sourceUrl) rejectedUrls.nodeSource++;
     nodes.push({
       id,label,type,description:value(field(row,"description")) || undefined,
-      region:value(field(row,"region","geographic reach")) || undefined,
+      region:value(field(row,"atlas region","region","geographic reach")) || undefined,
       tags:tags(field(row,"tags","topics")),
       imageUrl,sourceUrl,
       origin:{system:source,recordId:original || label,...locations?.get(row)},

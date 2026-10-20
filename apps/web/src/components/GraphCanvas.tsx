@@ -89,6 +89,9 @@ export function GraphCanvas({
           { selector: "node.funder", style: { "background-color": "#80a8cb", "border-color": "#d4e5ef", "shape": "diamond", "width": 30, "height": 30 } },
           { selector: "node.person", style: { "background-color": "#cba5b5" } },
           { selector: "node.place", style: { "background-color": "#99b6a6", "shape": "hexagon", "width": 27, "height": 27 } },
+          { selector: "node.topic", style: { "background-color": "#a2b777", "border-color": "#d9e1a3", "shape": "hexagon", "width": 34, "height": 34 } },
+          { selector: "node.methodology", style: { "background-color": "#72939f", "border-color": "#c1d5d9", "shape": "hexagon", "width": 43, "height": 43 } },
+          { selector: "node.outcome", style: { "background-color": "#7fa7a3", "border-color": "#cde3df", "shape": "diamond", "width": 32, "height": 32 } },
           { selector: "node.context", style: { "opacity": 0.32 } },
           { selector: "node.region-group", style: {
             "shape": "round-rectangle", "background-color": "#3d7258",
@@ -308,6 +311,9 @@ export function GraphCanvas({
       <span><i className="legend-symbol organisation" /> Organisation</span>
       <span><i className="legend-symbol project" /> Project</span>
       <span><i className="legend-symbol funder" /> Funder</span>
+      {graph.nodes.some(n=>n.type==="topic")&&<span><i className="legend-symbol topic" /> Topic</span>}
+      {graph.nodes.some(n=>n.type==="methodology")&&<span><i className="legend-symbol methodology" /> Method</span>}
+      {graph.nodes.some(n=>n.type==="outcome")&&<span><i className="legend-symbol outcome" /> Outcome</span>}
       {view === "collaborations" && <span><i className="legend-symbol inferred" /> Shared association</span>}
       {pathEdgeIds.length>0 && <span><i className="legend-symbol traced" /> Recorded path</span>}
       {junctionNodeIds.length>0 && <span><i className="legend-symbol junction" /> Structural junction</span>}

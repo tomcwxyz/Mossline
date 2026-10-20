@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const nodeTypeSchema = z.enum(["organisation", "project", "funder", "person", "place", "other"]);
+export const nodeTypeSchema = z.enum(["organisation", "project", "funder", "person", "place", "topic", "methodology", "outcome", "other"]);
 export type NodeType = z.infer<typeof nodeTypeSchema>;
 
 const webUrl = z.url().refine(value => /^https?:\/\//i.test(value), "Use an HTTP(S) URL");
