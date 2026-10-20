@@ -392,3 +392,64 @@
   .guided-discovery{padding:13px;}
   .map-library-chooser{width:100%;max-width:none;}
 }
+
+/* Alpha 1.2 — approachable navigation, legible action buttons and route selection */
+.import-preview .button-outline,
+.guided-discovery .button-outline,
+.discovery-advanced .button-outline {
+  background:#f6faf3;
+  color:#234d39;
+  border:1px solid #64846c;
+  font-weight:700;
+}
+.import-preview .button-outline:hover,
+.guided-discovery .button-outline:hover {
+  background:#dcebdd;color:#153d2a;border-color:#386448;filter:none;
+}
+.import-preview .button-outline:focus-visible,
+.guided-discovery .button-outline:focus-visible,
+.trace-panel :is(button,select):focus-visible,
+.inspect-trace-start:focus-visible {
+  outline:3px solid #d5a94e;outline-offset:3px;
+}
+.import-preview .help {color:#45624d;line-height:1.55;}
+.import-preview .import-title>.button-outline {
+  padding:10px 16px;min-width:72px;border-radius:9px;
+}
+.import-preview .import-title .eyebrow {color:#4b7956;}
+.import-preview .import-title h2 {color:#203f30;}
+.guided-discovery .discovery-decision .button-outline {
+  padding:11px 15px;min-height:42px;
+}
+.guided-discovery .discovery-buttons {align-items:stretch;}
+.guided-discovery .discovery-buttons button {white-space:normal;text-align:center;min-height:43px;}
+.guided-discovery .discovery-preview {margin:12px 0 2px;}
+.guided-discovery .discovery-provenance {color:#45644e;}
+.trace-panel {padding:17px 14px;margin-top:19px;}
+.trace-head {align-items:flex-start;flex-wrap:wrap;gap:3px 8px;}
+.trace-head .eyebrow {margin:0;}
+.trace-head>span {white-space:normal;text-align:left;font-size:10px;color:#eed4a4;}
+.trace-panel>.help {font-size:11px;line-height:1.6;color:#d2dfd0;}
+.trace-form {gap:8px;margin-top:15px;}
+.trace-form label {font-size:11px;line-height:1.45;color:#f0f3e5;}
+.trace-form select.search {width:100%;min-width:0;font-size:12px;border-color:#6c927a;
+  background:#0e3128;color:#f2f4e9;padding:10px 9px;min-height:42px;}
+.trace-form select.search:disabled {opacity:1;background:#25473a;color:#afc2b0;cursor:not-allowed;}
+.trace-form select.search optgroup {font-style:normal;font-weight:700;background:#edf4e8;color:#1d4630;}
+.trace-form select.search option {font-size:12px;font-weight:400;background:#edf4e8;color:#1c3d2d;}
+.trace-destinations {margin:0 0 5px!important;padding:10px 11px;border-radius:7px;
+  background:#294f3e;border:1px solid #50755d;color:#f1e7cb!important;
+  font-size:11px!important;line-height:1.55!important;}
+.trace-action {font-size:12px;padding:12px 10px;min-height:43px;}
+.trace-example {font-size:11px;line-height:1.5;}
+.trace-response .trace-caption {font-size:11px;}
+.inspect-trace-start {display:block;width:100%;padding:10px 9px;margin:12px 0;
+  border-radius:8px;background:#dfcc96;color:#254735;border:1px solid #ddc993;
+  font-size:12px;font-weight:700;text-align:center;}
+.inspect-trace-start:hover {background:#f2dda6;}
+@media(min-width:1300px) {
+  .workspace {grid-template-columns:260px minmax(0,1fr) 280px;}
+}
+@media(max-width:900px) {
+  .trace-panel {padding:14px 12px;}
+}
