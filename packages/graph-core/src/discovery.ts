@@ -198,6 +198,18 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
       if(!nodeTypes.includes(rule.fromType)||!nodeTypes.includes(rule.toType))
         throw Error("Choose supported entity types");
     }
+    const relationCounts=new Map<string,number>();
+    for(const row of rows) {
+      const isPrivate=headers.some(h=>norm(h)==="public" &&
+        ["false","no","0","private"].includes(value(row[h]).toLowerCase()));
+      if(isPrivate || mapping.mode!=="relationships")continue;
+      mapping.rules.forEach((rule,index)=>{
+        const from=value(row[rule.fromColumn]),to=value(row[rule.toColumn]);
+        if(!from || !to)return;
+        const key=JSON.stringify([idFor(rule.fromColumn,from),idFor(rule.toColumn,to),rule.type.trim(),index]);
+        relationCounts.set(key,(relationCounts.get(key)??0)+1);
+      });
+    }
     const nodes=new Map<string,GraphDocument["nodes"][number]>();
     const edges:GraphDocument["edges"]=[];
     const duplicateEdgeCounts = new Map<string,number>();
@@ -251,7 +263,14 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
             mapping.regionTarget==="source" || mapping.regionTarget==="both");
           const target=addNode(to,rule.toColumn,rule.toType,row,i,
             mapping.regionTarget==="target" || mapping.regionTarget==="both");
-          const edgeKey = JSON.stringify([source,target,rule.type.trim(),ruleIndex]);
+          const baseKey = JSON.stringify([source,target,rule.type.trim(),ruleIndex]);
+          // If two rows record the same relation, tie their identity to the
+          // source row's contents rather than whichever one came first.
+          // Without a separate source relationship ID, changes to such a
+          // duplicate row are conservatively reported as removal + addition.
+          const evidenceKey=JSON.stringify(Object.keys(row).sort().map(k=>[k,row[k]]));
+          const edgeKey = (relationCounts.get(baseKey)??0)>1 ?
+            baseKey+"|"+evidenceKey : baseKey;
           const number = duplicateEdgeCounts.get(edgeKey) ?? 0;
           duplicateEdgeCounts.set(edgeKey,number+1);
           edges.push({
@@ -272,6 +291,9 @@ export function buildMappedGraph(file:ImportFile,mapping:ColumnMapping):MappedPr
       if(seen.descriptions.size>1) issues.push({severity:"warning",
         message:"Conflicting descriptions for '"+label+"'; no single description was assigned. Original rows are retained on relationships."});
     }
+    const repeatedRelations=[...relationCounts.values()].filter(count=>count>1).length;
+    if(repeatedRelations)issues.push({severity:"warning",
+      message:repeatedRelations+" relationship pair(s) occur in multiple source rows. Their identity includes row evidence, because no stable row-level relation ID is configured."});
     if(privateRows)issues.push({severity:"warning",
       message:privateRows+" rows marked non-public were excluded before generating any nodes or relationships."});
     if(skipped-privateRows>0)issues.push({severity:"warning",
