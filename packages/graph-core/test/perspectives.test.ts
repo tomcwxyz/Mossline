@@ -37,3 +37,19 @@ test("authored narrative and illustrated presentation survive a saved perspectiv
   assert.throws(()=>parsePerspectives([{...item,presentation:{...item.presentation,
     introduction:"x".repeat(1201)}}]));
 });
+
+test("geographic atlas is a valid saved view without changing source topology",()=>{
+  const record={
+    id:"uk-atlas",name:"Across the UK",graphKey:graphFingerprint(graph),
+    view:"atlas",basis:"all",region:"",query:"",
+    types:["organisation","project","funder","place"],
+    context:true,layout:"organic",labels:"essential",
+    presentation:{title:"The network across the UK",
+      introduction:"Browse geographical coverage and the connections behind it.",
+      illustrated:true},
+    createdAt:3
+  };
+  const parsed=parsePerspectives([record]);
+  assert.equal(parsed[0].view,"atlas");
+  assert.equal(graphFingerprint(graph),record.graphKey);
+});
