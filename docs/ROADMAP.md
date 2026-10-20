@@ -207,3 +207,14 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] General geography via a configurable MapLibre basemap rather than hard-coded UK bounds.
 - [ ] A user-selected illustration pack, independent of any bundled example.
 - [ ] Server-backed workspaces, sharing and user-controlled publication permissions.
+
+
+## Alpha 1.5 — network appearance authoring (development)
+- [x] Validated per-node appearance overlays independent of the canonical graph.
+- [x] Generic inspector: per-node label, size, emphasis and HTTPS image.
+- [x] Save/restore node appearance in browser-local named perspectives.
+- [x] Preserve original images, graph identifiers and recorded relationships.
+- [ ] CI tests/typecheck/build and protected-preview browser acceptance.
+- [ ] Undo/redo manual positioning and node locking.
+- [ ] User-managed asset library with attribution and licence information.
+- [ ] Shareable public perspectives and hosted workspace permissions.
