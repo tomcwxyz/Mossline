@@ -1,13 +1,20 @@
 "use client";
 
 import {useMemo,useState} from "react";
-import {buildFundingThemeClusters,type GraphDocument} from "@mossline/graph-core";
+import {buildFundingThemeClusters,type FundingFullAnalysis,type GraphDocument} from "@mossline/graph-core";
 
-export function FundingClusters({graph,onExplore}:{
-  graph:GraphDocument;onExplore:(id:string)=>void
+export function FundingClusters({graph,fullAnalysis,onExplore}:{
+  graph:GraphDocument;fullAnalysis?:FundingFullAnalysis;onExplore:(id:string)=>void
 }){
-  const report=useMemo(()=>buildFundingThemeClusters(graph,6),[graph]);
+  const localReport=useMemo(()=>buildFundingThemeClusters(graph,6),[graph]);
+  const report=fullAnalysis?.themes??localReport;
+  const fullDataset=!!fullAnalysis&&fullAnalysis.grants>localReport.totalGrants;
+  const graphIds=useMemo(()=>new Set(graph.nodes.map(n=>n.id)),[graph]);
   const names=useMemo(()=>new Map(graph.nodes.map(n=>[n.id,n.label])),[graph]);
+  const graphButton=(id:string,label:string)=><button type="button"
+    disabled={!graphIds.has(id)} title={graphIds.has(id)?"Explore this entity in the network":
+      "Included in full-data analysis, but not in the reduced network view"}
+    onClick={()=>onExplore(id)}>{label}</button>;
   const [filter,setFilter]=useState<"all"|"funders"|"source">("all");
   const [showMore,setShowMore]=useState(false);
   const [selected,setSelected]=useState("");
@@ -36,6 +43,9 @@ export function FundingClusters({graph,onExplore}:{
     <div className="funding-cluster-intro">
       <div><p className="eyebrow">Landscape view · themes and connections</p>
         <h2>Where does funding gather?</h2>
+        <p className="funding-cluster-scope">{fullDataset?
+          "Full-source thematic analysis · all "+report.totalGrants+" unique eligible organisational grants":
+          "Thematic analysis · "+report.totalGrants+" grants in this map"}</p>
         <p>Explore groups of grants with similar recorded themes or matching descriptive
           phrases. These are <strong>possible themes to investigate</strong>, not claims
           that the recipients collaborate or that local needs are met.</p>
@@ -64,10 +74,10 @@ export function FundingClusters({graph,onExplore}:{
       </label>
     </div>
     {report.unclassifiedGrants>0&&<p className="funding-cluster-caveat">
-      {Math.round(report.unclassifiedGrants/report.totalGrants*100)}% of mapped
-      awards cannot yet be classified by the available evidence. This is missing
-      information, not a funding gap. Counts relate to the imported map
-      {graph.description.includes("exploratory subset")?" — an exploratory subset, not every award in the CSV":""}.
+      {Math.round(report.unclassifiedGrants/report.totalGrants*100)}% of
+      {fullDataset?" eligible source awards":" mapped awards"} cannot yet be classified
+      by the available evidence. This is missing information, not a funding gap.
+      {fullDataset?" Theme totals include grants not shown in the reduced network.":""}
     </p>}
     <div className="funding-cluster-grid">
       {visible.map(c=><article className="funding-cluster-card" key={c.id}>
@@ -91,21 +101,24 @@ export function FundingClusters({graph,onExplore}:{
         </p>}
         <details className="funding-cluster-detail">
           <summary>Explore organisations and evidence</summary>
+          {fullDataset&&<p className="funding-cluster-scope">
+            Some full-data records may not be in the reduced network canvas.
+            Their evidence remains visible here, but network exploration is available
+            only for records included in the visual selection.</p>}
           <div>
             <h4>Funders appearing in this theme</h4>
             <ul>{c.funderIds.slice(0,12).map(id=><li key={id}>
-              <button type="button" onClick={()=>onExplore(id)}>{names.get(id)??id}</button></li>)}</ul>
+              {graphButton(id,names.get(id)??id)}</li>)}</ul>
             {c.funderIds.length>12&&<small>And {c.funderIds.length-12} more funders</small>}
             <h4>Organisations receiving awards from multiple funders within this theme</h4>
             {c.organisationBridges.length===0?<p>No multi-funder recipients recorded for this theme.</p>:
               <ul>{c.organisationBridges.map(item=><li key={item.recipientId}>
-                <button type="button" onClick={()=>onExplore(item.recipientId)}>
-                  {names.get(item.recipientId)??item.recipientId}</button>
+                {graphButton(item.recipientId,names.get(item.recipientId)??item.recipientId)}
                 {" "}· {item.funderCount} funders
               </li>)}</ul>}
             <h4>Examples from grant records</h4>
             <ul>{c.evidence.map(e=><li key={e.grantId} className="funding-cluster-evidence">
-              <button type="button" onClick={()=>onExplore(e.grantId)}>{e.title}</button>
+              {graphButton(e.grantId,e.title)}
               <small>{names.get(e.funderId)??e.funderId} → {names.get(e.recipientId)??e.recipientId}</small>
               <p>{e.description||"No narrative description recorded"}</p>
               <small>Matched because of {e.reason==="source-tag"?"source tag":"phrase rule"}:
