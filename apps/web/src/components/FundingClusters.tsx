@@ -10,7 +10,10 @@ export function FundingClusters({graph,fullAnalysis,onExplore}:{
   const report=fullAnalysis?.themes??localReport;
   const fullDataset=!!fullAnalysis&&fullAnalysis.grants>localReport.totalGrants;
   const graphIds=useMemo(()=>new Set(graph.nodes.map(n=>n.id)),[graph]);
-  const names=useMemo(()=>new Map(graph.nodes.map(n=>[n.id,n.label])),[graph]);
+  const names=useMemo(()=>new Map([
+    ...Object.entries(fullAnalysis?.entityLabels??{}),
+    ...graph.nodes.map(n=>[n.id,n.label] as [string,string])
+  ]),[graph,fullAnalysis]);
   const graphButton=(id:string,label:string)=><button type="button"
     disabled={!graphIds.has(id)} title={graphIds.has(id)?"Explore this entity in the network":
       "Included in full-data analysis, but not in the reduced network view"}
