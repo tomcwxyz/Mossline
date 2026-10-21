@@ -937,7 +937,7 @@ export function MapStudio() {
       onClose={()=>setShowFundingWorkbench(false)}
       onCreate={(next,fullAnalysis,datasetId)=>{
         if(!createNewMap(next,fullAnalysis,datasetId))return false;
-        setNotice("Created a funding landscape: full-data grant and theme analysis is saved alongside a smaller network view. Explore the clusters and supporting records below.");
+        setNotice("Created a funding landscape. Open Network to explore the complete recorded funding graph; deeper analysis is available below.");
         return true;
       }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
@@ -1109,12 +1109,14 @@ export function MapStudio() {
             <option value="recorded">Recorded direct relationships only</option>
           </select>
           <p className="help">Dashed lines show shared associations, not confirmed partnerships. Changing the basis does not remove the organisations.</p>
-        </> : <div className="type-list">
+        </> : <details className="studio-inline-disclosure">
+          <summary>Entity types</summary>
+          <div className="type-list">
           {totalTypes.filter(item => item.count > 0).map(({ type, count }) => <label key={type} className="type-item">
             <input type="checkbox" checked={types.includes(type)} onChange={() => toggleType(type)} />
             <span className={"small-dot " + type} /><span>{TYPE_LABELS[type]}</span><span className="type-count">{count}</span>
           </label>)}
-        </div>}
+        </div></details>}
         <label className="context-toggle"><input type="checkbox" checked={context} onChange={e => setContext(e.target.checked)} /> Keep related context</label>
         <p className="help">Retain one-hop neighbours so filters do not erase the relationships you are exploring.</p>
         {selected && <button className={"focus-button" + (focusId ? " on" : "")}
@@ -1343,7 +1345,9 @@ export function MapStudio() {
             view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
           <span>{fullFundingView?
             "Complete funding network · explore all source records":
-            filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
+            activeFundingMap?.fundingDatasetId?
+              "Focused detail only · choose Network for the full dataset":
+              filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
           <div className="map-options">
             {view!=="atlas"&&!fullFundingView&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>

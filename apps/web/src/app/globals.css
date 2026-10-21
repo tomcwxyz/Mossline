@@ -1314,3 +1314,16 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
   .studio-primary-views .view-switch{width:100%}
   .studio-action-popover{right:0;min-width:min(270px,85vw)}
   .studio-start-grid{gap:12px}}
+
+/* Keep optional filters discoverable without expanding the first screen. */
+.studio-inline-disclosure{margin-top:13px;border:1px solid #3f6551;
+  border-radius:8px;padding:0 10px}
+.studio-inline-disclosure summary{padding:11px 2px;font-size:12px;
+  cursor:pointer;color:#dcead4;font-weight:650}
+.studio-inline-disclosure[open]{padding-bottom:12px}
+@media(max-width:680px){
+  /* The network comes before configuration on narrow screens. */
+  .mossline-studio .map-panel{order:-1}
+  .mossline-studio .sidebar{order:0}
+  .mossline-studio .inspector{order:1}
+}
