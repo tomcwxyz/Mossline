@@ -125,3 +125,29 @@ test("full dataset summary is detached from canvas subset and never contains pri
  assert.equal(JSON.stringify(full).includes("Personal details"),false);
  assert.equal(JSON.stringify(imported.graph).includes("Private recipient"),false);
 });
+
+test("latest modified version of a repeated grant ID wins independent of CSV order",()=>{
+ const headers="Identifier,Funding Org:Name,Recipient Org:Name,Amount Awarded,Date Modified,Title,Description";
+ const older='ID1,Foundation,Local Charity,13262,2025-11-28T00:00:00+00:00,Community meals,Supporting accessible food and community meals';
+ const newer='ID1,Foundation,Local Charity,13345,2026-08-13T00:00:00+00:00,Community meals,Supporting accessible food and community meals';
+ for(const order of [[older,newer],[newer,older]]){
+   const result=importFundingCsv({name:"revisions.csv",text:[headers,...order].join("\n")});
+   assert.equal(result.fullGrantCount,1);
+   assert.equal(result.counts.duplicateExcluded,1);
+   assert.equal(result.counts.importedGrants,1);
+   const summary=buildFundingFullAnalysis(result.graph!);
+   // Currency must be explicit rather than guessed from an unmarked amount.
+   assert.equal(summary.amounts.length,0);
+   const award=result.graph!.nodes.find(n=>n.type==="project");
+   assert.equal(award?.properties?.amountAwarded,13345);
+ }
+});
+test("multiple versions with an explicit currency count the latest award amount once",()=>{
+ const csv="Identifier,Funding Org:Name,Recipient Org:Name,Amount Awarded,Currency,Date Modified,Title,Description\n"+
+  "G100,Foundation,Charity,1200,GBP,2025-01-01,Meals,Community meals for families\n"+
+  "G100,Foundation,Charity,1275,GBP,2026-01-01,Meals,Community meals for families";
+ const result=importFundingCsv({name:"revisions.csv",text:csv});
+ assert.equal(result.fullGrantCount,1);
+ assert.deepEqual(buildFundingFullAnalysis(result.graph!).amounts,
+   [{currency:"GBP",total:1275,knownAmounts:1}]);
+});
