@@ -870,3 +870,10 @@
 @media(max-width:680px){.published-head{padding:25px 0 20px;}
   .published-main .graph-stage{min-height:450px;}
   .published-workspace{border-radius:9px;}}
+
+
+.share-disclosure{margin:3px 0;border:1px solid #607f69;border-radius:7px;padding:8px 10px;}
+.share-disclosure summary{font-size:11px;font-weight:700;color:#eedeb8;cursor:pointer;}
+.share-disclosure li small{font-size:10px;color:#b9cab9;overflow-wrap:anywhere;}
+.share-confirm-label input{margin-top:2px;}
+.share-disclosure summary:focus-visible{outline:3px solid #eed18a;outline-offset:2px;}
