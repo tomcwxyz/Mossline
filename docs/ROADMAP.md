@@ -275,7 +275,7 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Directed funder → grant → organisation edges retaining multiple grants and amounts.
 - [x] Preserve organisation/grant IDs; exclude source-marked private rows; keep amount and currency disaggregated.
 - [x] Funding summary of grants, recipients, funders, award totals by currency and multi-funded organisations.
-- [x] Two explicitly separate candidate theme sources: recorded source themes vs provisional word overlaps in descriptions.
+- [x] Three clearly labelled candidate theme sources: recorded source themes, reviewable topic phrase rules and provisional word overlaps.
 - [x] Every candidate can show source evidence and links to entities, but never creates an inferred graph edge automatically.
 - [x] Synthetic mixed-funder test fixture, mapping preview and standalone example CSV.
 - [ ] Test against multiple real, rights-cleared large 360Giving publisher CSV datasets (including missing data, alias drift and non-standard dates).
