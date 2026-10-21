@@ -62,7 +62,7 @@ test("source tags and matching phrases remain independent types of evidence",()=
 test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  const input=[cols.join(",")];
  for(let i=0;i<1400;i++){
-   const id=i<120?"F1":"F2";
+   const id=i<1200?"F1":"F2";
    input.push(line(["X"+i,id==="F1"?"Big Funder":"Small Funder",id,
      "Organisation "+i,"ORG"+i,"","","Organisation",
      "Community meals", "Food pantry for families","10","GBP","North East"]));
@@ -144,7 +144,7 @@ test("latest modified version of a repeated grant ID wins independent of CSV ord
 });
 test("multiple versions with an explicit currency count the latest award amount once",()=>{
  const csv="Identifier,Funding Org:Name,Recipient Org:Name,Amount Awarded,Currency,Date Modified,Title,Description\n"+
-  "G100,Foundation,Charity,120,GBP,2025-01-01,Meals,Community meals for families\n"+
+  "G100,Foundation,Charity,1200,GBP,2025-01-01,Meals,Community meals for families\n"+
   "G100,Foundation,Charity,1275,GBP,2026-01-01,Meals,Community meals for families";
  const result=importFundingCsv({name:"revisions.csv",text:csv});
  assert.equal(result.fullGrantCount,1);
