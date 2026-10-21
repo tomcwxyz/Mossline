@@ -89,7 +89,7 @@ export function FundingWorkbench({onCreate,onClose}:{
       setExamples(reply.examples??[]);
     };
     worker.onerror=()=>{
-      if(id!==requestRef.current)return;
+      if(workerRef.current!==worker)return;
       saveRef.current?.reject(Error("Dataset worker failed."));
       saveRef.current=null;
       setBusy(false);setStage("");
