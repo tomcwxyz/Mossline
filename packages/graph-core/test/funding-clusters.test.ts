@@ -71,7 +71,7 @@ test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  assert.ok(result.graph);
  assert.equal(result.counts.eligibleOrganisationRows,1400);
  assert.equal(result.counts.importedGrants,120);
- assert.equal(result.counts.overflowExcluded,200);
+ assert.equal(result.counts.overflowExcluded,1280);
  assert.equal(result.fullGrantCount,1400);
  assert.equal(result.graph!.nodes.filter(n=>n.type==="project").length,120);
  assert.equal(result.analysisGraph!.nodes.filter(n=>n.type==="project").length,1400);
