@@ -6,6 +6,35 @@ Mossline is an Apache-2.0 open-source prototype for mapping relationships betwee
 
 > Alpha 0.1: local prototype, not production-ready. All included example entities and connections are fictional. No accounts, database, live Google Sheets sync, full Kumu backup import, geography, hosted MCP authentication or multi-user collaboration are implemented yet.
 
+## Built for any network — Alpha 1.4 preview
+
+Mossline is **not a PFT product**. The farming imagery and network are a separately
+owned, optional example showing one possible editorial treatment. A second fictional
+**Neighbourhood Connections** example demonstrates organisations, projects, funders,
+places, people, topics and outcomes without any PFT artwork or specialised schema.
+Open **Explore example networks** to try either example without replacing your map.
+
+The **Editorial / Classic** visual-style choice is available for *any* imported map.
+Source images are retained; special PFT imagery is only matched for the relevant
+dataset by original source IDs. The UK atlas works with explicit **Latitude** /
+**Longitude**, **lat/lon**, **lat/lng** or **Atlas location** source fields. It
+never geocodes names or uses Kumu visual-layout coordinates as geography, and
+still has deliberately UK-only coverage.
+
+**Arrange a network:** drag nodes in Landscape or Collaborations; select
+**Save view** to store all on-screen positions together with filters, layout,
+narrative and style in a named perspective. Reopening the perspective restores
+the manually arranged positions. **Reset arrangement** recalculates the current
+view without changing previously saved perspectives. The original graph,
+source records and imported coordinates are never altered. Older perspectives
+without saved node positions remain valid. Browser local storage is still the
+only persistence mechanism; no hosted accounts, collaborative editing or map
+publishing has been added yet.
+
+The Alpha 1.4 work is a feature branch stacked on Alpha 1.3 and has passed automated CI but awaits
+interactive browser acceptance. PFT-specific art attribution and licences are
+still governed separately from Mossline's Apache-2.0 code licence.
+
 ## Run locally
 
 Requires Node.js 22+ and npm 10+.
@@ -329,3 +358,259 @@ background secondary/close buttons have dark accessible text, and the
 connection sidebar uses more readable labels, inputs and responsive widths.
 These styles and controls need a protected-preview desktop/mobile visual
 review before the branch is approved for merge.
+
+## Alpha 1.3 — source-ID visual packs and narrated perspectives
+
+The **PFT illustrated farming landscape** is a separate visual companion to
+source records. When at least five node SOURCE IDs match the curated manifest,
+Mossline offers an **illustrated** visual style and uses up to 82 original
+owner-created illustrations. Images are served from a commit-pinned public
+asset repository, not copied into Mossline's source code. Any prior `Image`
+or `imageUrl` value remains unchanged in imported JSON and exports.
+
+The companion includes the original PFT front-page hero, introductory text,
+and a reference to the UK basemap for a future geographic perspective.
+Illustrations only depict subject matter; they are not evidence that the
+fictional/prototype entities or relationships exist in reality.
+Unmatched entities retain their original images or category symbols.
+
+The **Save view** form now also offers a story title, introductory paragraph
+and an optional HTTPS cover illustration. This narrative and visual style are
+saved as optional *presentation* properties on a browser-local perspective.
+Older saved perspectives remain valid; no entity or relationship changes
+when opening a saved story. All saved views remain scoped to the exact
+network and are local to this browser.
+
+**Artwork ownership:** the user confirmed ownership of
+`tomcwxyz/pft-network-images`, but the repository doesn't yet publish a
+machine-readable reuse licence. The Mossline implementation references
+the separately hosted original files rather than bundling/relicensing them
+under the Mossline code licence. No generic right to redistribute this
+companion pack is implied. Future distribution should have its own explicit
+terms, independent of the open-source software licence.
+
+**Next:** a proper geographic layer using validated Atlas location (lat/lon)
+separately from Kumu's authored `mapx/mapy` positions; configurable
+perspective positioning; mobile visual and authenticated browser review.
+The included basemap is registered as an asset but not yet geo-referenced
+or rendered as a geographical network background.
+
+### Alpha 1.3 — visible artwork smoke test
+
+The initial Alpha 1.3 preview appeared unchanged because the visible header
+still said "alpha 1.1" and the PFT visual pack only activated **after** a
+PFT graph containing at least five exact source IDs had been loaded. This
+made the feature impossible to evaluate on the built-in non-PFT demo.
+
+The header now correctly reads **alpha 1.3**. A conspicuous **PFT artwork
+preview** is visible on the first screen even with a non-PFT map open:
+it shows the real owner-created hero, a browseable artwork gallery and
+**Open illustrated example map**. The button creates a separate map with
+20 illustrated entity examples, without overwriting any existing local maps.
+
+**The example is deliberately synthetic**. Its 20 connections are
+`inferred=true` so source-record searches and evidence inspectors do
+not present them as actual PFT relationships. To test the real PFT
+network, use **Discover your data** with the separate PFT Elements +
+Connections CSVs or the previously prepared portable Mossline JSON.
+The images should then appear automatically wherever source IDs match.
+
+This is a testable preview, not a claim of a completed authenticated visual
+browser walkthrough. The owner-hosted images load from a public, revision-
+pinned GitHub raw URL, and are not packaged under Mossline's code licence.
+
+## Alpha 1.3 — UK geographic atlas (second stage)
+
+The studio now provides a third **UK atlas** view alongside Landscape and
+Collaborations. Atlas positions come **only** from the entity's original
+`Atlas location` property, parsed as `latitude, longitude`. No
+geocoding is guessed from names, region labels, Kumu `geo`,
+`mapx` or `mapy`. Records without this field stay unlocated.
+
+The map uses public-domain simplified Natural Earth outlines of Great Britain
+and Ireland, projected with exactly the same UK-bounded equirectangular
+transform as the plotted source locations. This is an **approximate
+geographic exploration**, not a survey-grade map or licensed base-map tiles.
+Any records outside this regional viewport are counted separately rather
+than moved to invented border coordinates.
+
+To reduce clutter, nearby entities are grouped into selectable clusters;
+click a cluster to choose the exact entity and see its source links.
+Relationship lines appear when an entity is selected, for source-recorded
+connections whose endpoints also have locations. Unlocated entities and
+relationships remain accessible via Landscape and the inspector. The original
+PFT UK basemap illustration is available **as an artistic reference only**,
+explicitly not aligned to the coordinate frame.
+
+**Test with real PFT data:** Select **Discover your data**, upload the
+PFT-Mossline-network.json snapshot (or Elements/Connections CSVs) and
+**Create a new map**. Select **UK atlas** in the left navigation. With the
+currently supplied PFT snapshot, 70 of 107 nodes have valid `Atlas location`
+coordinates and 37 remain unlocated. The 242 original network relationships
+are preserved. The smaller 20-entity illustration showcase intentionally
+has no geographic coordinates and should show the atlas empty state.
+
+Saved browser-local perspectives now support `view: "atlas"`, including
+the custom title, narrative and selected categories. Existing perspectives
+continue to load.
+
+**Out of scope for this phase:** true georeferencing of the original PFT
+illustrated basemap, a live tile-map view, advanced map projections, persistent
+per-view manual positioning, and authenticated hands-on/mobile visual QA.
+
+## Alpha 1.3 — refined illustrated UK atlas
+
+The UK atlas offers two complementary ways of seeing the *same* source data:
+
+- **Illustrated projects:** starts with projects that have an original
+  `Atlas location`. It shows the owner's illustrations as a curated,
+  paginated editorial strip under the UK outline. Select a project to
+  highlight its exact source location using a gold location thread.
+  This thread represents **position, not a relationship**. Related entities
+  and evidence links appear in the adjacent inspector.
+- **Explore places:** zooms conceptually back out to the source-located
+  network. Filter to projects, organisations, funders, places or all,
+  search by entity name, and inspect clustered locations and selectively
+  revealed original source relationships.
+
+The country outlines were regenerated directly from Natural Earth
+1:110m public-domain feature coordinates, using the *same bounding
+transform* as the pins rather than hand-positioned illustrative silhouettes.
+They remain appropriately labelled as regional/approximate.
+
+The atlas avoids showing all possible relationship lines at once, and
+keeps 37 currently unlocated PFT entities accessible in Landscape.
+The current PFT source snapshot has 20 located projects among 70
+located entities; **none are geocoded by guessing place names**.
+Saved perspectives retain the illustrated/places choice and selected
+entity category alongside the existing narrative and filters.
+
+The authored PFT illustration repository is still referenced as an
+externally owned asset pack. The original PFT basemap is visible for
+artistic comparison but is not silently used as a georeferenced map.
+
+Known limits: project cards are a responsive editorial presentation,
+not saved Kumu `mapx/mapy` coordinates; the geographic rendering
+still needs authenticated desktop/mobile/browser acceptance.
+
+
+## Alpha 1.5 — authoring individual node appearance (draft)
+
+Mossline now supports per-node presentation overrides **for any network**.
+In Landscape or Collaborations select a node, then choose **How should this
+appear?** Set the label to automatic/always visible/hidden, change its size
+to compact or featured, highlight it, or apply an HTTPS image URL.
+Save a named perspective to retain these choices alongside manual positions,
+filters, labels and story settings. Reopening the perspective restores them.
+
+Visual overrides never update the canonical graph, source-provided images,
+relationships or exported data. HTTPS image links are display-only, not uploads
+or licences, and users must have rights to use the artwork. Existing saved
+perspectives without overrides remain readable. The feature is deliberately
+available for all graph entity types, not only farming datasets; geographic
+source coordinates cannot be adjusted through this editor.
+
+This draft requires CI and manual protected-preview desktop/mobile usability
+review before merge.
+
+
+### Undo and redo for arranged nodes
+
+Dragging a node now records a bounded arrangement history for the active map
+and layout. Use **Undo** and **Redo** above the canvas; new movements clear
+redo history. Reset arrangement recalculates the layout without editing any
+saved perspective or underlying source data. Undo/redo is session-local,
+available for up to 20 manual movements, and is intentionally separate
+from the names and versions of saved perspectives.
+
+
+## Alpha 1.6 — portable perspectives and a reusable artwork library
+
+Mossline's authoring remains local-first, but your saved views needn't be trapped
+in a single browser. Under **Saved perspectives**, use **Export views** to download
+a strict versioned JSON bundle that contains the saved perspectives for the
+current map, including labels, arrangement, styles, story and external artwork
+references. The bundle contains **no canonical graph records or relationships**.
+Use **Import views** on the same dataset in another browser; Mossline validates
+the package and confirms the number and names of incoming views before appending
+them. Existing views are never replaced. Export and import the underlying Mossline
+map separately when moving to another browser.
+
+The **Artwork library** holds up to 60 reusable HTTPS picture *references* with
+a title, creator, declared licence, optional source URL and attribution note.
+An author can choose a saved image when styling an entity or a story cover.
+The library is browser-local. Imported/exported perspective bundles include its
+referenced artwork metadata and image URLs, but **never the image binaries**.
+Mossline does not verify claimed licences; choose rights-cleared artwork and
+review external URLs before sharing. Remote images may contact their host when
+shown, including after importing a bundle. Removing a library entry never silently
+alters already-saved perspectives.
+
+A bundle is scoped to a matching graph fingerprint and currently known entity
+IDs. It cannot be imported onto arbitrary other datasets and does not attempt to
+merge, relabel or invent relationships. Fingerprints are convenience identifiers,
+**not cryptographic access controls**. Import is limited to 1 MB, 40 perspectives
+and 60 artwork references; browser storage limits still apply.
+
+
+## Alpha 1.7 — read-only share links for small network views (draft)
+
+Choose **Share a view** in the studio to generate a **self-contained,
+read-only snapshot link**. This is an explicitly confirmed publication
+action, separate from saving local working perspectives. Its default
+disclosure is minimal: it contains labels, types, visible relationship
+assertions with their inferred flags, and the author's current layout.
+It strips all raw source properties (except explicit atlas coordinates in
+the UK atlas view), file provenance, source URLs, evidence data, internal
+notes, descriptions and external pictures. The author can separately opt
+to include descriptions or external image URLs and sees the number and
+sample names of the entities included before generating a link.
+
+The viewer is a distinct `/share` page: it displays only the shared
+snapshot, never local saved maps, local artwork libraries or editing
+controls. It offers a network or atlas view, entity browser and
+relationship inspection. The content is compressed into a URL **fragment**
+(`#s=…`), so it is not uploaded or sent as part of an HTTP request to
+the Mossline web server. The complete shareable content is *inside the
+URL*. Anyone with that URL can decode, copy, archive and redistribute
+the included data. **These links cannot be revoked, permissions cannot
+be restricted, and subsequent edits do not update them**. Do not share
+confidential, personal or unauthorised information through this feature.
+External images, when opted in, may contact their own servers when
+loaded. Inferred links are visibly labelled as inferred, not certified.
+
+Compression is bounded to 7,500 fragment characters and 150 KB of
+decompressed JSON. The graph is additionally limited to 150 entities
+and 300 links. Larger networks should be filtered first; share links
+are not a substitute for full-project export or hosted controlled
+publishing. Fragment links also require a publicly accessible viewer:
+if a Vercel preview is protected by team sign-in, recipients will not
+be able to use it anonymously. Hosted publishing with permissions,
+revocation, audit and durable short URLs remains a later release.
+
+
+### Publication review safeguard
+Before producing a share link, Mossline lists every included entity and
+relationship assertion (not just a preview subset) and requires explicit
+confirmation of permission to share. The map's narrative introduction is a
+separate opt-in, **off by default**, alongside descriptions and external
+images. Sharing a snapshot is a disclosure event even though it doesn't
+upload data to the Mossline server; the link cannot be revoked.
+The web compression codec is exercised by a browser-API-compatible
+round-trip and malformed-link regression test in CI.
+
+
+## Alpha 1.8 — controlled hosted publishing (development)
+
+The **Publish online** panel provides a stable, read-only URL under `/p/<slug>`,
+rather than a large embedded fragment link. A source-minimised snapshot is
+deliberately reviewed before being stored. The publisher receives an
+independent secret management key to update or unpublish the public view.
+
+**Not enabled by default.** This branch includes additive SQL migration and
+the server-only configuration requirements, but no Neon Mossline database or
+Vercel publishing credentials have been configured or migrated. Consult
+[Hosted publishing setup](docs/HOSTED_PUBLISHING.md) for an isolated development
+rollout and security limitations. This does not implement team logins, private
+publishing, or fine-grained reader permissions. Anyone with the URL can access
+the current publication; withdrawal cannot recall redistributed copies.

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Core } from "cytoscape";
-import type { GraphDocument } from "@mossline/graph-core";
+import type { GraphDocument, NodeStyleOverride } from "@mossline/graph-core";
 
 export type NetworkLayout = "organic" | "radial" | "regions";
 export type LabelDensity = "essential" | "all";
@@ -20,18 +20,31 @@ interface Props {
   view: "landscape" | "collaborations";
   layoutMode: NetworkLayout;
   labelDensity: LabelDensity;
+  illustrated?: boolean;
+  nodeStyles?: Record<string,NodeStyleOverride>;
+  /** Restored when opening a saved perspective, not part of source graph data. */
+  savedPositions?: Record<string, Point>;
+  positionRevision?: number;
+  onPositionsChange?: (positions: Record<string, Point>) => void;
+  onDragBegin?: (positions: Record<string, Point>) => void;
+  onDragCommit?: (positions: Record<string, Point>) => void;
 }
 
 type Point = { x: number; y: number };
 
 /** Cytoscape only renders a projection. The graph data remains immutable here. */
 export function GraphCanvas({
-  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity
+  graph, contextNodeIds, selectedId, selectedEdgeId, pathNodeIds, pathEdgeIds, junctionNodeIds, onSelect, onSelectEdge, view, layoutMode, labelDensity, illustrated=false, nodeStyles={}, savedPositions, positionRevision=0, onPositionsChange, onDragBegin, onDragCommit
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
   const onSelectRef = useRef(onSelect);
   const onSelectEdgeRef = useRef(onSelectEdge);
+  const onPositionsChangeRef = useRef(onPositionsChange);
+  const onDragBeginRef = useRef(onDragBegin);
+  const onDragCommitRef = useRef(onDragCommit);
+  const positionRevisionRef = useRef(positionRevision);
+  const nodeStylesRef = useRef(nodeStyles);
   const viewKeyRef = useRef("");
   const positionCacheRef = useRef(new Map<string, Map<string, Point>>());
   const labelsRef = useRef(labelDensity);
@@ -40,8 +53,26 @@ export function GraphCanvas({
 
   onSelectRef.current = onSelect;
   onSelectEdgeRef.current = onSelectEdge;
+  onPositionsChangeRef.current = onPositionsChange;
+  onDragBeginRef.current = onDragBegin;
+  onDragCommitRef.current = onDragCommit;
+  nodeStylesRef.current = nodeStyles;
   labelsRef.current = labelDensity;
   selectedRef.current = selectedId;
+
+  function snapshotPositions(cy: Core) {
+    const positions: Record<string, Point> = {};
+    cy.nodes().not(".region-group").forEach(node => {
+      const point = node.position();
+      if (Number.isFinite(point.x) && Number.isFinite(point.y)) {
+        positions[node.id()] = {x: point.x, y: point.y};
+      }
+    });
+    return positions;
+  }
+  function publishPositions(cy:Core){
+    onPositionsChangeRef.current?.(snapshotPositions(cy));
+  }
 
   function refreshLabels(cy: Core) {
     const all = labelsRef.current === "all" || cy.zoom() > 1.25 || cy.nodes().not(".region-group").length < 22;
@@ -51,7 +82,9 @@ export function GraphCanvas({
         .forEach(neighbour => { relatedIds.add(neighbour.id()); });
     }
     cy.nodes().forEach(node => {
-      const show = all || node.hasClass("key-node") || node.id() === selectedRef.current || relatedIds.has(node.id());
+      const labelChoice=nodeStylesRef.current[node.id()]?.label ?? "auto";
+      const show=labelChoice==="show" || (labelChoice!=="hide" &&
+        (all || node.hasClass("key-node") || node.id()===selectedRef.current || relatedIds.has(node.id())));
       if (node.hasClass("region-group")) return;
       if (show) node.removeClass("label-hidden");
       else node.addClass("label-hidden");
@@ -104,7 +137,10 @@ export function GraphCanvas({
           } },
           { selector: "node.key-node", style: { "border-width": 4, "width": 50, "height": 50,
             "font-weight": 700, "font-size": 13 } },
-          { selector: "node.label-hidden", style: { "text-opacity": 0 } },
+
+          { selector: "node.view-highlight", style: {
+            "border-color": "#ffd67f", "border-width": 6, "z-index": 19
+          } },
           { selector: "node.active", style: { "border-color": "#f7e9b4", "border-width": 6, "opacity": 1,
             "z-index": 20, "text-opacity": 1 } },
           { selector: "node.nearby", style: { "opacity": 1, "text-opacity": 1 } },
@@ -136,7 +172,8 @@ export function GraphCanvas({
           { selector: "edge.path-step", style: {
             "line-color": "#ffcf75", "target-arrow-color": "#ffcf75",
             "source-arrow-color": "#ffcf75", "width": 4, "opacity": 1, "z-index": 32
-          } }
+          } },
+          { selector: "node.label-hidden", style: { "text-opacity": 0 } }
         ]
       });
       cy.on("tap", "node", event => {
@@ -145,11 +182,18 @@ export function GraphCanvas({
       cy.on("tap", "edge", event => onSelectEdgeRef.current(event.target.id()));
       cy.on("tap", event => { if (event.target === cy) onSelectRef.current(null); });
       cy.on("zoom", () => refreshLabels(cy));
+      cy.on("grab", "node", event => {
+        if(!event.target.hasClass("region-group"))
+          onDragBeginRef.current?.(snapshotPositions(cy));
+      });
       cy.on("dragfree", "node", event => {
+        if (event.target.hasClass("region-group")) return;
         const key = viewKeyRef.current;
         const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
         saved.set(event.target.id(), { ...event.target.position() });
         positionCacheRef.current.set(key, saved);
+        publishPositions(cy);
+        onDragCommitRef.current?.(snapshotPositions(cy));
       });
       cyRef.current = cy;
       setReady(true);
@@ -171,6 +215,8 @@ export function GraphCanvas({
       cy.nodes().not(".region-group").forEach(node => { snapshot.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(oldKey, snapshot);
     }
+    const restoring = positionRevisionRef.current !== positionRevision;
+    if (restoring) positionCacheRef.current.delete(key);
     const cached = positionCacheRef.current.get(key);
     const cachedCount = graph.nodes.filter(n => cached?.has(n.id)).length;
     const reuse = !!cached && cachedCount === graph.nodes.length && graph.nodes.length > 0;
@@ -238,15 +284,27 @@ export function GraphCanvas({
           nodeRepulsion: () => 130000, idealEdgeLength: () => 110,
           edgeElasticity: () => 85, gravity: 0.32, numIter: 1100 }).run();
       }
-      if (!reuse || oldKey !== key) cy.fit(undefined, 65);
+      // Saved positions override an automatic layout only when explicitly restored.
+      // Unknown/filtered-out IDs are ignored and never become graph records.
+      if (restoring || !cached) {
+        for (const [id, point] of Object.entries(savedPositions ?? {})) {
+          const element = cy.getElementById(id);
+          if (element.length && element.isNode() && !element.hasClass("region-group")) {
+            element.position(point);
+          }
+        }
+      }
+      if (!reuse || oldKey !== key || restoring) cy.fit(undefined, 65);
       const saved = positionCacheRef.current.get(key) ?? new Map<string, Point>();
       cy.nodes().not(".region-group").forEach(node => { saved.set(node.id(), { ...node.position() }); });
       positionCacheRef.current.set(key, saved);
     }
     viewKeyRef.current = key;
+    positionRevisionRef.current = positionRevision;
     cy.resize();
     refreshLabels(cy);
-  }, [graph, contextNodeIds, layoutMode, view, ready]);
+    publishPositions(cy);
+  }, [graph, contextNodeIds, layoutMode, view, ready, positionRevision]);
 
   useEffect(() => {
     const cy = cyRef.current;
@@ -271,6 +329,50 @@ export function GraphCanvas({
     cy.elements(".path-step").removeClass("dimmed");
     refreshLabels(cy);
   }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
+
+  // Presentation state changes the canvas palette, not canonical node records.
+  useEffect(() => {
+    const cy=cyRef.current;
+    if(!cy||!ready)return;
+    const styling=cy.style();
+    styling.selector("node").style({
+      color:illustrated?"#284835":"#f0f5e9",
+      "text-outline-color":illustrated?"#f5f1e6":"#143028",
+      "text-outline-width":illustrated?2.4:2.2,
+      "font-family":illustrated?"Georgia, serif":"Arial, sans-serif"
+    });
+    styling.selector("edge").style({
+      "line-color":illustrated?"#789d7d":"#8ca497",
+      "target-arrow-color":illustrated?"#789d7d":"#8ca497",
+      opacity:illustrated?0.48:0.43
+    });
+    styling.selector("node[imageUrl]").style({
+      shape:illustrated?"ellipse":"ellipse",
+      "border-color":illustrated?"#608966":"#d0e0c9",
+      "border-width":illustrated?3.5:3,
+      width:illustrated?61:54,height:illustrated?61:54,
+      "background-image":"data(imageUrl)",
+      "background-fit":"cover",
+      "background-clip":"node"
+    });
+    styling.update();
+    refreshLabels(cy);
+  },[illustrated,ready,graph]);
+
+  // Overrides are view-only: the graph model remains the authority for relationships.
+  useEffect(()=>{
+    const cy=cyRef.current;
+    if(!cy||!ready)return;
+    cy.nodes().not(".region-group").forEach(node=>{
+      const style=nodeStyles[node.id()];
+      node.removeClass("view-highlight");
+      node.removeStyle("width height");
+      if(style?.highlight)node.addClass("view-highlight");
+      if(style?.size==="small")node.style({width:26,height:26});
+      if(style?.size==="large")node.style({width:86,height:86});
+    });
+    refreshLabels(cy);
+  },[nodeStyles,graph,illustrated,ready]);
 
   const junctionIdentity = junctionNodeIds.join("|");
   useEffect(() => {
@@ -299,7 +401,7 @@ export function GraphCanvas({
       renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
   };
 
-  return <div className="graph-stage">
+  return <div className={"graph-stage"+(illustrated?" illustrated":"")}>
     <div ref={rootRef} aria-label="Interactive network map. Select a node or relationship line to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
     <div className="graph-tools" aria-label="Network navigation">
       <button type="button" onClick={() => zoom(1.35)} aria-label="Zoom in" title="Zoom in">+</button>
@@ -308,9 +410,12 @@ export function GraphCanvas({
     </div>
     {layoutMode === "regions" && <span className="regional-hint">Grouped by region · not a geographic map</span>}
     <div className="graph-legend" aria-label="Network legend">
-      <span><i className="legend-symbol organisation" /> Organisation</span>
-      <span><i className="legend-symbol project" /> Project</span>
-      <span><i className="legend-symbol funder" /> Funder</span>
+      {graph.nodes.some(n=>n.type==="organisation")&&<span><i className="legend-symbol organisation"/> Organisation</span>}
+      {graph.nodes.some(n=>n.type==="project")&&<span><i className="legend-symbol project"/> Project</span>}
+      {graph.nodes.some(n=>n.type==="funder")&&<span><i className="legend-symbol funder"/> Funder</span>}
+      {graph.nodes.some(n=>n.type==="person")&&<span><i className="legend-symbol person"/> Person</span>}
+      {graph.nodes.some(n=>n.type==="place")&&<span><i className="legend-symbol place"/> Place</span>}
+      {graph.nodes.some(n=>n.type==="other")&&<span><i className="legend-symbol other"/> Other</span>}
       {graph.nodes.some(n=>n.type==="topic")&&<span><i className="legend-symbol topic" /> Topic</span>}
       {graph.nodes.some(n=>n.type==="methodology")&&<span><i className="legend-symbol methodology" /> Method</span>}
       {graph.nodes.some(n=>n.type==="outcome")&&<span><i className="legend-symbol outcome" /> Outcome</span>}

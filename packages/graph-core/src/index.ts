@@ -7,3 +7,8 @@ export * from "./analysis";
 export * from "./audit";
 export * from "./discovery";
 export * from "./recipes";
+export * from "./visual-assets";
+export * from "./geography";
+export * from "./arrangement-history";
+export * from "./portability";
+export * from "./published";

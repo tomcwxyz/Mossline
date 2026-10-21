@@ -13,7 +13,7 @@
     "dev": "npm run dev --workspace @mossline/web",
     "build": "npm run build --workspace @mossline/web",
     "mcp": "npm run start --workspace @mossline/mcp",
-    "test": "tsx --test packages/graph-core/test/*.test.ts",
+    "test": "tsx --test packages/graph-core/test/*.test.ts apps/web/test/*.test.ts",
     "typecheck": "tsc -p packages/graph-core/tsconfig.json --noEmit && tsc -p apps/mcp/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit"
   },
   "devDependencies": {

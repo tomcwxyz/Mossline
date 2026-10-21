@@ -151,3 +151,66 @@ The browser-local map collection (`mossline-local-maps-v1`) stores
 named graph snapshots in localStorage; a legacy single-map snapshot is
 bootstrapped once on first load. This is not shared, hosted, synced,
 encrypted or production durability. Eight stored maps is an initial cap.
+
+## Separately licensed visual asset packs and narrative overlays
+
+`VisualAssetPack` is a manifest that references an external revision-pinned
+asset repository. `matchAssetPack` only considers exact source record IDs;
+`applyAssetPack` returns a disposable, image-enriched projection of the
+canonical graph, never changing source records or exports. Unknown assets
+fall back to source pictures and category symbols. An automatic PFT option
+is shown only if at least five source IDs match the curated manifest.
+No asset files are included in the open-source code repository.
+
+A `SavedPerspective` optionally carries `presentation`: story heading,
+introduction, HTTPS cover URL and illustrated-mode flag. It remains scoped
+by the existing graph fingerprint. This is local browser persistence, not
+published editorial content or a hosted multi-user permissions system.
+Older perspectives without presentation retain backwards compatibility.
+
+PFT image filenames match 82 of 107 current network element IDs. The PFT
+feed's `Atlas location` field contains latitude/longitude strings, while
+`mapx/mapy` and `geo` are different Kumu layout/geography metadata and
+must not be silently used interchangeably. The asset pack registers the
+original basemap but no geographic overlay is claimed until coordinates
+are properly projected and independently tested.
+
+## UK geographic projection (Alpha 1.3)
+
+`geography.ts` strictly parses an original node property called
+`Atlas location` as `latitude, longitude` and checks the regional UK
+viewport. It intentionally does not use Kumu `geo`, `mapx`/`mapy`,
+regional labels or geocoding guesses. `buildUkAtlas` returns located,
+unlocated and outside-viewport records separately, preserving graph data.
+
+The client renders public-domain Natural Earth simplified land outlines
+in the same equirectangular projection as source-derived pins. Nearby
+points are grouped by screen-cell for readability; underlying coordinates
+remain unchanged in the graph. Only edges originally recorded in the
+graph, with two plotted endpoints, become highlighted connection lines
+on node selection. A standalone PFT basemap is shown as decoration and
+is **not** georeferenced; compositing it directly behind the coordinate
+overlay without registration would introduce false spatial claims.
+
+Atlas view and narrative are user-saved presentation state, never written
+into or substituted for original source records. The full PFT source
+dataset remains outside this public code repository.
+
+## Two ways of exploring geographic source records
+
+The UK atlas separates *editorial display* from the source's geographic
+facts. Illustrated projects show PFT artwork from source-matched entity
+IDs, with a selected-location thread. These threads are **not**
+network edges and never alter source records. Explore places shows
+category-filtered source pins and projects recorded relationships
+between selected visible endpoints. Missing source locations are not
+created from labels, region names or Kumu layout coordinates.
+
+Land-outline SVG paths are projected from Natural Earth 1:110m
+United Kingdom and Ireland public-domain boundary features, using
+the same equirectangular transform as points. Approximate rendering
+does not replace proper cartographic projection or survey boundaries.
+
+Saved perspective `presentation` optionally includes `atlasMode`
+(stories/places) and `atlasKind` (all/project/organisation/funder/place).
+Existing saved views without these optional fields remain valid.

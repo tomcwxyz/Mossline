@@ -3,15 +3,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
+  applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
+  makePerspectiveBundle, readPerspectiveBundle, parseAssetLibrary,
+  emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
-  type NodeType, type CollaborationBasis, type SavedPerspective
+  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
+  type LibraryAsset, type PerspectiveBundle
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
+import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
+import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
+import { AssetLibraryPanel } from "./AssetLibraryPanel";
+import { ShareViewPanel } from "./ShareViewPanel";
+import { HostedPublishPanel } from "./HostedPublishPanel";
+import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
+import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
+import { PftVisualShowcase } from "./PftVisualShowcase";
 import demo from "../../../../data/demo.json";
+import communityExample from "../../../../data/community-example.json";
 
 const TYPE_LABELS: Record<NodeType, string> = {
   organisation: "Organisations", project: "Projects", funder: "Funders",
@@ -19,11 +32,13 @@ const TYPE_LABELS: Record<NodeType, string> = {
 };
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
+const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
 const STORAGE_KEY = "mossline-demo-graph-v1";
 const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 type LocalMap = { id:string; createdAt:number; title:string; graph:GraphDocument };
 const MAX_LOCAL_MAPS=8;
 const SAVED_KEY = "mossline-perspectives-v1";
+const ASSET_KEY = "mossline-artwork-library-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
   name:"fictional-farming-relationships.csv",
@@ -33,7 +48,7 @@ const DISCOVERY_EXAMPLE: ImportFile = {
     "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n" +
     "Hidden Example,Private Project,Private Funder,South West,FALSE\n"
 };
-type ViewMode = "landscape" | "collaborations";
+type ViewMode = "landscape" | "collaborations" | "atlas";
 
 function saveJson(graph: GraphDocument) {
   const blob = new Blob([JSON.stringify(graph, null, 2)], { type: "application/json" });
@@ -240,10 +255,30 @@ export function MapStudio() {
   const [region, setRegion] = useState("");
   const [focusId, setFocusId] = useState<string | null>(null);
   const [layoutMode, setLayoutMode] = useState<NetworkLayout>("organic");
+  const [illustrated, setIllustrated] = useState(true);
+  const [atlasMode,setAtlasMode]=useState<AtlasMode>("stories");
+  const [atlasKind,setAtlasKind]=useState<KindFilter>("project");
   const [labelDensity, setLabelDensity] = useState<LabelDensity>("essential");
+  // Authorable view positions, never stored in the canonical graph.
+  const [positionState,setPositionState] = useState<{
+    key:string;positions:Record<string,{x:number;y:number}>
+  }>({key:"",positions:{}});
+  const [positionRevision,setPositionRevision] = useState(0);
+  const [nodeStyles,setNodeStyles]=useState<Record<string,NodeStyleOverride>>({});
+  const [arrangementState,setArrangementState]=useState<{key:string;history:LayoutHistory}>({
+    key:"",history:emptyLayoutHistory()
+  });
+  const dragStartRef=useRef<{key:string;positions:LayoutPositions}|null>(null);
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
+  const [assets,setAssets]=useState<LibraryAsset[]>([]);
+  const [portablePreview,setPortablePreview]=useState<PerspectiveBundle|null>(null);
+  const perspectiveFileRef=useRef<HTMLInputElement>(null);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
+  const [storyTitle,setStoryTitle]=useState("");
+  const [storyIntroduction,setStoryIntroduction]=useState("");
+  const [storyCover,setStoryCover]=useState("");
+  const [activeStory,setActiveStory]=useState<SavedPerspective["presentation"]>();
   const [notice, setNotice] = useState("");
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
@@ -291,20 +326,97 @@ export function MapStudio() {
       if(saved) setPerspectives(parsePerspectives(JSON.parse(saved)));
     } catch { window.localStorage.removeItem(SAVED_KEY); }
   }, []);
+  useEffect(()=>{
+    try {
+      const stored=window.localStorage.getItem(ASSET_KEY);
+      if(stored)setAssets(parseAssetLibrary(JSON.parse(stored)));
+    }catch{
+      setNotice("The saved artwork library could not be read; it was left unchanged.");
+    }
+  },[]);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const positionKey=[graphKey,view,layoutMode,basis].join(":");
+  const activePositions=positionState.key===positionKey?positionState.positions:{};
+  const movementHistory=arrangementState.key===positionKey?
+    arrangementState.history:emptyLayoutHistory();
+  function capturePositions(positions:Record<string,{x:number;y:number}>) {
+    setPositionState(previous=>({
+      key:positionKey,
+      positions:{...(previous.key===positionKey?previous.positions:{}),...positions}
+    }));
+  }
+  function beginNodeMovement(positions:LayoutPositions) {
+    dragStartRef.current={key:positionKey,positions:{...activePositions,...positions}};
+  }
+  function finishNodeMovement(positions:LayoutPositions) {
+    const from=dragStartRef.current;
+    dragStartRef.current=null;
+    if(!from||from.key!==positionKey)return;
+    const next={...activePositions,...positions};
+    setArrangementState(previous=>({
+      key:positionKey,history:recordLayoutMovement(
+        previous.key===positionKey?previous.history:emptyLayoutHistory(),
+        from.positions,next)
+    }));
+  }
+  function undoNodeMovement() {
+    const change=undoLayoutMovement(movementHistory,activePositions);
+    if(!change)return;
+    setArrangementState({key:positionKey,history:change.history});
+    setPositionState({key:positionKey,positions:change.positions});
+    setPositionRevision(value=>value+1);
+  }
+  function redoNodeMovement() {
+    const change=redoLayoutMovement(movementHistory,activePositions);
+    if(!change)return;
+    setArrangementState({key:positionKey,history:change.history});
+    setPositionState({key:positionKey,positions:change.positions});
+    setPositionRevision(value=>value+1);
+  }
+  function resetNodeArrangement() {
+    setPositionState({key:positionKey,positions:{}});
+    setArrangementState({key:positionKey,history:emptyLayoutHistory()});
+    setPositionRevision(value=>value+1);
+    setNotice("Reset the on-screen arrangement. Saved perspectives remain unchanged.");
+  }
+  const pftAssets=useMemo(()=>matchAssetPack(graph,PFT_VISUAL_PACK),[graph]);
+  const atlasCoverage=useMemo(()=>buildUkAtlas(graph),[graph]);
+  // Match exact source IDs, so artwork is never attached to another dataset by name.
+  const pftCompatible=pftAssets.matched>=5;
+  const pftMapReference=pftCompatible&&PFT_VISUAL_PACK.basemap?
+    visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.basemap):undefined;
+  const showPftArtwork=pftCompatible&&illustrated;
+  const story=activeStory?.title||activeStory?.introduction ? activeStory : undefined;
+  const storyCoverUrl=story?.coverUrl || (pftCompatible&&PFT_VISUAL_PACK.frontPage?
+    visualAssetUrl(PFT_VISUAL_PACK,PFT_VISUAL_PACK.frontPage.hero):undefined);
+  const storyTitleText=story?.title || (pftCompatible?PFT_VISUAL_PACK.frontPage?.title:graph.title);
+  const storyIntroText=story?.introduction || (pftCompatible?PFT_VISUAL_PACK.frontPage?.introduction:graph.description);
+  const presentedGraph=useMemo(()=>{
+    const withArtwork=showPftArtwork?applyAssetPack(graph,PFT_VISUAL_PACK):graph;
+    return applyNodeStyleImages(withArtwork,nodeStyles);
+  },[graph,showPftArtwork,nodeStyles]);
   const proposedChanges=useMemo(()=>importPreview?.graph?
     compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview]);
   const hasRemovals=!!proposedChanges &&
     (proposedChanges.nodes.removed>0 || proposedChanges.edges.removed>0);
   const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
     .sort((a,b)=>b.createdAt-a.createdAt),[perspectives,graphKey]);
-  const current = useMemo(() => view === "collaborations" ? collaborationGraph(graph, basis) : graph, [graph, view, basis]);
+  const current = useMemo(() => view === "collaborations" ?
+    collaborationGraph(presentedGraph, basis) : presentedGraph, [presentedGraph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
   const filtered = useMemo(() => filterGraph(current, {
     types: activeTypes, query, region, focusId, includeNeighbours: context
   }), [current, activeTypes.join("|"), query, region, focusId, context]);
   const selected = filtered.graph.nodes.find(n => n.id === selectedId) ?? null;
   const selectedEdge = filtered.graph.edges.find(e => e.id === selectedEdgeId) ?? null;
+  function changeNodeAppearance(id:string,value:NodeStyleOverride|undefined) {
+    setNodeStyles(current=>{
+      const next={...current};
+      if(!value||Object.keys(value).length===0)delete next[id];
+      else next[id]=value;
+      return next;
+    });
+  }
   function pickNode(id: string | null) {
     setSelectedId(id);
     setSelectedEdgeId(null);
@@ -394,10 +506,96 @@ export function MapStudio() {
     setTypes(previous => previous.includes(type) ? previous.filter(v => v !== type) : [...previous, type]);
   }
 
+  function saveArtwork(next:LibraryAsset[]):boolean {
+    try {
+      const checked=parseAssetLibrary(next);
+      window.localStorage.setItem(ASSET_KEY,JSON.stringify(checked));
+      setAssets(checked);
+      return true;
+    }catch{
+      setNotice("Could not save the artwork library. Existing entries were preserved.");
+      return false;
+    }
+  }
+  function addArtwork(asset:LibraryAsset):boolean {
+    if(assets.length>=60||assets.some(a=>a.url===asset.url))return false;
+    return saveArtwork([...assets,asset]);
+  }
+  function downloadPerspectives(){
+    if(savedForMap.length===0){setNotice("Save a perspective before exporting.");return;}
+    try{
+      const bundle=makePerspectiveBundle(graph,savedForMap,assets);
+      const blob=new Blob([JSON.stringify(bundle,null,2)],{type:"application/json"});
+      const href=URL.createObjectURL(blob);
+      const link=document.createElement("a");
+      link.href=href;link.download="mossline-perspectives-"+graphKey+".json";
+      link.click();
+      URL.revokeObjectURL(href);
+      setNotice("Exported "+savedForMap.length+" perspectives and "+assets.length+" artwork references. No graph records were included.");
+    }catch{
+      setNotice("Could not export this perspective bundle.");
+    }
+  }
+  async function previewPerspectiveImport(event:ChangeEvent<HTMLInputElement>){
+    const file=event.target.files?.[0];
+    event.target.value="";
+    if(!file)return;
+    setPortablePreview(null);
+    if(file.size>1024*1024){setNotice("Perspective bundles must be 1 MB or smaller.");return;}
+    try{
+      const bundle=readPerspectiveBundle(JSON.parse(await file.text()),graph);
+      if(perspectives.length+bundle.perspectives.length>40)
+        throw Error("Not enough space for these views (40 local views maximum).");
+      const newImages=bundle.assets.filter(asset=>!assets.some(a=>a.url===asset.url));
+      if(assets.length+newImages.length>60)
+        throw Error("Not enough space for artwork references (60 maximum).");
+      setPortablePreview(bundle);
+      setNotice("Reviewed import available. Confirm below to add the views without replacing existing ones.");
+    }catch(err){
+      setNotice(err instanceof Error?err.message:"Invalid perspective bundle.");
+    }
+  }
+  function confirmPerspectiveImport(){
+    if(!portablePreview)return;
+    try {
+      const checked=readPerspectiveBundle(portablePreview,graph);
+      const updatedViews=parsePerspectives([...perspectives,...checked.perspectives.map(item=>({
+        ...item,id:crypto.randomUUID()
+      }))]);
+      const ids=new Set(assets.map(a=>a.id));
+      const updatedAssets=parseAssetLibrary([...assets,...checked.assets.filter(a=>
+        !assets.some(existing=>existing.url===a.url)).map(asset=>{
+          const id=ids.has(asset.id)?crypto.randomUUID():asset.id;
+          ids.add(id);
+          return {...asset,id};
+        })]);
+      const oldPerspectives=window.localStorage.getItem(SAVED_KEY);
+      const oldAssets=window.localStorage.getItem(ASSET_KEY);
+      try {
+        window.localStorage.setItem(SAVED_KEY,JSON.stringify(updatedViews));
+        window.localStorage.setItem(ASSET_KEY,JSON.stringify(updatedAssets));
+      }catch(error){
+        try {
+          if(oldPerspectives===null)window.localStorage.removeItem(SAVED_KEY);
+          else window.localStorage.setItem(SAVED_KEY,oldPerspectives);
+          if(oldAssets===null)window.localStorage.removeItem(ASSET_KEY);
+          else window.localStorage.setItem(ASSET_KEY,oldAssets);
+        }catch{/* Browser storage may be unavailable; existing state is retained in memory. */}
+        throw error;
+      }
+      setPerspectives(updatedViews);
+      setAssets(updatedAssets);
+      setPortablePreview(null);
+      setNotice("Imported "+checked.perspectives.length+" new perspectives. Existing views and source graph were not overwritten.");
+    }catch(err){
+      setNotice(err instanceof Error?err.message:"Unable to import the bundle.");
+    }
+  }
   function savePerspectives(next: SavedPerspective[]) {
     try {
-      window.localStorage.setItem(SAVED_KEY,JSON.stringify(next));
-      setPerspectives(next);
+      const validated=parsePerspectives(next);
+      window.localStorage.setItem(SAVED_KEY,JSON.stringify(validated));
+      setPerspectives(validated);
       return true;
     } catch { setNotice("Unable to save views in browser storage."); return false; }
   }
@@ -407,12 +605,28 @@ export function MapStudio() {
     const name=newName.trim().slice(0,60);
     if(!name) return;
     if(perspectives.length>=40){setNotice("40 saved views is the current local limit.");return;}
+    const cover=storyCover.trim();
+    if(cover&&!/^https:\/\/[^\s]+$/i.test(cover)) {
+      setNotice("Cover images must use HTTPS.");return;
+    }
     const record:SavedPerspective={
       id:crypto.randomUUID(),name,graphKey,view,basis,region,query:query.slice(0,200),
-      types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now()
+      types:[...types],context,layout:layoutMode,labels:labelDensity,createdAt:Date.now(),
+      ...(view==="atlas"?{}:{positions:activePositions}),
+      ...(Object.keys(nodeStyles).length?{nodeStyles}:{}),
+      presentation:{
+        title:storyTitle.trim().slice(0,100),
+        introduction:storyIntroduction.trim().slice(0,1200),
+        ...(cover?{coverUrl:cover}:{}),
+        illustrated,
+        atlasMode,
+        atlasKind
+      }
     };
     if(savePerspectives([...perspectives,record])){
       setShowSave(false);setNewName("");
+      setActiveStory(record.presentation);
+      setStoryTitle("");setStoryIntroduction("");setStoryCover("");
       setNotice("Saved perspective ‘"+name+"’ in this browser.");
     }
   }
@@ -422,11 +636,25 @@ export function MapStudio() {
     setView(item.view);setBasis(item.basis);setRegion(item.region);setQuery(item.query);
     setTypes(item.types);setContext(item.context);setLayoutMode(item.layout);
     setLabelDensity(item.labels);setSelectedId(null);setSelectedEdgeId(null);setFocusId(null);
+    setPositionState({key:[graphKey,item.view,item.layout,item.basis].join(":"),
+      positions:item.positions??{}});
+    setPositionRevision(value=>value+1);
+    setActiveStory(item.presentation);setIllustrated(item.presentation?.illustrated??true);
+    setAtlasMode(item.presentation?.atlasMode??"stories");
+    setAtlasKind(item.presentation?.atlasKind??"project");
+    setNodeStyles(item.nodeStyles??{});
+    setArrangementState({key:"",history:emptyLayoutHistory()});
     setNotice("Opened ‘"+item.name+"’. Source data is unchanged.");
   }
 
   function resetExplorer(next:GraphDocument) {
-    setGraph(next);
+    setGraph(next);setActiveStory(undefined);
+    setPortablePreview(null);
+    setNodeStyles({});
+    setArrangementState({key:"",history:emptyLayoutHistory()});
+    setPositionState({key:"",positions:{}});
+    setPositionRevision(value=>value+1);
+    setAtlasMode("stories");setAtlasKind("project");
     setSelectedId(null);
     setSelectedEdgeId(null);
     setConnectionTrails([]);
@@ -487,13 +715,15 @@ export function MapStudio() {
     try {
       const input = await Promise.all(files.map(async file => ({name:file.name,text:await file.text()})));
       const analysis = input.length===1 ? discoverData(input[0]) : null;
-      setDiscovery(analysis);
+      const preview=analysis?.kind==="csv-table"?null:previewImport(input);
+      // A valid native Mossline graph is not an unsupported Kumu configuration.
+      setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
       setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
       setMappingSession(previous=>previous+1);
       setAcknowledgeRemovals(false);
       setImportMode("new");
       setImportMapName(input.length===1?input[0].name.replace(/\.(csv|json)$/i,""):"Imported network");
-      setImportPreview(analysis?.kind==="csv-table" ? null : previewImport(input));
+      setImportPreview(preview);
       setNotice("");
     } catch (error) {
       setImportPreview(null);
@@ -545,10 +775,23 @@ export function MapStudio() {
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
+  function openCommunityExample() {
+    if(createNewMap(COMMUNITY_EXAMPLE)) {
+      setNotice("Opened a separate fictional community network. Try Landscape, Collaborations and UK atlas; your other maps are preserved.");
+      closeImport();
+    }
+  }
+  function openPftVisualExample() {
+    if(createNewMap(PFT_VISUAL_EXAMPLE)) {
+      setIllustrated(true);
+      setNotice("Opened the PFT illustration showcase. Links are SYNTHETIC layout examples, not recorded PFT connections. Your other maps are saved.");
+      closeImport();
+    }
+  }
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.1</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.8</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -573,6 +816,18 @@ export function MapStudio() {
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
+    <details className="example-library">
+      <summary>Explore example networks · community and farming</summary>
+      <p>Examples demonstrate what Mossline can do with different kinds of data.
+        They are fictional, optional and never overwrite your current map.</p>
+      <div className="example-community">
+        <div><strong>Neighbourhood Connections</strong>
+          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
+        <button type="button" className="button-outline" onClick={openCommunityExample}>
+          Open community example →</button>
+      </div>
+      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
+    </details>
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Explore what Mossline found</p>
@@ -695,32 +950,111 @@ export function MapStudio() {
         </button>
       </div>}
     </section>}
+    {(pftCompatible||story) && <section className="perspective-narrative" aria-label="Perspective story">
+      {storyCoverUrl&&<img loading="lazy" src={storyCoverUrl}
+        alt="Illustration introducing this network perspective" />}
+      <div className="perspective-narrative-copy">
+        <p className="eyebrow">{story?"Your saved story":"Visual companion · Progressive Farming Trust"}</p>
+        <h2>{storyTitleText}</h2>
+        <p>{storyIntroText}</p>
+        {!story&&pftCompatible&&<p className="pft-guidance">{PFT_VISUAL_PACK.frontPage?.guidance}</p>}
+        <span>{pftCompatible?pftAssets.matched+" original illustrations available · ":""}
+          Presentation only · Source records unchanged</span>
+      </div>
+    </section>}
     <section className="workspace">
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
         <div className="view-switch">
           <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
           <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
+          <button className={view === "atlas" ? "on" : ""} onClick={() => {setView("atlas");setSelectedId(null);setFocusId(null);}}>
+            ◉ <span>UK atlas{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
+          </button>
         </div>
         <section className="perspectives-panel" aria-label="Saved perspectives">
           <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
-            <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":"My collaborations");}}>+ Save</button></div>
+            <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":view==="atlas"?"My UK atlas":"My collaborations");}}>+ Save</button></div>
           {showSave && <form className="perspective-form" onSubmit={saveCurrentPerspective}>
             <label htmlFor="save-view-name">Name this perspective</label>
             <input className="search" id="save-view-name" maxLength={60} required value={newName}
               onChange={e=>setNewName(e.target.value)} placeholder="e.g. Northern connections"/>
+            <label htmlFor="perspective-story-title">Story heading (optional)</label>
+            <input className="search" id="perspective-story-title" maxLength={100}
+              value={storyTitle} onChange={e=>setStoryTitle(e.target.value)}
+              placeholder="What are we exploring?"/>
+            <label htmlFor="perspective-story-text">Introduce this view</label>
+            <textarea id="perspective-story-text" className="search" rows={3}
+              maxLength={1200} value={storyIntroduction}
+              onChange={e=>setStoryIntroduction(e.target.value)}
+              placeholder="Give readers a story or question to explore"/>
+            {assets.length>0&&<label htmlFor="perspective-story-asset">Or use a saved artwork image
+              <select className="search" id="perspective-story-asset" value=""
+                onChange={event=>{
+                  const asset=assets.find(a=>a.id===event.target.value);
+                  if(asset)setStoryCover(asset.url);
+                }}>
+                <option value="">Choose artwork…</option>
+                {assets.map(asset=><option key={asset.id} value={asset.id}>
+                  {asset.name} · {asset.licence}
+                </option>)}
+              </select>
+            </label>}
+            <label htmlFor="perspective-story-cover">Cover artwork (HTTPS URL)</label>
+            <input className="search" id="perspective-story-cover" type="url"
+              value={storyCover} onChange={e=>setStoryCover(e.target.value)}
+              placeholder="https://…"/>
+            <p className="help">Your filters, story, node appearance and arrangement are saved here.
+              Drag nodes on Landscape or Collaborations before saving.
+              Positions belong to this view only; source data is unchanged.</p>
             <div><button className="button-primary" type="submit">Save view</button>
               <button className="text-button" type="button" onClick={()=>setShowSave(false)}>Cancel</button></div>
           </form>}
-          {savedForMap.length===0 && <p className="help">Save your layout, search and filters, then return to them later.</p>}
+          {savedForMap.length===0 && <p className="help">Save a named perspective to keep your network arrangement, node styling, search and filters.</p>}
           {savedForMap.map(item=><div key={item.id} className="saved-perspective">
             <button type="button" onClick={()=>openPerspective(item)}>
               <span>{item.name}</span><small>{item.view} · {item.layout}</small></button>
             <button className="remove-perspective" type="button" aria-label={"Delete "+item.name}
               onClick={()=>savePerspectives(perspectives.filter(p=>p.id!==item.id))}>×</button>
           </div>)}
-          <p className="help">Only this browser · scoped to this dataset · no changes to source data</p>
+          <div className="portable-perspectives">
+            <p className="eyebrow">Take your perspectives with you</p>
+            <input type="file" hidden ref={perspectiveFileRef}
+              accept=".json,application/json" aria-label="Import Mossline perspectives"
+              onChange={previewPerspectiveImport}/>
+            <div className="portable-actions">
+              <button type="button" onClick={downloadPerspectives}
+                disabled={savedForMap.length===0}>↓ Export views</button>
+              <button type="button" onClick={()=>perspectiveFileRef.current?.click()}>
+                ↑ Import views</button>
+            </div>
+            {portablePreview&&<div className="portable-confirm" aria-label="Review perspective import">
+              <strong>{portablePreview.perspectives.length} views ready to add</strong>
+              <p>{portablePreview.perspectives.map(item=>item.name).join(" · ")}</p>
+              <small>{portablePreview.assets.length} linked artwork references.
+                Files will be added to this browser; existing views are preserved.
+                External pictures may contact their hosting services when displayed.</small>
+              <div className="portable-actions">
+                <button type="button" onClick={confirmPerspectiveImport}>Confirm import</button>
+                <button type="button" onClick={()=>setPortablePreview(null)}>Cancel</button>
+              </div>
+            </div>}
+            <p className="help">Exports contain saved view settings, entity IDs and image URLs —
+              not the underlying map data. Import onto the same network in another browser.
+              Export your map separately if you need to move its data too.</p>
+          </div>
+          <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
+        <ShareViewPanel graph={filtered.graph} view={view}
+          layout={layoutMode} labels={labelDensity} illustrated={illustrated}
+          title={storyTitleText||graph.title} introduction={storyIntroText||undefined}
+          coverUrl={storyCoverUrl} positions={activePositions} nodeStyles={nodeStyles}/>
+        <HostedPublishPanel graph={filtered.graph} view={view}
+          layout={layoutMode} labels={labelDensity} illustrated={illustrated}
+          title={storyTitleText||graph.title} introduction={storyIntroText||undefined}
+          coverUrl={storyCoverUrl} positions={activePositions} nodeStyles={nodeStyles}/>
+        <AssetLibraryPanel assets={assets} onAdd={addArtwork}
+          onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
           <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Explore what’s reachable</span></div>
           <p className="help">Choose something you know. Mossline shows who and what is connected through recorded relationships.</p>
@@ -872,35 +1206,68 @@ export function MapStudio() {
           <button className="text-button" onClick={resetDemo}>Restore example landscape ↗</button>
         </div>
       </aside>
-      <div className="map-panel">
+      <div className={"map-panel"+(illustrated?" editorial-style":"")}>
         <div className="map-topline">
-          <span><span className="signal" /> {view === "landscape" ? "Living network" : "Shared associations"}</span>
+          <span><span className="signal" /> {view === "landscape" ? "Living network" :
+            view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
           <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span>
           <div className="map-options">
-            <label>Layout <select aria-label="Network layout" value={layoutMode}
+            {view!=="atlas"&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
               <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
-            </select></label>
-            <label>Labels <select aria-label="Network labels" value={labelDensity}
+            </select></label>}
+            {view!=="atlas"&&<label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
-            </select></label>
+            </select></label>}
+            {view!=="atlas"&&<label>Style <select aria-label="Network visual style"
+              value={illustrated?"editorial":"classic"}
+              onChange={event=>setIllustrated(event.target.value==="editorial")}>
+              <option value="editorial">Editorial</option>
+              <option value="classic">Classic</option>
+            </select></label>}
+            {view!=="atlas"&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
+              <button type="button" disabled={!movementHistory.past.length}
+                onClick={undoNodeMovement} title="Undo last manual node movement">↶ Undo</button>
+              <button type="button" disabled={!movementHistory.future.length}
+                onClick={redoNodeMovement} title="Redo manual node movement">↷ Redo</button>
+              <button type="button" onClick={resetNodeArrangement}>Reset arrangement</button>
+            </div>}
           </div>
         </div>
-        <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
-          selectedId={selectedId} selectedEdgeId={selectedEdgeId}
-          pathNodeIds={connectionTrail?.nodeIds ?? []}
-          pathEdgeIds={connectionTrail?.steps.map(step => step.edgeId) ?? []}
-          junctionNodeIds={showJunctions ? junctions.map(item=>item.nodeId) : []}
-          onSelect={pickNode} onSelectEdge={pickEdge}
-          view={view} layoutMode={layoutMode} labelDensity={labelDensity} />
-        <div className="map-bottomline"><span>Drag to explore · Select a node or a relationship line to inspect its evidence</span><span>Built with Cytoscape.js</span></div>
+        {view==="atlas" ?
+          <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
+            onSelect={pickNode} onPickEdge={pickEdge}
+            mode={atlasMode} onModeChange={setAtlasMode}
+            kind={atlasKind} onKindChange={setAtlasKind}
+            referenceArtwork={pftMapReference?{url:pftMapReference,
+              label:"PFT illustrated UK map"}:undefined}/> :
+          <GraphCanvas graph={filtered.graph} contextNodeIds={filtered.contextNodeIds}
+            selectedId={selectedId} selectedEdgeId={selectedEdgeId}
+            pathNodeIds={connectionTrail?.nodeIds ?? []}
+            pathEdgeIds={connectionTrail?.steps.map(step=>step.edgeId)??[]}
+            junctionNodeIds={showJunctions?junctions.map(item=>item.nodeId):[]}
+            onSelect={pickNode} onSelectEdge={pickEdge}
+            view={view} layoutMode={layoutMode} labelDensity={labelDensity}
+            illustrated={illustrated} nodeStyles={nodeStyles}
+            savedPositions={activePositions} positionRevision={positionRevision}
+            onPositionsChange={capturePositions}
+            onDragBegin={beginNodeMovement} onDragCommit={finishNodeMovement} />}
+        <div className="map-bottomline"><span>{view==="atlas"?
+          "Source-provided locations only · Choose a marker to see its recorded relationships" :
+          "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
+          <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
         {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
           onPick={pickNode} onEvidence={exploreEvidence} /> :
-        selected ? <NodeInspector node={selected} graph={filtered.graph} source={graph}
-          onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode} /> :
+        selected ? <>
+          <NodeInspector node={selected} graph={filtered.graph} source={graph}
+            onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode}/>
+          {view!=="atlas"&&<NodeAppearanceEditor node={selected}
+            value={nodeStyles[selected.id]??{}} assets={assets}
+            onChange={changeNodeAppearance}/>}
+        </> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
             <p className="eyebrow">The relationships matter</p>

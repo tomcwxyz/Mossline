@@ -140,3 +140,131 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Protected-preview authenticated browser and mobile keyboard/accessibility walkthrough.
 - [ ] Typeahead/virtualised destination choices for very large imported maps.
 - [ ] Offer a broader depth control and advanced directed-only exploration.
+
+## Alpha 1.3 — owner-authored PFT visual companion (first stage)
+- [x] Inspect PFT visual repository and map 82 exact image IDs to 107 PFT network records.
+- [x] Keep the artwork in its owned repository; pin referenced asset revision.
+- [x] General visual pack interface and pure presentation-only projection.
+- [x] Apply owner-created illustration overrides without overwriting source image values.
+- [x] PFT intro banner with original hero and evidence/prototype caveat.
+- [x] Illustrated canvas palette and photographic circular nodes, with original-style switch.
+- [x] Saved perspectives can include an authored title, introduction, cover HTTPS URL and style.
+- [x] Schema and regression checks preserve older locally saved perspectives.
+- [ ] Authenticated browser verification of imported PFT 107-node/242-edge preview and artwork.
+- [ ] Illustrated UK atlas with tested geographic projection and separate custom positions.
+- [ ] Geographical basemap and regional filters using explicit valid coordinates.
+- [ ] Author-controlled node placement, edge styles, badges and per-perspective node display.
+- [ ] Written explicit artwork-pack usage/licensing terms before public redistribution.
+
+## Alpha 1.3 — artwork visibility correction
+- [x] Fix stale "alpha 1.1" header on the Alpha 1.3 branch.
+- [x] Make the real PFT hero/artwork gallery visible without importing PFT network data.
+- [x] Offer a separate 20-entity illustrated **synthetic** showcase map on one click.
+- [x] Verify all 20 example IDs match files in the 82-asset manifest.
+- [x] Mark all mock links inferred so they cannot masquerade as recorded source relationships.
+- [x] Vercel preview and CI production build/tests pass.
+- [ ] Authenticated browser confirmation that all images render and layout is attractive.
+- [ ] Import the real PFT 107/242 graph in-browser, then visually compare against Kumu.
+
+## Alpha 1.3 — UK atlas geographic exploration (second stage)
+- [x] Exact source `Atlas location` parsing with strict latitude/longitude checks.
+- [x] Shared UK projection for source points and simplified Natural Earth outlines.
+- [x] New UK atlas tab, with source-only location counts and explicit unlocated records.
+- [x] Approximate cluster aggregation for overlapping pins, with selectable member list.
+- [x] Show source-recorded connection lines only on selection, preserving all graph edges.
+- [x] Link markers to the existing Node and Relationship inspectors.
+- [x] Show owner's original PFT UK basemap as an unaligned artistic reference, not false geography.
+- [x] Allow atlas views to be saved with authored story headers and filters.
+- [x] Regression tests for invalid locations, no fake Kumu coordinate fallback, projection and perspective schema.
+- [ ] Authenticated desktop/mobile browser review of actual 70 placed PFT entities; adjust label and cluster legibility.
+- [ ] Georeference the PFT illustrated UK basemap or migrate to a licensed vector/tiled base layer.
+- [ ] Per-perspective manual node arrangement independent of immutable source geographic coordinates.
+- [ ] Improved geographic bounds/selection for source networks beyond the UK.
+
+## Alpha 1.3 — illustrated atlas refinements
+- [x] Replace hand-rounded UK outline with geometry directly derived from Natural Earth public-domain data.
+- [x] Add Illustrated projects and Explore places presentations within UK atlas.
+- [x] Curate source-located projects with PFT artwork, paginated project cards and a selected-place location thread.
+- [x] Make category filters and search available for located entities without displaying every possible relationship.
+- [x] Clarify which lines indicate geographical placement versus source-recorded relationships.
+- [x] Preserve atlas mode and category in browser-saved perspectives and validate the new presentation fields.
+- [ ] Authenticate and visually inspect project cards/markers at desktop and mobile sizes.
+- [ ] Full manual per-perspective node placement with a separate authored-position model.
+- [ ] Genuine georeferencing of the PFT illustrated UK basemap, if wanted, with registration controls.
+- [ ] Label collision and clustering improvements for screen size, zoom level and large datasets.
+
+## Alpha 1.4 — general-purpose perspectives and layout authoring (development)
+- [x] Treat PFT as an optional illustration pack and example, not the default product experience.
+- [x] Add a wholly fictional community-network example with diverse entity types.
+- [x] Expose Editorial and Classic presentation modes for every dataset.
+- [x] Save and restore drag-adjusted coordinates separately from canonical graph records.
+- [x] Allow layout reset without modifying previously saved perspectives.
+- [x] Accept common explicit Latitude/Longitude and lat/lon pairs for the UK atlas.
+- [x] Show PFT reference artwork only for compatible PFT data.
+- [x] GitHub Actions tests, TypeScript checks and production build pass (run 39490750503).
+- [ ] Protected-preview browser acceptance: restored positions on filters, across reloads, smaller screens.
+- [ ] Consider per-node locks, drag undo and saved-layout export/import.
+- [ ] General geography via a configurable MapLibre basemap rather than hard-coded UK bounds.
+- [ ] A user-selected illustration pack, independent of any bundled example.
+- [ ] Server-backed workspaces, sharing and user-controlled publication permissions.
+
+
+## Alpha 1.5 — network appearance authoring (development)
+- [x] Validated per-node appearance overlays independent of the canonical graph.
+- [x] Generic inspector: per-node label, size, emphasis and HTTPS image.
+- [x] Save/restore node appearance in browser-local named perspectives.
+- [x] Preserve original images, graph identifiers and recorded relationships.
+- [ ] CI tests/typecheck/build and protected-preview browser acceptance.
+- [x] Undo/redo manual positioning in the active view.
+- [ ] Node locking and more complex authoring controls.
+- [ ] User-managed asset library with attribution and licence information.
+- [ ] Shareable public perspectives and hosted workspace permissions.
+
+
+- [x] Undo and redo up to 20 manual node movements per active map/layout.
+- [x] Restore saved perspectives without treating layout replay as a new user movement.
+
+
+## Alpha 1.6 — portability and reuse of visual authoring
+- [x] Versioned, schema-validated, graph-scoped export of saved perspectives without source graph records.
+- [x] Import preview and explicit confirmation; append views with new IDs rather than overwrite.
+- [x] Browser artwork library with creator, rights declaration, attribution and source URL.
+- [x] Reuse library pictures for node styling and saved perspective covers.
+- [x] Include rights metadata alongside perspective export/import, without copying image binaries.
+- [x] Refuse cross-dataset import, unknown entity IDs and malformed or oversized files.
+- [ ] End-to-end protected-preview tests for import/save/refresh across browsers and phone widths.
+- [ ] Interactive licence/attribution display in published/public maps.
+- [ ] Portable full-project format with canonical source rows, visual settings and editable assets.
+- [ ] Hosted workspaces with publication and permissions.
+
+
+## Alpha 1.7 — read-only snapshot sharing
+- [x] Build strict minimal published graph schema: no raw source properties, import provenance or evidence payloads.
+- [x] Keep recorded/inferred relationship distinction; explicit opt-ins for descriptions/images.
+- [x] Review visible entities before generating public link; no automatic upload.
+- [x] Browser-only compressed URL fragment with bounded decode and snapshot size.
+- [x] Separate /share viewer with interactive read-only graph/atlas and accessible entity browser.
+- [x] Source-privacy and malformed-payload regression tests.
+- [ ] Authenticated preview browser test: generate, open and navigate a link; mobile keyboard and touch review.
+- [ ] Hosted publication with real storage, revocation, durable short URLs and workspace permissions.
+- [ ] Expiry controls, public attribution and provenance policy, redaction review and controlled updates.
+- [ ] Handle larger networks beyond bounded URL-sharing prototype.
+
+
+- [x] Require author approval after full list of disclosed entities and relationships.
+- [x] Explicit opt-in for introductory story text, default off.
+- [x] Compressed fragment round-trip and invalid-token tests in CI.
+
+
+## Alpha 1.8 — controlled hosted publishing (draft)
+- [x] Feature-gated separate Neon public snapshot store, with additive SQL migration.
+- [x] Strong publisher authorisation for creating snapshots; distinct owner management keys stored hashed.
+- [x] Stable public URLs and dynamic no-store, noindex public reader.
+- [x] Owner-key authenticated atomic revision update and withdrawal.
+- [x] Source-minimised snapshot schema reused from Alpha 1.7.
+- [x] Studio controls with complete disclosure review, publishing, update and unpublish.
+- [x] No browser storage of author or management secrets.
+- [ ] Isolated development DB setup, migration application and live read/update/withdraw acceptance.
+- [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
+- [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
+- [ ] Real user accounts, team roles, invitations and restricted/private publications.

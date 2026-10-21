@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "title": "Neighbourhood Connections — fictional example",
+  "description": "A fictional neighbourhood network: groups, places, funding, activities and shared ambitions. Explore relationships or view explicit UK coordinates.",
+  "nodes": [
+    {
+      "id": "org-hub",
+      "label": "Neighbourhood Hub",
+      "type": "organisation",
+      "region": "North East",
+      "description": "A fictional community-led organisation coordinating local activities.",
+      "properties": {
+        "Latitude": 54.618,
+        "Longitude": -1.574
+      }
+    },
+    {
+      "id": "org-library",
+      "label": "Community Library",
+      "type": "organisation",
+      "region": "North East",
+      "description": "A welcoming place for learning and community events.",
+      "properties": {
+        "Latitude": 54.615,
+        "Longitude": -1.567
+      }
+    },
+    {
+      "id": "org-food",
+      "label": "Food Partnership",
+      "type": "organisation",
+      "region": "North East",
+      "description": "A local partnership exploring affordable food access.",
+      "properties": {
+        "Latitude": 54.611,
+        "Longitude": -1.583
+      }
+    },
+    {
+      "id": "org-youth",
+      "label": "Youth Collective",
+      "type": "organisation",
+      "region": "North East",
+      "description": "Young people developing shared neighbourhood activities.",
+      "properties": {
+        "Latitude": 54.624,
+        "Longitude": -1.56
+      }
+    },
+    {
+      "id": "org-garden",
+      "label": "Community Gardeners",
+      "type": "organisation",
+      "region": "North East",
+      "description": "Neighbours tending a shared green space.",
+      "properties": {
+        "lat": 54.606,
+        "lon": -1.571
+      }
+    },
+    {
+      "id": "proj-meals",
+      "label": "Community Meals",
+      "type": "project",
+      "region": "North East",
+      "description": "Neighbour-led meals and food-sharing sessions.",
+      "properties": {
+        "latitude": 54.614,
+        "longitude": -1.578
+      }
+    },
+    {
+      "id": "proj-skills",
+      "label": "Skills Exchange",
+      "type": "project",
+      "region": "North East",
+      "description": "Residents sharing practical knowledge and skills.",
+      "properties": {
+        "lat": 54.62,
+        "lng": -1.562
+      }
+    },
+    {
+      "id": "proj-green",
+      "label": "Greener Streets",
+      "type": "project",
+      "region": "North East",
+      "description": "A project supporting local outdoor spaces.",
+      "properties": {
+        "Latitude": 54.604,
+        "Longitude": -1.567
+      }
+    },
+    {
+      "id": "fund-local",
+      "label": "Local Connections Fund",
+      "type": "funder",
+      "description": "A fictional community grantmaker.",
+      "region": "North East"
+    },
+    {
+      "id": "fund-community",
+      "label": "Community Futures Trust",
+      "type": "funder",
+      "description": "A fictional fund supporting long-term local projects.",
+      "region": "North East"
+    },
+    {
+      "id": "place-hall",
+      "label": "The Community Hall",
+      "type": "place",
+      "region": "North East",
+      "description": "A shared local meeting venue.",
+      "properties": {
+        "Latitude": 54.617,
+        "Longitude": -1.579
+      }
+    },
+    {
+      "id": "place-green",
+      "label": "The Green",
+      "type": "place",
+      "region": "North East",
+      "description": "A local open space.",
+      "properties": {
+        "Latitude": 54.605,
+        "Longitude": -1.568
+      }
+    },
+    {
+      "id": "person-ali",
+      "label": "Ali (volunteer)",
+      "type": "person",
+      "description": "A fictional resident helping with projects.",
+      "region": "North East"
+    },
+    {
+      "id": "topic-belonging",
+      "label": "Belonging",
+      "type": "topic",
+      "description": "A shared theme across activities."
+    },
+    {
+      "id": "outcome-friendships",
+      "label": "New friendships",
+      "type": "outcome",
+      "description": "A possible intended outcome; not an evaluated impact claim."
+    }
+  ],
+  "edges": [
+    {
+      "id": "connection-1",
+      "source": "org-hub",
+      "target": "proj-meals",
+      "type": "coordinates",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-2",
+      "source": "org-food",
+      "target": "proj-meals",
+      "type": "delivers",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-3",
+      "source": "org-hub",
+      "target": "proj-skills",
+      "type": "supports",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-4",
+      "source": "org-library",
+      "target": "proj-skills",
+      "type": "hosts",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-5",
+      "source": "org-youth",
+      "target": "proj-skills",
+      "type": "helps to design",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-6",
+      "source": "org-garden",
+      "target": "proj-green",
+      "type": "delivers",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-7",
+      "source": "org-hub",
+      "target": "proj-green",
+      "type": "supports",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-8",
+      "source": "fund-local",
+      "target": "proj-meals",
+      "type": "funds",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-9",
+      "source": "fund-community",
+      "target": "proj-green",
+      "type": "funds",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-10",
+      "source": "place-hall",
+      "target": "proj-meals",
+      "type": "hosts",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-11",
+      "source": "place-green",
+      "target": "proj-green",
+      "type": "hosts",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-12",
+      "source": "person-ali",
+      "target": "proj-meals",
+      "type": "volunteers with",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-13",
+      "source": "proj-skills",
+      "target": "topic-belonging",
+      "type": "explores",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-14",
+      "source": "proj-meals",
+      "target": "topic-belonging",
+      "type": "explores",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-15",
+      "source": "proj-green",
+      "target": "outcome-friendships",
+      "type": "aims towards",
+      "direction": "directed"
+    },
+    {
+      "id": "connection-16",
+      "source": "org-youth",
+      "target": "place-hall",
+      "type": "uses",
+      "direction": "directed"
+    }
+  ]
+}
