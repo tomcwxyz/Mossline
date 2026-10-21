@@ -122,9 +122,10 @@ export function FundingWorkbench({onCreate,onClose}:{
             detected, but only {parsed.counts.importedGrants} are being mapped.
             {parsed.counts.overflowExcluded} remaining records are not represented.
             The selection balances funders for network exploration; it is not a
-            statistically representative sample. **All {fullAnalysis?.grants??0} unique eligible
-            organisation awards are nevertheless analysed** in the full funding
-            totals and theme clusters. Filter the CSV for more detailed mapping.</p>}
+            statistically representative sample. <strong>All {fullAnalysis?.grants??0}
+            {" "}unique eligible organisation awards are nevertheless analysed</strong>
+            {" "}in the full funding totals and theme clusters. Filter the CSV
+            for more detailed mapping.</p>}
         </div>}
       {parsed.graph&&<div className="funding-import-review">
         <strong>Example recorded relationships</strong>
@@ -189,6 +190,27 @@ export function FundingInsights({graph,fullAnalysis,onExplore}:{
         a funder-balanced selection of {facts.awardCount} grants.
         They are for exploration and are not representative of the whole dataset.
       </p>}
+    {fullAnalysis&&<details className="funding-full-overview">
+      <summary>Explore funders, repeated recipients and locations across all {fullAnalysis.grants} grants</summary>
+      <div className="funding-full-overview-grid">
+        <section><h3>Leading funders by recorded grants</h3>
+          <ol>{fullAnalysis.leadingFunders.slice(0,12).map(f=>
+            <li key={f.id}><strong>{f.name}</strong>
+              <span>{f.grants} grants · {f.recipients} recipients</span></li>)}</ol>
+        </section>
+        <section><h3>Recipients appearing across several funders</h3>
+          <ol>{fullAnalysis.sharedRecipients.slice(0,12).map(r=>
+            <li key={r.id}><strong>{r.name}</strong>
+              <span>{r.funders} funders · {r.grants} grants</span></li>)}</ol>
+          {!fullAnalysis.sharedRecipients.length&&<p>No repeated recipients in these records.</p>}
+        </section>
+      </div>
+      <p className="funding-method-note">Source geography here is the
+        <strong> recipient organisation's region</strong>, not proof that the
+        funding was spent in that region or that its beneficiaries live there.</p>
+      <div className="funding-regions">{fullAnalysis.recipientRegions.slice(0,12).map(r=>
+        <span key={r.region}>{r.region}: {r.grants} grants</span>)}</div>
+    </details>}
     <div className="funding-insight-columns">
       <div className="funding-insight-column">
         <h3>Shared recipients {fullAnalysis?.grants!==facts.awardCount?"· network selection":""}</h3>
