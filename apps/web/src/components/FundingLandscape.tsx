@@ -3,6 +3,7 @@ import {useEffect,useMemo,useRef,useState,type ChangeEvent} from "react";
 import {DiscoverConnections} from "./DiscoverConnections";
 import {FundingClusters} from "./FundingClusters";
 import {FundingDatasetExplorer} from "./FundingDatasetExplorer";
+import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {analyseFundingLandscape,graphFingerprint,
   type FundingImport,type FundingMapping,type FundingFullAnalysis,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
@@ -364,9 +365,17 @@ export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,o
           onClick={()=>setShowAll(v=>!v)}>{showAll?"Show fewer":"Show all "+facts.insights.length+" suggestions"}</button>}
       </div>
     </div>
-    {fullAnalysis&&datasetId&&onViewProjection&&
-      <FundingDatasetExplorer datasetId={datasetId} analysis={fullAnalysis}
-        onView={onViewProjection}/>}
+    {fullAnalysis&&datasetId&&<>
+      <WholeGraphExplorer datasetId={datasetId}/>
+      {onViewProjection&&<details className="funding-detail-pages">
+        <summary>Advanced: open an individual grant page in the older detailed canvas</summary>
+        <p>The whole-network view above represents every record. This optional legacy
+          detail tool opens smaller selections in the main studio for editing and
+          close-up inspection; it does not determine what belongs in the network.</p>
+        <FundingDatasetExplorer datasetId={datasetId} analysis={fullAnalysis}
+          onView={onViewProjection}/>
+      </details>}
+    </>}
     {fullAnalysis&&!datasetId&&fullAnalysis.grants>facts.awardCount&&
       <p className="funding-cluster-caveat">This map was saved before complete-dataset storage was available.
         Reimport the CSV to make every grant searchable and navigable without repeated uploads.</p>}

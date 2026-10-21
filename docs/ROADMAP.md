@@ -358,3 +358,21 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Aggregate/cluster-based canvas rendering, rather than many individual grant-event nodes.
 - [ ] Fine-grained saved filters and multi-dimensional drilldowns; benchmark real low-memory devices.
 - [ ] Optional server workspace persistence for collaborative/synchronised or very large datasets.
+
+## Whole-graph adaptive exploration — initial implementation
+
+- [x] Reusable source-agnostic graph aggregation in graph-core (not tied to grant records).
+- [x] Every entity represented once, every relationship counted either directly,
+      across groups or within one group; group totals are not inferred partnerships.
+- [x] Deterministic nested groups, expandable to original source records without paging.
+- [x] Background-worker whole-network view for complete funding data in IndexedDB.
+- [x] Group-aware Cytoscape overview, click-to-expand and keyboard-accessible list.
+- [x] Guard a crowded viewport rather than discarding connections or silently sampling.
+- [ ] Browser-level performance and usability acceptance against real GrantNav data.
+- [ ] Integrate adaptive overview as the default large-network canvas for **all**
+      Kumu, CSV and other generic graph imports, not just saved funding datasets.
+- [ ] Incremental/streamed general-purpose source storage rather than localStorage.
+- [ ] Stable hierarchical layout/semantic zoom and focus-neighbourhood transitions
+      with preserved user-authored positions.
+- [ ] More meaningful grouping recipes (community detection, geography, funding,
+      themes), with explicit provenance and no invented links.

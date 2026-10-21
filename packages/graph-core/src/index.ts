@@ -19,3 +19,5 @@ export * from "./semantic-discovery";
 export * from "./browser-map-recovery";
 
 export * from "./funding-projection";
+
+export * from "./adaptive-graph";
