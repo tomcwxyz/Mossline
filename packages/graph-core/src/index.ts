@@ -23,3 +23,5 @@ export * from "./funding-projection";
 export * from "./funding-dataset-backup";
 
 export * from "./adaptive-graph";
+
+export * from "./network-navigation";
