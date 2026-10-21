@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {parseGraphDocument,createPublishedSnapshot} from "@mossline/graph-core";
 import {decodeShareSnapshot,encodeShareSnapshot,MAX_FRAGMENT_LENGTH}
-  from "../src/lib/share-codec.ts";
+  from "../src/lib/share-codec";
 
 const source=parseGraphDocument({version:1,title:"Fictional example",
   nodes:[{id:"a",label:"Neighbourhood Hub",type:"organisation",properties:{secret:"not in link"}},
