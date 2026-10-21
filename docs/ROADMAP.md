@@ -400,3 +400,15 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
       (currently browser localStorage and synchronous source filtering).
 - [ ] Preserve authored node positioning when switching between small-graph
       canvas and group-based overview.
+
+## Alpha 2.5 — simpler start and exploration (development)
+
+- [x] A focused first-run entry with saved maps, CSV/Kumu and funding imports, examples.
+- [x] Promote one primary network workspace and three recognisable view choices.
+- [x] Disclose saved views, sharing, appearance and connection tools progressively.
+- [x] Put full indexed funding-network exploration in the primary map.
+- [x] Move evidence and advanced analysis out of the initial scan path.
+- [ ] Check imported funding dataset counts and exports are labelled accurately.
+- [ ] Manually test workflows and mobile/keyboard accessibility.
+- [ ] Replace current main-thread generic graph filtering and layout with
+      scalable, source-agnostic full-graph rendering.
