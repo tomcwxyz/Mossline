@@ -121,7 +121,7 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
       const current=nodes.get(id);
       const roles=new Set<string>([...((current?.properties?.fundingRoles as string[]|undefined)??[]),role]);
       nodes.set(id,{
-        id,label:current?.label??label,
+        id,label:current?.label??label,tags:current?.tags??[],
         type:roles.has("funder")?"funder":"organisation",
         ...(region||current?.region?{region:current?.region??region}:{}),
         properties:{...(current?.properties??{}),fundingRoles:[...roles],
