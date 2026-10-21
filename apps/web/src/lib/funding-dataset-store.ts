@@ -64,3 +64,42 @@ export async function deleteFundingDataset(id:string):Promise<void>{
     });
   }finally{db.close();}
 }
+
+
+/** Metadata and large graph reads happen in a Web Worker, not during React rendering. */
+export type FundingDatasetSummary=Omit<StoredFundingDataset,"graph">;
+export async function listFundingDatasets():Promise<FundingDatasetSummary[]>{
+  const db=await open();
+  try{
+    return await new Promise((resolve,reject)=>{
+      const entries:FundingDatasetSummary[]=[];
+      const request=db.transaction(STORE,"readonly").objectStore(STORE).openCursor();
+      request.onerror=()=>reject(request.error??Error("Cannot list funding datasets"));
+      request.onsuccess=()=>{
+        const cursor=request.result;
+        if(!cursor){resolve(entries.sort((a,b)=>b.createdAt-a.createdAt));return;}
+        const {id,createdAt,sourceTitle,grantCount}=cursor.value as StoredFundingDataset;
+        entries.push({id,createdAt,sourceTitle,grantCount});
+        cursor.continue();
+      };
+    });
+  }finally{db.close();}
+}
+
+/** Atomic add-only restore: any existing ID aborts the entire transaction. */
+export async function restoreFundingDatasets(datasets:StoredFundingDataset[]):Promise<void>{
+  if(datasets.length===0)return;
+  const db=await open();
+  try{
+    await new Promise<void>((resolve,reject)=>{
+      const transaction=db.transaction(STORE,"readwrite");
+      transaction.oncomplete=()=>resolve();
+      transaction.onabort=()=>reject(transaction.error?.name==="ConstraintError"?
+        Error("A dataset from this backup already exists here. Nothing was replaced. "+
+          "Remove the conflicting dataset only after checking it is no longer needed."):
+        transaction.error??Error("Dataset restoration failed; no datasets were imported."));
+      transaction.onerror=()=>{/* onabort provides the rollback result */};
+      for(const dataset of datasets)transaction.objectStore(STORE).add(dataset);
+    });
+  }finally{db.close();}
+}

@@ -1,16 +1,18 @@
 "use client";
 
 import {useEffect,useRef,useState} from "react";
+import {FundingDatasetRecovery} from "./FundingDatasetRecovery";
 import {LEGACY_GRAPH_STORAGE_KEY,MAP_LIBRARY_STORAGE_KEY,
   type MapRecoveryInfo} from "@mossline/graph-core";
 
 type WorkerReply={
-  type:"listed"|"candidate"|"error";requestId:number;message?:string;
-  activeId?:string;maps?:MapRecoveryInfo[];nextRaw?:string|null;
+  type:"listed"|"candidate"|"restorable"|"error";requestId:number;message?:string;
+  activeId?:string;maps?:MapRecoveryInfo[];nextRaw?:string|null;legacyRaw?:string|null;
 };
 
 export function MapRecovery(){
   const workerRef=useRef<Worker|null>(null);
+  const restoreInput=useRef<HTMLInputElement>(null);
   const requestRef=useRef(0);
   const [maps,setMaps]=useState<MapRecoveryInfo[]>([]);
   const [activeId,setActiveId]=useState("");
@@ -44,6 +46,34 @@ export function MapRecovery(){
         setActiveId(message.activeId??"");
         setSelected(message.activeId??message.maps?.[0]?.id??"");
         setBusy(false);setReady(true);
+      }
+      if(message.type==="restorable"){
+        const beforeLibrary=window.localStorage.getItem(MAP_LIBRARY_STORAGE_KEY);
+        const beforeLegacy=window.localStorage.getItem(LEGACY_GRAPH_STORAGE_KEY);
+        try{
+          if(message.nextRaw!==null&&message.nextRaw!==undefined)
+            window.localStorage.setItem(MAP_LIBRARY_STORAGE_KEY,message.nextRaw);
+          else window.localStorage.removeItem(MAP_LIBRARY_STORAGE_KEY);
+          if(message.legacyRaw!==null&&message.legacyRaw!==undefined)
+            window.localStorage.setItem(LEGACY_GRAPH_STORAGE_KEY,message.legacyRaw);
+          else window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
+          setHasLibrary(!!message.nextRaw);setHasLegacy(!!message.legacyRaw);
+          setMaps(message.maps??[]);setActiveId(message.activeId??"");
+          setSelected(message.activeId??message.maps?.[0]?.id??"");
+          setNotice("Map backup restored in this browser. If it references funding datasets, restore their separate backup too.");
+          setError("");setBusy(false);setReady(true);setConfirmedBackup(false);
+          if(message.nextRaw)worker.postMessage({type:"inspect",
+            raw:message.nextRaw,requestId:++requestRef.current});
+        }catch{
+          try{
+            if(beforeLibrary===null)window.localStorage.removeItem(MAP_LIBRARY_STORAGE_KEY);
+            else window.localStorage.setItem(MAP_LIBRARY_STORAGE_KEY,beforeLibrary);
+            if(beforeLegacy===null)window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
+            else window.localStorage.setItem(LEGACY_GRAPH_STORAGE_KEY,beforeLegacy);
+          }catch{/* Storage itself may be unavailable. */}
+          setBusy(false);setError("Restoring the map backup failed. Existing maps were preserved where browser storage allowed.");
+        }
+        return;
       }
       if(message.type==="candidate"){
         try{
@@ -112,6 +142,21 @@ export function MapRecovery(){
     }catch{setError("Unable to export the backup from browser storage.");}
   }
 
+  async function restoreBackup(file?:File){
+    if(!file)return;
+    if(file.size>64*1024*1024){
+      setError("Map-library backup must be smaller than 64 MB.");return;
+    }
+    if(!window.confirm("Restore this map-library backup? Existing saved maps in this browser "+
+      "will be REPLACED. Export and check a fresh backup of your current work first. "+
+      "Full funding datasets must be restored separately."))return;
+    try{
+      setBusy(true);setError("");setNotice("Validating map backup in a background worker…");
+      workerRef.current?.postMessage({type:"restore",requestId:++requestRef.current,
+        raw:await file.text()});
+    }catch{setBusy(false);setError("The selected map backup could not be read.");}
+  }
+
   function removeSelected(){
     if(!confirmedBackup||!ready||busy||!selected||!workerRef.current)return;
     const title=maps.find(m=>m.id===selected)?.title??"this saved map";
@@ -152,14 +197,24 @@ export function MapRecovery(){
         Other Mossline tabs should be closed before making changes here.</p>
       <nav className="recovery-nav"><a href="/">← Back to Mossline</a></nav>
       <section className="recovery-section">
-        <h2>1. Export a backup</h2>
+        <h2>1. Back up or restore your maps</h2>
         <p>Save your original map-library cache, including the legacy copy if one exists.
           Check the download in your computer's Downloads folder before removing anything.
           <strong> This backup does not include full funding datasets held separately in
-          IndexedDB.</strong> Retain your original CSV if you need to recreate those datasets.</p>
+          IndexedDB.</strong> Download those using the funding section below.</p>
         <button type="button" onClick={exportBackup} disabled={!hasLibrary&&!hasLegacy}>
           ↓ Download map-library backup
         </button>
+        <button type="button" className="recovery-secondary"
+          disabled={busy} onClick={()=>restoreInput.current?.click()}>
+          ↑ Restore map-library backup
+        </button>
+        <input type="file" hidden ref={restoreInput} accept=".json,application/json"
+          aria-label="Choose map-library backup JSON"
+          onChange={e=>{const file=e.target.files?.[0];e.target.value="";
+            void restoreBackup(file);}}/>
+        <p>Restoring a map backup replaces this browser's saved maps. It does not restore
+          its separate full funding datasets; restore those below as well.</p>
       </section>
       <section className="recovery-section">
         <h2>2. Select a map to remove</h2>
@@ -196,13 +251,15 @@ export function MapRecovery(){
             onClick={clearSavedMaps}>Clear all saved maps</button>
         </div>
       </section>
+      <FundingDatasetRecovery linkedDatasetIds={maps.flatMap(m=>m.fundingDatasetId?
+        [m.fundingDatasetId]:[])} canInspectMaps={ready&&!error}/>
       {notice&&<p className="recovery-notice" role="status">{notice}</p>}
       {error&&<p className="recovery-error" role="alert">{error}</p>}
       <p className="recovery-note">This only affects locally saved map entries.
         Hosted publications and the Neon database are not touched.
-        Full funding data held separately in IndexedDB is not included in the map-library backup
-        or automatically erased here; retain your original CSV. Manage funding dataset
-        storage and complete exports will be added separately.
+        Full funding datasets held in IndexedDB are not automatically erased with maps.
+        Use the separate section above to back up, restore or remove them. Keep both
+        backups together when moving work to a new browser.
         A backup export may contain sensitive descriptions, so store it securely.
       </p>
     </div>

@@ -358,3 +358,16 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Aggregate/cluster-based canvas rendering, rather than many individual grant-event nodes.
 - [ ] Fine-grained saved filters and multi-dimensional drilldowns; benchmark real low-memory devices.
 - [ ] Optional server workspace persistence for collaborative/synchronised or very large datasets.
+
+## Alpha 2.4 — reliable local recovery (development)
+
+- [x] Export complete browser-local funding datasets separately from map-library backups.
+- [x] Add-only, collision-safe IndexedDB restore, preserving dataset identities.
+- [x] Map-library backup restore with validation and explicit replace confirmation.
+- [x] Guard deletion of funding datasets referenced by saved maps.
+- [x] Keep recovery independent of large canvas and network rendering.
+- [x] Document the two-file backup workflow and sensitive data caveats.
+- [ ] Manually verify backup/restore/delete on Chrome, Firefox and small-memory devices.
+- [ ] Fully portable single-file workspace backup including views, art, recipes and funding data.
+- [ ] Streaming/archive export and incremental import for very large datasets.
+- [ ] Assess more intuitive filtering and clustered views with real users before widening the interface.

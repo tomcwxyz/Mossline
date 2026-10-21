@@ -6,7 +6,7 @@ export const LEGACY_GRAPH_STORAGE_KEY="mossline-demo-graph-v1";
 
 export type MapRecoveryInfo={
   id:string;title:string;createdAt:number;
-  nodes:number;edges:number;
+  nodes:number;edges:number;fundingDatasetId?:string;
 };
 export type StoredMapRecovery={id:string;title:string;createdAt:number;
   graph:{nodes?:unknown[];edges?:unknown[]};[key:string]:unknown};
@@ -38,7 +38,8 @@ export function listRecoveryMaps(data:StoredMapLibraryRecovery):MapRecoveryInfo[
   return data.maps.map(m=>({
     id:m.id,title:m.title,createdAt:m.createdAt,
     nodes:Array.isArray(m.graph.nodes)?m.graph.nodes.length:0,
-    edges:Array.isArray(m.graph.edges)?m.graph.edges.length:0
+    edges:Array.isArray(m.graph.edges)?m.graph.edges.length:0,
+    fundingDatasetId:typeof m.fundingDatasetId==="string"?m.fundingDatasetId:undefined
   }));
 }
 export function omitRecoveryMap(data:StoredMapLibraryRecovery,id:string):StoredMapLibraryRecovery{
