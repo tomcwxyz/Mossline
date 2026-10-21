@@ -236,3 +236,16 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Interactive licence/attribution display in published/public maps.
 - [ ] Portable full-project format with canonical source rows, visual settings and editable assets.
 - [ ] Hosted workspaces with publication and permissions.
+
+
+## Alpha 1.7 — read-only snapshot sharing
+- [x] Build strict minimal published graph schema: no raw source properties, import provenance or evidence payloads.
+- [x] Keep recorded/inferred relationship distinction; explicit opt-ins for descriptions/images.
+- [x] Review visible entities before generating public link; no automatic upload.
+- [x] Browser-only compressed URL fragment with bounded decode and snapshot size.
+- [x] Separate /share viewer with interactive read-only graph/atlas and accessible entity browser.
+- [x] Source-privacy and malformed-payload regression tests.
+- [ ] Authenticated preview browser test: generate, open and navigate a link; mobile keyboard and touch review.
+- [ ] Hosted publication with real storage, revocation, durable short URLs and workspace permissions.
+- [ ] Expiry controls, public attribution and provenance policy, redaction review and controlled updates.
+- [ ] Handle larger networks beyond bounded URL-sharing prototype.
