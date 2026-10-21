@@ -17,3 +17,5 @@ export * from "./funding-clusters";
 export * from "./semantic-discovery";
 
 export * from "./browser-map-recovery";
+
+export * from "./funding-projection";
