@@ -342,3 +342,19 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Benchmark actual browser responsiveness and memory on multiple low-memory devices.
 - [ ] Per-theme and per-funder network selection to replace static 120-grant overview.
 - [ ] IndexedDB-backed datasets and efficient incremental processing for much larger multi-year files.
+
+
+## Large dataset architecture
+- [x] Separate full eligible organisation records from the rendered graph.
+- [x] Store the complete eligible graph in IndexedDB (browser-local), not in localStorage.
+- [x] Run dataset persistence and arbitrary full-dataset grant queries in Web Workers.
+- [x] Regenerate focused network views by theme, funder, region, text and page from all records.
+- [x] Page through *all* matching grants; avoid a permanently inaccessible "first 120".
+- [x] Keep source analytics unchanged while swapping the visual selection.
+- [x] Unit-test complete record reachability and filter correctness on larger synthetic files.
+- [ ] Store full aggregates/indexes only in IndexedDB, reducing localStorage summaries for much larger data.
+- [ ] Incremental/streaming CSV parsing and indexed award records for 100k+ / GB-scale sources.
+- [ ] Datasets management and export/import/backup (including IndexedDB), storage usage and clean deletion.
+- [ ] Aggregate/cluster-based canvas rendering, rather than many individual grant-event nodes.
+- [ ] Fine-grained saved filters and multi-dimensional drilldowns; benchmark real low-memory devices.
+- [ ] Optional server workspace persistence for collaborative/synchronised or very large datasets.

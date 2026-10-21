@@ -1137,3 +1137,29 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
 .recovery-error{background:#f9e8e5;color:#843d36;border-color:#b88071}
 .recovery-content .recovery-note{font-size:12px;color:#59695e;margin-top:24px}
 .recovery-shell :is(a,button,input):focus-visible{outline:3px solid #a87c2b;outline-offset:3px}
+
+
+/* Persistent large-dataset exploration. The canvas is always a bounded projection. */
+.funding-dataset-explorer{border:1px solid #c0d0b5;background:#e9efe2;color:#1e3a2a;
+  border-radius:12px;padding:21px;margin:20px 0}
+.funding-dataset-explorer-intro h3{font:normal clamp(22px,3vw,30px)/1.2 Georgia,serif;margin:3px 0 10px}
+.funding-dataset-explorer-intro p:not(.eyebrow){font-size:12px;line-height:1.7;max-width:770px}
+.funding-dataset-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:18px 0}
+.funding-dataset-controls label{font-size:11px;line-height:1.5;font-weight:650;display:grid;gap:7px}
+.funding-dataset-controls select,.funding-dataset-controls input{
+  width:100%;min-width:0;background:#fffdf6;color:#213c2b;border:1px solid #8eaa93;
+  border-radius:7px;padding:11px 10px;font-size:12px
+}
+.funding-dataset-actions{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+.funding-dataset-actions button{font-size:12px;padding:11px 13px;border-radius:7px}
+.funding-dataset-status,.funding-dataset-error{font-size:12px;line-height:1.7;color:#3b5c43}
+.funding-dataset-error{color:#923b29}
+.funding-dataset-paging{border-top:1px solid #bfd0b7;margin-top:17px;padding-top:14px}
+.funding-dataset-paging p{font-size:12px;line-height:1.65;margin:0 0 11px}
+.funding-dataset-paging button{margin-right:8px;border:1px solid #588468;
+  color:#224b32;background:transparent;border-radius:7px;padding:9px 11px;font-size:11px}
+.funding-dataset-paging button:disabled{opacity:.45}
+.funding-dataset-explorer .funding-method-note{color:#566e54}
+.funding-dataset-explorer :is(select,input,button):focus-visible{outline:3px solid #af873b;outline-offset:3px}
+@media(max-width:640px){.funding-dataset-controls{grid-template-columns:1fr}
+.funding-dataset-explorer{padding:15px}}

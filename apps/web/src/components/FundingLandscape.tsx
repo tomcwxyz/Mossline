@@ -2,6 +2,7 @@
 import {useEffect,useMemo,useRef,useState,type ChangeEvent} from "react";
 import {DiscoverConnections} from "./DiscoverConnections";
 import {FundingClusters} from "./FundingClusters";
+import {FundingDatasetExplorer} from "./FundingDatasetExplorer";
 import {analyseFundingLandscape,graphFingerprint,
   type FundingImport,type FundingMapping,type FundingFullAnalysis,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
@@ -16,7 +17,7 @@ const FIELDS:[keyof FundingMapping,string][]=[
 ];
 
 export function FundingWorkbench({onCreate,onClose}:{
-  onCreate:(graph:GraphDocument,analysis:FundingFullAnalysis)=>boolean;onClose:()=>void;
+  onCreate:(graph:GraphDocument,analysis:FundingFullAnalysis,datasetId:string)=>boolean;onClose:()=>void;
 }){
   const [file,setFile]=useState<ImportFile|null>(null);
   const [mapping,setMapping]=useState<FundingMapping|null>(null);
@@ -31,7 +32,12 @@ export function FundingWorkbench({onCreate,onClose}:{
   const [examples,setExamples]=useState<{title:string;funder:string;recipient:string}[]>([]);
   const workerRef=useRef<Worker|null>(null);
   const requestRef=useRef(0);
-  useEffect(()=>()=>{workerRef.current?.terminate();requestRef.current++;},[]);
+  const saveRef=useRef<{id:number;resolve:(datasetId:string)=>void;reject:(error:Error)=>void}|null>(null);
+  useEffect(()=>()=>{
+    if(saveRef.current)saveRef.current.reject(Error("Import cancelled"));
+    saveRef.current=null;
+    workerRef.current?.terminate();requestRef.current++;
+  },[]);
   const columns=mapping?Object.values(mapping):[];
   const allOptions=[...new Set([...headings,...columns])].filter(Boolean);
 
@@ -55,7 +61,7 @@ export function FundingWorkbench({onCreate,onClose}:{
     setError("");setReviewed(false);setDirty(false);setParsed(null);
     setFullAnalysis(null);
     worker.onmessage=(event:MessageEvent<{
-      kind:"stage"|"result"|"failed";id:number;message?:string;
+      kind:"stage"|"result"|"failed"|"persisted";id:number;message?:string;datasetId?:string;
       headings?:string[];mapping?:FundingMapping;
       graph?:GraphDocument|null;fullAnalysis?:FundingFullAnalysis|null;
       issues?:FundingImport["issues"];counts?:FundingImport["counts"];
@@ -64,6 +70,13 @@ export function FundingWorkbench({onCreate,onClose}:{
       const reply=event.data;
       if(reply.id!==requestRef.current)return;
       if(reply.kind==="stage"){setStage(reply.message??"Analysing…");return;}
+      if(reply.kind==="persisted"&&saveRef.current?.id===reply.id){
+        saveRef.current.resolve(reply.datasetId??"");saveRef.current=null;return;
+      }
+      if(reply.kind==="failed"&&saveRef.current?.id===reply.id){
+        saveRef.current.reject(Error(reply.message??"Could not save the dataset."));
+        saveRef.current=null;return;
+      }
       setBusy(false);setStage("");
       if(reply.kind==="failed"){
         setError(reply.message??"Could not analyse this spreadsheet.");return;
@@ -76,7 +89,9 @@ export function FundingWorkbench({onCreate,onClose}:{
       setExamples(reply.examples??[]);
     };
     worker.onerror=()=>{
-      if(id!==requestRef.current)return;
+      if(workerRef.current!==worker)return;
+      saveRef.current?.reject(Error("Dataset worker failed."));
+      saveRef.current=null;
       setBusy(false);setStage("");
       setError("The background CSV analysis failed. Try a smaller file or another browser.");
       worker.terminate();workerRef.current=null;
@@ -94,8 +109,8 @@ export function FundingWorkbench({onCreate,onClose}:{
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
     if(!uploaded)return;
-    if(uploaded.size>12_000_000){
-      setError("Choose a CSV file smaller than 12 MB for now.");
+    if(uploaded.size>60_000_000){
+      setError("Choose a CSV smaller than 60 MB for this local browser import. Larger datasets need streamed import.");
       return;
     }
     setBusy(true);setStage("Reading your file…");setError("");
@@ -119,15 +134,28 @@ export function FundingWorkbench({onCreate,onClose}:{
     setDirty(true);setReviewed(false);
   }
   function cancel(){
+    saveRef.current?.reject(Error("Analysis cancelled"));
+    saveRef.current=null;
     requestRef.current++;workerRef.current?.terminate();
     workerRef.current=null;setBusy(false);setStage("");
     setError("Analysis cancelled. Your source CSV has not been saved.");
   }
-  function create(){
-    if(!parsed?.graph||!fullAnalysis||busy||dirty||
+  async function create(){
+    if(!parsed?.graph||!fullAnalysis||!workerRef.current||busy||dirty||
       parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
-    if(onCreate(parsed.graph,fullAnalysis))onClose();
-    else setError("The map couldn't be saved. Export or remove a browser-local map first.");
+    const id=++requestRef.current;
+    setBusy(true);setStage("Saving the complete dataset for future exploration…");setError("");
+    try{
+      const datasetId=await new Promise<string>((resolve,reject)=>{
+        saveRef.current={id,resolve,reject};
+        workerRef.current!.postMessage({kind:"persist",id});
+      });
+      if(!datasetId)throw Error("Dataset storage did not return an identifier.");
+      if(onCreate(parsed.graph,fullAnalysis,datasetId))onClose();
+      else setError("The local map library could not save this view. The data is still in IndexedDB; check browser storage.");
+    }catch(error){
+      setError(error instanceof Error?error.message:"Could not persist the complete funding dataset.");
+    }finally{setBusy(false);setStage("");}
   }
   return <section className="funding-workbench" aria-label="Create a funding landscape">
     <div className="funding-workbench-head">
@@ -224,7 +252,7 @@ export function FundingWorkbench({onCreate,onClose}:{
         uncertain identities have been reviewed.
       </label>}
       <button type="button" className="button-primary" disabled={!reviewed||!parsed.graph||busy||dirty||
-        parsed.issues.some(i=>i.severity==="error")} onClick={create}>
+        parsed.issues.some(i=>i.severity==="error")} onClick={()=>void create()}>
         Create funding landscape →
       </button>
     </>}
@@ -236,8 +264,10 @@ export function FundingWorkbench({onCreate,onClose}:{
   </section>;
 }
 
-export function FundingInsights({graph,fullAnalysis,onExplore}:{
-  graph:GraphDocument;fullAnalysis?:FundingFullAnalysis;onExplore:(id:string)=>void;
+export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,onExplore}:{
+  graph:GraphDocument;fullAnalysis?:FundingFullAnalysis;
+  datasetId?:string;onViewProjection?:(graph:GraphDocument)=>boolean;
+  onExplore:(id:string)=>void;
 }){
   const facts=useMemo(()=>analyseFundingLandscape(graph),[graph]);
   const [showAll,setShowAll]=useState(false);
@@ -334,6 +364,12 @@ export function FundingInsights({graph,fullAnalysis,onExplore}:{
           onClick={()=>setShowAll(v=>!v)}>{showAll?"Show fewer":"Show all "+facts.insights.length+" suggestions"}</button>}
       </div>
     </div>
+    {fullAnalysis&&datasetId&&onViewProjection&&
+      <FundingDatasetExplorer datasetId={datasetId} analysis={fullAnalysis}
+        onView={onViewProjection}/>}
+    {fullAnalysis&&!datasetId&&fullAnalysis.grants>facts.awardCount&&
+      <p className="funding-cluster-caveat">This map was saved before complete-dataset storage was available.
+        Reimport the CSV to make every grant searchable and navigable without repeated uploads.</p>}
     <FundingClusters graph={graph} fullAnalysis={fullAnalysis} onExplore={onExplore}/>
     <DiscoverConnections key={graphFingerprint(graph)}
       graph={graph} onExplore={onExplore}/>

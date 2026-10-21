@@ -153,10 +153,12 @@ export function MapRecovery(){
       <nav className="recovery-nav"><a href="/">← Back to Mossline</a></nav>
       <section className="recovery-section">
         <h2>1. Export a backup</h2>
-        <p>Save your original map cache, including the legacy copy if one exists.
-          Check the download in your computer's Downloads folder before removing anything.</p>
+        <p>Save your original map-library cache, including the legacy copy if one exists.
+          Check the download in your computer's Downloads folder before removing anything.
+          <strong> This backup does not include full funding datasets held separately in
+          IndexedDB.</strong> Retain your original CSV if you need to recreate those datasets.</p>
         <button type="button" onClick={exportBackup} disabled={!hasLibrary&&!hasLegacy}>
-          ↓ Download complete saved-map backup
+          ↓ Download map-library backup
         </button>
       </section>
       <section className="recovery-section">
@@ -196,9 +198,12 @@ export function MapRecovery(){
       </section>
       {notice&&<p className="recovery-notice" role="status">{notice}</p>}
       {error&&<p className="recovery-error" role="alert">{error}</p>}
-      <p className="recovery-note">This only affects saved maps on this browser.
+      <p className="recovery-note">This only affects locally saved map entries.
         Hosted publications and the Neon database are not touched.
-        A backup export contains your data, so store it securely.
+        Full funding data held separately in IndexedDB is not included in the map-library backup
+        or automatically erased here; retain your original CSV. Manage funding dataset
+        storage and complete exports will be added separately.
+        A backup export may contain sensitive descriptions, so store it securely.
       </p>
     </div>
   </main>;
