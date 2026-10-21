@@ -551,3 +551,50 @@ IDs. It cannot be imported onto arbitrary other datasets and does not attempt to
 merge, relabel or invent relationships. Fingerprints are convenience identifiers,
 **not cryptographic access controls**. Import is limited to 1 MB, 40 perspectives
 and 60 artwork references; browser storage limits still apply.
+
+
+## Alpha 1.7 — read-only share links for small network views (draft)
+
+Choose **Share a view** in the studio to generate a **self-contained,
+read-only snapshot link**. This is an explicitly confirmed publication
+action, separate from saving local working perspectives. Its default
+disclosure is minimal: it contains labels, types, visible relationship
+assertions with their inferred flags, and the author's current layout.
+It strips all raw source properties (except explicit atlas coordinates in
+the UK atlas view), file provenance, source URLs, evidence data, internal
+notes, descriptions and external pictures. The author can separately opt
+to include descriptions or external image URLs and sees the number and
+sample names of the entities included before generating a link.
+
+The viewer is a distinct `/share` page: it displays only the shared
+snapshot, never local saved maps, local artwork libraries or editing
+controls. It offers a network or atlas view, entity browser and
+relationship inspection. The content is compressed into a URL **fragment**
+(`#s=…`), so it is not uploaded or sent as part of an HTTP request to
+the Mossline web server. The complete shareable content is *inside the
+URL*. Anyone with that URL can decode, copy, archive and redistribute
+the included data. **These links cannot be revoked, permissions cannot
+be restricted, and subsequent edits do not update them**. Do not share
+confidential, personal or unauthorised information through this feature.
+External images, when opted in, may contact their own servers when
+loaded. Inferred links are visibly labelled as inferred, not certified.
+
+Compression is bounded to 7,500 fragment characters and 150 KB of
+decompressed JSON. The graph is additionally limited to 150 entities
+and 300 links. Larger networks should be filtered first; share links
+are not a substitute for full-project export or hosted controlled
+publishing. Fragment links also require a publicly accessible viewer:
+if a Vercel preview is protected by team sign-in, recipients will not
+be able to use it anonymously. Hosted publishing with permissions,
+revocation, audit and durable short URLs remains a later release.
+
+
+### Publication review safeguard
+Before producing a share link, Mossline lists every included entity and
+relationship assertion (not just a preview subset) and requires explicit
+confirmation of permission to share. The map's narrative introduction is a
+separate opt-in, **off by default**, alongside descriptions and external
+images. Sharing a snapshot is a disclosure event even though it doesn't
+upload data to the Mossline server; the link cannot be revoked.
+The web compression codec is exercised by a browser-API-compatible
+round-trip and malformed-link regression test in CI.

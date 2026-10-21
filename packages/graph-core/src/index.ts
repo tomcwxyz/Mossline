@@ -11,3 +11,4 @@ export * from "./visual-assets";
 export * from "./geography";
 export * from "./arrangement-history";
 export * from "./portability";
+export * from "./published";
