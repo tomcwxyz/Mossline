@@ -1,6 +1,7 @@
 "use client";
 import {useMemo,useState,type ChangeEvent} from "react";
-import {analyseFundingLandscape,importFundingCsv,parseCsv,suggestFundingMapping,
+import {DiscoverConnections} from "./DiscoverConnections";
+import {analyseFundingLandscape,graphFingerprint,importFundingCsv,parseCsv,suggestFundingMapping,
   type FundingMapping,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
 const FIELDS:[keyof FundingMapping,string][]=[
@@ -205,6 +206,8 @@ export function FundingInsights({graph,onExplore}:{
           onClick={()=>setShowAll(v=>!v)}>{showAll?"Show fewer":"Show all "+facts.insights.length+" suggestions"}</button>}
       </div>
     </div>
+    <DiscoverConnections key={graphFingerprint(graph)}
+      graph={graph} onExplore={onExplore}/>
     <p className="funding-method-note">Method: recorded source grant links; shared tags where supplied;
       basic local keyword overlap for other candidates. No embeddings or LLMs are running in this version.
       Scores are ranking aids, not probabilities, evidence of need, or impact assessments.</p>

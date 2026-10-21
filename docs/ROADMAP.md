@@ -284,3 +284,18 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Human-reviewed network annotations, theme curation and gap/hypothesis exploration.
 - [ ] Identity-resolution review for mixed aliases, identifier schemes and funder/recipient dual roles.
 - [ ] Multi-file grant import, UK place grouping and temporal / programme filters.
+
+
+## Alpha 2 — semantic discovery and human review
+- [x] Prepare short, bounded award excerpts without raw properties, contact details or monetary amounts.
+- [x] Provider-agnostic, server-configured OpenAI-compatible embeddings API, disabled unless configured.
+- [x] Explicit author opt-in and shared access key before any external transmission.
+- [x] Pairwise cosine candidate ranking with separate grant evidence, IDs, model and score.
+- [x] Compare and explain a pair using an optional LLM (strict two-grant context; no independent graph changes).
+- [x] Human review: worth exploring / dismissed, browser-local decision memory and portable shortlist export.
+- [x] Fully local keyword and explicit-theme matching remain available without models or network calls.
+- [ ] Publisher-linked authentication instead of a temporary operator access code.
+- [ ] User-selected local model adapter or hosted embedding settings with per-provider consent.
+- [ ] Evaluate human relevance and false-positive rates on multiple UK grant datasets.
+- [ ] Multi-grant evidence clustering, theme editing and question-led exploration.
+- [ ] Cost controls, usage reporting, rate limiting and provider fallbacks before general public rollout.

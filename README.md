@@ -681,3 +681,28 @@ create a *recorded* connection, claim a partnership, infer causation or
 certify a funding gap. Empty/low-quality descriptions should yield
 "insufficient evidence", not invented suggestions. Publishing any
 model output requires separate confirmation.
+
+
+## Alpha 2 — Discover connections in funding landscapes
+
+In a funding landscape, open **Connections worth exploring** underneath
+the funding facts. Mossline now provides a **reviewable, evidence-linked
+discovery workflow**, even without a model provider: inspect candidate pairs
+of recipients, their grant descriptions, and the reason for each suggestion.
+Mark a pair **Worth exploring** or **Dismiss**, and export an evidence-bearing
+JSON shortlist. Review decisions persist in this browser against the exact
+source network fingerprint, and **never** create or modify recorded graph edges.
+
+An optional model-assisted route can embed selected grant descriptions and
+rank semantically similar awards across recipients. The **text similarity**
+value is a ranking aid, not a probability of meaningful collaboration. An
+optional LLM can offer a short evidence-bound interpretation of a matched pair.
+AI results are clearly labelled as hypotheses and always link to the two
+underlying grant records. On first use, the author explicitly approves
+sending up to 48 short summaries to the configured remote provider.
+
+**Important:** remote embeddings and explanations remain disabled without
+server-side provider and access-code configuration. No user map is
+automatically sent to a model, and no AI service is required for local
+discovery. See [Discovery setup](docs/DISCOVERY_MODELS.md) for configuration,
+limits and acceptance tests.
