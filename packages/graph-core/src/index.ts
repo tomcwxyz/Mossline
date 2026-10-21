@@ -13,4 +13,5 @@ export * from "./arrangement-history";
 export * from "./portability";
 export * from "./published";
 export * from "./funding";
+export * from "./funding-clusters";
 export * from "./semantic-discovery";
