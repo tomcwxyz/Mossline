@@ -86,7 +86,7 @@ test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  const names=result.graph!.nodes.filter(n=>n.type==="funder").map(n=>n.label);
  assert.ok(names.includes("Big Funder"));
  assert.ok(names.includes("Small Funder"));
- assert.match(result.graph!.description,/exploratory subset/i);
+ assert.match(result.graph!.description,/interactive network shows 1200 of 1400/i);
 });
 test("grants without classification are counted explicitly, not turned into a fictitious gap",()=>{
  const data=[
