@@ -40,12 +40,21 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
       self.postMessage({kind:"result",action:"search",id:job.id,matches});
     }else if(job.kind==="select"){
       if(!job.nodeId)throw Error("Select an entity to explore.");
-      const revealed=revealNetworkNode(index,job.expandedIds??[],job.nodeId);
       const inspection=inspectNetworkNode(navigation,job.nodeId);
-      self.postMessage({kind:"result",action:"select",id:job.id,
-        projection:revealed.projection,inspection,
-        expandedIds:revealed.expandedIds,
-        collapsedOtherGroups:revealed.collapsedOtherGroups});
+      try{
+        const revealed=revealNetworkNode(index,job.expandedIds??[],job.nodeId);
+        self.postMessage({kind:"result",action:"select",id:job.id,
+          projection:revealed.projection,inspection,
+          expandedIds:revealed.expandedIds,
+          collapsedOtherGroups:revealed.collapsedOtherGroups});
+      }catch(error){
+        // A dense visual area must never block inspection of a real source
+        // entity. Leave the last valid overview in place.
+        self.postMessage({kind:"result",action:"select",id:job.id,inspection,
+          expandedIds:job.expandedIds??[],visualLimit:
+            error instanceof Error?error.message:
+            "The entity cannot be revealed at this detail level."});
+      }
     }else if(job.kind==="inspect"){
       if(!job.nodeId)throw Error("Select an entity to explore.");
       const inspection=inspectNetworkNode(navigation,job.nodeId,

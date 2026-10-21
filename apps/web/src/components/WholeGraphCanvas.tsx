@@ -101,7 +101,7 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
     if(!cy||!ready)return;
     cy.batch(()=>{
       cy.elements().removeClass("selected dimmed neighbour");
-      const selected=selectedId?cy.getElementById(selectedId):null;
+      const selected=selectedId&&!selectedEdgeId?cy.getElementById(selectedId):null;
       const edge=selectedEdgeId?cy.getElementById(selectedEdgeId):null;
       if(selected?.length){
         cy.elements().addClass("dimmed");
@@ -116,7 +116,7 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
         edge.connectedNodes().removeClass("dimmed").addClass("neighbour");
       }
     });
-    const target=selectedId?cy.getElementById(selectedId):null;
+    const target=selectedId&&!selectedEdgeId?cy.getElementById(selectedId):null;
     if(target?.length)cy.center(target);
   },[selectedId,selectedEdgeId,projection,ready]);
 

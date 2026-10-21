@@ -9,7 +9,7 @@ type Reply={
   kind:"stage"|"result"|"failed";action?:"overview"|"search"|"select"|"inspect";
   id:number;message?:string;projection?:AdaptiveGraphProjection;
   inspection?:NetworkInspection;matches?:NetworkSearch;expandedIds?:string[];
-  collapsedOtherGroups?:boolean;
+  collapsedOtherGroups?:boolean;visualLimit?:string;
 };
 
 /** All navigation, search and relationship detail use the canonical source
@@ -64,27 +64,27 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           setInspection(msg.inspection);
           return;
         }
-        if(msg.projection){
-          setProjection(msg.projection);
-          if(msg.action==="overview"){
-            setExpanded(pendingExpanded.current);
-            if(resetOnOverview.current){
-              setInspection(null);setHistory([]);setSelectedEdge(null);
-              setConnectionQuery("");setAppliedConnectionQuery("");
-              setNotice("");
-            }
-            resetOnOverview.current=false;
-          }
-          if(msg.action==="select"&&msg.inspection){
-            setExpanded(msg.expandedIds??[]);
-            setInspection(msg.inspection);
-            setHistory(pendingHistory.current);
-            setSelectedEdge(null);setMatches(null);
+        if(msg.projection)setProjection(msg.projection);
+        if(msg.action==="overview"&&msg.projection){
+          setExpanded(pendingExpanded.current);
+          if(resetOnOverview.current){
+            setInspection(null);setHistory([]);setSelectedEdge(null);
             setConnectionQuery("");setAppliedConnectionQuery("");
-            setNotice(msg.collapsedOtherGroups?
-              "Unrelated groups were collapsed to keep this area readable. "+
-              "The complete network is still represented.":"");
+            setNotice("");
           }
+          resetOnOverview.current=false;
+        }
+        if(msg.action==="select"&&msg.inspection){
+          setExpanded(msg.expandedIds??[]);
+          setInspection(msg.inspection);
+          setHistory(pendingHistory.current);
+          setSelectedEdge(null);setMatches(null);
+          setConnectionQuery("");setAppliedConnectionQuery("");
+          setNotice(msg.visualLimit?
+            msg.visualLimit+" Original connections remain inspectable below.":
+            msg.collapsedOtherGroups?
+            "Unrelated groups were collapsed to keep this area readable. "+
+            "The complete network is still represented.":"");
         }
       };
       instance.onerror=()=>{
@@ -104,6 +104,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
     worker.current.postMessage({...job,id:++request.current,datasetId});
   }
   function show(next:string[],reset=false){
+    setSelectedEdge(null);
     pendingExpanded.current=next;resetOnOverview.current=reset;
     submit({kind:"overview",expandedIds:next},"Updating the network without losing source records…");
   }
@@ -195,7 +196,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           {" "}· {projection.clusterCount} groups</span>
       </div>
       <WholeGraphCanvas projection={projection}
-        selectedId={inspection?.node.id??null} selectedEdgeId={selectedEdge?.id??null}
+        selectedId={selectedEdge?null:(inspection?.node.id??null)} selectedEdgeId={selectedEdge?.id??null}
         onPickNode={pickNode} onPickEdge={pickEdge}/>
       <div className="whole-graph-bottom">
         <section className="whole-graph-groups">
