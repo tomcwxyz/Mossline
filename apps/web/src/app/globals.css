@@ -877,3 +877,23 @@
 .share-disclosure li small{font-size:10px;color:#b9cab9;overflow-wrap:anywhere;}
 .share-confirm-label input{margin-top:2px;}
 .share-disclosure summary:focus-visible{outline:3px solid #eed18a;outline-offset:2px;}
+
+
+/* Alpha 1.8: opt-in hosted publishing panel */
+.hosted-publish-panel{border:1px solid #537e69;border-radius:10px;margin:15px 0;padding:13px 11px;background:#1d4136;}
+.hosted-controls{display:grid;gap:12px;padding:7px 2px 3px;}
+.hosted-controls .eyebrow{margin:1px 0 0;font-size:10px;color:#e9d4a2;}
+.hosted-controls .help{font-size:11px;line-height:1.65;margin:0;}
+.hosted-controls>label:not(.share-checkbox){display:grid;gap:7px;color:#e5eee3;font-size:11px;font-weight:650;}
+.hosted-controls .share-review{margin:2px 0;min-width:0;}
+.hosted-controls .share-review label{display:grid;gap:7px;font-size:11px;}
+.hosted-controls .share-review label.share-checkbox{display:flex;align-items:flex-start;}
+.hosted-controls .share-review textarea{max-width:100%;width:100%;font-size:11px;overflow-wrap:anywhere;word-break:break-all;}
+.hosted-secret{display:grid;gap:9px;padding:12px 0 3px;border-top:1px solid #6c9376;}
+.hosted-secret strong{color:#f1d8a8;}
+.hosted-secret p{font-size:11px;line-height:1.55;margin:0;color:#d6e4ce;}
+.hosted-secret button{border:1px solid #9abda1;background:#40654b;color:#fff6e5;border-radius:8px;padding:9px;text-align:left;font-size:11px;}
+.hosted-withdraw{border-top:1px solid #6c9476;padding-top:14px;display:grid;gap:10px;}
+.hosted-withdraw>button{border:1px solid #d9a9a3;background:#6d3438;color:#fff2e8;font-size:11px;font-weight:700;padding:10px;border-radius:7px;}
+.hosted-withdraw>button:disabled{opacity:.4;cursor:not-allowed;}
+.hosted-controls :is(button,input,textarea):focus-visible{outline:3px solid #ebd08d;outline-offset:2px;}
