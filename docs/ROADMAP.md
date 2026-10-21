@@ -254,3 +254,17 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Require author approval after full list of disclosed entities and relationships.
 - [x] Explicit opt-in for introductory story text, default off.
 - [x] Compressed fragment round-trip and invalid-token tests in CI.
+
+
+## Alpha 1.8 — controlled hosted publishing (draft)
+- [x] Feature-gated separate Neon public snapshot store, with additive SQL migration.
+- [x] Strong publisher authorisation for creating snapshots; distinct owner management keys stored hashed.
+- [x] Stable public URLs and dynamic no-store, noindex public reader.
+- [x] Owner-key authenticated atomic revision update and withdrawal.
+- [x] Source-minimised snapshot schema reused from Alpha 1.7.
+- [x] Studio controls with complete disclosure review, publishing, update and unpublish.
+- [x] No browser storage of author or management secrets.
+- [ ] Isolated development DB setup, migration application and live read/update/withdraw acceptance.
+- [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
+- [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
+- [ ] Real user accounts, team roles, invitations and restricted/private publications.
