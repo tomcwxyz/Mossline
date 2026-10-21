@@ -55,7 +55,8 @@ export async function readDiscoveryJson(request:Request,maxBytes=53_000):Promise
   return JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes));
 }
 export class ModelUnavailable extends Error{}
-export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown){
+export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown,
+  maxReplyChars=1_600_000){
   const base=urlConfig(),key=process.env.MOSSLINE_DISCOVERY_API_KEY;
   if(!base||!key)throw new ModelUnavailable("Remote model not configured");
   // The destination is fixed by the deployer's server-only settings, never by user input.
@@ -67,7 +68,7 @@ export async function providerPost(path:"/embeddings"|"/chat/completions",payloa
   });}catch{throw new ModelUnavailable("Model service could not be reached");}
   if(!response.ok)throw new ModelUnavailable("Model service returned an error");
   const raw=await response.text();
-  if(raw.length>1_600_000)throw new ModelUnavailable("Model reply too large");
+  if(raw.length>maxReplyChars)throw new ModelUnavailable("Model reply too large");
   try{return JSON.parse(raw) as unknown;}
   catch{throw new ModelUnavailable("Model reply was not JSON");}
 }

@@ -20,7 +20,7 @@ export async function POST(request:Request){
     const model=process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL!;
     const result=await providerPost("/embeddings",{
       model,input:data.documents.map(d=>d.text)
-    });
+    },10_000_000);
     const vectors=parseEmbeddingReply(result,data.documents.length);
     return NextResponse.json({model,ids:data.documents.map(d=>d.id),vectors},
       {headers:noStoreHeaders});

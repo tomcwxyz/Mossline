@@ -887,3 +887,37 @@ Existing older maps with only a compact summary and a preselected canvas
 graph must be **reimported** once to gain a persistent complete dataset.
 Editing or replacing a map's source graph invalidates its previous full-data
 analysis; moving between query views keeps the full dataset and analysis intact.
+
+## Alpha 2.7 — full-network exploration and model-assisted questions
+
+**Full graph:** In the network workspace, choose **Full graph + AI**, then
+**Full graph** to render every original entity as a GPU point and every original
+source edge as a GPU line. This view is independent of the earlier grouped
+overview, which remains available for a more readable summary. WebGL is required
+for ungrouped GPU rendering; unsupported browsers fall back to the overview.
+Initial coordinates are deterministic, computed in a worker. They are not
+yet a stable, authorable ForceAtlas layout. Labels are selective and graph
+legibility/performance on large real datasets still need acceptance testing.
+
+**Semantic network questions:** Open **Ask this network**. With an approved,
+server-configured OpenAI-compatible model provider, the operator can consent
+to indexing every eligible source entity, not only the older first 48 grants.
+Indexing runs in batches of 48; completed batches and model-version-specific
+vectors are cached in this browser's IndexedDB for reuse/resumption.
+Do not send confidential records or personal information without appropriate
+authority. Explicitly private graph records are excluded, but free-text
+descriptions can still contain sensitive information.
+
+The subsequent question stage embeds the question, ranks source descriptions
+by cosine similarity, retrieves original edges among the eight leading source
+entities, and optionally asks the configured LLM to explain those excerpts.
+Model answers remain hypotheses tied to supplied record identifiers. This is
+not a verified finding, global graph pathfinding answer or independently
+validated analysis of the entire network.
+
+To enable the models, configure the existing server-only
+`MOSSLINE_DISCOVERY_*` settings as described in
+[Discovery setup](docs/DISCOVERY_MODELS.md). Do not place secrets in
+`NEXT_PUBLIC_*` variables. The public app works with AI disabled.
+Before enabling broad access, implement quotas, rate limiting, privacy
+governance, costs and provider-health monitoring.

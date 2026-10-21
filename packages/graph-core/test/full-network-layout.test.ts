@@ -11,6 +11,7 @@ test("full network GPU geometry includes every source entity and parallel edge",
  const g=layoutFullNetwork(graph);
  assert.equal(g.nodeCount,900);assert.equal(g.edgeCount,1250);
  assert.equal(g.ids.length,900);
+ assert.equal(g.labels[0],"Node 0");
  assert.equal(g.positions.length,1800);assert.equal(g.segments.length,5000);
  assert.ok([...g.positions].every(Number.isFinite));
  assert.ok([...g.segments].every(Number.isFinite));

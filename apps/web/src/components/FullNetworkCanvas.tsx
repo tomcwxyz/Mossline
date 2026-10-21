@@ -4,11 +4,14 @@ import type {FullNetworkGeometry} from "@mossline/graph-core";
 
 type Camera={offsetX:number;offsetY:number;zoom:number};
 const vert=`attribute vec2 a_pos;
+attribute float a_kind;
+varying float v_kind;
 uniform vec2 u_offset;
 uniform vec2 u_viewport;
 uniform float u_zoom;
 uniform float u_pointSize;
 void main(){
+ v_kind=a_kind;
  vec2 p=(a_pos+u_offset)*u_zoom;
  gl_Position=vec4(p.x/(u_viewport.x*0.5),-p.y/(u_viewport.y*0.5),0.0,1.0);
  gl_PointSize=u_pointSize;
@@ -16,9 +19,19 @@ void main(){
 const frag=`precision mediump float;
 uniform vec4 u_colour;
 uniform bool u_circle;
+varying float v_kind;
 void main(){
  if(u_circle && length(gl_PointCoord-vec2(0.5))>0.5)discard;
- gl_FragColor=u_colour;
+ vec4 colour=u_colour;
+ if(u_circle){
+  if(v_kind<0.5) colour=vec4(.54,.76,.56,.93);
+  else if(v_kind<1.5) colour=vec4(.91,.73,.41,.91);
+  else if(v_kind<2.5) colour=vec4(.55,.73,.91,.94);
+  else if(v_kind<3.5) colour=vec4(.81,.57,.72,.91);
+  else if(v_kind<4.5) colour=vec4(.69,.77,.68,.91);
+  else colour=vec4(.79,.81,.65,.9);
+ }
+ gl_FragColor=colour;
 }`;
 function shader(gl:WebGLRenderingContext,type:number,source:string){
  const result=gl.createShader(type);if(!result)throw Error("WebGL shader unavailable");
@@ -51,20 +64,24 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     preserveDrawingBuffer:false});
   if(!gl){draw.current=null;onGpuFailure.current?.();return;}
   let program:WebGLProgram|null=null,lineBuffer:WebGLBuffer|null=null,
-      pointBuffer:WebGLBuffer|null=null,observer:ResizeObserver|null=null;
+      pointBuffer:WebGLBuffer|null=null,typeBuffer:WebGLBuffer|null=null,
+      observer:ResizeObserver|null=null;
   try{
    program=gl.createProgram();if(!program)throw Error("No WebGL programme");
    gl.attachShader(program,shader(gl,gl.VERTEX_SHADER,vert));
    gl.attachShader(program,shader(gl,gl.FRAGMENT_SHADER,frag));gl.linkProgram(program);
    if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error("WebGL linking failed");
-   lineBuffer=gl.createBuffer();pointBuffer=gl.createBuffer();
-   if(!lineBuffer||!pointBuffer)throw Error("Insufficient graphics memory");
+   lineBuffer=gl.createBuffer();pointBuffer=gl.createBuffer();typeBuffer=gl.createBuffer();
+   if(!lineBuffer||!pointBuffer||!typeBuffer)throw Error("Insufficient graphics memory");
+   gl.bindBuffer(gl.ARRAY_BUFFER,typeBuffer);
+   gl.bufferData(gl.ARRAY_BUFFER,geometry.types,gl.STATIC_DRAW);
    gl.bindBuffer(gl.ARRAY_BUFFER,lineBuffer);
    gl.bufferData(gl.ARRAY_BUFFER,geometry.segments,gl.STATIC_DRAW);
    gl.bindBuffer(gl.ARRAY_BUFFER,pointBuffer);
    gl.bufferData(gl.ARRAY_BUFFER,geometry.positions,gl.STATIC_DRAW);
    pickIndex.current=new Map(geometry.ids.map((id,i)=>[id,i]));
    const attr=gl.getAttribLocation(program,"a_pos");
+   const kindAttr=gl.getAttribLocation(program,"a_kind");
    const offset=gl.getUniformLocation(program,"u_offset");
    const viewport=gl.getUniformLocation(program,"u_viewport");
    const zoom=gl.getUniformLocation(program,"u_zoom");
@@ -94,6 +111,8 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     gl.uniform2f(viewport,w,h);gl.uniform2f(offset,c.offsetX,c.offsetY);
     gl.uniform1f(zoom,c.zoom);gl.enableVertexAttribArray(attr);
     gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    gl.disableVertexAttribArray(kindAttr);
+    gl.vertexAttrib1f(kindAttr,0);
     gl.uniform1i(circle,0);gl.uniform1f(size,1);
     gl.uniform4f(colour,.54,.70,.61,.18);
     gl.bindBuffer(gl.ARRAY_BUFFER,lineBuffer);gl.vertexAttribPointer(attr,2,gl.FLOAT,false,0,0);
@@ -102,6 +121,9 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     gl.uniform1f(size,Math.max(2.5,Math.min(8,c.zoom*8)));
     gl.uniform4f(colour,.85,.85,.68,.85);
     gl.bindBuffer(gl.ARRAY_BUFFER,pointBuffer);gl.vertexAttribPointer(attr,2,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,typeBuffer);
+    gl.enableVertexAttribArray(kindAttr);
+    gl.vertexAttribPointer(kindAttr,1,gl.UNSIGNED_BYTE,false,0,0);
     gl.drawArrays(gl.POINTS,0,geometry.nodeCount);
     const ctx=foreground.getContext("2d");if(!ctx)return;
     ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);
@@ -112,7 +134,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     if(x<-100||y<-100||x>w+100||y>h+100)return;
     ctx.beginPath();ctx.arc(x,y,13,0,Math.PI*2);ctx.lineWidth=3;
     ctx.strokeStyle="#ffdd91";ctx.stroke();
-    ctx.font="bold 12px system-ui";const label=geometry.ids[index];
+    ctx.font="bold 12px system-ui";const label=geometry.labels[index]??geometry.ids[index];
     const labelWidth=ctx.measureText(label).width;
     ctx.fillStyle="#173d31";ctx.fillRect(x+17,y-18,labelWidth+16,25);
     ctx.fillStyle="#fff3d5";ctx.fillText(label,x+25,y);
@@ -126,6 +148,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     observer?.disconnect();draw.current=null;
     if(lineBuffer)gl.deleteBuffer(lineBuffer);
     if(pointBuffer)gl.deleteBuffer(pointBuffer);
+    if(typeBuffer)gl.deleteBuffer(typeBuffer);
     if(program)gl.deleteProgram(program);
   };
  },[geometry]);

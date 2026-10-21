@@ -5,7 +5,7 @@ import type {GraphDocument,GraphNode} from "./schema";
  * Coordinates are computed in the background worker; no source edges are dropped.
  */
 export type FullNetworkGeometry={
-  ids:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
+  ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
   nodeCount:number;edgeCount:number;bounds:{minX:number;minY:number;maxX:number;maxY:number};
 };
 const CATEGORIES=["organisation","project","funder","person","place","topic",
@@ -18,6 +18,7 @@ function hash(value:string):number{
 export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
   const count=graph.nodes.length;
   const ids=graph.nodes.map(n=>n.id);
+  const labels=graph.nodes.map(n=>n.label);
   const map=new Map(ids.map((id,i)=>[id,i]));
   const types=new Uint8Array(count),positions=new Float32Array(count*2);
   const seeds=new Float32Array(count*2);
@@ -78,6 +79,6 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
     maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
   }
   if(!count){minX=minY=-1;maxX=maxY=1;}
-  return {ids,types,positions,segments,nodeCount:count,edgeCount:graph.edges.length,
+  return {ids,labels,types,positions,segments,nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
 }
