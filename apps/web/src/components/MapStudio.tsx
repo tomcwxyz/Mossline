@@ -1077,10 +1077,10 @@ export function MapStudio() {
     {!showFundingWorkbench&&!importPreview&&!discovery&&<>
     <nav className="studio-primary-views" aria-label="Choose how to explore this network">
         <div className="view-switch">
-          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
-          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
+          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Network</span></button>
+          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Connections</span></button>
           <button className={view === "atlas" ? "on" : ""} onClick={() => {setView("atlas");setSelectedId(null);setFocusId(null);}}>
-            ◉ <span>UK atlas{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
+            ◉ <span>Places{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
           </button>
         </div>
     </nav>
@@ -1329,7 +1329,7 @@ export function MapStudio() {
             <small>{item.separatedGroups} connected parts if removed</small>
           </button>)}
           <p className="help">Computed on all recorded relationships, ignoring inferred associations and current view filters.</p>
-        </details>
+        </details>}
         <div className="sidebar-divider" />
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
@@ -1397,7 +1397,14 @@ export function MapStudio() {
           <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
-        {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
+        {fullFundingView?<div className="empty-inspector">
+          <p className="eyebrow">Explore the complete network</p>
+          <h2>Follow a thread.</h2>
+          <p>Choose a group, entity or relationship in the whole-network canvas.
+            Details open alongside the network as you explore, without reducing
+            the graph to a small selection.</p>
+        </div>:
+        selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
           onPick={pickNode} onEvidence={exploreEvidence} /> :
         selected ? <>
           <NodeInspector node={selected} graph={filtered.graph} source={graph}
