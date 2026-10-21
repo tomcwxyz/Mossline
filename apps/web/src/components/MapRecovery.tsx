@@ -54,6 +54,7 @@ export function MapRecovery(){
           }
           // The obsolete single-map cache must not resurrect a deleted map.
           window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
+          setHasLegacy(false);
           worker.postMessage({type:"commit",requestId:++requestRef.current});
           setMaps(message.maps??[]);
           setActiveId(message.activeId??"");
