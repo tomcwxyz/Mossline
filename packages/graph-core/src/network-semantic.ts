@@ -16,15 +16,17 @@ export type NetworkSemanticPreparation={
 function clean(s:string):string{return s.replace(/\s+/g," ").trim();}
 function isPrivate(node:GraphNode):boolean{
   const p=node.properties??{};
-  const privacy=[p.private,p.isPrivate,p.public,p.isPublic,p.visibility,p.Visibility,
-    p.Public,p["Public"]].map(v=>typeof v==="string"?v.toLowerCase().trim():v);
-  return privacy.includes(true)&&[p.private,p.isPrivate].some(v=>v===true||
-    (typeof v==="string"&&v.toLowerCase()==="true"))||
-    [p.public,p.isPublic,p.Public].some(v=>v===false||
-    (typeof v==="string"&&["false","no","private"].includes(v.toLowerCase())))||
-    [p.visibility,p.Visibility].some(v=>typeof v==="string"&&
-      ["private","restricted","confidential","non-public"].includes(v.toLowerCase()));
+  const norm=(v:unknown)=>typeof v==="string"?v.trim().toLowerCase():v;
+  // Treat explicit restrictions as authoritative regardless of their casing
+  // or common CSV boolean representations.
+  if([p.private,p.isPrivate,p.Private].some(v=>[true,"true","yes","1"].includes(norm(v) as string|boolean)))
+    return true;
+  if([p.public,p.isPublic,p.Public].some(v=>[false,"false","no","0"].includes(norm(v) as string|boolean)))
+    return true;
+  return [p.visibility,p.Visibility,p.access,p.Access].some(v=>
+    ["private","restricted","confidential","non-public"].includes(String(norm(v))));
 }
+
 export function prepareNetworkSemanticDocuments(graph:GraphDocument):NetworkSemanticPreparation{
   const docs:NetworkSemanticDocument[]=[];
   let excludedPrivate=0;

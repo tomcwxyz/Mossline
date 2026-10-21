@@ -32,3 +32,15 @@ test("citations include only original edges connecting retrieved records",()=>{
  assert.equal(all[0].inferred,false);
  assert.equal(sourceRelationsAmong(graph,["o","s"])[0].inferred,true);
 });
+
+test("string flags from CSV metadata exclude explicitly non-public entities",()=>{
+ const src=parseGraphDocument({version:1,title:"Privacy",description:"",
+ nodes:[
+  {id:"p",label:"Private yes",type:"person",tags:[],properties:{private:"TRUE"}},
+  {id:"r",label:"Restricted",type:"project",tags:[],properties:{Access:"Restricted"}},
+  {id:"x",label:"Public",type:"organisation",tags:[],properties:{Public:"YES"}}
+ ],edges:[]});
+ const docs=prepareNetworkSemanticDocuments(src);
+ assert.deepEqual(docs.documents.map(x=>x.id),["x"]);
+ assert.equal(docs.excludedPrivate,2);
+});

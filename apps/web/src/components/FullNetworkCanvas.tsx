@@ -113,8 +113,8 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     ctx.beginPath();ctx.arc(x,y,13,0,Math.PI*2);ctx.lineWidth=3;
     ctx.strokeStyle="#ffdd91";ctx.stroke();
     ctx.font="bold 12px system-ui";const label=geometry.ids[index];
-    const size=ctx.measureText(label).width;
-    ctx.fillStyle="#173d31";ctx.fillRect(x+17,y-18,size+16,25);
+    const labelWidth=ctx.measureText(label).width;
+    ctx.fillStyle="#173d31";ctx.fillRect(x+17,y-18,labelWidth+16,25);
     ctx.fillStyle="#fff3d5";ctx.fillText(label,x+25,y);
    };
    draw.current=render;render();
