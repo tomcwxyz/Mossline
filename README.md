@@ -706,3 +706,42 @@ server-side provider and access-code configuration. No user map is
 automatically sent to a model, and no AI service is required for local
 discovery. See [Discovery setup](docs/DISCOVERY_MODELS.md) for configuration,
 limits and acceptance tests.
+
+
+## Alpha 2.1 — clusters from real 360Giving/GrantNav exports
+
+Funding Landscapes now surfaces **theme clusters** across awards. Each
+cluster shows how many grants, recipient organisations and funders have a
+matching source theme or an explicitly labelled, reviewable phrase rule.
+Each has independent source grant examples, funder/recipient identities,
+and a list of recipients supported by several funders *within that theme*.
+The totals are reported separately by currency. As individual grants may
+belong to several themes, **never add thematic totals together**.
+
+The new GrantNav mixed-recipient CSV handling recognises
+`Recipient Region (additional data)`, and excludes rows containing
+`Recipient Individual Id`, `Recipient Individual Name` or
+`Type of Recipient = Individual` from organisational maps. It does not
+expose these individual recipients in nodes, graph relationships or
+network exports. Source rows marked private are also excluded.
+
+To avoid crashing a browser or exceeding its local storage, this release
+allows CSV uploads up to **12 MB** but limits *detailed map*
+representation to **1,200 organisation grants**. For a larger source
+file, it chooses a funder-balanced exploratory subset and clearly
+reports the number of eligible source rows that were not mapped.
+**The resulting map, amounts and theme insights cover the subset only,
+not the whole CSV.** They are not representative estimates. For a
+complete landscape or further analysis, filter the export by programme,
+funding geography or date and import the relevant section.
+
+The multi-thousand-award test behind this change came from a
+user-provided 2025 North East GrantNav CSV. **The actual user dataset was
+not committed or deployed, nor transmitted to a model provider.**
+Tests use a fully synthetic data fixture with equivalent field names.
+
+Themes are deliberately cautious: the source tag, the phrase that matched,
+and whether any grant remains *unclassified* are always available.
+Missing classifications are not proof of gaps in funding or unmet need.
+This is a starting point for question-led exploration, not a definitive
+subject classification or causal model.
