@@ -118,7 +118,8 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
     for(const item of candidates){
       const name=rowValue(item.row,m.funderId)||rowValue(item.row,m.funder);
       const key=canonical(name);
-      groups.set(key,[...(groups.get(key)??[]),item]);
+      const bucket=groups.get(key)??[];
+      bucket.push(item);groups.set(key,bucket);
     }
     const buckets=[...groups.values()];
     const picked:{row:string[];index:number}[]=[];
@@ -261,7 +262,13 @@ export const TOPIC_BRIDGES=[
   {topic:"Skills and employment",phrases:["practical learning","skills training","repair skills","employment skills","career pathway","pathways into work","workshop skills","job readiness"]},
   {topic:"Climate and environment",phrases:["climate action","greening","reuse","waste reduction","shared gardens","green spaces","carbon reduction","repair and reuse"]},
   {topic:"Health and wellbeing",phrases:["mental health","wellbeing","peer support","nutrition outreach","social isolation","family health"]},
-  {topic:"Cost of living",phrases:["household costs","low-income households","cost of living","fuel poverty","poverty","financial hardship"]}
+  {topic:"Cost of living",phrases:["household costs","low-income households","cost of living","fuel poverty","poverty","financial hardship"]},
+  {topic:"Children and young people",phrases:["children and young people","young people","young adults","youth clubs","youth work","early years","holiday activities","child development"]},
+  {topic:"Housing and homelessness",phrases:["homelessness","homeless people","rough sleeping","housing advice","housing insecurity","supported housing","temporary accommodation"]},
+  {topic:"Education and language",phrases:["english for speakers","esol classes","literacy support","adult education","language learning","school readiness","learning disabilities"]},
+  {topic:"Arts and heritage",phrases:["community arts","creative arts","performing arts","theatre workshops","music workshops","cultural heritage","heritage conservation"]},
+  {topic:"Disability and accessibility",phrases:["disabled people","disability support","accessibility","inclusive activities","autism support","sensory impairment"]},
+  {topic:"Sports and physical activity",phrases:["football club","sports participation","physical activity","grassroots sport","sport coaching","cycling club"]}
 ] as const;
 function topicMatches(input:string):Set<string>{
   const text=" "+input.toLocaleLowerCase("en-GB").replace(/[^\p{L}\p{N}]+/gu," ")+" ";
