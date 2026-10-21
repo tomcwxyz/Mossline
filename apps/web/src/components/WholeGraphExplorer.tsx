@@ -224,7 +224,12 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
       </div>
       {viewMode==="full"&&fullGeometry?
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
-          onSelect={id=>navigate(id)}/>:
+          onSelect={id=>navigate(id)}
+          onUnavailable={()=>{
+            setViewMode("overview");
+            setError("Full-graph WebGL rendering is unavailable in this browser. "+
+              "The grouped overview and complete source search remain available.");
+          }}/>:
         <WholeGraphCanvas projection={projection}
           selectedId={selectedEdge?null:(inspection?.node.id??null)}
           selectedEdgeId={selectedEdge?.id??null}
@@ -234,7 +239,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           Showing all {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and
           {" "}{fullGeometry.edgeCount.toLocaleString("en-GB")} original relationship lines —
           without grouping or sampling. Zoom, pan, or use search to inspect the network.
-        </p>
+        </p>}
       <details className="network-ai-disclosure"
         onToggle={event=>setAiOpen(event.currentTarget.open)}>
         <summary>Ask this network · Semantic discovery &amp; AI</summary>

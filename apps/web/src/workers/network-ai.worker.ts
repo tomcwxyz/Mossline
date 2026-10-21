@@ -50,8 +50,19 @@ async function putRow(db:IDBDatabase,store:string,value:Record<string,unknown>):
 }
 async function hashDocuments(items:NetworkSemanticDocument[]):Promise<string>{
  // Hash every identifier and every text, never a truncated first-page sample.
- const value=items.map(d=>JSON.stringify([d.id,d.text])).join("\n");
- const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));
+ const encoder=new TextEncoder();
+ const parts:Uint8Array[]=[];
+ for(let start=0;start<items.length;start+=256){
+   const chunk=items.slice(start,start+256)
+     .map(d=>JSON.stringify([d.id,d.text])).join("\n");
+   parts.push(new Uint8Array(await crypto.subtle.digest("SHA-256",encoder.encode(chunk))));
+ }
+ const data=new Uint8Array(parts.length*32+8);
+ const view=new DataView(data.buffer);
+ view.setUint32(0,items.length);
+ view.setUint32(4,parts.length);
+ parts.forEach((part,i)=>data.set(part,8+i*32));
+ const buf=await crypto.subtle.digest("SHA-256",data);
  return [...new Uint8Array(buf)].map(n=>n.toString(16).padStart(2,"0")).join("");
 }
 async function sendEmbed(items:{id:string;text:string}[],key:string,controller:AbortController){

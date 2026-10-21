@@ -32,23 +32,24 @@ function shader(gl:WebGLRenderingContext,type:number,source:string){
  * original edge. Interaction runs independently of the adaptive summary.
  * Browser fallback stays available if WebGL cannot be initialised.
  */
-export function FullNetworkCanvas({geometry,selectedId,onSelect}:{
+export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
  geometry:FullNetworkGeometry;selectedId?:string|null;
- onSelect:(id:string)=>void;
+ onSelect:(id:string)=>void;onUnavailable?:()=>void;
 }){
  const canvas=useRef<HTMLCanvasElement>(null);
  const overlay=useRef<HTMLCanvasElement>(null);
  const cam=useRef<Camera>({offsetX:0,offsetY:0,zoom:1});
  const draw=useRef<(()=>void)|null>(null);
  const selected=useRef(selectedId);
- const onPick=useRef(onSelect);selected.current=selectedId;onPick.current=onSelect;
+ const onPick=useRef(onSelect),onGpuFailure=useRef(onUnavailable);
+ selected.current=selectedId;onPick.current=onSelect;onGpuFailure.current=onUnavailable;
  const pickIndex=useRef(new Map<string,number>());
  useEffect(()=>{
   const surface=canvas.current,foreground=overlay.current;
   if(!surface||!foreground)return;
   const gl=surface.getContext("webgl",{alpha:false,antialias:false,
     preserveDrawingBuffer:false});
-  if(!gl){draw.current=null;return;}
+  if(!gl){draw.current=null;onGpuFailure.current?.();return;}
   let program:WebGLProgram|null=null,lineBuffer:WebGLBuffer|null=null,
       pointBuffer:WebGLBuffer|null=null,observer:ResizeObserver|null=null;
   try{
@@ -119,7 +120,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect}:{
    draw.current=render;render();
    observer=new ResizeObserver(render);observer.observe(surface);
   }catch{
-   draw.current=null;
+   draw.current=null;onGpuFailure.current?.();
   }
   return ()=>{
     observer?.disconnect();draw.current=null;
@@ -128,7 +129,17 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect}:{
     if(program)gl.deleteProgram(program);
   };
  },[geometry]);
- useEffect(()=>{draw.current?.();},[selectedId]);
+ useEffect(()=>{
+   if(selectedId){
+     const i=pickIndex.current.get(selectedId);
+     if(i!==undefined){
+       cam.current.offsetX=-geometry.positions[i*2];
+       cam.current.offsetY=-geometry.positions[i*2+1];
+       cam.current.zoom=Math.max(cam.current.zoom,1.3);
+     }
+   }
+   draw.current?.();
+ },[selectedId,geometry]);
  const gesture=useRef<{x:number;y:number;offsetX:number;offsetY:number;moved:boolean}|null>(null);
  const zoomAround=(factor:number,x:number,y:number)=>{
   const surface=canvas.current;if(!surface)return;
