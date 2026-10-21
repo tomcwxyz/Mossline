@@ -4,17 +4,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
+  makePerspectiveBundle, readPerspectiveBundle, parseAssetLibrary,
   emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
   auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
   previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
-  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions
+  type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
+  type LibraryAsset, type PerspectiveBundle
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
+import { AssetLibraryPanel } from "./AssetLibraryPanel";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
@@ -33,6 +36,7 @@ const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 type LocalMap = { id:string; createdAt:number; title:string; graph:GraphDocument };
 const MAX_LOCAL_MAPS=8;
 const SAVED_KEY = "mossline-perspectives-v1";
+const ASSET_KEY = "mossline-artwork-library-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
   name:"fictional-farming-relationships.csv",
@@ -264,6 +268,9 @@ export function MapStudio() {
   });
   const dragStartRef=useRef<{key:string;positions:LayoutPositions}|null>(null);
   const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
+  const [assets,setAssets]=useState<LibraryAsset[]>([]);
+  const [portablePreview,setPortablePreview]=useState<PerspectiveBundle|null>(null);
+  const perspectiveFileRef=useRef<HTMLInputElement>(null);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
   const [storyTitle,setStoryTitle]=useState("");
@@ -317,6 +324,14 @@ export function MapStudio() {
       if(saved) setPerspectives(parsePerspectives(JSON.parse(saved)));
     } catch { window.localStorage.removeItem(SAVED_KEY); }
   }, []);
+  useEffect(()=>{
+    try {
+      const stored=window.localStorage.getItem(ASSET_KEY);
+      if(stored)setAssets(parseAssetLibrary(JSON.parse(stored)));
+    }catch{
+      setNotice("The saved artwork library could not be read; it was left unchanged.");
+    }
+  },[]);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
   const positionKey=[graphKey,view,layoutMode,basis].join(":");
   const activePositions=positionState.key===positionKey?positionState.positions:{};
@@ -489,6 +504,91 @@ export function MapStudio() {
     setTypes(previous => previous.includes(type) ? previous.filter(v => v !== type) : [...previous, type]);
   }
 
+  function saveArtwork(next:LibraryAsset[]):boolean {
+    try {
+      const checked=parseAssetLibrary(next);
+      window.localStorage.setItem(ASSET_KEY,JSON.stringify(checked));
+      setAssets(checked);
+      return true;
+    }catch{
+      setNotice("Could not save the artwork library. Existing entries were preserved.");
+      return false;
+    }
+  }
+  function addArtwork(asset:LibraryAsset):boolean {
+    if(assets.length>=60||assets.some(a=>a.url===asset.url))return false;
+    return saveArtwork([...assets,asset]);
+  }
+  function downloadPerspectives(){
+    if(savedForMap.length===0){setNotice("Save a perspective before exporting.");return;}
+    try{
+      const bundle=makePerspectiveBundle(graph,savedForMap,assets);
+      const blob=new Blob([JSON.stringify(bundle,null,2)],{type:"application/json"});
+      const href=URL.createObjectURL(blob);
+      const link=document.createElement("a");
+      link.href=href;link.download="mossline-perspectives-"+graphKey+".json";
+      link.click();
+      URL.revokeObjectURL(href);
+      setNotice("Exported "+savedForMap.length+" perspectives and "+assets.length+" artwork references. No graph records were included.");
+    }catch{
+      setNotice("Could not export this perspective bundle.");
+    }
+  }
+  async function previewPerspectiveImport(event:ChangeEvent<HTMLInputElement>){
+    const file=event.target.files?.[0];
+    event.target.value="";
+    if(!file)return;
+    setPortablePreview(null);
+    if(file.size>1024*1024){setNotice("Perspective bundles must be 1 MB or smaller.");return;}
+    try{
+      const bundle=readPerspectiveBundle(JSON.parse(await file.text()),graph);
+      if(perspectives.length+bundle.perspectives.length>40)
+        throw Error("Not enough space for these views (40 local views maximum).");
+      const newImages=bundle.assets.filter(asset=>!assets.some(a=>a.url===asset.url));
+      if(assets.length+newImages.length>60)
+        throw Error("Not enough space for artwork references (60 maximum).");
+      setPortablePreview(bundle);
+      setNotice("Reviewed import available. Confirm below to add the views without replacing existing ones.");
+    }catch(err){
+      setNotice(err instanceof Error?err.message:"Invalid perspective bundle.");
+    }
+  }
+  function confirmPerspectiveImport(){
+    if(!portablePreview)return;
+    try {
+      const checked=readPerspectiveBundle(portablePreview,graph);
+      const updatedViews=parsePerspectives([...perspectives,...checked.perspectives.map(item=>({
+        ...item,id:crypto.randomUUID()
+      }))]);
+      const ids=new Set(assets.map(a=>a.id));
+      const updatedAssets=parseAssetLibrary([...assets,...checked.assets.filter(a=>
+        !assets.some(existing=>existing.url===a.url)).map(asset=>{
+          const id=ids.has(asset.id)?crypto.randomUUID():asset.id;
+          ids.add(id);
+          return {...asset,id};
+        })]);
+      const oldPerspectives=window.localStorage.getItem(SAVED_KEY);
+      const oldAssets=window.localStorage.getItem(ASSET_KEY);
+      try {
+        window.localStorage.setItem(SAVED_KEY,JSON.stringify(updatedViews));
+        window.localStorage.setItem(ASSET_KEY,JSON.stringify(updatedAssets));
+      }catch(error){
+        try {
+          if(oldPerspectives===null)window.localStorage.removeItem(SAVED_KEY);
+          else window.localStorage.setItem(SAVED_KEY,oldPerspectives);
+          if(oldAssets===null)window.localStorage.removeItem(ASSET_KEY);
+          else window.localStorage.setItem(ASSET_KEY,oldAssets);
+        }catch{/* Browser storage may be unavailable; existing state is retained in memory. */}
+        throw error;
+      }
+      setPerspectives(updatedViews);
+      setAssets(updatedAssets);
+      setPortablePreview(null);
+      setNotice("Imported "+checked.perspectives.length+" new perspectives. Existing views and source graph were not overwritten.");
+    }catch(err){
+      setNotice(err instanceof Error?err.message:"Unable to import the bundle.");
+    }
+  }
   function savePerspectives(next: SavedPerspective[]) {
     try {
       const validated=parsePerspectives(next);
@@ -547,6 +647,7 @@ export function MapStudio() {
 
   function resetExplorer(next:GraphDocument) {
     setGraph(next);setActiveStory(undefined);
+    setPortablePreview(null);
     setNodeStyles({});
     setArrangementState({key:"",history:emptyLayoutHistory()});
     setPositionState({key:"",positions:{}});
@@ -688,7 +789,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.6</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -885,6 +986,18 @@ export function MapStudio() {
               maxLength={1200} value={storyIntroduction}
               onChange={e=>setStoryIntroduction(e.target.value)}
               placeholder="Give readers a story or question to explore"/>
+            {assets.length>0&&<label htmlFor="perspective-story-asset">Or use a saved artwork image
+              <select className="search" id="perspective-story-asset" value=""
+                onChange={event=>{
+                  const asset=assets.find(a=>a.id===event.target.value);
+                  if(asset)setStoryCover(asset.url);
+                }}>
+                <option value="">Choose artwork…</option>
+                {assets.map(asset=><option key={asset.id} value={asset.id}>
+                  {asset.name} · {asset.licence}
+                </option>)}
+              </select>
+            </label>}
             <label htmlFor="perspective-story-cover">Cover artwork (HTTPS URL)</label>
             <input className="search" id="perspective-story-cover" type="url"
               value={storyCover} onChange={e=>setStoryCover(e.target.value)}
@@ -902,8 +1015,36 @@ export function MapStudio() {
             <button className="remove-perspective" type="button" aria-label={"Delete "+item.name}
               onClick={()=>savePerspectives(perspectives.filter(p=>p.id!==item.id))}>×</button>
           </div>)}
-          <p className="help">Only this browser · scoped to this dataset · no changes to source data</p>
+          <div className="portable-perspectives">
+            <p className="eyebrow">Take your perspectives with you</p>
+            <input type="file" hidden ref={perspectiveFileRef}
+              accept=".json,application/json" aria-label="Import Mossline perspectives"
+              onChange={previewPerspectiveImport}/>
+            <div className="portable-actions">
+              <button type="button" onClick={downloadPerspectives}
+                disabled={savedForMap.length===0}>↓ Export views</button>
+              <button type="button" onClick={()=>perspectiveFileRef.current?.click()}>
+                ↑ Import views</button>
+            </div>
+            {portablePreview&&<div className="portable-confirm" aria-label="Review perspective import">
+              <strong>{portablePreview.perspectives.length} views ready to add</strong>
+              <p>{portablePreview.perspectives.map(item=>item.name).join(" · ")}</p>
+              <small>{portablePreview.assets.length} linked artwork references.
+                Files will be added to this browser; existing views are preserved.
+                External pictures may contact their hosting services when displayed.</small>
+              <div className="portable-actions">
+                <button type="button" onClick={confirmPerspectiveImport}>Confirm import</button>
+                <button type="button" onClick={()=>setPortablePreview(null)}>Cancel</button>
+              </div>
+            </div>}
+            <p className="help">Exports contain saved view settings, entity IDs and image URLs —
+              not the underlying map data. Import onto the same network in another browser.
+              Export your map separately if you need to move its data too.</p>
+          </div>
+          <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
+        <AssetLibraryPanel assets={assets} onAdd={addArtwork}
+          onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
           <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Explore what’s reachable</span></div>
           <p className="help">Choose something you know. Mossline shows who and what is connected through recorded relationships.</p>
@@ -1114,7 +1255,8 @@ export function MapStudio() {
           <NodeInspector node={selected} graph={filtered.graph} source={graph}
             onPick={pickNode} onPickEdge={pickEdge} onTraceFrom={startTraceFromNode}/>
           {view!=="atlas"&&<NodeAppearanceEditor node={selected}
-            value={nodeStyles[selected.id]??{}} onChange={changeNodeAppearance}/>}
+            value={nodeStyles[selected.id]??{}} assets={assets}
+            onChange={changeNodeAppearance}/>}
         </> :
           <div className="empty-inspector">
             <div className="orbit"><span>✳</span></div>
