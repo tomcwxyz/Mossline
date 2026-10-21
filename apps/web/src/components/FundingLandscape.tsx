@@ -265,9 +265,9 @@ export function FundingWorkbench({onCreate,onClose}:{
   </section>;
 }
 
-export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,onExplore}:{
+export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,onExplore,showWholeGraph=true}:{
   graph:GraphDocument;fullAnalysis?:FundingFullAnalysis;
-  datasetId?:string;onViewProjection?:(graph:GraphDocument)=>boolean;
+  datasetId?:string;showWholeGraph?:boolean;onViewProjection?:(graph:GraphDocument)=>boolean;
   onExplore:(id:string)=>void;
 }){
   const facts=useMemo(()=>analyseFundingLandscape(graph),[graph]);
@@ -366,7 +366,7 @@ export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,o
       </div>
     </div>
     {fullAnalysis&&datasetId&&<>
-      <WholeGraphExplorer datasetId={datasetId}/>
+      {showWholeGraph&&<WholeGraphExplorer datasetId={datasetId}/>}
       {onViewProjection&&<details className="funding-detail-pages">
         <summary>Advanced: open an individual grant page in the older detailed canvas</summary>
         <p>The whole-network view above represents every record. This optional legacy

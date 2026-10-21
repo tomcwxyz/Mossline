@@ -14,6 +14,7 @@ import {
   type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
+import {StartScreen} from "./StartScreen";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
@@ -239,6 +240,10 @@ function RelationshipInspector({ edge, source, onPick, onEvidence }: {
 
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
+  const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
+  const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
+  const [traceOpen,setTraceOpen]=useState(false);
+  const [insightsOpen,setInsightsOpen]=useState(false);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
   const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
   const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
@@ -301,8 +306,10 @@ export function MapStudio() {
     let loaded=ORIGINAL;
     try {
       const saved=window.localStorage.getItem(STORAGE_KEY);
-      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS)
+      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS){
         loaded=parseGraphDocument(JSON.parse(saved));
+        setHasSavedMapLibrary(true);
+      }
     } catch {
       // A damaged single-map cache must not destroy a valid map library.
     }
@@ -326,6 +333,7 @@ export function MapStudio() {
             return {...entry,graph:parseGraphDocument(entry.graph)};
           });
           const active=maps.find(m=>m.id===data.activeId)??maps[0];
+          setHasSavedMapLibrary(true);
           setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
           return;
         }
@@ -493,6 +501,7 @@ export function MapStudio() {
     setConnectionTrails([]);setActiveRouteIndex(0);setConnectionMessage("");
   }
   function startTraceFromNode(id:string) {
+    setTraceOpen(true);
     setTraceFrom(id);setTraceTo("");clearTrail();
     tracePanelRef.current?.scrollIntoView({behavior:"smooth",block:"center"});
   }
@@ -699,6 +708,7 @@ export function MapStudio() {
       }));
       // Previous-version fallback is obsolete once the library has saved.
       window.localStorage.removeItem(STORAGE_KEY);
+      setHasSavedMapLibrary(true);
       setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
       return true;
     } catch {
@@ -820,18 +830,60 @@ export function MapStudio() {
     }
   }
 
-  return <main className="shell">
+  const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
+  const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
+
+  if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.3</small></div>
-      <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="topbar-right"><span className="local-tag"><span className="signal"/> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
+      </div>
+    </header>
+    <input ref={fileRef} type="file" hidden multiple
+      accept=".csv,.json,application/json,text/csv"
+      aria-label="Import a spreadsheet or Kumu network"
+      onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
+    {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
+      <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
+    <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
+      nodes:m.graph.nodes.length,edges:m.graph.edges.length,
+      updatedAt:m.createdAt,funding:!!m.fundingDatasetId,
+      summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
+        " grants in complete dataset":undefined}))}
+      onOpen={id=>{selectLocalMap(id);setExperienceSpace("studio");}}
+      onImport={()=>fileRef.current?.click()}
+      onFunding={()=>{setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
+      onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
+      onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
+      onRecovery={()=>{window.location.href="/recover";}}/>
+  </main>;
+
+  return <main className="shell mossline-studio">
+    <header className="topbar">
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="topbar-right">
+        <button className="studio-home-link" type="button"
+          onClick={()=>{closeImport();setShowFundingWorkbench(false);setExperienceSpace("home");}}>
+          ← Your maps</button>
+        <span className="local-tag"><span className="signal" /> Saved in this browser</span>
       </div>
     </header>
     <section className="heading">
       <div>
-        <p className="eyebrow">A place to understand what connects us {graphKey===DEMO_KEY && <>· <span className="demo-indicator">Fictional demonstration data</span></>}</p>
-        <h1>{graph.title}<span className="heading-period">.</span></h1>
-        <p className="subtitle">{graph.description}</p>
+        <p className="eyebrow">{showFundingWorkbench||importPreview||discovery?
+          "Create a network · your existing maps are preserved":
+          <>A place to understand what connects us {graphKey===DEMO_KEY&&
+            <>· <span className="demo-indicator">Fictional demonstration data</span></>}</>}</p>
+        <h1>{showFundingWorkbench?"Explore a funding landscape":
+          importPreview||discovery?"Discover your data":graph.title}
+          <span className="heading-period">.</span></h1>
+        <p className="subtitle">{showFundingWorkbench?
+          "Bring a grants spreadsheet and discover the relationships between funders, awards and organisations.":
+          importPreview||discovery?
+          "Review what was found, check the proposed relationships and choose whether to create a new map.":
+          graph.description}</p>
       </div>
       <div className="actions">
         <label className="map-library-chooser">Your maps
@@ -840,15 +892,22 @@ export function MapStudio() {
             {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
           </select>
         </label>
-        <a className="map-recovery-link" href="/recover" title="Back up, delete or recover saved browser maps">Manage saved maps ↗</a>
-        <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
-        <button className="button-outline funding-launch" type="button"
-          onClick={()=>setShowFundingWorkbench(current=>!current)}>
-          {showFundingWorkbench?"− Close funding workflow":"✳ Map funding landscape"}
-        </button>
-        <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Discover your data</button>
-        <button className="button-outline" onClick={tryExampleDiscovery}>Try sample spreadsheet</button>
-        <button className="button-primary" onClick={() => saveJson(graph)}>↓ Export map</button>
+        <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet"
+          ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv"
+          hidden onChange={onImport}/>
+        <button className="button-primary" type="button"
+          onClick={()=>fileRef.current?.click()}>↑ Import data</button>
+        <details className="studio-action-menu">
+          <summary>More actions</summary>
+          <div className="studio-action-popover">
+            <button type="button" onClick={()=>setShowFundingWorkbench(v=>!v)}>
+              {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
+            <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
+            {fullFundingView?<a href="/recover">↓ Back up full funding dataset</a>:
+              <button type="button" onClick={()=>saveJson(graph)}>↓ Export this map</button>}
+            <a href="/recover">Manage backups and saved maps ↗</a>
+          </div>
+        </details>
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
@@ -894,7 +953,7 @@ export function MapStudio() {
       onClose={()=>setShowFundingWorkbench(false)}
       onCreate={(next,fullAnalysis,datasetId)=>{
         if(!createNewMap(next,fullAnalysis,datasetId))return false;
-        setNotice("Created a funding landscape: full-data grant and theme analysis is saved alongside a smaller network view. Explore the clusters and supporting records below.");
+        setNotice("Created a funding landscape. Open Network to explore the complete recorded funding graph; deeper analysis is available below.");
         return true;
       }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
@@ -1031,24 +1090,82 @@ export function MapStudio() {
           Presentation only · Source records unchanged</span>
       </div>
     </section>}
-    <FundingInsights graph={graph}
-      fullAnalysis={localMaps.find(item=>item.id===activeMapId)?.fundingAnalysis}
-      datasetId={localMaps.find(item=>item.id===activeMapId)?.fundingDatasetId}
-      onViewProjection={applyFundingProjection}
-      onExplore={id=>{
-      setView("landscape");setTypes(TYPE_KEYS);setRegion("");setQuery("");setFocusId(null);
-      setSelectedId(id);setSelectedEdgeId(null);
-    }}/>
-    <section className="workspace">
-      <aside className="sidebar">
-        <p className="eyebrow">Explore</p>
+    {!showFundingWorkbench&&!importPreview&&!discovery&&<>
+    <nav className="studio-primary-views" aria-label="Choose how to explore this network">
         <div className="view-switch">
-          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Landscape</span></button>
-          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Collaborations</span></button>
+          <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Network</span></button>
+          <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Connections</span></button>
           <button className={view === "atlas" ? "on" : ""} onClick={() => {setView("atlas");setSelectedId(null);setFocusId(null);}}>
-            ◉ <span>UK atlas{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
+            ◉ <span>Places{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
           </button>
         </div>
+    </nav>
+    <section className="workspace">
+      <aside className="sidebar studio-simplified-sidebar">
+        <p className="eyebrow">Explore this network</p>
+        {fullFundingView?<p className="help">The entire funding network is shown on the canvas.
+          Select groups to see the original awards. For grant filters,
+          open the detailed funding analysis below.</p>:<>
+        <div className="filter-heading">
+          <p className="eyebrow">Find & filter</p>
+          <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
+        </div>
+        <input className="search" value={query} onChange={event => { setQuery(event.target.value); setSelectedId(null); }} placeholder="Search the landscape…" aria-label="Search entities" />
+        <label className="collaboration-label" htmlFor="region-lens">Explore by region</label>
+        <select id="region-lens" className="search" value={region} onChange={event => { setRegion(event.target.value); setSelectedId(null); setFocusId(null); }}>
+          <option value="">Whole landscape</option>
+          {regions.map(place => <option value={place} key={place}>{place}</option>)}
+        </select>
+        {view === "collaborations" ? <>
+          <label className="collaboration-label" htmlFor="collaboration-basis">Show relationships</label>
+          <select id="collaboration-basis" className="search" value={basis} onChange={event => { setBasis(event.target.value as CollaborationBasis); setSelectedId(null); }}>
+            <option value="all">Recorded and shared associations</option>
+            <option value="project">Shared projects</option>
+            <option value="funder">Shared funders</option>
+            <option value="recorded">Recorded direct relationships only</option>
+          </select>
+          <p className="help">Dashed lines show shared associations, not confirmed partnerships. Changing the basis does not remove the organisations.</p>
+        </> : <details className="studio-inline-disclosure">
+          <summary>Entity types</summary>
+          <div className="type-list">
+          {totalTypes.filter(item => item.count > 0).map(({ type, count }) => <label key={type} className="type-item">
+            <input type="checkbox" checked={types.includes(type)} onChange={() => toggleType(type)} />
+            <span className={"small-dot " + type} /><span>{TYPE_LABELS[type]}</span><span className="type-count">{count}</span>
+          </label>)}
+        </div></details>}
+        <label className="context-toggle"><input type="checkbox" checked={context} onChange={e => setContext(e.target.checked)} /> Keep related context</label>
+        <p className="help">Retain one-hop neighbours so filters do not erase the relationships you are exploring.</p>
+        {selected && <button className={"focus-button" + (focusId ? " on" : "")}
+          onClick={() => setFocusId(previous => previous === selected.id ? null : selected.id)}>
+          {focusId ? "← Show wider network" : "◎ Explore this entity’s connections"}
+        </button>}
+        {hubs.length > 0 && <div className="sidebar-highlights">
+          <p className="eyebrow">Well-connected in this view</p>
+          {hubs.map(({node, connections}) => <button key={node.id}
+            onClick={() => { setSelectedId(node.id); setFocusId(null); }}>
+            <span>{node.label}</span><small>{connections} links</small>
+          </button>)}
+        </div>}
+        <details className="browse-panel" aria-label="Browse visible entities">
+          <summary>Browse entities <span>{filtered.graph.nodes.length} in view</span></summary>
+          <p className="help">Keyboard-accessible alternative to selecting nodes on the canvas.</p>
+          <ul>{filtered.graph.nodes.slice(0,40).map(node=><li key={node.id}>
+            <button type="button" onClick={()=>pickNode(node.id)}>
+              <span className={"small-dot "+node.type}/>
+              <span>{node.label}</span><small>{node.type}</small>
+            </button>
+          </li>)}</ul>
+          {filtered.graph.nodes.length>40 && <p className="help">Showing the first 40. Narrow the results with search or filters.</p>}
+        </details>
+        <details className="audit-panel">
+          <summary>Data health & provenance</summary>
+          <CoverageReport graph={graph} />
+        </details>
+
+        </>}
+
+        {!fullFundingView&&<details className="studio-tool-group">
+          <summary>Saved views <span>{savedForMap.length} saved</span></summary>
         <section className="perspectives-panel" aria-label="Saved perspectives">
           <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
             <button type="button" onClick={()=>{setShowSave(v=>!v);setNewName(view==="landscape"?"My landscape":view==="atlas"?"My UK atlas":"My collaborations");}}>+ Save</button></div>
@@ -1122,6 +1239,9 @@ export function MapStudio() {
           </div>
           <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
+        </details>}
+        {!fullFundingView&&<details className="studio-tool-group">
+          <summary>Share, publish &amp; style</summary>
         <ShareViewPanel graph={filtered.graph} view={view}
           layout={layoutMode} labels={labelDensity} illustrated={illustrated}
           title={storyTitleText||graph.title} introduction={storyIntroText||undefined}
@@ -1132,6 +1252,10 @@ export function MapStudio() {
           coverUrl={storyCoverUrl} positions={activePositions} nodeStyles={nodeStyles}/>
         <AssetLibraryPanel assets={assets} onAdd={addArtwork}
           onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
+        </details>}
+        {!fullFundingView&&<details className="studio-tool-group" open={traceOpen}
+          onToggle={e=>setTraceOpen(e.currentTarget.open)}>
+          <summary>Follow a connection</summary>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
           <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Explore what’s reachable</span></div>
           <p className="help">Choose something you know. Mossline shows who and what is connected through recorded relationships.</p>
@@ -1208,7 +1332,8 @@ export function MapStudio() {
             <button type="button" className="trace-clear" onClick={clearTrail}>Clear path</button>
           </div>}
         </section>
-        <details className="junction-panel">
+        </details>}
+        {!fullFundingView&&<details className="junction-panel">
           <summary>Structural junctions <span>{featuredJunctions.length} shown</span></summary>
           <p className="help">Which organisations or projects hold different parts of the recorded network together? This is a structural test, not a judgement about importance or impact.</p>
           <label className="context-toggle">
@@ -1222,61 +1347,8 @@ export function MapStudio() {
             <small>{item.separatedGroups} connected parts if removed</small>
           </button>)}
           <p className="help">Computed on all recorded relationships, ignoring inferred associations and current view filters.</p>
-        </details>
+        </details>}
         <div className="sidebar-divider" />
-        <div className="filter-heading">
-          <p className="eyebrow">Find & filter</p>
-          <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
-        </div>
-        <input className="search" value={query} onChange={event => { setQuery(event.target.value); setSelectedId(null); }} placeholder="Search the landscape…" aria-label="Search entities" />
-        <label className="collaboration-label" htmlFor="region-lens">Explore by region</label>
-        <select id="region-lens" className="search" value={region} onChange={event => { setRegion(event.target.value); setSelectedId(null); setFocusId(null); }}>
-          <option value="">Whole landscape</option>
-          {regions.map(place => <option value={place} key={place}>{place}</option>)}
-        </select>
-        {view === "collaborations" ? <>
-          <label className="collaboration-label" htmlFor="collaboration-basis">Show relationships</label>
-          <select id="collaboration-basis" className="search" value={basis} onChange={event => { setBasis(event.target.value as CollaborationBasis); setSelectedId(null); }}>
-            <option value="all">Recorded and shared associations</option>
-            <option value="project">Shared projects</option>
-            <option value="funder">Shared funders</option>
-            <option value="recorded">Recorded direct relationships only</option>
-          </select>
-          <p className="help">Dashed lines show shared associations, not confirmed partnerships. Changing the basis does not remove the organisations.</p>
-        </> : <div className="type-list">
-          {totalTypes.filter(item => item.count > 0).map(({ type, count }) => <label key={type} className="type-item">
-            <input type="checkbox" checked={types.includes(type)} onChange={() => toggleType(type)} />
-            <span className={"small-dot " + type} /><span>{TYPE_LABELS[type]}</span><span className="type-count">{count}</span>
-          </label>)}
-        </div>}
-        <label className="context-toggle"><input type="checkbox" checked={context} onChange={e => setContext(e.target.checked)} /> Keep related context</label>
-        <p className="help">Retain one-hop neighbours so filters do not erase the relationships you are exploring.</p>
-        {selected && <button className={"focus-button" + (focusId ? " on" : "")}
-          onClick={() => setFocusId(previous => previous === selected.id ? null : selected.id)}>
-          {focusId ? "← Show wider network" : "◎ Explore this entity’s connections"}
-        </button>}
-        {hubs.length > 0 && <div className="sidebar-highlights">
-          <p className="eyebrow">Well-connected in this view</p>
-          {hubs.map(({node, connections}) => <button key={node.id}
-            onClick={() => { setSelectedId(node.id); setFocusId(null); }}>
-            <span>{node.label}</span><small>{connections} links</small>
-          </button>)}
-        </div>}
-        <details className="browse-panel" aria-label="Browse visible entities">
-          <summary>Browse entities <span>{filtered.graph.nodes.length} in view</span></summary>
-          <p className="help">Keyboard-accessible alternative to selecting nodes on the canvas.</p>
-          <ul>{filtered.graph.nodes.slice(0,40).map(node=><li key={node.id}>
-            <button type="button" onClick={()=>pickNode(node.id)}>
-              <span className={"small-dot "+node.type}/>
-              <span>{node.label}</span><small>{node.type}</small>
-            </button>
-          </li>)}</ul>
-          {filtered.graph.nodes.length>40 && <p className="help">Showing the first 40. Narrow the results with search or filters.</p>}
-        </details>
-        <details className="audit-panel">
-          <summary>Data health & provenance</summary>
-          <CoverageReport graph={graph} />
-        </details>
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
           <p className="help">Imported JSON is kept in this browser only. MCP reads the bundled demo unless configured separately.</p>
@@ -1287,23 +1359,27 @@ export function MapStudio() {
         <div className="map-topline">
           <span><span className="signal" /> {view === "landscape" ? "Living network" :
             view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
-          <span>{filtered.graph.nodes.length} entities <span className="sep">·</span> {filtered.graph.edges.length} relationships</span>
+          <span>{fullFundingView?
+            "Complete funding network · explore all source records":
+            activeFundingMap?.fundingDatasetId?
+              "Focused detail only · choose Network for the full dataset":
+              filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
           <div className="map-options">
-            {view!=="atlas"&&<label>Layout <select aria-label="Network layout" value={layoutMode}
+            {view!=="atlas"&&!fullFundingView&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
               <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
             </select></label>}
-            {view!=="atlas"&&<label>Labels <select aria-label="Network labels" value={labelDensity}
+            {view!=="atlas"&&!fullFundingView&&<label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
             </select></label>}
-            {view!=="atlas"&&<label>Style <select aria-label="Network visual style"
+            {view!=="atlas"&&!fullFundingView&&<label>Style <select aria-label="Network visual style"
               value={illustrated?"editorial":"classic"}
               onChange={event=>setIllustrated(event.target.value==="editorial")}>
               <option value="editorial">Editorial</option>
               <option value="classic">Classic</option>
             </select></label>}
-            {view!=="atlas"&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
+            {view!=="atlas"&&!fullFundingView&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
               <button type="button" disabled={!movementHistory.past.length}
                 onClick={undoNodeMovement} title="Undo last manual node movement">↶ Undo</button>
               <button type="button" disabled={!movementHistory.future.length}
@@ -1312,7 +1388,9 @@ export function MapStudio() {
             </div>}
           </div>
         </div>
-        {view!=="atlas"&&(filtered.graph.nodes.length>260||
+        {fullFundingView?
+          <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}/> :
+        view!=="atlas"&&(filtered.graph.nodes.length>260||
             filtered.graph.edges.length>650)?
           <WholeGraphExplorer graph={filtered.graph}/> :
         view==="atlas" ?
@@ -1339,7 +1417,14 @@ export function MapStudio() {
           <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
-        {selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
+        {fullFundingView?<div className="empty-inspector">
+          <p className="eyebrow">Explore the complete network</p>
+          <h2>Follow a thread.</h2>
+          <p>Choose a group, entity or relationship in the whole-network canvas.
+            Details open alongside the network as you explore, without reducing
+            the graph to a small selection.</p>
+        </div>:
+        selectedEdge ? <RelationshipInspector edge={selectedEdge} source={graph}
           onPick={pickNode} onEvidence={exploreEvidence} /> :
         selected ? <>
           <NodeInspector node={selected} graph={filtered.graph} source={graph}
@@ -1358,6 +1443,23 @@ export function MapStudio() {
           </div>}
       </aside>
     </section>
+    <details className="studio-deep-dive" open={insightsOpen}
+      onToggle={e=>setInsightsOpen(e.currentTarget.open)}>
+      <summary>Explore analysis, evidence &amp; funding patterns</summary>
+      {insightsOpen&&<>
+    <FundingInsights graph={graph}
+      fullAnalysis={localMaps.find(item=>item.id===activeMapId)?.fundingAnalysis}
+      datasetId={localMaps.find(item=>item.id===activeMapId)?.fundingDatasetId}
+      onViewProjection={applyFundingProjection}
+      showWholeGraph={false}
+      onExplore={id=>{
+      setView("landscape");setTypes(TYPE_KEYS);setRegion("");setQuery("");setFocusId(null);
+      setSelectedId(id);setSelectedEdgeId(null);
+    }}/>
+
+      </>}
+    </details>
+    </>}
     <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
   </main>;
 }
