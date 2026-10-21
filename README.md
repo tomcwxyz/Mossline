@@ -727,7 +727,7 @@ network exports. Source rows marked private are also excluded.
 
 To avoid crashing a browser or exceeding its local storage, this release
 allows CSV uploads up to **12 MB** but limits *detailed map*
-representation to **1,200 organisation grants**. For a larger source
+representation to **120 organisation grants**. For a larger source
 file, it chooses a funder-balanced exploratory subset and clearly
 reports the number of eligible source rows that were not mapped.
 **The resulting map, amounts and theme insights cover the subset only,
@@ -765,7 +765,7 @@ All eligible, unique grants contribute to:
   organisation and evidence coverage; explicitly unclassified grants.
 
 The network canvas remains a **funder-balanced, non-representative
-selection of up to 1,200 grants**, keeping the view navigable. Full-data
+selection of up to 120 grants**, keeping the view navigable. Full-data
 theme cards label their scope prominently. Where a complete-data grant
 is absent from the selection, its evidence remains readable, but it is
 not falsely offered as an interactive canvas node.
@@ -793,3 +793,30 @@ beneficiaries, account for inflation, or establish need, impact,
 partnership or public spending. Optional semantic embeddings remain
 capped at 48 grant excerpts selected from the **detail network** and
 must not be represented as having analysed every award.
+
+## Browser responsiveness fix for large funding files
+
+Large GrantNav CSVs are now parsed, deduplicated and analysed in a
+**cancellable Web Worker**, not synchronously in the React render phase.
+Changing a mapped column requires an explicit **Apply mapping and
+reanalyse** action; ordinary typing does not repeatedly process the CSV.
+Import progress is surfaced in the interface, and file contents remain
+browser-local. This avoids blocking the main interface during the full
+analysis of multi-thousand-award extracts.
+
+The interactive graph now contains up to **120 grants** (plus selected
+funders and recipients). The **full funding totals and theme clusters
+continue to use all eligible, unique organisation awards** and remain
+separately labelled. This initial graph is exploratory, not a complete or
+statistically representative network.
+
+Saved map collections exceeding the safe automatic-restore size are not
+parsed on page load; instead a backup export and explicitly confirmed
+local cache reset are offered. The original cache is retained until the
+user chooses to reset it. New local map writes no longer redundantly
+store the same graph twice under legacy keys.
+
+A small alpha should still treat browser storage as a convenience, not
+as a database for large grant landscapes. See the roadmap for durable
+workspace storage and user-controlled ways to regenerate network views
+from the full source.
