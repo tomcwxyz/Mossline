@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {discoveryRequestSchema,explanationRequestSchema,parseEmbeddingReply,
-  readDiscoveryJson,authoriseDiscovery} from "../src/lib/discovery-provider.ts";
+  readDiscoveryJson,authoriseDiscovery} from "../src/lib/discovery-provider";
 
 test("only bounded grant excerpts are allowed; no unreviewed properties",()=>{
  const okay={documents:[
