@@ -241,6 +241,7 @@ function RelationshipInspector({ edge, source, onPick, onEvidence }: {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
+  const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
@@ -305,8 +306,10 @@ export function MapStudio() {
     let loaded=ORIGINAL;
     try {
       const saved=window.localStorage.getItem(STORAGE_KEY);
-      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS)
+      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS){
         loaded=parseGraphDocument(JSON.parse(saved));
+        setHasSavedMapLibrary(true);
+      }
     } catch {
       // A damaged single-map cache must not destroy a valid map library.
     }
@@ -330,6 +333,7 @@ export function MapStudio() {
             return {...entry,graph:parseGraphDocument(entry.graph)};
           });
           const active=maps.find(m=>m.id===data.activeId)??maps[0];
+          setHasSavedMapLibrary(true);
           setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
           return;
         }
@@ -704,6 +708,7 @@ export function MapStudio() {
       }));
       // Previous-version fallback is obsolete once the library has saved.
       window.localStorage.removeItem(STORAGE_KEY);
+      setHasSavedMapLibrary(true);
       setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
       return true;
     } catch {
@@ -839,7 +844,9 @@ export function MapStudio() {
       accept=".csv,.json,application/json,text/csv"
       aria-label="Import a spreadsheet or Kumu network"
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
-    <StartScreen maps={localMaps.map(m=>({id:m.id,title:m.title,
+    {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
+      <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
+    <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
       nodes:m.graph.nodes.length,edges:m.graph.edges.length,
       updatedAt:m.createdAt,funding:!!m.fundingDatasetId,
       summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
@@ -865,9 +872,18 @@ export function MapStudio() {
     </header>
     <section className="heading">
       <div>
-        <p className="eyebrow">A place to understand what connects us {graphKey===DEMO_KEY && <>· <span className="demo-indicator">Fictional demonstration data</span></>}</p>
-        <h1>{graph.title}<span className="heading-period">.</span></h1>
-        <p className="subtitle">{graph.description}</p>
+        <p className="eyebrow">{showFundingWorkbench||importPreview||discovery?
+          "Create a network · your existing maps are preserved":
+          <>A place to understand what connects us {graphKey===DEMO_KEY&&
+            <>· <span className="demo-indicator">Fictional demonstration data</span></>}</>}</p>
+        <h1>{showFundingWorkbench?"Explore a funding landscape":
+          importPreview||discovery?"Discover your data":graph.title}
+          <span className="heading-period">.</span></h1>
+        <p className="subtitle">{showFundingWorkbench?
+          "Bring a grants spreadsheet and discover the relationships between funders, awards and organisations.":
+          importPreview||discovery?
+          "Review what was found, check the proposed relationships and choose whether to create a new map.":
+          graph.description}</p>
       </div>
       <div className="actions">
         <label className="map-library-chooser">Your maps
