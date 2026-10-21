@@ -634,7 +634,9 @@ receiving awards from several funders. It suggests **potential thematic
 connections** by two transparent mechanisms:
 
 1. Matching explicit source-assigned theme tags across recipients.
-2. Shared significant words in award descriptions and programmes,
+2. Interpretable topic-bridge phrase patterns (such as food insecurity and
+   community meals), separately labelled as candidate themes.
+3. Shared significant words in award descriptions and programmes,
    labelled as provisional keyword overlap — not semantic embeddings.
 
 Every suggestion names both recipients, notes whether they have different
