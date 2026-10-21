@@ -831,6 +831,7 @@ export function MapStudio() {
             {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
           </select>
         </label>
+        <a className="map-recovery-link" href="/recover" title="Back up, delete or recover saved browser maps">Manage saved maps ↗</a>
         <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
         <button className="button-outline funding-launch" type="button"
           onClick={()=>setShowFundingWorkbench(current=>!current)}>
