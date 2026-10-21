@@ -250,6 +250,7 @@ export function MapStudio() {
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
+  const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
@@ -832,6 +833,9 @@ export function MapStudio() {
 
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
   const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
+  const largeActiveView=filtered.graph.nodes.length>260||filtered.graph.edges.length>650;
+  const usingSourceExplorer=view==="landscape"&&
+    (fullFundingView||wholeNetworkOpen||largeActiveView);
 
   if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
@@ -1103,9 +1107,10 @@ export function MapStudio() {
     <section className="workspace">
       <aside className="sidebar studio-simplified-sidebar">
         <p className="eyebrow">Explore this network</p>
-        {fullFundingView?<p className="help">The entire funding network is shown on the canvas.
-          Select groups to see the original awards. For grant filters,
-          open the detailed funding analysis below.</p>:<>
+        {usingSourceExplorer?<p className="help">This workspace explores the complete
+          source network. Use Find or Ask this network on the canvas to follow
+          any entity and its original relationships. Switch to the grouped
+          overview or individual GPU rendering within the canvas.</p>:<>
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
           <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
@@ -1164,7 +1169,7 @@ export function MapStudio() {
 
         </>}
 
-        {!fullFundingView&&<details className="studio-tool-group">
+        {!usingSourceExplorer&&<details className="studio-tool-group">
           <summary>Saved views <span>{savedForMap.length} saved</span></summary>
         <section className="perspectives-panel" aria-label="Saved perspectives">
           <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
@@ -1240,7 +1245,7 @@ export function MapStudio() {
           <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
         </details>}
-        {!fullFundingView&&<details className="studio-tool-group">
+        {!usingSourceExplorer&&<details className="studio-tool-group">
           <summary>Share, publish &amp; style</summary>
         <ShareViewPanel graph={filtered.graph} view={view}
           layout={layoutMode} labels={labelDensity} illustrated={illustrated}
@@ -1253,7 +1258,7 @@ export function MapStudio() {
         <AssetLibraryPanel assets={assets} onAdd={addArtwork}
           onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
         </details>}
-        {!fullFundingView&&<details className="studio-tool-group" open={traceOpen}
+        {!usingSourceExplorer&&<details className="studio-tool-group" open={traceOpen}
           onToggle={e=>setTraceOpen(e.currentTarget.open)}>
           <summary>Follow a connection</summary>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
@@ -1333,7 +1338,7 @@ export function MapStudio() {
           </div>}
         </section>
         </details>}
-        {!fullFundingView&&<details className="junction-panel">
+        {!usingSourceExplorer&&<details className="junction-panel">
           <summary>Structural junctions <span>{featuredJunctions.length} shown</span></summary>
           <p className="help">Which organisations or projects hold different parts of the recorded network together? This is a structural test, not a judgement about importance or impact.</p>
           <label className="context-toggle">
@@ -1359,27 +1364,32 @@ export function MapStudio() {
         <div className="map-topline">
           <span><span className="signal" /> {view === "landscape" ? "Living network" :
             view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
-          <span>{fullFundingView?
-            "Complete funding network · explore all source records":
+          <span>{usingSourceExplorer?
+            "Complete source network · all entities and relationships":
             activeFundingMap?.fundingDatasetId?
               "Focused detail only · choose Network for the full dataset":
               filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
           <div className="map-options">
-            {view!=="atlas"&&!fullFundingView&&<label>Layout <select aria-label="Network layout" value={layoutMode}
+            {view==="landscape"&&!fullFundingView&&!largeActiveView&&
+              <button type="button" className="whole-network-entry"
+                aria-pressed={wholeNetworkOpen} onClick={()=>setWholeNetworkOpen(v=>!v)}>
+                {wholeNetworkOpen?"← Standard canvas":"✳ Full graph + AI"}
+              </button>}
+            {view!=="atlas"&&!usingSourceExplorer&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
               <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<label>Labels <select aria-label="Network labels" value={labelDensity}
+            {view!=="atlas"&&!usingSourceExplorer&&<label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<label>Style <select aria-label="Network visual style"
+            {view!=="atlas"&&!usingSourceExplorer&&<label>Style <select aria-label="Network visual style"
               value={illustrated?"editorial":"classic"}
               onChange={event=>setIllustrated(event.target.value==="editorial")}>
               <option value="editorial">Editorial</option>
               <option value="classic">Classic</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
+            {view!=="atlas"&&!usingSourceExplorer&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
               <button type="button" disabled={!movementHistory.past.length}
                 onClick={undoNodeMovement} title="Undo last manual node movement">↶ Undo</button>
               <button type="button" disabled={!movementHistory.future.length}
@@ -1390,9 +1400,8 @@ export function MapStudio() {
         </div>
         {fullFundingView?
           <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}/> :
-        view!=="atlas"&&(filtered.graph.nodes.length>260||
-            filtered.graph.edges.length>650)?
-          <WholeGraphExplorer graph={filtered.graph}/> :
+        view!=="atlas"&&((view==="landscape"&&wholeNetworkOpen)||largeActiveView)?
+          <WholeGraphExplorer graph={view==="landscape"?graph:filtered.graph}/> :
         view==="atlas" ?
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
             onSelect={pickNode} onPickEdge={pickEdge}
@@ -1417,7 +1426,7 @@ export function MapStudio() {
           <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
       </div>
       <aside className="inspector">
-        {fullFundingView?<div className="empty-inspector">
+        {usingSourceExplorer?<div className="empty-inspector">
           <p className="eyebrow">Explore the complete network</p>
           <h2>Follow a thread.</h2>
           <p>Choose a group, entity or relationship in the whole-network canvas.

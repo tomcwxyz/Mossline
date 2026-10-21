@@ -1,12 +1,12 @@
 /// <reference lib="webworker" />
 import {buildAdaptiveGraphIndex,projectAdaptiveGraph,
-  buildNetworkNavigation,searchNetwork,inspectNetworkNode,revealNetworkNode,
+  buildNetworkNavigation,searchNetwork,inspectNetworkNode,revealNetworkNode,layoutFullNetwork,
   type AdaptiveGraphIndex,type NetworkNavigationIndex,type GraphDocument}
   from "@mossline/graph-core";
 import {loadFundingDataset} from "../lib/funding-dataset-store";
 
 type Job={
-  kind:"overview"|"search"|"select"|"inspect";id:number;
+  kind:"overview"|"search"|"select"|"inspect"|"full";id:number;mode?:"full"|"overview";
   datasetId?:string;graph?:GraphDocument;expandedIds?:string[];
   nodeId?:string;query?:string;page?:number;
 };
@@ -35,12 +35,23 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
         message:"Preparing the whole-network view…"});
       const projection=projectAdaptiveGraph(index,job.expandedIds??[]);
       self.postMessage({kind:"result",action:"overview",id:job.id,projection});
+    }else if(job.kind==="full"){
+      self.postMessage({kind:"stage",id:job.id,
+        message:"Positioning every original entity and relationship…"});
+      const geometry=layoutFullNetwork(index.source);
+      self.postMessage({kind:"result",action:"full",id:job.id,geometry},
+        [geometry.positions.buffer,geometry.segments.buffer,geometry.types.buffer]);
     }else if(job.kind==="search"){
       const matches=searchNetwork(navigation,job.query??"",20);
       self.postMessage({kind:"result",action:"search",id:job.id,matches});
     }else if(job.kind==="select"){
       if(!job.nodeId)throw Error("Select an entity to explore.");
       const inspection=inspectNetworkNode(navigation,job.nodeId);
+      if(job.mode==="full"){
+        self.postMessage({kind:"result",action:"select",id:job.id,inspection,
+          expandedIds:job.expandedIds??[]});
+        return;
+      }
       try{
         const revealed=revealNetworkNode(index,job.expandedIds??[],job.nodeId);
         self.postMessage({kind:"result",action:"select",id:job.id,

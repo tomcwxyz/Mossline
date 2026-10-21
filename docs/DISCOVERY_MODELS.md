@@ -96,3 +96,52 @@ verified before local ranking.
 7. For a public self-service tool, add per-user usage quotas/authentication,
    budget alarms, audit logging and consent records before allowing
    unrestricted AI calls. The access code is for a small alpha cohort only.
+
+## Alpha 2.7 — source-agnostic whole-network semantic index
+
+This feature is separate from the original **maximum 48 grant descriptions**
+candidate-finder. The new **Ask this network** feature operates on all eligible
+source nodes in the current canonical network, not just the displayed summary
+or a paginated selection. Each source node contributes one text item containing
+its label, type, optional description, source tags and region. Custom raw
+properties, monetary values and contact fields are not sent as independent
+embedding fields. Explicitly private/restricted nodes are excluded. **This is
+not automatic personal-data removal**: titles and descriptions may contain
+sensitive material and must be reviewed by the data owner.
+
+1. Get `/api/discovery/status` and confirm `embeddings` and
+   `embeddingModel`. A configured flag does not verify the provider is healthy.
+2. Open **Full graph + AI → Ask this network** and review the eligible record
+   count and estimated number of 48-item batches.
+3. Approve external transmission explicitly, enter the alpha access code
+   (never stored in localStorage or IndexedDB), and start indexing.
+4. The browser worker uses the fixed server-side `/api/discovery/embed`
+   endpoint. The server controls the model, URL and provider API key.
+5. Completed batches are saved in local IndexedDB keyed by a SHA-256 digest of
+   every eligible source identifier+text and the configured embedding model.
+   Interrupted indexing can resume; changing records or models invalidates the
+   cache key. Text content itself is not copied into the embedding cache.
+6. After completing the index, a question is itself embedded and ranked against
+   the cached vectors. The answer panel displays up to eight retrieved source
+   excerpts and exact recorded edges between those retrieved entities, if any.
+7. If the optional chat model is configured, `/api/discovery/ask` receives the
+   question, those up to eight snippets and up to 24 source edges, with strict
+   evidence-only instructions. No LLM-generated edge is written to the graph.
+
+For **OpenRouter**, choose a specific, currently available embeddings model and
+chat-completions model at the configured provider. Not all hosted chat-model
+services expose compatible embeddings. For **Ollama**, Vercel cannot call
+a `localhost` model running on the user's PC; a TLS-protected, authenticated
+and intentionally exposed endpoint is needed if hosted usage is desired.
+
+**Limits and unresolved work:** client-side batch processing can use significant
+time and browser disk/memory for tens or hundreds of thousands of records.
+There is not yet a per-user cost budget, provider retry/backoff, usage tracking,
+identity/session authorisation, cross-device synchronisation or model evaluation.
+The shared alpha access code is suitable only for a restricted pilot. Source
+texts are not independently DLP-scanned. Model scores indicate resemblance,
+not certainty, collaboration, impact or causation. Detailed graph traversals
+remain available separately from the LLM.
+
+Do not enable public unrestricted model access until quotas, audit logging,
+consent management, abuse controls and provider spending limits are in place.

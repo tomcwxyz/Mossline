@@ -7,6 +7,8 @@ export function GET(){
     embeddings:discoveryEnabled(),
     explanations:explanationEnabled(),
     provider:"server-configured OpenAI-compatible provider",
+    embeddingModel:discoveryEnabled()?process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL:null,
+    maxBatch:48,
     maxGrants:48
   },{headers:noStoreHeaders});
 }
