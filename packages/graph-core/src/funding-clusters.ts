@@ -119,6 +119,7 @@ export type FundingFullAnalysis={
   amounts:{currency:string;total:number;knownAmounts:number}[];
   multiFundedCount:number;
   leadingFunders:{id:string;name:string;grants:number;recipients:number}[];
+  allFunders:{id:string;name:string;grants:number}[];
   sharedRecipients:{id:string;name:string;funders:number;grants:number}[];
   recipientRegions:{region:string;grants:number}[];
   /** Entity labels for full-data evidence that may not be in the reduced network. */
@@ -157,6 +158,7 @@ export function buildFundingFullAnalysis(graph:GraphDocument):FundingFullAnalysi
       .sort((a,b)=>a.currency.localeCompare(b.currency)),
     multiFundedCount:orderedRecipients.length,
     leadingFunders:orderedFunders.slice(0,18),
+    allFunders:orderedFunders.map(f=>({id:f.id,name:f.name,grants:f.grants})),
     sharedRecipients:orderedRecipients.slice(0,18),
     recipientRegions:[...recipientRegions.entries()].map(([region,grants])=>({region,grants}))
       .sort((a,b)=>b.grants-a.grants),
