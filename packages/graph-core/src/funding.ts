@@ -117,10 +117,34 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
     candidates.push({row,index});
   }
   const eligibleOrganisationRows=candidates.length;
-  // First build the complete organisation-only award graph. A second,
-  // smaller projection is built for the network canvas only.
-  const take=candidates;
-  const overflowExcluded=Math.max(0,candidates.length-maxDetailedGrants);
+  // GrantNav can contain multiple versions of a grant identifier. Keep the
+  // latest valid Date Modified version, never the first arbitrary source row.
+  // Missing/invalid modification timestamps keep the earliest row for review.
+  const modifiedHeader=headers.find(h=>normalise(h)==="datemodified")??"";
+  const uniqueByGrant=new Map<string,{row:string[];index:number}>();
+  let revisedGrantCount=0;
+  for(const candidate of candidates){
+    const id=rowValue(candidate.row,m.grantId);
+    if(!id)continue; // rows without official IDs are handled by fallback content hash
+    const prior=uniqueByGrant.get(id);
+    if(!prior){uniqueByGrant.set(id,candidate);continue;}
+    revisedGrantCount++;
+    const time=(item:{row:string[];index:number})=>{
+      const value=rowValue(item.row,modifiedHeader);
+      if(!value)return Number.NEGATIVE_INFINITY;
+      const timestamp=Date.parse(value);
+      return Number.isFinite(timestamp)?timestamp:Number.NEGATIVE_INFINITY;
+    };
+    if(time(candidate)>time(prior))uniqueByGrant.set(id,candidate);
+  }
+  const take=candidates.filter(item=>{
+    const id=rowValue(item.row,m.grantId);
+    return !id||uniqueByGrant.get(id)===item;
+  });
+  const overflowExcluded=Math.max(0,take.length-maxDetailedGrants);
+  if(revisedGrantCount)issues.push({severity:"warning",message:
+    revisedGrantCount+" repeated grant identifiers were resolved using the latest "+
+    "Date Modified where available. Earlier versions are excluded from totals."});
   if(individualExcluded)issues.push({severity:"warning",message:
     individualExcluded+" grants to individuals were excluded; no individual recipient details were added to the map"});
   if(overflowExcluded)issues.push({severity:"warning",message:
@@ -133,7 +157,7 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
   const edges:GraphEdge[]=[];
   const recipients=new Set<string>(),funders=new Set<string>(),seenGrants=new Set<string>();
   const grantCounts=new Map<string,number>();
-  let skipped=0,withheld=0,duplicateExcluded=0;
+  let skipped=revisedGrantCount,withheld=0,duplicateExcluded=revisedGrantCount;
   for(const {index:i,row} of take){
     if(row.length>headers.length){issues.push({severity:"warning",message:"Row "+(i+2)+" has extra columns and was skipped"});skipped++;continue;}
     const record=Object.fromEntries(headers.map((h,j)=>[h,clean(row[j])]));
