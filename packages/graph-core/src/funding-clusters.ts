@@ -121,6 +121,8 @@ export type FundingFullAnalysis={
   leadingFunders:{id:string;name:string;grants:number;recipients:number}[];
   sharedRecipients:{id:string;name:string;funders:number;grants:number}[];
   recipientRegions:{region:string;grants:number}[];
+  /** Entity labels for full-data evidence that may not be in the reduced network. */
+  entityLabels:Record<string,string>;
   themes:FundingClusterReport;
 };
 export function buildFundingFullAnalysis(graph:GraphDocument):FundingFullAnalysis{
@@ -158,6 +160,8 @@ export function buildFundingFullAnalysis(graph:GraphDocument):FundingFullAnalysi
     sharedRecipients:orderedRecipients.slice(0,18),
     recipientRegions:[...recipientRegions.entries()].map(([region,grants])=>({region,grants}))
       .sort((a,b)=>b.grants-a.grants),
+    entityLabels:Object.fromEntries([...names.entries()].filter(([id])=>
+      funders.has(id)||recipients.has(id))),
     themes:buildFundingThemeClusters(graph)
   };
 }
