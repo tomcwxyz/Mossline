@@ -315,3 +315,19 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Human-managed theme vocabulary and manual override/review of theme membership.
 - [ ] Embedding-based cluster enrichment and clearly sourced explanatory questions after provider configuration.
 - [ ] Network viewport level-of-detail clustering / virtualisation for very large imports.
+
+
+## Alpha 2.2 — analysis/rendering separation
+- [x] Analyse every eligible organisational grant without discarding rows simply because the canvas is capped.
+- [x] Reconcile repeated grant IDs using latest valid `Date Modified`; independent of CSV row order.
+- [x] Distinct full-source coverage and smaller, funder-balanced network-detail indicators.
+- [x] Full-source theme clusters, award totals, recipient/funder overlap and regional recipient-organisation location counts.
+- [x] Persist only compact aggregate report plus detailed reduced graph in browser-local maps.
+- [x] Explain grant evidence that is outside the canvas, rather than linking to a nonexistent rendered node.
+- [x] Full-data vs reduced-network regression tests with over 1,000 synthetic grant records.
+- [ ] User-selected theme filters that regenerate a more relevant detailed network subset without re-uploading the whole CSV.
+- [ ] Move large-scale graph processing into a Web Worker for very large multi-year exports.
+- [ ] Dedicated durable workspace storage for full source data; avoid assuming browser localStorage is a database.
+- [ ] Clear beneficiary vs recipient vs grant funder location comparisons.
+- [ ] Quality review tooling for conflicting grant revisions or missing source metadata.
+- [ ] Scalable embeddings over the full dataset, with privacy review, budget caps and clearly documented selection.
