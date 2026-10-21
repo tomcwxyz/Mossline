@@ -1,6 +1,7 @@
 "use client";
 import {useMemo,useState,type ChangeEvent} from "react";
 import {DiscoverConnections} from "./DiscoverConnections";
+import {FundingClusters} from "./FundingClusters";
 import {analyseFundingLandscape,graphFingerprint,importFundingCsv,parseCsv,suggestFundingMapping,
   type FundingMapping,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
@@ -38,7 +39,7 @@ export function FundingWorkbench({onCreate,onClose}:{
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
     if(!uploaded)return;
-    if(uploaded.size>3_000_000){setError("Choose a CSV file smaller than 3 MB for now.");return;}
+    if(uploaded.size>12_000_000){setError("Choose a CSV file smaller than 12 MB for now. Split larger exports into smaller datasets.");return;}
     try{useFile({name:uploaded.name,text:await uploaded.text()});}
     catch{setError("Unable to read the file.");}
   }
@@ -107,8 +108,21 @@ export function FundingWorkbench({onCreate,onClose}:{
         <div><strong>{parsed.counts.importedGrants}</strong><span>Recorded grants</span></div>
         <div><strong>{parsed.counts.funders}</strong><span>Funders</span></div>
         <div><strong>{parsed.counts.recipients}</strong><span>Recipients</span></div>
-        <div><strong>{parsed.counts.skipped}</strong><span>Excluded / skipped rows</span></div>
+        <div><strong>{parsed.counts.skipped}</strong><span>Excluded / not mapped</span></div>
       </div>
+      {(parsed.counts.individualExcluded>0||parsed.counts.overflowExcluded>0)&&
+        <div className="funding-csv-coverage" role="status">
+          {parsed.counts.individualExcluded>0&&<p><strong>{parsed.counts.individualExcluded}
+          {" "}individual-recipient awards excluded.</strong> No recipient names or personal
+            grant details from these records are included in the map.</p>}
+          {parsed.counts.overflowExcluded>0&&<p><strong>Large export:</strong>
+            {" "}{parsed.counts.eligibleOrganisationRows} eligible organisational records were
+            detected, but only {parsed.counts.importedGrants} are being mapped.
+            {parsed.counts.overflowExcluded} remaining records are not represented.
+            The selection balances funders to support exploration; it is neither
+            a complete landscape nor a statistically representative sample.
+            Filter the CSV to a programme, period or area for deeper analysis.</p>}
+        </div>}
       {parsed.graph&&<div className="funding-import-review">
         <strong>Example recorded relationships</strong>
         <ul>{analyseFundingLandscape(parsed.graph).awards.slice(0,6).map(a=>{
@@ -206,10 +220,13 @@ export function FundingInsights({graph,onExplore}:{
           onClick={()=>setShowAll(v=>!v)}>{showAll?"Show fewer":"Show all "+facts.insights.length+" suggestions"}</button>}
       </div>
     </div>
+    <FundingClusters graph={graph} onExplore={onExplore}/>
     <DiscoverConnections key={graphFingerprint(graph)}
       graph={graph} onExplore={onExplore}/>
     <p className="funding-method-note">Method: recorded source grant links; shared tags where supplied;
-      basic local keyword overlap for other candidates. No embeddings or LLMs are running in this version.
+      phrase-rule theme clusters and local keyword overlaps.
+      Optional AI analysis can be enabled separately; neither embeddings nor an LLM
+      makes any recorded graph links.
       Scores are ranking aids, not probabilities, evidence of need, or impact assessments.</p>
   </section>;
 }
