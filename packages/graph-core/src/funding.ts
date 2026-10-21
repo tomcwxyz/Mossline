@@ -242,10 +242,19 @@ export function analyseFundingLandscape(graph:GraphDocument){
     // Conservative suggestion threshold: source themes, visible phrase rule or two words.
     if(!shared.length&&!sharedTopics.length&&commonWords.length<2)continue;
     const differentFunders=[...a.funders].every(id=>!b.funders.has(id));
-    insights.push({recipientA:a.id,recipientB:b.id,
-      kind:shared.length?"recorded-themes":sharedTopics.length?"topic-rule":"word-overlap",
-      common:shared.length?shared:sharedTopics.length?sharedTopics:commonWords,
-      evidenceA:a.sample.slice(0,220),evidenceB:b.sample.slice(0,220),
+    const kind=shared.length?"recorded-themes":sharedTopics.length?"topic-rule":"word-overlap";
+    const concepts=shared.length?shared:sharedTopics.length?sharedTopics:commonWords;
+    const evidence=(list:FundingAward[])=>{
+      const supporting=list.find(award=>{
+        if(kind==="recorded-themes")return award.themes.map(canonical).some(t=>concepts.includes(t));
+        const prose=[award.title,award.description,award.programme].join(" ");
+        if(kind==="topic-rule")return concepts.some(t=>topicMatches(prose).has(t));
+        return concepts.some(t=>terms(prose).has(t));
+      })??list[0];
+      return [supporting?.title,supporting?.description].filter(Boolean).join(": ").slice(0,220);
+    };
+    insights.push({recipientA:a.id,recipientB:b.id,kind,
+      common:concepts,evidenceA:evidence(a.list),evidenceB:evidence(b.list),
       differentFunders,score:shared.length*5+sharedTopics.length*3+commonWords.length+(differentFunders?1:0)});
   }
   insights.sort((a,b)=>b.score-a.score||nodeNames.get(a.recipientA)!.localeCompare(nodeNames.get(b.recipientA)!));
