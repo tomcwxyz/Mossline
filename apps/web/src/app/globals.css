@@ -1170,3 +1170,43 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
   background:#fffdf6;color:#23372b;border:1px solid #8eaa93;
   border-radius:7px;padding:12px;font-size:13px}
 @media(max-width:600px){.recovery-section .recovery-secondary{margin:10px 0 0}}
+
+/* Adaptive whole-network exploration; grouped summaries never become source records. */
+.whole-graph-explorer{margin:28px 0;border:1px solid #bed1b8;border-radius:15px;
+  background:#e9f1e6;color:#244332;padding:clamp(15px,3vw,26px)}
+.whole-graph-heading{display:flex;align-items:start;justify-content:space-between;
+  gap:20px;flex-wrap:wrap}
+.whole-graph-heading h3{font:normal clamp(23px,3vw,32px)/1.15 Georgia,serif;margin:6px 0 12px}
+.whole-graph-heading p:not(.eyebrow){font-size:13px;line-height:1.65;max-width:780px}
+.whole-graph-actions{display:flex;gap:8px;flex-wrap:wrap}
+.whole-graph-actions button{border:1px solid #7c9b7d;background:transparent;
+  color:#315940;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:700}
+.whole-graph-actions button:disabled,.whole-graph-group-list button:disabled{opacity:.45}
+.whole-graph-coverage{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 12px}
+.whole-graph-coverage span{border:1px solid #b6cdb3;background:#f6f8f1;border-radius:8px;
+  padding:10px 12px;font-size:12px}
+.whole-graph-stage{position:relative;border-radius:12px;overflow:hidden;
+  border:1px solid #45634f;background:#143028}
+.whole-graph-canvas{height:clamp(380px,62vh,660px);width:100%;touch-action:none}
+.whole-graph-bottom{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
+  gap:18px;margin-top:18px}
+.whole-graph-bottom section{border:1px solid #bbcfb6;background:#f8f9f2;
+  border-radius:11px;padding:18px;min-width:0}
+.whole-graph-bottom h4{font:normal 21px Georgia,serif;margin:0 0 9px}
+.whole-graph-bottom p{font-size:12px;line-height:1.7;margin:8px 0}
+.whole-graph-group-list{display:grid;gap:7px;max-height:250px;overflow:auto}
+.whole-graph-group-list button{display:flex;justify-content:space-between;align-items:center;
+  gap:12px;text-align:left;border:1px solid #b6c8b3;border-radius:8px;
+  background:#e9f0e5;color:#254733;padding:10px 12px;font-size:12px}
+.whole-graph-group-list button span:first-child{flex:1;overflow-wrap:anywhere}
+.whole-graph-inspector strong{overflow-wrap:anywhere}
+.whole-graph-inspector a{color:#245f3e;text-decoration:underline}
+.whole-graph-notice,.whole-graph-error{font-size:12px;line-height:1.6;margin:12px 0}
+.whole-graph-error{color:#9a3a29}
+.whole-graph-explorer :is(button,a):focus-visible{outline:3px solid #b58c3f;outline-offset:3px}
+.funding-detail-pages{border:1px solid #bdcdb4;border-radius:10px;
+  margin:18px 0;padding:14px 17px}
+.funding-detail-pages>summary{cursor:pointer;font-weight:700}
+.funding-detail-pages>p{font-size:12px;line-height:1.7}
+@media(max-width:750px){.whole-graph-bottom{grid-template-columns:1fr}
+ .whole-graph-canvas{height:420px}}
