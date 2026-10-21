@@ -106,3 +106,58 @@ export function buildFundingThemeClusters(graph:GraphDocument,maxEvidence=5):Fun
     unclassifiedGrants:awards.length-classifiedGrants,multipleThemeGrants,
     method:"source-tags-and-phrase-rules"};
 }
+
+
+/** Compact, portable aggregate built from ALL eligible awards. The complete
+ * source graph can then be discarded: do not persist raw 360Giving rows in
+ * localStorage or upload them to Mossline's publishing service.
+ */
+export type FundingFullAnalysis={
+  version:1;
+  scope:"eligible-organisation-grants";
+  grants:number;funders:number;recipients:number;
+  amounts:{currency:string;total:number;knownAmounts:number}[];
+  multiFundedCount:number;
+  leadingFunders:{id:string;name:string;grants:number;recipients:number}[];
+  sharedRecipients:{id:string;name:string;funders:number;grants:number}[];
+  recipientRegions:{region:string;grants:number}[];
+  themes:FundingClusterReport;
+};
+export function buildFundingFullAnalysis(graph:GraphDocument):FundingFullAnalysis{
+  const awards=fundingAwards(graph);
+  const names=new Map(graph.nodes.map(n=>[n.id,n.label]));
+  const regions=new Map(graph.nodes.map(n=>[n.id,n.region?.trim()??""]));
+  const funders=new Map<string,{grants:number;recipients:Set<string>}>();
+  const recipients=new Map<string,{grants:number;funders:Set<string>}>();
+  const amounts=new Map<string,{total:number;knownAmounts:number}>();
+  const recipientRegions=new Map<string,number>();
+  for(const a of awards){
+    const f=funders.get(a.funderId)??{grants:0,recipients:new Set<string>()};
+    f.grants++;f.recipients.add(a.recipientId);funders.set(a.funderId,f);
+    const r=recipients.get(a.recipientId)??{grants:0,funders:new Set<string>()};
+    r.grants++;r.funders.add(a.funderId);recipients.set(a.recipientId,r);
+    if(a.amount!==null&&a.currency){
+      const tot=amounts.get(a.currency)??{total:0,knownAmounts:0};
+      tot.total+=a.amount;tot.knownAmounts++;amounts.set(a.currency,tot);
+    }
+    const region=regions.get(a.recipientId)||"Unknown recipient location";
+    recipientRegions.set(region,(recipientRegions.get(region)??0)+1);
+  }
+  const orderedFunders=[...funders.entries()].map(([id,v])=>({
+    id,name:names.get(id)??id,grants:v.grants,recipients:v.recipients.size
+  })).sort((a,b)=>b.grants-a.grants||a.name.localeCompare(b.name));
+  const orderedRecipients=[...recipients.entries()].filter(([,v])=>v.funders.size>1)
+    .map(([id,v])=>({id,name:names.get(id)??id,funders:v.funders.size,grants:v.grants}))
+    .sort((a,b)=>b.funders-a.funders||b.grants-a.grants||a.name.localeCompare(b.name));
+  return {version:1,scope:"eligible-organisation-grants",grants:awards.length,
+    funders:funders.size,recipients:recipients.size,
+    amounts:[...amounts.entries()].map(([currency,v])=>({currency,...v}))
+      .sort((a,b)=>a.currency.localeCompare(b.currency)),
+    multiFundedCount:orderedRecipients.length,
+    leadingFunders:orderedFunders.slice(0,18),
+    sharedRecipients:orderedRecipients.slice(0,18),
+    recipientRegions:[...recipientRegions.entries()].map(([region,grants])=>({region,grants}))
+      .sort((a,b)=>b.grants-a.grants),
+    themes:buildFundingThemeClusters(graph)
+  };
+}
