@@ -2,8 +2,8 @@
 import {useMemo,useState,type ChangeEvent} from "react";
 import {DiscoverConnections} from "./DiscoverConnections";
 import {FundingClusters} from "./FundingClusters";
-import {analyseFundingLandscape,graphFingerprint,importFundingCsv,parseCsv,suggestFundingMapping,
-  type FundingMapping,type GraphDocument,type ImportFile} from "@mossline/graph-core";
+import {analyseFundingLandscape,buildFundingFullAnalysis,graphFingerprint,importFundingCsv,parseCsv,suggestFundingMapping,
+  type FundingMapping,type FundingFullAnalysis,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
 const FIELDS:[keyof FundingMapping,string][]=[
  ["funder","Funder / awarding organisation"],["recipient","Recipient organisation"],
@@ -16,7 +16,7 @@ const FIELDS:[keyof FundingMapping,string][]=[
 ];
 
 export function FundingWorkbench({onCreate,onClose}:{
-  onCreate:(graph:GraphDocument)=>boolean;onClose:()=>void;
+  onCreate:(graph:GraphDocument,analysis:FundingFullAnalysis)=>boolean;onClose:()=>void;
 }){
   const [file,setFile]=useState<ImportFile|null>(null);
   const [mapping,setMapping]=useState<FundingMapping|null>(null);
@@ -24,6 +24,8 @@ export function FundingWorkbench({onCreate,onClose}:{
   const [busy,setBusy]=useState(false);
   const [reviewed,setReviewed]=useState(false);
   const parsed=useMemo(()=>file?importFundingCsv(file,mapping??undefined):null,[file,mapping]);
+  const fullAnalysis=useMemo(()=>parsed?.graph?
+    buildFundingFullAnalysis(parsed.analysisGraph??parsed.graph):null,[parsed]);
   const headers=useMemo(()=>{
     if(!file)return [];
     try{return parseCsv(file.text)[0]??[];}catch{return [];}
@@ -53,8 +55,8 @@ export function FundingWorkbench({onCreate,onClose}:{
     finally{setBusy(false);}
   }
   function create(){
-    if(!parsed?.graph||parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
-    if(onCreate(parsed.graph))onClose();
+    if(!parsed?.graph||!fullAnalysis||parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
+    if(onCreate(parsed.graph,fullAnalysis))onClose();
     else setError("The map couldn't be saved. Export or remove a browser-local map first.");
   }
   return <section className="funding-workbench" aria-label="Create a funding landscape">
@@ -105,10 +107,10 @@ export function FundingWorkbench({onCreate,onClose}:{
           </label>)}</div>
       </details>
       <div className="funding-preview-stats">
-        <div><strong>{parsed.counts.importedGrants}</strong><span>Recorded grants</span></div>
-        <div><strong>{parsed.counts.funders}</strong><span>Funders</span></div>
-        <div><strong>{parsed.counts.recipients}</strong><span>Recipients</span></div>
-        <div><strong>{parsed.counts.skipped}</strong><span>Excluded / not mapped</span></div>
+        <div><strong>{fullAnalysis?.grants??0}</strong><span>Unique grants analysed (full data)</span></div>
+        <div><strong>{fullAnalysis?.funders??0}</strong><span>Funders (full data)</span></div>
+        <div><strong>{fullAnalysis?.recipients??0}</strong><span>Recipients (full data)</span></div>
+        <div><strong>{parsed.counts.importedGrants}</strong><span>Grants in network view</span></div>
       </div>
       {(parsed.counts.individualExcluded>0||parsed.counts.overflowExcluded>0)&&
         <div className="funding-csv-coverage" role="status">
@@ -119,9 +121,11 @@ export function FundingWorkbench({onCreate,onClose}:{
             {" "}{parsed.counts.eligibleOrganisationRows} eligible organisational records were
             detected, but only {parsed.counts.importedGrants} are being mapped.
             {parsed.counts.overflowExcluded} remaining records are not represented.
-            The selection balances funders to support exploration; it is neither
-            a complete landscape nor a statistically representative sample.
-            Filter the CSV to a programme, period or area for deeper analysis.</p>}
+            The selection balances funders for network exploration; it is not a
+            statistically representative sample. <strong>All {fullAnalysis?.grants??0}
+            {" "}unique eligible organisation awards are nevertheless analysed</strong>
+            {" "}in the full funding totals and theme clusters. Filter the CSV
+            for more detailed mapping.</p>}
         </div>}
       {parsed.graph&&<div className="funding-import-review">
         <strong>Example recorded relationships</strong>
@@ -151,8 +155,8 @@ export function FundingWorkbench({onCreate,onClose}:{
   </section>;
 }
 
-export function FundingInsights({graph,onExplore}:{
-  graph:GraphDocument;onExplore:(id:string)=>void;
+export function FundingInsights({graph,fullAnalysis,onExplore}:{
+  graph:GraphDocument;fullAnalysis?:FundingFullAnalysis;onExplore:(id:string)=>void;
 }){
   const facts=useMemo(()=>analyseFundingLandscape(graph),[graph]);
   const [showAll,setShowAll]=useState(false);
@@ -167,22 +171,51 @@ export function FundingInsights({graph,onExplore}:{
         Potentially related themes are <strong>not</strong> assertions of collaboration.</p>
     </div></div>
     <div className="funding-preview-stats">
-      <div><strong>{facts.awardCount}</strong><span>Grant records</span></div>
-      <div><strong>{facts.funderCount}</strong><span>Funders</span></div>
-      <div><strong>{facts.recipientCount}</strong><span>Recipients</span></div>
-      <div><strong>{facts.multiFunded.length}</strong><span>Recipients supported by multiple funders</span></div>
+      <div><strong>{fullAnalysis?.grants??facts.awardCount}</strong><span>Unique grants analysed</span></div>
+      <div><strong>{fullAnalysis?.funders??facts.funderCount}</strong><span>Funders</span></div>
+      <div><strong>{fullAnalysis?.recipients??facts.recipientCount}</strong><span>Recipients</span></div>
+      <div><strong>{fullAnalysis?.multiFundedCount??facts.multiFunded.length}</strong><span>Recipients supported by multiple funders</span></div>
     </div>
     {facts.amounts.length>0&&<p className="funding-amounts">
       Recorded award totals (not spending, adjusted for inflation or proven impact):
-      {" "}{facts.amounts.map(({currency,total,count})=>{
-        try{return formatAmount(total,currency)+" across "+count+" awards";}
-        catch{return currency+" "+total+" across "+count+" awards";}
+      {" "}{(fullAnalysis?.amounts??facts.amounts.map(x=>({currency:x.currency,total:x.total,knownAmounts:x.count}))).map(({currency,total,knownAmounts})=>{
+        try{return formatAmount(total,currency)+" across "+knownAmounts+" awards";}
+        catch{return currency+" "+total+" across "+knownAmounts+" awards";}
       }).join(" · ")}
     </p>}
+    {fullAnalysis&&fullAnalysis.grants>facts.awardCount&&
+      <p className="funding-cluster-caveat">
+        Full-data funding figures above cover {fullAnalysis.grants} unique eligible grants.
+        The network visualisation below and the pairwise comparison list show
+        a funder-balanced selection of {facts.awardCount} grants.
+        They are for exploration and are not representative of the whole dataset.
+      </p>}
+    {fullAnalysis&&<details className="funding-full-overview">
+      <summary>Explore funders, repeated recipients and locations across all {fullAnalysis.grants} grants</summary>
+      <div className="funding-full-overview-grid">
+        <section><h3>Leading funders by recorded grants</h3>
+          <ol>{fullAnalysis.leadingFunders.slice(0,12).map(f=>
+            <li key={f.id}><strong>{f.name}</strong>
+              <span>{f.grants} grants · {f.recipients} recipients</span></li>)}</ol>
+        </section>
+        <section><h3>Recipients appearing across several funders</h3>
+          <ol>{fullAnalysis.sharedRecipients.slice(0,12).map(r=>
+            <li key={r.id}><strong>{r.name}</strong>
+              <span>{r.funders} funders · {r.grants} grants</span></li>)}</ol>
+          {!fullAnalysis.sharedRecipients.length&&<p>No repeated recipients in these records.</p>}
+        </section>
+      </div>
+      <p className="funding-method-note">Source geography here is the
+        <strong> recipient organisation's region</strong>, not proof that the
+        funding was spent in that region or that its beneficiaries live there.</p>
+      <div className="funding-regions">{fullAnalysis.recipientRegions.slice(0,12).map(r=>
+        <span key={r.region}>{r.region}: {r.grants} grants</span>)}</div>
+    </details>}
     <div className="funding-insight-columns">
       <div className="funding-insight-column">
-        <h3>Shared recipients</h3>
-        <p>Organisations recorded as receiving awards from more than one funder.</p>
+        <h3>Shared recipients {fullAnalysis?.grants!==facts.awardCount?"· network selection":""}</h3>
+        <p>Organisations recorded as receiving awards from more than one funder
+          {fullAnalysis?.grants!==facts.awardCount?" in the selected network view":""}.</p>
         {facts.multiFunded.length===0?<p className="funding-muted">No overlaps recorded in these grants.</p>:
           <ul>{facts.multiFunded.slice(0,8).map(item=><li key={item.id}>
             <button type="button" onClick={()=>onExplore(item.id)}>
@@ -220,7 +253,7 @@ export function FundingInsights({graph,onExplore}:{
           onClick={()=>setShowAll(v=>!v)}>{showAll?"Show fewer":"Show all "+facts.insights.length+" suggestions"}</button>}
       </div>
     </div>
-    <FundingClusters graph={graph} onExplore={onExplore}/>
+    <FundingClusters graph={graph} fullAnalysis={fullAnalysis} onExplore={onExplore}/>
     <DiscoverConnections key={graphFingerprint(graph)}
       graph={graph} onExplore={onExplore}/>
     <p className="funding-method-note">Method: recorded source grant links; shared tags where supplied;

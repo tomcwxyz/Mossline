@@ -745,3 +745,51 @@ and whether any grant remains *unclassified* are always available.
 Missing classifications are not proof of gaps in funding or unmet need.
 This is a starting point for question-led exploration, not a definitive
 subject classification or causal model.
+
+
+## Alpha 2.2 — full-data funding analysis, reduced network view
+
+**Alpha 2.2 replaces Alpha 2.1's subset-only analytical limitation.**
+The importer now assembles *all eligible organisational grant records* in
+a temporary in-browser graph, reconciles duplicate grant identifiers by
+their latest valid `Date Modified` version, and calculates compact
+**full-source funding analytics** before creating the reduced interactive
+canvas graph.
+
+All eligible, unique grants contribute to:
+- Overall award totals, separately by currency; distinct funder/recipient
+  counts and the count of recipients supported by multiple funders.
+- Ranked funders and repeated recipients across the source export.
+- Counts by **recipient organisation region** (not beneficiary location).
+- Source theme and phrase-rule clusters, each with amount, funder,
+  organisation and evidence coverage; explicitly unclassified grants.
+
+The network canvas remains a **funder-balanced, non-representative
+selection of up to 1,200 grants**, keeping the view navigable. Full-data
+theme cards label their scope prominently. Where a complete-data grant
+is absent from the selection, its evidence remains readable, but it is
+not falsely offered as an interactive canvas node.
+
+The full raw graph is **not persisted**, sent to a model or uploaded
+to Neon. Only the compact aggregate results and reduced network are
+stored in the browser's map library. The aggregate survives switching
+between local maps. Editing/replacing source graph data invalidates
+the old aggregate to prevent stale full-source conclusions.
+
+### Real-world verification (user-provided GrantNav format)
+
+An uploaded 7,757-row 2025 GrantNav extract was inspected locally:
+3,971 individual-recipient awards were excluded; 3,786
+organisation-recipient rows resolved to **3,780 unique grant IDs**
+after six repeated grant IDs were reconciled using their 2026 modified
+versions, including one changed amount. These records cover 90 unique
+funder identifiers and 2,009 recipient identifiers. The user's
+original file **was not committed to GitHub, deployed or sent to an AI
+provider**. Automated integration tests use synthetic GrantNav-format CSV.
+
+This full-data analysis is still a snapshot of the *supplied export*.
+It does **not** correct unknown data completeness, infer locality of
+beneficiaries, account for inflation, or establish need, impact,
+partnership or public spending. Optional semantic embeddings remain
+capped at 48 grant excerpts selected from the **detail network** and
+must not be represented as having analysed every award.
