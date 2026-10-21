@@ -63,27 +63,37 @@ export function buildAdaptiveGraphIndex(source:GraphDocument):AdaptiveGraphIndex
   const roots:AdaptiveItem[]=[];
   for(const [type,nodes] of [...byType.entries()].sort(([a],[b])=>a.localeCompare(b))){
     if(nodes.length===1){roots.push(leaf(nodes[0]));continue;}
-    const byRegion=new Map<string,GraphNode[]>();
+    const grantAwards=type==="project"&&nodes.every(n=>
+      n.properties?.mosslineFundingGrant===true&&typeof n.properties.funderId==="string");
+    const sourceById=new Map(source.nodes.map(n=>[n.id,n]));
+    const byMeaning=new Map<string,GraphNode[]>();
     for(const node of nodes){
-      const region=node.region?.trim()||"Region not recorded";
-      const members=byRegion.get(region)??[];
-      members.push(node);byRegion.set(region,members);
+      // Source-supplied funding links give a meaningful first grouping for
+      // awards; generic nodes retain their recorded region. No AI-invented
+      // community or unverified relationship is introduced.
+      const grouping=grantAwards?
+        "Funded by "+(sourceById.get(String(node.properties?.funderId))?.label??
+          String(node.properties?.funderId)):
+        node.region?.trim()||"Region not recorded";
+      const members=byMeaning.get(grouping)??[];
+      members.push(node);byMeaning.set(grouping,members);
     }
-    // Avoid a high-cardinality region explosion. Regional groups themselves
-    // remain available for drill-down (rather than hiding excess regions).
-    const regions=[...byRegion.entries()].sort(([a],[b])=>a.localeCompare(b));
+    // Group excessive top-level categories into alphabetic ranges rather
+    // than dropping any funder, region or entity from the visible hierarchy.
+    const categories=[...byMeaning.entries()].sort(([a],[b])=>a.localeCompare(b));
     const children:AdaptiveItem[]=[];
-    const regionItems=regions.map(([region,members])=>
+    const categoryItems=categories.map(([label,members])=>
       members.length===1?leaf(members[0]):
-      makeGroup(region,members,chunks(members)));
-    if(regionItems.length<=FANOUT)children.push(...regionItems);
+      makeGroup(label,members,chunks(members)));
+    if(categoryItems.length<=FANOUT)children.push(...categoryItems);
     else{
-      const per=Math.ceil(regionItems.length/FANOUT);
-      for(let i=0;i<regionItems.length;i+=per){
-        const slice=regionItems.slice(i,i+per);
-        const subnodes=regions.slice(i,i+per).flatMap(([,members])=>members);
-        children.push(makeGroup("Regions "+regions[i][0]+" – "+
-          regions[Math.min(i+per,regions.length)-1][0],subnodes,slice));
+      const per=Math.ceil(categoryItems.length/FANOUT);
+      for(let i=0;i<categoryItems.length;i+=per){
+        const slice=categoryItems.slice(i,i+per);
+        const subnodes=categories.slice(i,i+per).flatMap(([,members])=>members);
+        children.push(makeGroup((grantAwards?"Funders ":"Regions ")+
+          categories[i][0]+" – "+
+          categories[Math.min(i+per,categories.length)-1][0],subnodes,slice));
       }
     }
     roots.push(makeGroup(typeNames[type]??type,nodes,children));

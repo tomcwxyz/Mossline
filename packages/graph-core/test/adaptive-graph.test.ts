@@ -73,3 +73,22 @@ test("expansion budget refuses a dense fully expanded hairball rather than hidin
  assert.equal(partial.representedEdges,900);
  assert.throws(()=>projectAdaptiveGraph(index,[...index.groups.keys()]),/visible connections/);
 });
+
+test("grants expand by their recorded funder before showing individual awards",()=>{
+ const graph=parseGraphDocument({version:1,title:"Funding",description:"",
+ nodes:[{id:"a",label:"Amber Trust",type:"funder",tags:[]},
+   {id:"b",label:"Blue Trust",type:"funder",tags:[]},
+   ...Array.from({length:50},(_,i)=>({id:"g"+i,label:"Grant "+i,
+     type:"project",tags:[],properties:{mosslineFundingGrant:true,
+       funderId:i%2?"a":"b"}}))],
+ edges:Array.from({length:50},(_,i)=>({
+   id:"award"+i,source:i%2?"a":"b",target:"g"+i,type:"awarded"}))});
+ const index=buildAdaptiveGraphIndex(graph);
+ const first=projectAdaptiveGraph(index);
+ const awardsRoot=first.availableGroups.find(g=>g.label==="Projects and grants");
+ assert.ok(awardsRoot);
+ const expanded=projectAdaptiveGraph(index,[awardsRoot!.id]);
+ assert.ok(expanded.availableGroups.some(g=>g.label==="Funded by Amber Trust"));
+ assert.ok(expanded.availableGroups.some(g=>g.label==="Funded by Blue Trust"));
+ assert.equal(expanded.representedEdges,50);
+});
