@@ -1,9 +1,9 @@
 "use client";
-import {useMemo,useState,type ChangeEvent} from "react";
+import {useEffect,useMemo,useRef,useState,type ChangeEvent} from "react";
 import {DiscoverConnections} from "./DiscoverConnections";
 import {FundingClusters} from "./FundingClusters";
-import {analyseFundingLandscape,buildFundingFullAnalysis,graphFingerprint,importFundingCsv,parseCsv,suggestFundingMapping,
-  type FundingMapping,type FundingFullAnalysis,type GraphDocument,type ImportFile} from "@mossline/graph-core";
+import {analyseFundingLandscape,graphFingerprint,
+  type FundingImport,type FundingMapping,type FundingFullAnalysis,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
 const FIELDS:[keyof FundingMapping,string][]=[
  ["funder","Funder / awarding organisation"],["recipient","Recipient organisation"],
@@ -22,40 +22,110 @@ export function FundingWorkbench({onCreate,onClose}:{
   const [mapping,setMapping]=useState<FundingMapping|null>(null);
   const [error,setError]=useState("");
   const [busy,setBusy]=useState(false);
+  const [stage,setStage]=useState("");
+  const [dirty,setDirty]=useState(false);
   const [reviewed,setReviewed]=useState(false);
-  const parsed=useMemo(()=>file?importFundingCsv(file,mapping??undefined):null,[file,mapping]);
-  const fullAnalysis=useMemo(()=>parsed?.graph?
-    buildFundingFullAnalysis(parsed.analysisGraph??parsed.graph):null,[parsed]);
-  const headers=useMemo(()=>{
-    if(!file)return [];
-    try{return parseCsv(file.text)[0]??[];}catch{return [];}
-  },[file]);
+  const [parsed,setParsed]=useState<Pick<FundingImport,"graph"|"issues"|"counts">|null>(null);
+  const [fullAnalysis,setFullAnalysis]=useState<FundingFullAnalysis|null>(null);
+  const [headings,setHeadings]=useState<string[]>([]);
+  const [examples,setExamples]=useState<{title:string;funder:string;recipient:string}[]>([]);
+  const workerRef=useRef<Worker|null>(null);
+  const requestRef=useRef(0);
+  useEffect(()=>()=>{workerRef.current?.terminate();requestRef.current++;},[]);
   const columns=mapping?Object.values(mapping):[];
-  const allOptions=[...new Set([...headers,...columns])].filter(Boolean);
+  const allOptions=[...new Set([...headings,...columns])].filter(Boolean);
 
+  function analyse(next:ImportFile,override?:FundingMapping,newSource=false){
+    if(newSource){workerRef.current?.terminate();workerRef.current=null;}
+    const needsFile=!workerRef.current;
+    if(!workerRef.current){
+      try{
+        workerRef.current=new Worker(
+          new URL("../workers/funding-import.worker.ts",import.meta.url),
+          {type:"module"}
+        );
+      }catch{
+        setError("Background CSV processing is not available in this browser.");
+        setBusy(false);return;
+      }
+    }
+    const worker=workerRef.current;
+    const id=++requestRef.current;
+    setBusy(true);setStage("Preparing grant data in the background…");
+    setError("");setReviewed(false);setDirty(false);setParsed(null);
+    setFullAnalysis(null);
+    worker.onmessage=(event:MessageEvent<{
+      kind:"stage"|"result"|"failed";id:number;message?:string;
+      headings?:string[];mapping?:FundingMapping;
+      graph?:GraphDocument|null;fullAnalysis?:FundingFullAnalysis|null;
+      issues?:FundingImport["issues"];counts?:FundingImport["counts"];
+      examples?:{title:string;funder:string;recipient:string}[];
+    }>)=>{
+      const reply=event.data;
+      if(reply.id!==requestRef.current)return;
+      if(reply.kind==="stage"){setStage(reply.message??"Analysing…");return;}
+      setBusy(false);setStage("");
+      if(reply.kind==="failed"){
+        setError(reply.message??"Could not analyse this spreadsheet.");return;
+      }
+      setMapping(reply.mapping??null);setHeadings(reply.headings??[]);
+      setParsed(reply.counts&&reply.issues?{
+        graph:reply.graph??null,issues:reply.issues,counts:reply.counts
+      }:null);
+      setFullAnalysis(reply.fullAnalysis??null);
+      setExamples(reply.examples??[]);
+    };
+    worker.onerror=()=>{
+      if(id!==requestRef.current)return;
+      setBusy(false);setStage("");
+      setError("The background CSV analysis failed. Try a smaller file or another browser.");
+      worker.terminate();workerRef.current=null;
+    };
+    worker.postMessage({kind:"analyse",id,
+      ...(needsFile?{file:next}:{}),
+      ...(override?{mapping:override}:{})
+    });
+  }
   function useFile(next:ImportFile){
-    const headings=(()=>{try{return parseCsv(next.text)[0]??[];}catch{return [];}})();
-    setFile(next);setMapping(suggestFundingMapping(headings));
-    setError("");setReviewed(false);
+    setFile(next);setMapping(null);setHeadings([]);setExamples([]);
+    setParsed(null);setFullAnalysis(null);setDirty(false);
+    analyse(next,undefined,true);
   }
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
     if(!uploaded)return;
-    if(uploaded.size>12_000_000){setError("Choose a CSV file smaller than 12 MB for now. Split larger exports into smaller datasets.");return;}
+    if(uploaded.size>12_000_000){
+      setError("Choose a CSV file smaller than 12 MB for now.");
+      return;
+    }
+    setBusy(true);setStage("Reading your file…");setError("");
     try{useFile({name:uploaded.name,text:await uploaded.text()});}
-    catch{setError("Unable to read the file.");}
+    catch{setBusy(false);setStage("");setError("Unable to read the file.");}
   }
   async function sample(){
-    setBusy(true);setError("");
+    setBusy(true);setStage("Loading the fictional example…");setError("");
     try{
       const response=await fetch("/funding-landscape-example.csv",{cache:"no-store"});
       if(!response.ok)throw Error("The example could not be loaded");
       useFile({name:"Fictional funding landscape.csv",text:await response.text()});
-    }catch(err){setError(err instanceof Error?err.message:"Could not load the fictional example");}
-    finally{setBusy(false);}
+    }catch(err){
+      setBusy(false);setStage("");
+      setError(err instanceof Error?err.message:"Could not load the example");
+    }
+  }
+  function reviseMapping(field:keyof FundingMapping,value:string){
+    if(!mapping)return;
+    setMapping({...mapping,[field]:value});
+    setDirty(true);setReviewed(false);
+  }
+  function cancel(){
+    requestRef.current++;workerRef.current?.terminate();
+    workerRef.current=null;setBusy(false);setStage("");
+    setError("Analysis cancelled. Your source CSV has not been saved.");
   }
   function create(){
-    if(!parsed?.graph||!fullAnalysis||parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
+    if(!parsed?.graph||!fullAnalysis||busy||dirty||
+      parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
     if(onCreate(parsed.graph,fullAnalysis))onClose();
     else setError("The map couldn't be saved. Export or remove a browser-local map first.");
   }
@@ -81,14 +151,18 @@ export function FundingWorkbench({onCreate,onClose}:{
       Files are processed in your browser. No model or AI provider receives them.
       This version maps grants to <strong>funder → award → recipient</strong>,
       keeping every grant independently inspectable.</p>
-    {file&&mapping&&parsed&&<>
+    {busy&&<div className="funding-csv-coverage" role="status" aria-live="polite">
+      <strong>{stage}</strong>
+      <p>The page remains usable while the CSV is analysed in a background worker.</p>
+      <button type="button" className="button-outline" onClick={cancel}>Cancel analysis</button>
+    </div>}
+    {file&&mapping&&<div className="funding-file-mapping">
       <h3>{file.name}</h3>
       <div className="funding-mapping-essential">
         {FIELDS.slice(0,2).map(([field,label])=><label key={field}>
           {label} (required)
-          <select value={mapping[field]} onChange={e=>{
-            setMapping({...mapping,[field]:e.target.value});setReviewed(false);
-          }}>
+          <select value={mapping[field]} disabled={busy}
+            onChange={e=>reviseMapping(field,e.target.value)}>
             <option value="">Choose a column…</option>
             {allOptions.map(h=><option key={h} value={h}>{h}</option>)}
           </select>
@@ -98,14 +172,20 @@ export function FundingWorkbench({onCreate,onClose}:{
         <summary>Review other detected grant fields</summary>
         <div className="funding-field-grid">{FIELDS.slice(2).map(([field,label])=>
           <label key={field}>{label}
-            <select value={mapping[field]} onChange={e=>{
-              setMapping({...mapping,[field]:e.target.value});setReviewed(false);
-            }}>
+            <select value={mapping[field]} disabled={busy}
+              onChange={e=>reviseMapping(field,e.target.value)}>
               <option value="">Not provided</option>
               {allOptions.map(h=><option key={h} value={h}>{h}</option>)}
             </select>
           </label>)}</div>
       </details>
+      {dirty&&<div className="funding-csv-coverage" role="status">
+        Column mappings changed. Reanalyse to refresh the preview before creating a map.
+        <button className="button-primary" type="button" disabled={busy}
+          onClick={()=>analyse(file,mapping)}>Apply mapping and reanalyse</button>
+      </div>}
+    </div>}
+    {file&&mapping&&parsed&&!dirty&&!busy&&<>
       <div className="funding-preview-stats">
         <div><strong>{fullAnalysis?.grants??0}</strong><span>Unique grants analysed (full data)</span></div>
         <div><strong>{fullAnalysis?.funders??0}</strong><span>Funders (full data)</span></div>
@@ -127,14 +207,11 @@ export function FundingWorkbench({onCreate,onClose}:{
             {" "}in the full funding totals and theme clusters. Filter the CSV
             for more detailed mapping.</p>}
         </div>}
-      {parsed.graph&&<div className="funding-import-review">
+      {examples.length>0&&<div className="funding-import-review">
         <strong>Example recorded relationships</strong>
-        <ul>{analyseFundingLandscape(parsed.graph).awards.slice(0,6).map(a=>{
-          const names=new Map(parsed.graph!.nodes.map(n=>[n.id,n.label]));
-          return <li key={a.grantId}>
-            {names.get(a.funderId)} → <em>{a.title}</em> → {names.get(a.recipientId)}
-          </li>;
-        })}</ul>
+        <ul>{examples.map((item,i)=><li key={i}>
+          {item.funder} → <em>{item.title}</em> → {item.recipient}
+        </li>)}</ul>
       </div>}
       {parsed.issues.length>0&&<details className="funding-advanced">
         <summary>{parsed.issues.length} findings to review</summary>
@@ -146,12 +223,16 @@ export function FundingWorkbench({onCreate,onClose}:{
         These are the funding records I want to map; excluded records and any
         uncertain identities have been reviewed.
       </label>}
-      <button type="button" className="button-primary" disabled={!reviewed||!parsed.graph||
+      <button type="button" className="button-primary" disabled={!reviewed||!parsed.graph||busy||dirty||
         parsed.issues.some(i=>i.severity==="error")} onClick={create}>
         Create funding landscape →
       </button>
     </>}
-    {error&&<p role="alert" className="funding-error">{error}</p>}
+    {error&&<div role="alert" className="funding-error">
+      <p>{error}</p>
+      {file&&!busy&&<button className="button-outline" type="button"
+        onClick={()=>analyse(file,mapping??undefined,true)}>Retry analysis</button>}
+    </div>}
   </section>;
 }
 

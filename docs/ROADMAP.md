@@ -331,3 +331,14 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Clear beneficiary vs recipient vs grant funder location comparisons.
 - [ ] Quality review tooling for conflicting grant revisions or missing source metadata.
 - [ ] Scalable embeddings over the full dataset, with privacy review, budget caps and clearly documented selection.
+
+## Browser responsiveness and GrantNav imports
+- [x] Background worker for expensive CSV parsing, eligibility filters and full-source aggregation.
+- [x] Cancellable analysis with progress notices and explicit manual remapping.
+- [x] Cap the initial interactive funding graph to 120 grants without limiting full-source totals.
+- [x] Never ship the full raw grant CSV/graph back to React or persist it in the browser's map library.
+- [x] Avoid synchronous full-grant parsing during initial interface render.
+- [x] Offer backup + explicit reset for overly large saved browser map libraries.
+- [ ] Benchmark actual browser responsiveness and memory on multiple low-memory devices.
+- [ ] Per-theme and per-funder network selection to replace static 120-grant overview.
+- [ ] IndexedDB-backed datasets and efficient incremental processing for much larger multi-year files.

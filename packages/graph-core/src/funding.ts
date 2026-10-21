@@ -96,7 +96,7 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
   // Build an organisation-only, funder-balanced EXPLORATION SUBSET while keeping
   // explicit counts of eligible rows that were not included. A subset must
   // never be represented as complete coverage or used for a coverage claim.
-  const maxDetailedGrants=1200;
+  const maxDetailedGrants=120;
   const individualField=headers.find(h=>normalise(h)==="recipientindividualid");
   const individualNameField=headers.find(h=>normalise(h)==="recipientindividualname");
   const recipientTypeField=headers.find(h=>normalise(h)==="typeofrecipient");
