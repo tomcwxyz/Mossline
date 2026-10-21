@@ -587,3 +587,14 @@ publishing. Fragment links also require a publicly accessible viewer:
 if a Vercel preview is protected by team sign-in, recipients will not
 be able to use it anonymously. Hosted publishing with permissions,
 revocation, audit and durable short URLs remains a later release.
+
+
+### Publication review safeguard
+Before producing a share link, Mossline lists every included entity and
+relationship assertion (not just a preview subset) and requires explicit
+confirmation of permission to share. The map's narrative introduction is a
+separate opt-in, **off by default**, alongside descriptions and external
+images. Sharing a snapshot is a disclosure event even though it doesn't
+upload data to the Mossline server; the link cannot be revoked.
+The web compression codec is exercised by a browser-API-compatible
+round-trip and malformed-link regression test in CI.
