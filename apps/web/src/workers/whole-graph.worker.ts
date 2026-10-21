@@ -1,33 +1,60 @@
 /// <reference lib="webworker" />
 import {buildAdaptiveGraphIndex,projectAdaptiveGraph,
-  type AdaptiveGraphIndex,type GraphDocument} from "@mossline/graph-core";
+  buildNetworkNavigation,searchNetwork,inspectNetworkNode,revealNetworkNode,
+  type AdaptiveGraphIndex,type NetworkNavigationIndex,type GraphDocument}
+  from "@mossline/graph-core";
 import {loadFundingDataset} from "../lib/funding-dataset-store";
 
-type Job={kind:"overview";id:number;datasetId?:string;graph?:GraphDocument;expandedIds:string[]};
-let loadedId="",index:AdaptiveGraphIndex|null=null;
+type Job={
+  kind:"overview"|"search"|"select"|"inspect";id:number;
+  datasetId?:string;graph?:GraphDocument;expandedIds?:string[];
+  nodeId?:string;query?:string;page?:number;
+};
+let loadedId="",index:AdaptiveGraphIndex|null=null,
+  navigation:NetworkNavigationIndex|null=null;
 self.onmessage=async(event:MessageEvent<Job>)=>{
   const job=event.data;
-  if(job.kind!=="overview")return;
   try{
-    if(job.graph){
-      // Generic Kumu/CSV maps send their complete graph once on first load.
-      // Subsequent expansion calls reuse the background-worker index.
-      index=buildAdaptiveGraphIndex(job.graph);
-      loadedId="generic";
-    }else if(job.datasetId&&(!index||job.datasetId!==loadedId)){
-      self.postMessage({kind:"stage",id:job.id,
-        message:"Opening the complete source network…"});
-      const dataset=await loadFundingDataset(job.datasetId);
-      index=buildAdaptiveGraphIndex(dataset.graph);
-      loadedId=dataset.id;
+    if(job.kind==="overview"){
+      if(job.graph){
+        index=buildAdaptiveGraphIndex(job.graph);
+        navigation=buildNetworkNavigation(job.graph);
+        loadedId="generic";
+      }else if(job.datasetId&&(!index||job.datasetId!==loadedId)){
+        self.postMessage({kind:"stage",id:job.id,
+          message:"Opening the complete network from browser storage…"});
+        const dataset=await loadFundingDataset(job.datasetId);
+        index=buildAdaptiveGraphIndex(dataset.graph);
+        navigation=buildNetworkNavigation(dataset.graph);
+        loadedId=dataset.id;
+      }
     }
-    if(!index)throw Error("No complete network was available for exploration.");
-    self.postMessage({kind:"stage",id:job.id,
-      message:"Summarising the network without losing any source connections…"});
-    const projection=projectAdaptiveGraph(index,job.expandedIds);
-    self.postMessage({kind:"result",id:job.id,projection});
+    if(!index||!navigation)throw Error("No complete network is ready for exploration.");
+    if(job.kind==="overview"){
+      self.postMessage({kind:"stage",id:job.id,
+        message:"Preparing the whole-network view…"});
+      const projection=projectAdaptiveGraph(index,job.expandedIds??[]);
+      self.postMessage({kind:"result",action:"overview",id:job.id,projection});
+    }else if(job.kind==="search"){
+      const matches=searchNetwork(navigation,job.query??"",20);
+      self.postMessage({kind:"result",action:"search",id:job.id,matches});
+    }else if(job.kind==="select"){
+      if(!job.nodeId)throw Error("Select an entity to explore.");
+      const revealed=revealNetworkNode(index,job.expandedIds??[],job.nodeId);
+      const inspection=inspectNetworkNode(navigation,job.nodeId);
+      self.postMessage({kind:"result",action:"select",id:job.id,
+        projection:revealed.projection,inspection,
+        expandedIds:revealed.expandedIds,
+        collapsedOtherGroups:revealed.collapsedOtherGroups});
+    }else if(job.kind==="inspect"){
+      if(!job.nodeId)throw Error("Select an entity to explore.");
+      const inspection=inspectNetworkNode(navigation,job.nodeId,
+        {query:job.query??"",page:job.page??1,pageSize:20});
+      self.postMessage({kind:"result",action:"inspect",id:job.id,inspection});
+    }
   }catch(error){
-    self.postMessage({kind:"failed",id:job.id,
-      message:error instanceof Error?error.message:"Unable to prepare whole-network overview."});
+    self.postMessage({kind:"failed",action:job.kind,id:job.id,
+      message:error instanceof Error?error.message:
+        "Could not explore the complete network."});
   }
 };

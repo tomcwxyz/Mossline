@@ -4,8 +4,9 @@ import {useEffect,useRef,useState} from "react";
 import type {Core} from "cytoscape";
 import type {AdaptiveGraphProjection} from "@mossline/graph-core";
 
-export function WholeGraphCanvas({projection,onPickNode,onPickEdge}:{
+export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNode,onPickEdge}:{
   projection:AdaptiveGraphProjection;
+  selectedId:string|null;selectedEdgeId:string|null;
   onPickNode:(id:string)=>void;onPickEdge:(id:string)=>void;
 }){
   const root=useRef<HTMLDivElement>(null);
@@ -39,7 +40,10 @@ export function WholeGraphCanvas({projection,onPickNode,onPickEdge}:{
           {selector:"node.funder",style:{"background-color":"#81aacc","shape":"diamond"}},
           {selector:"node.organisation",style:{"background-color":"#88b793"}},
           {selector:"node.project",style:{"background-color":"#d8b574","shape":"round-rectangle"}},
-          {selector:"node.selected",style:{"border-width":6,"border-color":"#ffe1a4"}},
+          {selector:"node.selected",style:{"border-width":6,"border-color":"#ffe1a4","z-index":20}},
+          {selector:"node.neighbour",style:{"border-width":4,"border-color":"#c2d6bd","opacity":1}},
+          {selector:"node.dimmed",style:{"opacity":0.22,"text-opacity":0.12}},
+          {selector:"edge.dimmed",style:{"opacity":0.08}},
           {selector:"edge",style:{"width":1.3,"line-color":"#85a78d",
             "target-arrow-shape":"triangle","target-arrow-color":"#85a78d",
             "opacity":0.5,"curve-style":"bezier"}},
@@ -91,9 +95,34 @@ export function WholeGraphCanvas({projection,onPickNode,onPickEdge}:{
     }
     cy.resize();
   },[projection,ready]);
+  // Selection changes update styles, not the underlying network or its layout.
+  useEffect(()=>{
+    const cy=cyRef.current;
+    if(!cy||!ready)return;
+    cy.batch(()=>{
+      cy.elements().removeClass("selected dimmed neighbour");
+      const selected=selectedId?cy.getElementById(selectedId):null;
+      const edge=selectedEdgeId?cy.getElementById(selectedEdgeId):null;
+      if(selected?.length){
+        cy.elements().addClass("dimmed");
+        selected.removeClass("dimmed").addClass("selected");
+        const linked=selected.connectedEdges();
+        linked.removeClass("dimmed");
+        linked.connectedNodes().removeClass("dimmed").addClass("neighbour");
+        selected.removeClass("neighbour");
+      }else if(edge?.length){
+        cy.elements().addClass("dimmed");
+        edge.removeClass("dimmed").addClass("selected");
+        edge.connectedNodes().removeClass("dimmed").addClass("neighbour");
+      }
+    });
+    const target=selectedId?cy.getElementById(selectedId):null;
+    if(target?.length)cy.center(target);
+  },[selectedId,selectedEdgeId,projection,ready]);
+
   return <div className="whole-graph-stage">
     <div ref={root} className="whole-graph-canvas" role="img"
-      aria-label="Complete network overview with expandable groups. Select groups to reveal source records."/>
+      aria-label="Complete network overview. Select an entity to inspect its original relationships or a group to open it. The adjacent lists support keyboard navigation."/>
     <div className="graph-tools" aria-label="Whole network navigation">
       <button type="button" onClick={()=>{
         const cy=cyRef.current;if(cy)cy.zoom({level:Math.min(4,cy.zoom()*1.3),

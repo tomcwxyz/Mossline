@@ -412,3 +412,14 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Manually test workflows and mobile/keyboard accessibility.
 - [ ] Replace current main-thread generic graph filtering and layout with
       scalable, source-agnostic full-graph rendering.
+
+## Alpha 2.6 — connected exploration (development)
+
+- [x] Search every source entity, including those currently inside collapsed groups.
+- [x] Inspect actual recorded source relationships through a background worker.
+- [x] Navigate from any entity to a linked entity with automatic group reveal.
+- [x] Preserve an entity-to-entity back trail, show connection filters and counts.
+- [x] Highlight a selected node and nearby relationships without changing source data.
+- [ ] Test navigation with large real networks and low-powered devices.
+- [ ] Persist stable authored layouts through drilling and add full-graph GPU renderer.
+- [ ] Refactor the ordinary small-network inspector onto the same navigation model.

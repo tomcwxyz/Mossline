@@ -1327,3 +1327,49 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
   .mossline-studio .sidebar{order:0}
   .mossline-studio .inspector{order:1}
 }
+
+/* Alpha 2.6 — find and follow original relationships inside the whole graph. */
+.whole-graph-find{display:grid;gap:8px;margin:18px 0 10px}
+.whole-graph-find>label,.whole-graph-connection-find>label{font-size:12px;font-weight:700;color:#315942}
+.whole-graph-find>div,.whole-graph-connection-find>div{display:flex;gap:8px}
+.whole-graph-find input,.whole-graph-connection-find input{flex:1;min-width:0;border:1px solid #97b49b;
+ border-radius:8px;background:#fcfcf8;color:#213f30;padding:12px;font-size:13px}
+.whole-graph-find button,.whole-graph-connection-find button{border:1px solid #315b42;border-radius:8px;
+ background:#315b42;color:#f8f6e7;font-size:12px;font-weight:700;padding:10px 17px}
+.whole-graph-find button:disabled,.whole-graph-connection-find button:disabled{opacity:.45}
+.whole-graph-find-results{border:1px solid #aec4ac;border-radius:10px;background:#f9faf3;padding:14px;margin:11px 0}
+.whole-graph-results-header{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:10px}
+.whole-graph-results-header strong{font-size:13px}
+.whole-graph-results-header button,.whole-graph-selected-edge>button{border:0;background:none;
+ color:#355d40;text-decoration:underline;font-size:11px;padding:3px}
+.whole-graph-result-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-height:250px;overflow:auto}
+.whole-graph-result-list button{display:flex;align-items:center;gap:10px;min-width:0;
+ text-align:left;border:1px solid #d0dfce;border-radius:8px;background:white;
+ color:#244432;padding:10px;font-size:12px}
+.whole-graph-result-list button strong{flex:1;min-width:0;overflow-wrap:anywhere}
+.whole-graph-result-list button small{font-size:10px;color:#57715c}
+.whole-graph-find-results>p{font-size:11px;margin:10px 0 0}
+.whole-graph-entity h4{font:normal 24px Georgia,serif;margin:6px 0 12px;overflow-wrap:anywhere}
+.whole-graph-entity .eyebrow{margin:5px 0}
+.whole-graph-entity>p{margin:10px 0;font-size:12px;line-height:1.65}
+.whole-graph-connection-find{display:grid;gap:8px;margin:18px 0 9px}
+.whole-graph-connection-find button{padding:9px 12px}
+.whole-graph-connection-count{font-size:11px;color:#526d56;margin:8px 0!important}
+.whole-graph-relationships{display:grid;max-height:330px;overflow:auto;gap:5px}
+.whole-graph-relationship{display:flex;align-items:center;gap:7px;border:1px solid #cee0cb;
+ border-radius:8px;background:#eef4e9;padding:6px 9px}
+.whole-graph-relationship>button{background:none;border:0;display:grid;gap:5px;
+ text-align:left;min-width:0;flex:1;padding:5px 0;color:#244935}
+.whole-graph-relationship button strong{font-size:12px;overflow-wrap:anywhere}
+.whole-graph-relationship button small{font-size:10px;color:#5d755d}
+.whole-graph-relationship>a{padding:8px}
+.whole-graph-pagination{display:flex;justify-content:space-between;gap:9px;margin-top:14px}
+.whole-graph-pagination button{font-size:11px;border:1px solid #86a68e;border-radius:7px;
+ padding:9px 12px;background:transparent;color:#315941}
+.whole-graph-pagination button:disabled{opacity:.4}
+.whole-graph-related{display:block;border:1px solid #bacfbb;border-radius:8px;
+ background:#e9f1e6;color:#28533a;font-weight:650;margin:9px 0;padding:9px;
+ width:100%;text-align:left;font-size:12px}
+.whole-graph-explorer :is(input,button,a):focus-visible{outline:3px solid #ae8742;outline-offset:2px}
+@media(max-width:750px){.whole-graph-result-list{grid-template-columns:1fr}}
+@media(max-width:440px){.whole-graph-find>div,.whole-graph-connection-find>div{flex-direction:column}}
