@@ -837,3 +837,40 @@ hosted publications, other workspaces or Neon data.
 The studio's map switcher now links to **Manage saved maps**.
 Recovery backups include the raw saved-map keys, which may contain private
 grant descriptions or contact data: handle these backup files accordingly.
+
+
+## Large grant landscapes: persistent full dataset + query-driven network
+
+Funding Landscape workspaces no longer stop at a static 120-award canvas
+selection. Mossline analyses all eligible organisation grants in a background
+worker, then **stores the complete eligible organisational graph in IndexedDB**
+after the user explicitly creates the landscape. The raw CSV and
+individual-recipient awards are **not** saved to that dataset store.
+
+The browser map collection retains a lightweight first projection. A new
+**Full-dataset explorer** panel provides search across award descriptions,
+titles, programme and organisation names, plus filters for funder, theme
+and recipient-organisation region. The explorer queries the full stored dataset
+in a separate Worker and returns only a page of matched grants (75 by default,
+120 maximum) to the Cytoscape canvas. Page forward/backward until every
+matching grant can be reached. Filtering does **not** change the underlying
+full-source figures, and each canvas page states exactly what it represents.
+
+This approach means the graphical network is a **view** of the data, not a
+hard limit on how many grants Mossline can hold. It remains browser-local and
+doesn't need a login, a server database or API credentials. An independent
+IndexedDB store handles datasets larger than localStorage can sensibly hold.
+
+**Current limits:** This alpha uses an in-memory CSV parser and full-graph
+schema validation in a Web Worker, and restricts upload files to 60 MB.
+It is not yet a streaming 1 GB / million-record implementation. Large
+imports may still require substantial worker memory and available browser
+storage. A browser storage quota error will be shown explicitly rather
+than silently losing the full dataset. The full grant graph is available
+only in the browser where it was imported, not automatically backed up to
+Neon or the hosted publishing service.
+
+Existing older maps with only a compact summary and a preselected canvas
+graph must be **reimported** once to gain a persistent complete dataset.
+Editing or replacing a map's source graph invalidates its previous full-data
+analysis; moving between query views keeps the full dataset and analysis intact.
