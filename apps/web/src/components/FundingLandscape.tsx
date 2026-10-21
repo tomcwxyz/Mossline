@@ -184,7 +184,8 @@ export function FundingInsights({graph,onExplore}:{
         </p>:<ul>{facts.insights.slice(0,showAll?16:6).map((item,i)=>
           <li className="funding-theme-suggestion" key={item.recipientA+"|"+item.recipientB}>
             <div><span className="funding-evidence-label">{item.kind==="recorded-themes"?
-              "Shared source themes":"Candidate · shared description words"}</span>
+              "Shared source themes":item.kind==="topic-rule"?
+              "Candidate · matching topic phrases":"Candidate · shared description words"}</span>
               {item.differentFunders&&<span className="funding-cross-funder">Across different funders</span>}
             </div>
             <div className="funding-theme-pair">
