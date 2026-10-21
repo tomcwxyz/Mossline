@@ -250,6 +250,7 @@ export function MapStudio() {
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
+  const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
@@ -1361,25 +1362,32 @@ export function MapStudio() {
             view === "atlas" ? "Geographic atlas" : "Shared associations"}</span>
           <span>{fullFundingView?
             "Complete funding network · explore all source records":
+            wholeNetworkOpen&&view==="landscape"?
+            "Complete source network · all entities and relationships":
             activeFundingMap?.fundingDatasetId?
               "Focused detail only · choose Network for the full dataset":
               filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
           <div className="map-options">
-            {view!=="atlas"&&!fullFundingView&&<label>Layout <select aria-label="Network layout" value={layoutMode}
+            {view==="landscape"&&!fullFundingView&&
+              <button type="button" className="whole-network-entry"
+                aria-pressed={wholeNetworkOpen} onClick={()=>setWholeNetworkOpen(v=>!v)}>
+                {wholeNetworkOpen?"← Standard canvas":"✳ Full graph + AI"}
+              </button>}
+            {view!=="atlas"&&!fullFundingView&&!wholeNetworkOpen&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
               <option value="organic">Organic</option><option value="radial">Radial</option><option value="regions">Regions</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<label>Labels <select aria-label="Network labels" value={labelDensity}
+            {view!=="atlas"&&!fullFundingView&&!wholeNetworkOpen&&<label>Labels <select aria-label="Network labels" value={labelDensity}
               onChange={event => setLabelDensity(event.target.value as LabelDensity)}>
               <option value="essential">Essential</option><option value="all">All</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<label>Style <select aria-label="Network visual style"
+            {view!=="atlas"&&!fullFundingView&&!wholeNetworkOpen&&<label>Style <select aria-label="Network visual style"
               value={illustrated?"editorial":"classic"}
               onChange={event=>setIllustrated(event.target.value==="editorial")}>
               <option value="editorial">Editorial</option>
               <option value="classic">Classic</option>
             </select></label>}
-            {view!=="atlas"&&!fullFundingView&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
+            {view!=="atlas"&&!fullFundingView&&!wholeNetworkOpen&&<div className="arrangement-tools" role="group" aria-label="Arrangement history">
               <button type="button" disabled={!movementHistory.past.length}
                 onClick={undoNodeMovement} title="Undo last manual node movement">↶ Undo</button>
               <button type="button" disabled={!movementHistory.future.length}
@@ -1390,9 +1398,9 @@ export function MapStudio() {
         </div>
         {fullFundingView?
           <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}/> :
-        view!=="atlas"&&(filtered.graph.nodes.length>260||
+        view!=="atlas"&&(wholeNetworkOpen||filtered.graph.nodes.length>260||
             filtered.graph.edges.length>650)?
-          <WholeGraphExplorer graph={filtered.graph}/> :
+          <WholeGraphExplorer graph={graph}/> :
         view==="atlas" ?
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
             onSelect={pickNode} onPickEdge={pickEdge}

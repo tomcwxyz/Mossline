@@ -27,3 +27,5 @@ export * from "./adaptive-graph";
 export * from "./network-navigation";
 
 export * from "./full-network-layout";
+
+export * from "./network-semantic";

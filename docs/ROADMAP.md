@@ -423,3 +423,16 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Test navigation with large real networks and low-powered devices.
 - [ ] Persist stable authored layouts through drilling and add full-graph GPU renderer.
 - [ ] Refactor the ordinary small-network inspector onto the same navigation model.
+
+## Alpha 2.7 — original full-graph renderer and semantic exploration (in development)
+- [x] Optional raw WebGL mode: each source node and each recorded source edge is drawn,
+      with deterministic, worker-calculated positions rather than the grouped projection.
+- [x] Source-agnostic semantic preparation across **all eligible** entities (no 48-record sampling).
+- [x] Embeddings in 48-item batches, resumable locally cached batches, progress and cancellation.
+- [x] Source-backed question retrieval and an optional strictly evidence-limited LLM answer.
+- [x] Explicit permission before remote model calls; explicitly private records are excluded.
+- [ ] CI/build validation and real browser/WebGL and provider smoke tests.
+- [ ] Real-dataset GPU performance benchmark and fallback for unsupported GPUs.
+- [ ] Budget limits, auth, model audit, user-level quotas and comprehensive privacy review.
+- [ ] True layout persistence and semantic zoom / organisation clusters with meaningful positioning.
+- [ ] Add relationship descriptions to the embedding index under a separately approved policy.

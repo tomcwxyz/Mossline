@@ -5,6 +5,7 @@ import type {AdaptiveGraphProjection,GraphDocument,GraphEdge,NetworkInspection,
   NetworkSearch} from "@mossline/graph-core";
 import {WholeGraphCanvas} from "./WholeGraphCanvas";
 import {FullNetworkCanvas} from "./FullNetworkCanvas";
+import {NetworkAI} from "./NetworkAI";
 import type {FullNetworkGeometry} from "@mossline/graph-core";
 
 type Reply={
@@ -26,6 +27,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
   const resetOnOverview=useRef(false);
   const [expanded,setExpanded]=useState<string[]>([]);
   const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
+  const [aiOpen,setAiOpen]=useState(false);
   const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
   const [inspection,setInspection]=useState<NetworkInspection|null>(null);
@@ -233,6 +235,11 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           {" "}{fullGeometry.edgeCount.toLocaleString("en-GB")} original relationship lines —
           without grouping or sampling. Zoom, pan, or use search to inspect the network.
         </p>
+      <details className="network-ai-disclosure"
+        onToggle={event=>setAiOpen(event.currentTarget.open)}>
+        <summary>Ask this network · Semantic discovery &amp; AI</summary>
+        {aiOpen&&<NetworkAI datasetId={datasetId} graph={graph} onExplore={id=>navigate(id)}/>}
+      </details>
       <div className="whole-graph-bottom">
         <section className="whole-graph-groups">
           <h4>Explore the landscape</h4>
