@@ -18,6 +18,7 @@ import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
 import { AssetLibraryPanel } from "./AssetLibraryPanel";
+import { ShareViewPanel } from "./ShareViewPanel";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
@@ -789,7 +790,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.6</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.7</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -1043,6 +1044,10 @@ export function MapStudio() {
           </div>
           <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
+        <ShareViewPanel graph={filtered.graph} view={view}
+          layout={layoutMode} labels={labelDensity} illustrated={illustrated}
+          title={storyTitleText||graph.title} introduction={storyIntroText||undefined}
+          coverUrl={storyCoverUrl} positions={activePositions} nodeStyles={nodeStyles}/>
         <AssetLibraryPanel assets={assets} onAdd={addArtwork}
           onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
