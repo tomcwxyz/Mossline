@@ -1,6 +1,6 @@
 "use client";
 import {useMemo,useState,type ChangeEvent} from "react";
-import {analyseFundingLandscape,importFundingCsv,suggestFundingMapping,
+import {analyseFundingLandscape,importFundingCsv,parseCsv,suggestFundingMapping,
   type FundingMapping,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 
 const FIELDS:[keyof FundingMapping,string][]=[
@@ -22,17 +22,17 @@ export function FundingWorkbench({onCreate,onClose}:{
   const [busy,setBusy]=useState(false);
   const [reviewed,setReviewed]=useState(false);
   const parsed=useMemo(()=>file?importFundingCsv(file,mapping??undefined):null,[file,mapping]);
-  const headers=useMemo(()=>file?file.text.replace(/^\uFEFF/,"").split(/\r?\n/,1)[0]?.split(",").map(h=>h.replace(/^"|"$/g,"").trim())??[]:[],[file]);
-  // Mapping headers shown for convenience. The parser itself handles quoted/newline CSV correctly.
+  const headers=useMemo(()=>{
+    if(!file)return [];
+    try{return parseCsv(file.text)[0]??[];}catch{return [];}
+  },[file]);
   const columns=mapping?Object.values(mapping):[];
   const allOptions=[...new Set([...headers,...columns])].filter(Boolean);
 
   function useFile(next:ImportFile){
-    setFile(next);setMapping(suggestFundingMapping(
-      // Import with automatic detection; the initial parse supplies exact header spellings.
-      next.text.replace(/^\uFEFF/,"").split(/\r?\n/,1)[0]?.split(",")
-        .map(h=>h.replace(/^"|"$/g,"").trim())??[]
-    ));setError("");setReviewed(false);
+    const headings=(()=>{try{return parseCsv(next.text)[0]??[];}catch{return [];}})();
+    setFile(next);setMapping(suggestFundingMapping(headings));
+    setError("");setReviewed(false);
   }
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
