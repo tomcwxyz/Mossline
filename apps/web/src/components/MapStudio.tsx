@@ -11,7 +11,7 @@ import {
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
-  type LibraryAsset, type PerspectiveBundle
+  type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
@@ -36,7 +36,9 @@ const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
 const STORAGE_KEY = "mossline-demo-graph-v1";
 const MAP_LIBRARY_KEY="mossline-local-maps-v1";
-type LocalMap = { id:string; createdAt:number; title:string; graph:GraphDocument };
+type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
+  /** Compact full-file aggregates, not original raw grant records. */
+  fundingAnalysis?:FundingFullAnalysis};
 const MAX_LOCAL_MAPS=8;
 const SAVED_KEY = "mossline-perspectives-v1";
 const ASSET_KEY = "mossline-artwork-library-v1";
@@ -688,18 +690,19 @@ export function MapStudio() {
   }
   function updateGraph(next:GraphDocument):boolean {
     const current=localMaps.find(x=>x.id===activeMapId);
+    // A changed source graph invalidates previously calculated full-file facts.
     const entry:LocalMap=current?
-      {...current,title:next.title,graph:next}:
+      {id:current.id,createdAt:current.createdAt,title:next.title,graph:next}:
       {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next};
     const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
     return persistMapLibrary(updated,entry);
   }
-  function createNewMap(next:GraphDocument):boolean {
+  function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis):boolean {
     if(localMaps.length>=MAX_LOCAL_MAPS) {
       setNotice("This browser has eight maps. Export one before creating another.");
       return false;
     }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next};
+    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next,fundingAnalysis};
     return persistMapLibrary([...localMaps,entry],entry);
   }
   function selectLocalMap(id:string) {
@@ -793,7 +796,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.1</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.2</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -836,9 +839,9 @@ export function MapStudio() {
     </details>
     {showFundingWorkbench&&<FundingWorkbench
       onClose={()=>setShowFundingWorkbench(false)}
-      onCreate={next=>{
-        if(!createNewMap(next))return false;
-        setNotice("Created a new funding landscape with award records, funders and recipients. Explore the suggested thematic connections below.");
+      onCreate={(next,fullAnalysis)=>{
+        if(!createNewMap(next,fullAnalysis))return false;
+        setNotice("Created a funding landscape: full-data grant and theme analysis is saved alongside a smaller network view. Explore the clusters and supporting records below.");
         return true;
       }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
@@ -975,7 +978,9 @@ export function MapStudio() {
           Presentation only · Source records unchanged</span>
       </div>
     </section>}
-    <FundingInsights graph={graph} onExplore={id=>{
+    <FundingInsights graph={graph}
+      fullAnalysis={localMaps.find(item=>item.id===activeMapId)?.fundingAnalysis}
+      onExplore={id=>{
       setView("landscape");setTypes(TYPE_KEYS);setRegion("");setQuery("");setFocusId(null);
       setSelectedId(id);setSelectedEdgeId(null);
     }}/>
