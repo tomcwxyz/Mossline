@@ -73,6 +73,10 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
     issues.push({severity:"error",message:"Identify the funder and recipient organisation columns. This importer does not support grants to individuals."});
     return empty(records.length,0,m);
   }
+  if(/recipientind|individualrecipient|beneficiaryperson/.test(normalise(m.recipient))){
+    issues.push({severity:"error",message:"Individual-recipient grant fields are not supported in this organisation landscape importer. Do not upload personal grant recipient information."});
+    return empty(records.length,0,m);
+  }
   for(const [field,column] of Object.entries(m)){
     if(column&&!headers.includes(column)){
       issues.push({severity:"error",message:"Mapped "+field+" column not found: "+column});
@@ -179,8 +183,23 @@ export function fundingAwards(graph:GraphDocument):FundingAward[]{
 }
 
 export type FundingInsight={recipientA:string;recipientB:string;
-  kind:"recorded-themes"|"word-overlap";common:string[];
+  kind:"recorded-themes"|"topic-rule"|"word-overlap";common:string[];
   evidenceA:string;evidenceB:string;differentFunders:boolean;score:number};
+/** Interpretable topic bridge rules. These are hypotheses, not verified taxonomy labels.
+ * Each candidate is backed by award title/description text and clearly labelled.
+ */
+export const TOPIC_BRIDGES=[
+  {topic:"Food access",phrases:["food insecurity","food bank","food pantry","community meals","affordable meals","community kitchens","food surplus","food distribution","holiday meals","food access","nutrition outreach"]},
+  {topic:"Skills and employment",phrases:["practical learning","skills training","repair skills","employment skills","career pathway","pathways into work","workshop skills","job readiness"]},
+  {topic:"Climate and environment",phrases:["climate action","greening","reuse","waste reduction","shared gardens","green spaces","carbon reduction","repair and reuse"]},
+  {topic:"Health and wellbeing",phrases:["mental health","wellbeing","peer support","nutrition outreach","social isolation","family health"]},
+  {topic:"Cost of living",phrases:["household costs","low-income households","cost of living","fuel poverty","poverty","financial hardship"]}
+] as const;
+function topicMatches(input:string):Set<string>{
+  const text=" "+input.toLocaleLowerCase("en-GB").replace(/[^\p{L}\p{N}]+/gu," ")+" ";
+  return new Set(TOPIC_BRIDGES.filter(rule=>rule.phrases.some(term=>
+    text.includes(" "+term+" "))).map(rule=>rule.topic));
+}
 /** Small, transparent lexical baseline; NOT an LLM or semantic embedding.
  * Candidate similarity never becomes a canonical graph edge.
  */
@@ -210,6 +229,7 @@ export function analyseFundingLandscape(graph:GraphDocument){
     const tags=new Set(list.flatMap(a=>a.themes.map(canonical)));
     const documents=list.map(a=>a.title+" "+a.description+" "+a.programme);
     return {id,list,tags,words:terms(documents.join(" ")),
+      topics:topicMatches(documents.join(" ")),
       sample:list.map(a=>[a.title,a.description].filter(Boolean).join(": ")).find(Boolean)??"",
       funders:fundedBy.get(id)??new Set<string>()};
   });
@@ -217,15 +237,16 @@ export function analyseFundingLandscape(graph:GraphDocument){
   for(let i=0;i<recipients.length;i++)for(let j=i+1;j<recipients.length;j++){
     const a=recipients[i],b=recipients[j];
     const shared=[...a.tags].filter(t=>b.tags.has(t));
+    const sharedTopics=[...a.topics].filter(t=>b.topics.has(t));
     const commonWords=[...a.words].filter(t=>b.words.has(t)).slice(0,8);
-    // Exclude only lexical similarities caused by a single common term.
-    if(!shared.length&&commonWords.length<2)continue;
+    // Conservative suggestion threshold: source themes, visible phrase rule or two words.
+    if(!shared.length&&!sharedTopics.length&&commonWords.length<2)continue;
     const differentFunders=[...a.funders].every(id=>!b.funders.has(id));
     insights.push({recipientA:a.id,recipientB:b.id,
-      kind:shared.length?"recorded-themes":"word-overlap",
-      common:shared.length?shared:commonWords,
+      kind:shared.length?"recorded-themes":sharedTopics.length?"topic-rule":"word-overlap",
+      common:shared.length?shared:sharedTopics.length?sharedTopics:commonWords,
       evidenceA:a.sample.slice(0,220),evidenceB:b.sample.slice(0,220),
-      differentFunders,score:shared.length*4+commonWords.length+(differentFunders?1:0)});
+      differentFunders,score:shared.length*5+sharedTopics.length*3+commonWords.length+(differentFunders?1:0)});
   }
   insights.sort((a,b)=>b.score-a.score||nodeNames.get(a.recipientA)!.localeCompare(nodeNames.get(b.recipientA)!));
   return {
