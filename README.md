@@ -598,3 +598,19 @@ images. Sharing a snapshot is a disclosure event even though it doesn't
 upload data to the Mossline server; the link cannot be revoked.
 The web compression codec is exercised by a browser-API-compatible
 round-trip and malformed-link regression test in CI.
+
+
+## Alpha 1.8 — controlled hosted publishing (development)
+
+The **Publish online** panel provides a stable, read-only URL under `/p/<slug>`,
+rather than a large embedded fragment link. A source-minimised snapshot is
+deliberately reviewed before being stored. The publisher receives an
+independent secret management key to update or unpublish the public view.
+
+**Not enabled by default.** This branch includes additive SQL migration and
+the server-only configuration requirements, but no Neon Mossline database or
+Vercel publishing credentials have been configured or migrated. Consult
+[Hosted publishing setup](docs/HOSTED_PUBLISHING.md) for an isolated development
+rollout and security limitations. This does not implement team logins, private
+publishing, or fine-grained reader permissions. Anyone with the URL can access
+the current publication; withdrawal cannot recall redistributed copies.
