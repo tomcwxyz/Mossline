@@ -2,9 +2,22 @@
 
 **Make sense of connected worlds.**
 
-Mossline is an Apache-2.0 open-source prototype for mapping relationships between organisations, projects, funders, people and places. The first version is a Next.js browser explorer, shared graph-core package and read-only MCP server.
+Mossline is an Apache-2.0 open-source **technical alpha** for exploring relationships
+between organisations, projects, people, funders and places. It is a general-purpose
+network mapping studio, not a PFT-specific product.
 
-> Alpha 0.1: local prototype, not production-ready. All included example entities and connections are fictional. No accounts, database, live Google Sheets sync, full Kumu backup import, geography, hosted MCP authentication or multi-user collaboration are implemented yet.
+As of Alpha 2.3 (October 2026), Mossline offers guided CSV/Kumu imports, visual
+perspectives, path/evidence exploration, a UK atlas, privacy-reviewed read-only
+sharing and an optional funding-landscape workflow. Large organisational grant
+datasets are analysed in a background worker and retained in browser IndexedDB;
+the canvas displays only a focused page. Some optional AI discovery and hosted
+publishing features require operator configuration and are disabled by default.
+
+**Still an alpha:** no hosted multi-user workspace, live Google Sheets
+synchronisation or complete Kumu project migration. Browser-saved maps and full
+funding datasets are separate storage layers and are not automatically synced
+to other devices. Do not rely on this alpha as your only copy of important data.
+See [local backup and recovery](docs/RECOVERY.md) before importing real data.
 
 ## Built for any network — Alpha 1.4 preview
 
