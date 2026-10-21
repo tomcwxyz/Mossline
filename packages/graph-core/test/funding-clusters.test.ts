@@ -62,7 +62,7 @@ test("source tags and matching phrases remain independent types of evidence",()=
 test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  const input=[cols.join(",")];
  for(let i=0;i<1400;i++){
-   const id=i<1200?"F1":"F2";
+   const id=i<120?"F1":"F2";
    input.push(line(["X"+i,id==="F1"?"Big Funder":"Small Funder",id,
      "Organisation "+i,"ORG"+i,"","","Organisation",
      "Community meals", "Food pantry for families","10","GBP","North East"]));
@@ -70,10 +70,10 @@ test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  const result=importFundingCsv({name:"big.csv",text:input.join("\n")});
  assert.ok(result.graph);
  assert.equal(result.counts.eligibleOrganisationRows,1400);
- assert.equal(result.counts.importedGrants,1200);
+ assert.equal(result.counts.importedGrants,120);
  assert.equal(result.counts.overflowExcluded,200);
  assert.equal(result.fullGrantCount,1400);
- assert.equal(result.graph!.nodes.filter(n=>n.type==="project").length,1200);
+ assert.equal(result.graph!.nodes.filter(n=>n.type==="project").length,120);
  assert.equal(result.analysisGraph!.nodes.filter(n=>n.type==="project").length,1400);
  const full=buildFundingFullAnalysis(result.analysisGraph!);
  assert.equal(full.grants,1400);
@@ -86,7 +86,7 @@ test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  const names=result.graph!.nodes.filter(n=>n.type==="funder").map(n=>n.label);
  assert.ok(names.includes("Big Funder"));
  assert.ok(names.includes("Small Funder"));
- assert.match(result.graph!.description,/interactive network shows 1200 of 1400/i);
+ assert.match(result.graph!.description,/interactive network shows 120 of 1400/i);
 });
 test("grants without classification are counted explicitly, not turned into a fictitious gap",()=>{
  const data=[
@@ -115,7 +115,7 @@ test("full dataset summary is detached from canvas subset and never contains pri
  const imported=importFundingCsv({name:"GrantNav-realistic.csv",text:entries.join("\n")});
  assert.equal(imported.counts.individualExcluded,1);
  assert.equal(imported.fullGrantCount,1302);
- assert.equal(imported.counts.importedGrants,1200);
+ assert.equal(imported.counts.importedGrants,120);
  const full=buildFundingFullAnalysis(imported.analysisGraph!);
  assert.equal(full.grants,1302);
  assert.equal(full.amounts[0].total,1302*25);
@@ -144,7 +144,7 @@ test("latest modified version of a repeated grant ID wins independent of CSV ord
 });
 test("multiple versions with an explicit currency count the latest award amount once",()=>{
  const csv="Identifier,Funding Org:Name,Recipient Org:Name,Amount Awarded,Currency,Date Modified,Title,Description\n"+
-  "G100,Foundation,Charity,1200,GBP,2025-01-01,Meals,Community meals for families\n"+
+  "G100,Foundation,Charity,120,GBP,2025-01-01,Meals,Community meals for families\n"+
   "G100,Foundation,Charity,1275,GBP,2026-01-01,Meals,Community meals for families";
  const result=importFundingCsv({name:"revisions.csv",text:csv});
  assert.equal(result.fullGrantCount,1);
