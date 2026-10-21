@@ -36,6 +36,8 @@ const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
 const STORAGE_KEY = "mossline-demo-graph-v1";
 const MAP_LIBRARY_KEY="mossline-local-maps-v1";
+// Avoid synchronously parsing an unexpectedly huge cached graph at page startup.
+const MAX_AUTO_RESTORE_CHARS=2_600_000;
 type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
   /** Compact full-file aggregates, not original raw grant records. */
   fundingAnalysis?:FundingFullAnalysis};
@@ -237,6 +239,8 @@ function RelationshipInspector({ edge, source, onPick, onEvidence }: {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
+  const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
+  const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
@@ -296,13 +300,21 @@ export function MapStudio() {
     let loaded=ORIGINAL;
     try {
       const saved=window.localStorage.getItem(STORAGE_KEY);
-      if(saved)loaded=parseGraphDocument(JSON.parse(saved));
+      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS)
+        loaded=parseGraphDocument(JSON.parse(saved));
     } catch {
       // A damaged single-map cache must not destroy a valid map library.
     }
     try {
       const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
       if(raw) {
+        if(raw.length>MAX_AUTO_RESTORE_CHARS){
+          setOversizedSavedMaps(true);
+          setNotice("A large saved map collection was preserved but not loaded automatically. Export a backup before resetting it.");
+          const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
+          setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
+          return;
+        }
         const data=JSON.parse(raw) as {activeId:string;maps:unknown[]};
         if(Array.isArray(data.maps)&&data.maps.length>0&&data.maps.length<=MAX_LOCAL_MAPS) {
           const maps:LocalMap[]=data.maps.map(item=>{
@@ -675,12 +687,17 @@ export function MapStudio() {
   }
 
   function persistMapLibrary(nextMaps:LocalMap[],nextActive:LocalMap):boolean {
+    if(oversizedSavedMaps){
+      setNotice("The oversized map collection is protected. Export its backup and reset it before saving new maps.");
+      return false;
+    }
     try {
-      // Persist the entire collection first, so a failed write cannot pretend success.
+      // Avoid writing a second redundant copy of the graph into browser storage.
       window.localStorage.setItem(MAP_LIBRARY_KEY,JSON.stringify({
         activeId:nextActive.id,maps:nextMaps
       }));
-      window.localStorage.setItem(STORAGE_KEY,JSON.stringify(nextActive.graph));
+      // Previous-version fallback is obsolete once the library has saved.
+      window.localStorage.removeItem(STORAGE_KEY);
       setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
       return true;
     } catch {
@@ -825,6 +842,32 @@ export function MapStudio() {
       </div>
     </section>
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
+    {oversizedSavedMaps&&<div className="funding-csv-coverage" role="alert">
+      <strong>Your previous browser maps were preserved without loading them.</strong>
+      <p>The saved collection is too large to restore automatically without risking
+        another freeze. Export an untouched backup before clearing that cached collection.
+        The new importer will still analyse large files in the background.</p>
+      <div className="actions">
+        <button className="button-outline" type="button" onClick={()=>{
+          const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
+          if(!raw){setNotice("No saved map backup was found.");return;}
+          const blob=new Blob([raw],{type:"application/json"});
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement("a");
+          a.href=url;a.download="mossline-browser-map-library-backup.json";a.click();
+          URL.revokeObjectURL(url);setSavedMapBackupMade(true);
+        }}>↓ Export saved maps backup</button>
+        <button className="button-outline" type="button" disabled={!savedMapBackupMade}
+          onClick={()=>{
+            if(!window.confirm("Delete the oversized saved map collection from this browser? Only proceed after checking your downloaded backup."))return;
+            window.localStorage.removeItem(MAP_LIBRARY_KEY);
+            window.localStorage.removeItem(STORAGE_KEY);
+            setOversizedSavedMaps(false);setSavedMapBackupMade(false);
+            setNotice("Large local cache reset. You can now create a new, smaller map.");
+          }}>Reset oversized cached maps</button>
+      </div>
+    </div>}
+
     <details className="example-library">
       <summary>Explore example networks · community and farming</summary>
       <p>Examples demonstrate what Mossline can do with different kinds of data.
