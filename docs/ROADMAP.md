@@ -249,3 +249,8 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Hosted publication with real storage, revocation, durable short URLs and workspace permissions.
 - [ ] Expiry controls, public attribution and provenance policy, redaction review and controlled updates.
 - [ ] Handle larger networks beyond bounded URL-sharing prototype.
+
+
+- [x] Require author approval after full list of disclosed entities and relationships.
+- [x] Explicit opt-in for introductory story text, default off.
+- [x] Compressed fragment round-trip and invalid-token tests in CI.
