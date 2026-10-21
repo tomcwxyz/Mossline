@@ -335,7 +335,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
         through expandable groups. Group nodes and dashed, count-weighted lines
         are visual summaries, not invented connections. Entity search and the
         connection inspector query the complete source network in a browser worker.
-        Nothing is uploaded to an external service.</p>
+        Data stays local unless you explicitly approve a model request in Ask this network.</p>
     </>}
   </section>;
 }
