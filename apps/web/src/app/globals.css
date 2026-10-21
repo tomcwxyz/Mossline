@@ -1098,3 +1098,42 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
   text-decoration:underline dotted;text-decoration-color:#96a999}
 @media(max-width:720px){.funding-full-overview-grid{grid-template-columns:1fr}
   .funding-full-overview{padding:13px}}
+
+
+/* Browser-local map recovery route deliberately avoids importing graph components. */
+.map-recovery-link{align-self:center;color:#d6c58c;font-weight:650;font-size:12px;
+  text-decoration:underline;text-underline-offset:4px;padding:7px}
+.recovery-shell{min-height:100vh;background:#e7ede5;color:#23372b;font-family:inherit}
+.recovery-header{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  background:#173c2c;color:#ebefd9;padding:17px clamp(20px,5vw,66px)}
+.recovery-header a{color:#e8ebcf;text-decoration:none;font:normal 24px Georgia,serif}
+.recovery-header span{font-size:12px;color:#cbd9c9}
+.recovery-content{max-width:880px;padding:clamp(20px,5vw,52px) 22px 60px;margin:0 auto}
+.recovery-content h1{font:normal clamp(28px,5vw,43px)/1.14 Georgia,serif;max-width:690px;margin:9px 0 18px}
+.recovery-content>p:not(.eyebrow),.recovery-section p,.recovery-note{line-height:1.75;font-size:14px;color:#4b6155}
+.recovery-nav{margin:24px 0}
+.recovery-nav a{color:#345b3e;text-decoration:underline;text-underline-offset:3px;font-size:13px}
+.recovery-section{border:1px solid #b0c5b0;border-radius:12px;background:#f7f8f2;
+  padding:clamp(18px,4vw,26px);margin:17px 0}
+.recovery-section h2{font:normal 24px Georgia,serif;margin:0 0 8px}
+.recovery-section p{margin:9px 0 16px}
+.recovery-section button{border:1px solid #356246;border-radius:8px;background:#305a40;
+  color:#f8f8e9;padding:11px 14px;font-size:13px;font-weight:650}
+.recovery-section button:disabled{cursor:not-allowed;opacity:.43}
+.recovery-map-list{display:grid;gap:9px;margin:13px 0 19px}
+.recovery-map-list label{display:flex;gap:12px;align-items:flex-start;background:#eaf0e8;
+  border:1px solid #c1cfc1;border-radius:9px;padding:13px;cursor:pointer}
+.recovery-map-list input{accent-color:#316943;flex:none;margin:4px 0}
+.recovery-map-list span{display:grid;gap:5px;min-width:0}
+.recovery-map-list strong{font-size:14px;overflow-wrap:anywhere}
+.recovery-map-list small{font-size:12px;color:#5a6b5c}
+.recovery-acknowledge{display:flex;gap:12px;align-items:flex-start;margin:20px 0;
+  font-size:13px;line-height:1.65;font-weight:550}
+.recovery-acknowledge input{accent-color:#316943;margin:4px 0;flex:none}
+.recovery-actions{display:flex;gap:10px;flex-wrap:wrap}
+.recovery-section .recovery-danger{background:#f6e9e3;color:#733e32;border-color:#a97b6a}
+.recovery-notice,.recovery-error{border:1px solid #62876b;background:#e2f0df;color:#234332;
+  border-radius:8px;font-size:13px;line-height:1.6;padding:13px;margin:15px 0}
+.recovery-error{background:#f9e8e5;color:#843d36;border-color:#b88071}
+.recovery-content .recovery-note{font-size:12px;color:#59695e;margin-top:24px}
+.recovery-shell :is(a,button,input):focus-visible{outline:3px solid #a87c2b;outline-offset:3px}
