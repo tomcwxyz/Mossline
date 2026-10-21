@@ -522,3 +522,32 @@ redo history. Reset arrangement recalculates the layout without editing any
 saved perspective or underlying source data. Undo/redo is session-local,
 available for up to 20 manual movements, and is intentionally separate
 from the names and versions of saved perspectives.
+
+
+## Alpha 1.6 — portable perspectives and a reusable artwork library
+
+Mossline's authoring remains local-first, but your saved views needn't be trapped
+in a single browser. Under **Saved perspectives**, use **Export views** to download
+a strict versioned JSON bundle that contains the saved perspectives for the
+current map, including labels, arrangement, styles, story and external artwork
+references. The bundle contains **no canonical graph records or relationships**.
+Use **Import views** on the same dataset in another browser; Mossline validates
+the package and confirms the number and names of incoming views before appending
+them. Existing views are never replaced. Export and import the underlying Mossline
+map separately when moving to another browser.
+
+The **Artwork library** holds up to 60 reusable HTTPS picture *references* with
+a title, creator, declared licence, optional source URL and attribution note.
+An author can choose a saved image when styling an entity or a story cover.
+The library is browser-local. Imported/exported perspective bundles include its
+referenced artwork metadata and image URLs, but **never the image binaries**.
+Mossline does not verify claimed licences; choose rights-cleared artwork and
+review external URLs before sharing. Remote images may contact their host when
+shown, including after importing a bundle. Removing a library entry never silently
+alters already-saved perspectives.
+
+A bundle is scoped to a matching graph fingerprint and currently known entity
+IDs. It cannot be imported onto arbitrary other datasets and does not attempt to
+merge, relabel or invent relationships. Fingerprints are convenience identifiers,
+**not cryptographic access controls**. Import is limited to 1 MB, 40 perspectives
+and 60 artwork references; browser storage limits still apply.

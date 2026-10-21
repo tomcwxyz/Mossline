@@ -223,3 +223,16 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 
 - [x] Undo and redo up to 20 manual node movements per active map/layout.
 - [x] Restore saved perspectives without treating layout replay as a new user movement.
+
+
+## Alpha 1.6 — portability and reuse of visual authoring
+- [x] Versioned, schema-validated, graph-scoped export of saved perspectives without source graph records.
+- [x] Import preview and explicit confirmation; append views with new IDs rather than overwrite.
+- [x] Browser artwork library with creator, rights declaration, attribution and source URL.
+- [x] Reuse library pictures for node styling and saved perspective covers.
+- [x] Include rights metadata alongside perspective export/import, without copying image binaries.
+- [x] Refuse cross-dataset import, unknown entity IDs and malformed or oversized files.
+- [ ] End-to-end protected-preview tests for import/save/refresh across browsers and phone widths.
+- [ ] Interactive licence/attribution display in published/public maps.
+- [ ] Portable full-project format with canonical source rows, visual settings and editable assets.
+- [ ] Hosted workspaces with publication and permissions.

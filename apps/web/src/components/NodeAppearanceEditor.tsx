@@ -1,15 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import type { GraphNode, NodeStyleOverride } from "@mossline/graph-core";
+import type { GraphNode, NodeStyleOverride, LibraryAsset } from "@mossline/graph-core";
 
 type Props={
   node:GraphNode;
   value:NodeStyleOverride;
+  assets:LibraryAsset[];
   onChange:(id:string,value:NodeStyleOverride|undefined)=>void;
 };
 /** A reusable inspector for presentation choices, never canonical graph edits. */
-export function NodeAppearanceEditor({node,value,onChange}:Props){
+export function NodeAppearanceEditor({node,value,assets,onChange}:Props){
   const [picture,setPicture]=useState(value.imageUrl??"");
   const [error,setError]=useState("");
   useEffect(()=>{
@@ -59,6 +60,23 @@ export function NodeAppearanceEditor({node,value,onChange}:Props){
         onChange={e=>patch({highlight:e.target.checked})}/>
       Highlight this entity
     </label>
+    <label>Choose from your artwork library
+      <select aria-label="Choose saved image reference" value=""
+        onChange={event=>{
+          const asset=assets.find(x=>x.id===event.target.value);
+          if(asset){setPicture(asset.url);onChange(node.id,{...value,imageUrl:asset.url});}
+        }}>
+        <option value="">Select a saved picture…</option>
+        {assets.map(asset=><option key={asset.id} value={asset.id}>
+          {asset.name} · {asset.licence}
+        </option>)}
+      </select>
+    </label>
+    {assets.length===0&&<p className="appearance-explanation">
+      Add a picture in Artwork library to reuse it across your perspectives.
+    </p>}
+    {assets.find(a=>a.url===value.imageUrl)?.licence==="Unknown"&&
+      <p className="appearance-error">Rights not verified. Check before publishing this image.</p>}
     <form onSubmit={applyPicture} className="appearance-picture-form">
       <label htmlFor="appearance-picture">Picture override (HTTPS URL)
         <input id="appearance-picture" type="url" value={picture}
