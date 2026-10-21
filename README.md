@@ -820,3 +820,20 @@ A small alpha should still treat browser storage as a convenience, not
 as a database for large grant landscapes. See the roadmap for durable
 workspace storage and user-controlled ways to regenerate network views
 from the full source.
+
+
+### Independent browser map recovery
+
+If a large map makes the studio slow or difficult to navigate, open
+[`/recover`](https://mossline-omega.vercel.app/recover) directly. It does
+not mount the graph visualiser or automatically restore any saved networks.
+Map-library JSON is parsed in a Web Worker, with only map names and small
+counts sent to the interface. Choose **Download complete saved-map backup**,
+check that it exists on your computer, and select **Remove selected map**.
+You can also deliberately clear the local map cache after backing it up.
+Both operations only affect the current browser's local saved maps, not
+hosted publications, other workspaces or Neon data.
+
+The studio's map switcher now links to **Manage saved maps**.
+Recovery backups include the raw saved-map keys, which may contain private
+grant descriptions or contact data: handle these backup files accordingly.
