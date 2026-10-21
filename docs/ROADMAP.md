@@ -268,3 +268,19 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
 - [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
 - [ ] Real user accounts, team roles, invitations and restricted/private publications.
+
+
+## Alpha 1.9 — funding landscapes and potential thematic connections
+- [x] Funding-specific CSV importer for grant records, with common 360Giving-style field autodetection and manual field review.
+- [x] Directed funder → grant → organisation edges retaining multiple grants and amounts.
+- [x] Preserve organisation/grant IDs; exclude source-marked private rows; keep amount and currency disaggregated.
+- [x] Funding summary of grants, recipients, funders, award totals by currency and multi-funded organisations.
+- [x] Three clearly labelled candidate theme sources: recorded source themes, reviewable topic phrase rules and provisional word overlaps.
+- [x] Every candidate can show source evidence and links to entities, but never creates an inferred graph edge automatically.
+- [x] Synthetic mixed-funder test fixture, mapping preview and standalone example CSV.
+- [ ] Test against multiple real, rights-cleared large 360Giving publisher CSV datasets (including missing data, alias drift and non-standard dates).
+- [ ] Optional, consent-driven embeddings across grant descriptions, with per-record provenance and model/version metadata.
+- [ ] Optional LLM labelling of candidate clusters and question suggestions grounded solely in retrieved grants.
+- [ ] Human-reviewed network annotations, theme curation and gap/hypothesis exploration.
+- [ ] Identity-resolution review for mixed aliases, identifier schemes and funder/recipient dual roles.
+- [ ] Multi-file grant import, UK place grouping and temporal / programme filters.

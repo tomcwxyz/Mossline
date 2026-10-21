@@ -614,3 +614,70 @@ Vercel publishing credentials have been configured or migrated. Consult
 rollout and security limitations. This does not implement team logins, private
 publishing, or fine-grained reader permissions. Anyone with the URL can access
 the current publication; withdrawal cannot recall redistributed copies.
+
+
+## Alpha 1.9 — Funding landscapes and emerging themes
+
+Mossline now provides a purpose-built **Map funding landscape** workflow for
+flat grant award CSV files, including standard field names from common
+360Giving exports. Awards remain distinct **project** entities, with two
+directed recorded links: **funder → award → recipient**. This keeps repeated
+grants, dates, amounts and programme descriptions separately inspectable
+without collapsing multiple awards into one line. Funders and recipients are
+deduplicated by their provided official identifier when available, otherwise
+by a normalised name (which should be reviewed for collisions/variants).
+People receiving individual grants are not imported by this workflow.
+
+The **funding insight** panel summarises documented funders, organisation
+recipients, awards, currency-specific amount totals, and organisations
+receiving awards from several funders. It suggests **potential thematic
+connections** by two transparent mechanisms:
+
+1. Matching explicit source-assigned theme tags across recipients.
+2. Interpretable topic-bridge phrase patterns (such as food insecurity and
+   community meals), separately labelled as candidate themes.
+3. Shared significant words in award descriptions and programmes,
+   labelled as provisional keyword overlap — not semantic embeddings.
+
+Every suggestion names both recipients, notes whether they have different
+recorded funders, and reveals the texts that triggered the suggestion.
+These candidate insights are never added as graph relationships. A
+funder jointly financing two recipients is not proof of a partnership
+between them. Awarded amounts are financial commitments, not evidence
+of project impact, actual payments or local unmet need.
+
+**Try it:** choose **Map funding landscape → Try fictional funding
+landscape**. Inspect the detected field mappings and preview; create a
+separate local map, then explore the themed connections. Downloadable
+synthetic CSV: `apps/web/public/funding-landscape-example.csv`.
+
+CSV processing is local in the browser, and the source import is not
+sent to AI or LLM services. The workflow respects rows marked
+`Public=FALSE` or `Private`. Raw grant details are retained within
+the user's browser-local graph and need review before any online
+publication. Share/publish retain the separate, deliberately minimised
+snapshot schema and author consent.
+
+### AI path: hybrid candidate discovery (design, not enabled)
+
+A future optional model-assisted stage will use:
+
+- Rules: preserve award identity, source evidence, co-funding
+  and source-assigned themes as authoritative *records*.
+- Embedding retrieval: rank grants with semantically similar summaries
+  even when their word choices do not overlap, with model/version,
+  retrieval scores and per-grant source IDs.
+- A constrained, citation-oriented LLM: propose a limited number of
+  questions or draft theme labels **only for retrieved grant records**,
+  always showing those records for review.
+- Deterministic constraints/decisions: privacy filtering, thresholds,
+  contradictions, confidence calibration, audit and explicit human
+  approval before any newly created connection enters a graph.
+
+This approach is provider-agnostic (e.g. local Ollama embeddings or a
+server-configured external model), strictly opt-in before transmitting
+grant descriptions. Neither an LLM nor an embedding model may silently
+create a *recorded* connection, claim a partnership, infer causation or
+certify a funding gap. Empty/low-quality descriptions should yield
+"insufficient evidence", not invented suggestions. Publishing any
+model output requires separate confirmation.
