@@ -7,8 +7,8 @@ import {GraphCanvas} from "./GraphCanvas";
 import {AtlasCanvas,type AtlasMode,type KindFilter} from "./AtlasCanvas";
 import {decodeShareSnapshot} from "../lib/share-codec";
 
-export function SharedView(){
-  const [snapshot,setSnapshot]=useState<PublishedSnapshot|null>(null);
+export function SharedView({initialSnapshot}:{initialSnapshot?:PublishedSnapshot}={}){
+  const [snapshot,setSnapshot]=useState<PublishedSnapshot|null>(initialSnapshot??null);
   const [error,setError]=useState("");
   const [selectedId,setSelectedId]=useState<string|null>(null);
   const [selectedEdgeId,setSelectedEdgeId]=useState<string|null>(null);
@@ -16,6 +16,7 @@ export function SharedView(){
   const [atlasKind,setAtlasKind]=useState<KindFilter>("all");
 
   useEffect(()=>{
+    if(initialSnapshot)return;
     let cancelled=false;
     async function load(){
       try {
@@ -29,7 +30,7 @@ export function SharedView(){
     }
     void load();
     return ()=>{cancelled=true;};
-  },[]);
+  },[initialSnapshot]);
 
   const graph=useMemo(()=>snapshot?
     applyNodeStyleImages(sharedSnapshotGraph(snapshot),snapshot.nodeStyles??{}):null,[snapshot]);
