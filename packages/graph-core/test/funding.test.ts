@@ -73,3 +73,24 @@ test("stable funder IDs and grant IDs under row permutation",()=>{
  assert.deepEqual(new Set(a.nodes.map(n=>n.id)),new Set(b.nodes.map(n=>n.id)));
  assert.deepEqual(new Set(a.edges.map(e=>e.id)),new Set(b.edges.map(e=>e.id)));
 });
+
+
+test("topic bridge spots differently worded descriptions without inventing a relationship",()=>{
+ const text=[
+  "Funder,Recipient,Title,Description",
+  "First Trust,Families Hub,Nutrition access,Helping households facing food insecurity",
+  "Second Fund,Volunteer Pantry,Surplus redistribution,A food pantry for vulnerable neighbourhoods"
+ ].join("\n");
+ const {graph}=importFundingCsv({name:"different-language.csv",text});
+ assert.ok(graph);
+ const facts=analyseFundingLandscape(graph!);
+ assert.ok(facts.insights.some(i=>i.kind==="topic-rule"&&i.common.includes("Food access")&&i.differentFunders));
+ assert.equal(graph!.edges.length,4);
+});
+test("rejects individuals even if a user manually maps an individual-name column",()=>{
+ const text="Funding Org:Name,Recipient Ind:Name,Title\nFunder,Person,Private grant";
+ const mapping=suggestFundingMapping(["Funding Org:Name","Recipient Ind:Name","Title"]);
+ const result=importFundingCsv({name:"person.csv",text},{...mapping,recipient:"Recipient Ind:Name"});
+ assert.equal(result.graph,null);
+ assert.ok(result.issues.some(i=>/individual-recipient/i.test(i.message)));
+});
