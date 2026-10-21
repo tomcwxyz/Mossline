@@ -1,12 +1,12 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
-import type {AdaptiveGraphProjection,GraphEdge,GraphNode} from "@mossline/graph-core";
+import type {AdaptiveGraphProjection,GraphDocument,GraphEdge,GraphNode} from "@mossline/graph-core";
 import {WholeGraphCanvas} from "./WholeGraphCanvas";
 
 /** Whole-network navigation never mutates the imported graph, and does not use
  * pages or representative grant samples. View complexity is managed by grouping.
  */
-export function WholeGraphExplorer({datasetId}:{datasetId:string}){
+export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:GraphDocument}){
   const worker=useRef<Worker|null>(null);
   const request=useRef(0);
   const [expanded,setExpanded]=useState<string[]>([]);
@@ -16,7 +16,7 @@ export function WholeGraphExplorer({datasetId}:{datasetId:string}){
   const [error,setError]=useState("");
   const pending=useRef<string[]>([]);
   useEffect(()=>{
-    let instance:Worker;
+    let instance:Worker|undefined;
     try{
       instance=new Worker(new URL("../workers/whole-graph.worker.ts",import.meta.url),
         {type:"module"});
@@ -40,12 +40,12 @@ export function WholeGraphExplorer({datasetId}:{datasetId:string}){
       };
       instance.onerror=()=>{setBusy(false);setStatus("");
         setError("The whole-network worker failed. Source data was not changed.");};
-      instance.postMessage({kind:"overview",id,datasetId,expandedIds:[]});
+      instance.postMessage({kind:"overview",id,datasetId,graph,expandedIds:[]});
     }catch{
       setBusy(false);setError("This browser could not open whole-network exploration.");
     }
     return ()=>{request.current++;instance?.terminate();worker.current=null;};
-  },[datasetId]);
+  },[datasetId,graph]);
   function show(next:string[]){
     if(!worker.current||busy)return;
     pending.current=next;
@@ -69,7 +69,7 @@ export function WholeGraphExplorer({datasetId}:{datasetId:string}){
       <div>
         <p className="eyebrow">Whole-network exploration · adaptive level of detail</p>
         <h3>The whole network, without the hairball</h3>
-        <p>Every source entity and relationship is represented. Groups and thicker
+        <p>Every entity and relationship in this network is represented. Groups and thicker
           summary lines show where activity is concentrated; select a group to
           reveal its members and original connections. The graph itself is unchanged.</p>
       </div>

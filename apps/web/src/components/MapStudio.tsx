@@ -14,6 +14,7 @@ import {
   type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
+import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
@@ -1311,7 +1312,10 @@ export function MapStudio() {
             </div>}
           </div>
         </div>
-        {view==="atlas" ?
+        {view!=="atlas"&&(filtered.graph.nodes.length>260||
+            filtered.graph.edges.length>650)?
+          <WholeGraphExplorer graph={filtered.graph}/> :
+        view==="atlas" ?
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
             onSelect={pickNode} onPickEdge={pickEdge}
             mode={atlasMode} onModeChange={setAtlasMode}

@@ -118,6 +118,7 @@ export function projectAdaptiveGraph(index:AdaptiveGraphIndex,requestedIds:strin
   const internals=new Map<string,number>();
   const aggregates=new Map<string,{from:string;to:string;direction:string;count:number;inferred:number}>();
   const originalEdges:GraphEdge[]=[];
+  const clusterIds=new Set(clusters.map(cluster=>cluster.id));
   const originalIds=new Set(index.source.edges.map(e=>e.id));
   for(const edge of index.source.edges){
     let from=memberToView.get(edge.source),to=memberToView.get(edge.target);
@@ -126,7 +127,7 @@ export function projectAdaptiveGraph(index:AdaptiveGraphIndex,requestedIds:strin
       internals.set(from,(internals.get(from)??0)+1);
       continue;
     }
-    const groupEdge=clusters.some(c=>c.id===from||c.id===to);
+    const groupEdge=clusterIds.has(from)||clusterIds.has(to);
     if(!groupEdge){originalEdges.push(edge);continue;}
     const direction=edge.direction??"directed";
     if(direction==="undirected"&&from>to)[from,to]=[to,from];

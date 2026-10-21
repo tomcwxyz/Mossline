@@ -58,7 +58,7 @@ export function WholeGraphCanvas({projection,onPickNode,onPickEdge}:{
   useEffect(()=>{
     const cy=cyRef.current;if(!cy||!ready)return;
     const previous=new Map<string,{x:number;y:number}>();
-    cy.nodes().forEach(n=>previous.set(n.id(),{...n.position()}));
+    cy.nodes().forEach(n=>{previous.set(n.id(),{...n.position()});});
     const oldCount=cy.nodes().length;
     const {nodes,edges}=projection.graph;
     cy.batch(()=>{

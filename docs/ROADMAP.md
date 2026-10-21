@@ -376,3 +376,14 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
       with preserved user-authored positions.
 - [ ] More meaningful grouping recipes (community detection, geography, funding,
       themes), with explicit provenance and no invented links.
+
+## Generic large-network integration (development)
+
+- [x] Use the adaptive complete-graph viewport for general Kumu/CSV studio views
+      when more than 260 entities or 650 connections would be rendered.
+- [x] Send the active full graph to a dedicated worker once; expand groups
+      without rebuilding the entire studio on the main thread.
+- [ ] Move large generic graph storage and filtering off the main thread too
+      (currently browser localStorage and synchronous source filtering).
+- [ ] Preserve authored node positioning when switching between small-graph
+      canvas and group-based overview.
