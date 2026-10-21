@@ -242,6 +242,7 @@ export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
   const [traceOpen,setTraceOpen]=useState(false);
+  const [insightsOpen,setInsightsOpen]=useState(false);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
   const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
   const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
@@ -840,7 +841,9 @@ export function MapStudio() {
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
     <StartScreen maps={localMaps.map(m=>({id:m.id,title:m.title,
       nodes:m.graph.nodes.length,edges:m.graph.edges.length,
-      updatedAt:m.createdAt,funding:!!m.fundingDatasetId}))}
+      updatedAt:m.createdAt,funding:!!m.fundingDatasetId,
+      summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
+        " grants in complete dataset":undefined}))}
       onOpen={id=>{selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
       onFunding={()=>{setShowFundingWorkbench(true);setExperienceSpace("studio");}}
@@ -884,7 +887,8 @@ export function MapStudio() {
             <button type="button" onClick={()=>setShowFundingWorkbench(v=>!v)}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
-            <button type="button" onClick={()=>saveJson(graph)}>↓ Export this map</button>
+            {fullFundingView?<a href="/recover">↓ Back up full funding dataset</a>:
+              <button type="button" onClick={()=>saveJson(graph)}>↓ Export this map</button>}
             <a href="/recover">Manage backups and saved maps ↗</a>
           </div>
         </details>
@@ -1142,7 +1146,7 @@ export function MapStudio() {
 
         </>}
 
-        <details className="studio-tool-group">
+        {!fullFundingView&&<details className="studio-tool-group">
           <summary>Saved views <span>{savedForMap.length} saved</span></summary>
         <section className="perspectives-panel" aria-label="Saved perspectives">
           <div className="filter-heading"><p className="eyebrow">Saved perspectives</p>
@@ -1217,8 +1221,8 @@ export function MapStudio() {
           </div>
           <p className="help">Saved here until exported · scoped to this dataset · no changes to source data</p>
         </section>
-        </details>
-        <details className="studio-tool-group">
+        </details>}
+        {!fullFundingView&&<details className="studio-tool-group">
           <summary>Share, publish &amp; style</summary>
         <ShareViewPanel graph={filtered.graph} view={view}
           layout={layoutMode} labels={labelDensity} illustrated={illustrated}
@@ -1230,8 +1234,8 @@ export function MapStudio() {
           coverUrl={storyCoverUrl} positions={activePositions} nodeStyles={nodeStyles}/>
         <AssetLibraryPanel assets={assets} onAdd={addArtwork}
           onRemove={id=>saveArtwork(assets.filter(asset=>asset.id!==id))}/>
-        </details>
-        <details className="studio-tool-group" open={traceOpen}
+        </details>}
+        {!fullFundingView&&<details className="studio-tool-group" open={traceOpen}
           onToggle={e=>setTraceOpen(e.currentTarget.open)}>
           <summary>Follow a connection</summary>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
@@ -1310,8 +1314,8 @@ export function MapStudio() {
             <button type="button" className="trace-clear" onClick={clearTrail}>Clear path</button>
           </div>}
         </section>
-        </details>
-        <details className="junction-panel">
+        </details>}
+        {!fullFundingView&&<details className="junction-panel">
           <summary>Structural junctions <span>{featuredJunctions.length} shown</span></summary>
           <p className="help">Which organisations or projects hold different parts of the recorded network together? This is a structural test, not a judgement about importance or impact.</p>
           <label className="context-toggle">
@@ -1412,8 +1416,10 @@ export function MapStudio() {
           </div>}
       </aside>
     </section>
-    <details className="studio-deep-dive">
+    <details className="studio-deep-dive" open={insightsOpen}
+      onToggle={e=>setInsightsOpen(e.currentTarget.open)}>
       <summary>Explore analysis, evidence &amp; funding patterns</summary>
+      {insightsOpen&&<>
     <FundingInsights graph={graph}
       fullAnalysis={localMaps.find(item=>item.id===activeMapId)?.fundingAnalysis}
       datasetId={localMaps.find(item=>item.id===activeMapId)?.fundingDatasetId}
@@ -1424,6 +1430,7 @@ export function MapStudio() {
       setSelectedId(id);setSelectedEdgeId(null);
     }}/>
 
+      </>}
     </details>
     </>}
     <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>

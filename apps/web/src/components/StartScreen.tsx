@@ -1,6 +1,6 @@
 "use client";
 
-export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean};
+export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean;summary?:string};
 
 export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSampleSheet,
   onPft,onRecovery}:{
@@ -46,8 +46,8 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
             {maps.map(m=><button key={m.id} type="button" onClick={()=>onOpen(m.id)}>
               <span className="studio-start-map-symbol" aria-hidden="true">✳</span>
               <span className="studio-start-map-name"><strong>{m.title}</strong>
-                <small>{m.funding?"Funding network · ":""}{m.nodes.toLocaleString("en-GB")} entities ·
-                  {" "}{m.edges.toLocaleString("en-GB")} connections</small></span>
+                <small>{m.summary??(m.nodes.toLocaleString("en-GB")+" entities · "+
+                  m.edges.toLocaleString("en-GB")+" connections")}</small></span>
               <span aria-hidden="true">→</span>
             </button>)}
           </div>
