@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {importFundingCsv,suggestFundingMapping} from "../src/funding.ts";
-import {buildFundingThemeClusters,identifyFundingThemes} from "../src/funding-clusters.ts";
+import {buildFundingFullAnalysis,buildFundingThemeClusters,identifyFundingThemes} from "../src/funding-clusters.ts";
 
 const cols=["Identifier","Funding Org:Name","Funding Org:Identifier",
   "Recipient Org:Name","Recipient Org:Identifier","Recipient Individual Id",
@@ -72,6 +72,17 @@ test("a large GrantNav-style file gets a funder-balanced, explicit subset",()=>{
  assert.equal(result.counts.eligibleOrganisationRows,1400);
  assert.equal(result.counts.importedGrants,1200);
  assert.equal(result.counts.overflowExcluded,200);
+ assert.equal(result.fullGrantCount,1400);
+ assert.equal(result.graph!.nodes.filter(n=>n.type==="project").length,1200);
+ assert.equal(result.analysisGraph!.nodes.filter(n=>n.type==="project").length,1400);
+ const full=buildFundingFullAnalysis(result.analysisGraph!);
+ assert.equal(full.grants,1400);
+ assert.equal(full.funders,2);
+ assert.deepEqual(full.amounts,[{currency:"GBP",total:14000,knownAmounts:1400}]);
+ const food=full.themes.clusters.find(x=>x.title==="Food access");
+ assert.equal(food?.grantCount,1400);
+ assert.equal(full.themes.totalGrants,1400);
+ assert.equal(full.themes.unclassifiedGrants,0);
  const names=result.graph!.nodes.filter(n=>n.type==="funder").map(n=>n.label);
  assert.ok(names.includes("Big Funder"));
  assert.ok(names.includes("Small Funder"));
@@ -87,4 +98,30 @@ test("grants without classification are counted explicitly, not turned into a fi
  const report=buildFundingThemeClusters(graph);
  assert.equal(report.unclassifiedGrants,2);
  assert.equal(report.clusters.length,0);
+});
+
+test("full dataset summary is detached from canvas subset and never contains private individual awards",()=>{
+ const entries=[cols.join(",")];
+ for(let i=0;i<1302;i++){
+  entries.push(line(["Q"+i,"Funder "+(i%3),"F"+(i%3),
+   "Nonprofit "+i,"ORG"+i,"","","Organisation",
+   i%2?"Food access":"Repair and reuse",
+   i%2?"Affordable community meals":"Repair and reuse workshops",
+   "25","GBP","North East"]));
+ }
+ entries.push(line(["SENSITIVE","Trust","F4","","","an-individual-id",
+   "Private recipient","Individual","Private award",
+   "Personal details should not be imported","999999","GBP","North East"]));
+ const imported=importFundingCsv({name:"GrantNav-realistic.csv",text:entries.join("\n")});
+ assert.equal(imported.counts.individualExcluded,1);
+ assert.equal(imported.fullGrantCount,1302);
+ assert.equal(imported.counts.importedGrants,1200);
+ const full=buildFundingFullAnalysis(imported.analysisGraph!);
+ assert.equal(full.grants,1302);
+ assert.equal(full.amounts[0].total,1302*25);
+ assert.equal(full.themes.classifiedGrants,1302);
+ assert.equal(full.recipientRegions[0].region,"North East");
+ assert.equal(JSON.stringify(full).includes("Private recipient"),false);
+ assert.equal(JSON.stringify(full).includes("Personal details"),false);
+ assert.equal(JSON.stringify(imported.graph).includes("Private recipient"),false);
 });
