@@ -68,7 +68,7 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
     const projection=projectFundingGraph(currentFullGraph,{pageSize:75});
     self.postMessage({kind:"result",id:job.id,headings,graph:projection.graph,
       mapping:imported.mapping,issues:imported.issues,
-      counts:imported.counts,fullAnalysis,examples});
+      counts:{...imported.counts,importedGrants:projection.displayedGrants},fullAnalysis,examples});
   }catch(error){
     self.postMessage({kind:"failed",id:job.id,
       message:error instanceof Error?error.message:"The CSV could not be analysed."});
