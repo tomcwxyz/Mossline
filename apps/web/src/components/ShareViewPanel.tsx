@@ -21,6 +21,8 @@ export function ShareViewPanel(props:Props){
   const [open,setOpen]=useState(false);
   const [includeDescriptions,setIncludeDescriptions]=useState(false);
   const [includeImages,setIncludeImages]=useState(false);
+  const [includeIntroduction,setIncludeIntroduction]=useState(false);
+  const [authorised,setAuthorised]=useState(false);
   const [snapshot,setSnapshot]=useState<PublishedSnapshot|null>(null);
   const [link,setLink]=useState("");
   const [busy,setBusy]=useState(false);
@@ -28,10 +30,11 @@ export function ShareViewPanel(props:Props){
   const [copied,setCopied]=useState(false);
 
   function review(){
-    setLink("");setCopied(false);setError("");setSnapshot(null);
+    setLink("");setCopied(false);setError("");setSnapshot(null);setAuthorised(false);
     try {
       const settings:PublishSettings={
-        ...props,includeDescriptions,includeImages
+        ...props, introduction:includeIntroduction?props.introduction:undefined,
+        includeDescriptions,includeImages
       };
       setSnapshot(createPublishedSnapshot(props.graph,settings));
     }catch(err){
@@ -39,7 +42,7 @@ export function ShareViewPanel(props:Props){
     }
   }
   async function publish(){
-    if(!snapshot)return;
+    if(!snapshot||!authorised)return;
     setBusy(true);setError("");
     try{
       const hash=await encodeShareSnapshot(snapshot);
@@ -64,11 +67,15 @@ export function ShareViewPanel(props:Props){
         without opening your editing workspace.</p>
       <label className="share-checkbox"><input type="checkbox"
         checked={includeDescriptions} onChange={e=>{
-          setIncludeDescriptions(e.target.checked);setSnapshot(null);setLink("");
+          setIncludeDescriptions(e.target.checked);setSnapshot(null);setLink("");setAuthorised(false);
         }}/> Include entity descriptions</label>
       <label className="share-checkbox"><input type="checkbox"
+        checked={includeIntroduction} onChange={e=>{
+          setIncludeIntroduction(e.target.checked);setSnapshot(null);setLink("");setAuthorised(false);
+        }}/> Include the map's story introduction</label>
+      <label className="share-checkbox"><input type="checkbox"
         checked={includeImages} onChange={e=>{
-          setIncludeImages(e.target.checked);setSnapshot(null);setLink("");
+          setIncludeImages(e.target.checked);setSnapshot(null);setLink("");setAuthorised(false);
         }}/> Include external images and cover artwork</label>
       <p className="help"><strong>Public means public.</strong> Anyone with the link can
         copy the included labels, relationship types, descriptions or picture URLs.
@@ -80,16 +87,32 @@ export function ShareViewPanel(props:Props){
       {snapshot&&!link&&<div className="share-review" aria-label="Review public snapshot">
         <strong>{snapshot.nodes.length} entities · {snapshot.edges.length} relationships</strong>
         <p>Title: {snapshot.title}</p>
-        <p>Shared names include:</p>
-        <ul>{snapshot.nodes.slice(0,10).map(node=>
-          <li key={node.id}>{node.label} <small>({node.type})</small></li>)}</ul>
-        {snapshot.nodes.length>10&&<small>…and {snapshot.nodes.length-10} more visible entities.</small>}
+        {snapshot.introduction&&<p>Introduction: {snapshot.introduction}</p>}
+        <details open className="share-disclosure">
+          <summary>All {snapshot.nodes.length} entity names and categories</summary>
+          <ul>{snapshot.nodes.map(node=><li key={node.id}>
+            {node.label} <small>({node.type})</small>
+            {node.description&&<small> — {node.description}</small>}
+            {node.imageUrl&&<small> — image: {node.imageUrl}</small>}
+          </li>)}</ul>
+        </details>
+        <details className="share-disclosure">
+          <summary>All {snapshot.edges.length} relationship assertions</summary>
+          <ul>{snapshot.edges.map(edge=><li key={edge.id}>
+            {snapshot.nodes.find(n=>n.id===edge.source)?.label} →
+            {" "}{snapshot.nodes.find(n=>n.id===edge.target)?.label}
+            {" · "}{edge.type} {edge.inferred?"(inferred)":"(recorded)"}
+          </li>)}</ul>
+        </details>
         <p>{includeDescriptions?"Descriptions included.":"Descriptions omitted."}{" "}
           {includeImages?"External images included.":"External images omitted."}</p>
-        <label className="share-confirm-label">Only share data and images you are
-          authorised to publish.</label>
+        <label className="share-confirm-label share-checkbox">
+          <input type="checkbox" checked={authorised}
+            onChange={event=>setAuthorised(event.target.checked)}/>
+          I've reviewed the included content and have permission to share it.
+        </label>
         <button type="button" className="share-publish-button"
-          disabled={busy} onClick={publish}>
+          disabled={busy||!authorised} onClick={publish}>
           {busy?"Preparing…":"Generate share link for this snapshot"}
         </button>
       </div>}
