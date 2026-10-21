@@ -15,3 +15,5 @@ export * from "./published";
 export * from "./funding";
 export * from "./funding-clusters";
 export * from "./semantic-discovery";
+
+export * from "./browser-map-recovery";
