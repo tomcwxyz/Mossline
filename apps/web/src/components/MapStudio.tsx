@@ -40,7 +40,7 @@ const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 const MAX_AUTO_RESTORE_CHARS=2_600_000;
 type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
   /** Compact full-file aggregates, not original raw grant records. */
-  fundingAnalysis?:FundingFullAnalysis};
+  fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
 const MAX_LOCAL_MAPS=8;
 const SAVED_KEY = "mossline-perspectives-v1";
 const ASSET_KEY = "mossline-artwork-library-v1";
@@ -714,13 +714,21 @@ export function MapStudio() {
     const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
     return persistMapLibrary(updated,entry);
   }
-  function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis):boolean {
+  function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
+    fundingDatasetId?:string):boolean {
     if(localMaps.length>=MAX_LOCAL_MAPS) {
       setNotice("This browser has eight maps. Export one before creating another.");
       return false;
     }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next,fundingAnalysis};
+    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next,fundingAnalysis,fundingDatasetId};
     return persistMapLibrary([...localMaps,entry],entry);
+  }
+  function applyFundingProjection(next:GraphDocument):boolean{
+    const current=localMaps.find(m=>m.id===activeMapId);
+    if(!current?.fundingDatasetId||!current.fundingAnalysis)return false;
+    const entry:LocalMap={...current,graph:next};
+    const maps=localMaps.map(m=>m.id===current.id?entry:m);
+    return persistMapLibrary(maps,entry);
   }
   function selectLocalMap(id:string) {
     const entry=localMaps.find(x=>x.id===id);
@@ -813,7 +821,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.2</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.3</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -883,8 +891,8 @@ export function MapStudio() {
     </details>
     {showFundingWorkbench&&<FundingWorkbench
       onClose={()=>setShowFundingWorkbench(false)}
-      onCreate={(next,fullAnalysis)=>{
-        if(!createNewMap(next,fullAnalysis))return false;
+      onCreate={(next,fullAnalysis,datasetId)=>{
+        if(!createNewMap(next,fullAnalysis,datasetId))return false;
         setNotice("Created a funding landscape: full-data grant and theme analysis is saved alongside a smaller network view. Explore the clusters and supporting records below.");
         return true;
       }}/>}
@@ -1024,6 +1032,8 @@ export function MapStudio() {
     </section>}
     <FundingInsights graph={graph}
       fullAnalysis={localMaps.find(item=>item.id===activeMapId)?.fundingAnalysis}
+      datasetId={localMaps.find(item=>item.id===activeMapId)?.fundingDatasetId}
+      onViewProjection={applyFundingProjection}
       onExplore={id=>{
       setView("landscape");setTypes(TYPE_KEYS);setRegion("");setQuery("");setFocusId(null);
       setSelectedId(id);setSelectedEdgeId(null);
