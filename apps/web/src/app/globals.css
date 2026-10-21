@@ -1164,6 +1164,13 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
 @media(max-width:640px){.funding-dataset-controls{grid-template-columns:1fr}
 .funding-dataset-explorer{padding:15px}}
 
+/* Recovery controls remain usable independently of the mapping studio. */
+.recovery-section .recovery-secondary{margin:10px 0 0 10px;background:transparent;color:#305a40}
+.recovery-select{display:block;width:100%;max-width:650px;margin:8px 0 12px;
+  background:#fffdf6;color:#23372b;border:1px solid #8eaa93;
+  border-radius:7px;padding:12px;font-size:13px}
+@media(max-width:600px){.recovery-section .recovery-secondary{margin:10px 0 0}}
+
 /* Adaptive whole-network exploration; grouped summaries never become source records. */
 .whole-graph-explorer{margin:28px 0;border:1px solid #bed1b8;border-radius:15px;
   background:#e9f1e6;color:#244332;padding:clamp(15px,3vw,26px)}

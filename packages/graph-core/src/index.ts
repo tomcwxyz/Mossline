@@ -20,4 +20,6 @@ export * from "./browser-map-recovery";
 
 export * from "./funding-projection";
 
+export * from "./funding-dataset-backup";
+
 export * from "./adaptive-graph";
