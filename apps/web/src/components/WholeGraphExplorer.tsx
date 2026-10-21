@@ -4,12 +4,15 @@ import {useEffect,useRef,useState,type FormEvent} from "react";
 import type {AdaptiveGraphProjection,GraphDocument,GraphEdge,NetworkInspection,
   NetworkSearch} from "@mossline/graph-core";
 import {WholeGraphCanvas} from "./WholeGraphCanvas";
+import {FullNetworkCanvas} from "./FullNetworkCanvas";
+import type {FullNetworkGeometry} from "@mossline/graph-core";
 
 type Reply={
-  kind:"stage"|"result"|"failed";action?:"overview"|"search"|"select"|"inspect";
+  kind:"stage"|"result"|"failed";action?:"overview"|"search"|"select"|"inspect"|"full";
   id:number;message?:string;projection?:AdaptiveGraphProjection;
   inspection?:NetworkInspection;matches?:NetworkSearch;expandedIds?:string[];
   collapsedOtherGroups?:boolean;visualLimit?:string;
+  geometry?:FullNetworkGeometry;
 };
 
 /** All navigation, search and relationship detail use the canonical source
@@ -22,6 +25,8 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
   const pendingHistory=useRef<string[]>([]);
   const resetOnOverview=useRef(false);
   const [expanded,setExpanded]=useState<string[]>([]);
+  const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
+  const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
   const [inspection,setInspection]=useState<NetworkInspection|null>(null);
   const [selectedEdge,setSelectedEdge]=useState<GraphEdge|null>(null);
@@ -44,6 +49,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
       const id=++request.current;
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
+      setFullGeometry(null);setViewMode("overview");
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
@@ -56,6 +62,11 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           return;
         }
         setError("");
+        if(msg.action==="full"&&msg.geometry){
+          setFullGeometry(msg.geometry);
+          setViewMode("full");
+          return;
+        }
         if(msg.action==="search"&&msg.matches){
           setMatches(msg.matches);
           return;
@@ -112,7 +123,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
     if(busy)return;
     pendingHistory.current=back?history.slice(0,-1):
       inspection&&inspection.node.id!==id?[...history,inspection.node.id]:history;
-    submit({kind:"select",nodeId:id,expandedIds:expanded},
+    submit({kind:"select",nodeId:id,expandedIds:expanded,mode:viewMode},
       "Finding this entity and its recorded connections…");
   }
   function pickNode(id:string){
@@ -152,7 +163,18 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           follow its recorded connections without losing the wider picture.</p>
       </div>
       <div className="whole-graph-actions">
-        <button type="button" disabled={busy||!expanded.length}
+        <div className="full-network-mode" role="group" aria-label="Network presentation">
+          <button type="button" aria-pressed={viewMode==="overview"}
+            disabled={busy} className={viewMode==="overview"?"active":""}
+            onClick={()=>setViewMode("overview")}>Grouped overview</button>
+          <button type="button" aria-pressed={viewMode==="full"}
+            disabled={busy} className={viewMode==="full"?"active":""}
+            onClick={()=>{
+              if(fullGeometry){setViewMode("full");return;}
+              submit({kind:"full"},"Preparing every original node and line for GPU rendering…");
+            }}>Full graph</button>
+        </div>
+        <button type="button" disabled={busy||viewMode==="full"||!expanded.length}
           onClick={()=>show(expanded.slice(0,-1))}>← Close last group</button>
         <button type="button" disabled={busy||(!expanded.length&&!inspection)}
           onClick={()=>show([],true)}>Whole network</button>
@@ -192,18 +214,32 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
           {" "}{projection.totalNodes.toLocaleString("en-GB")} entities represented</span>
         <span><strong>{projection.representedEdges.toLocaleString("en-GB")}</strong> of
           {" "}{projection.totalEdges.toLocaleString("en-GB")} connections represented</span>
-        <span>{projection.visibleNodes} drawn nodes · {projection.visibleEdges} drawn lines
-          {" "}· {projection.clusterCount} groups</span>
+        <span>{viewMode==="full"&&fullGeometry?
+          fullGeometry.nodeCount.toLocaleString("en-GB")+" original nodes drawn · "+
+            fullGeometry.edgeCount.toLocaleString("en-GB")+" original lines":
+          projection.visibleNodes+" summary nodes · "+projection.visibleEdges+" summary lines · "+
+            projection.clusterCount+" groups"}</span>
       </div>
-      <WholeGraphCanvas projection={projection}
-        selectedId={selectedEdge?null:(inspection?.node.id??null)} selectedEdgeId={selectedEdge?.id??null}
-        onPickNode={pickNode} onPickEdge={pickEdge}/>
+      {viewMode==="full"&&fullGeometry?
+        <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
+          onSelect={id=>navigate(id)}/>:
+        <WholeGraphCanvas projection={projection}
+          selectedId={selectedEdge?null:(inspection?.node.id??null)}
+          selectedEdgeId={selectedEdge?.id??null}
+          onPickNode={pickNode} onPickEdge={pickEdge}/>}
+      {viewMode==="full"&&fullGeometry&&
+        <p className="whole-graph-full-caption" role="status">
+          Showing all {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and
+          {" "}{fullGeometry.edgeCount.toLocaleString("en-GB")} original relationship lines —
+          without grouping or sampling. Zoom, pan, or use search to inspect the network.
+        </p>
       <div className="whole-graph-bottom">
         <section className="whole-graph-groups">
           <h4>Explore the landscape</h4>
           <p>Each group represents the exact number of source entities shown.
             Select a group to expand it, or search to jump directly to an entity.</p>
-          {projection.availableGroups.length?
+          {viewMode==="full"?<p>The whole source graph is visible. Search any entity, or select a point to follow its real connections.</p>:
+          projection.availableGroups.length?
             <div className="whole-graph-group-list">
               {projection.availableGroups.map(g=><button key={g.id} type="button"
                 disabled={busy} onClick={()=>show([...expanded,g.id])}>
