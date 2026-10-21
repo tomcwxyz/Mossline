@@ -35,11 +35,24 @@ export function authoriseDiscovery(request:Request):boolean{
   return timingSafeEqual(hash(given.slice(7)),hash(expected));
 }
 export async function readDiscoveryJson(request:Request,maxBytes=53_000):Promise<unknown>{
-  const length=Number(request.headers.get("content-length"));
-  if(Number.isFinite(length)&&length>maxBytes)throw Error("Too much data");
-  const data=await request.text();
-  if(Buffer.byteLength(data)>maxBytes)throw Error("Too much data");
-  return JSON.parse(data);
+  const declared=Number(request.headers.get("content-length"));
+  if(Number.isFinite(declared)&&declared>maxBytes)throw Error("Too much data");
+  const reader=request.body?.getReader();
+  if(!reader)throw Error("No data supplied");
+  let total=0;
+  const chunks:Uint8Array[]=[];
+  try{
+    while(true){
+      const {value,done}=await reader.read();
+      if(done)break;
+      total+=value.length;
+      if(total>maxBytes)throw Error("Too much data");
+      chunks.push(value);
+    }
+  }finally{void reader.cancel().catch(()=>{});}
+  const bytes=new Uint8Array(total);let position=0;
+  for(const c of chunks){bytes.set(c,position);position+=c.length;}
+  return JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes));
 }
 export class ModelUnavailable extends Error{}
 export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown){
