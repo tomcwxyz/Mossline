@@ -20,6 +20,7 @@ import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
 import { AssetLibraryPanel } from "./AssetLibraryPanel";
 import { ShareViewPanel } from "./ShareViewPanel";
 import { HostedPublishPanel } from "./HostedPublishPanel";
+import { FundingWorkbench, FundingInsights } from "./FundingLandscape";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
@@ -236,6 +237,7 @@ export function MapStudio() {
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
+  const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
@@ -791,7 +793,7 @@ export function MapStudio() {
 
   return <main className="shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.8</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 1.9</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal" /> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -810,6 +812,10 @@ export function MapStudio() {
           </select>
         </label>
         <input aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet" ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv" hidden onChange={onImport}/>
+        <button className="button-outline funding-launch" type="button"
+          onClick={()=>setShowFundingWorkbench(current=>!current)}>
+          {showFundingWorkbench?"− Close funding workflow":"✳ Map funding landscape"}
+        </button>
         <button className="button-outline" onClick={() => fileRef.current?.click()}>↑ Discover your data</button>
         <button className="button-outline" onClick={tryExampleDiscovery}>Try sample spreadsheet</button>
         <button className="button-primary" onClick={() => saveJson(graph)}>↓ Export map</button>
@@ -828,6 +834,13 @@ export function MapStudio() {
       </div>
       <PftVisualShowcase onOpenSample={openPftVisualExample}/>
     </details>
+    {showFundingWorkbench&&<FundingWorkbench
+      onClose={()=>setShowFundingWorkbench(false)}
+      onCreate={next=>{
+        if(!createNewMap(next))return false;
+        setNotice("Created a new funding landscape with award records, funders and recipients. Explore the suggested thematic connections below.");
+        return true;
+      }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
         <div><p className="eyebrow">Explore what Mossline found</p>
@@ -962,6 +975,10 @@ export function MapStudio() {
           Presentation only · Source records unchanged</span>
       </div>
     </section>}
+    <FundingInsights graph={graph} onExplore={id=>{
+      setView("landscape");setTypes(TYPE_KEYS);setRegion("");setQuery("");setFocusId(null);
+      setSelectedId(id);setSelectedEdgeId(null);
+    }}/>
     <section className="workspace">
       <aside className="sidebar">
         <p className="eyebrow">Explore</p>
