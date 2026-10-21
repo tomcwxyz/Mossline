@@ -299,3 +299,19 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Evaluate human relevance and false-positive rates on multiple UK grant datasets.
 - [ ] Multi-grant evidence clustering, theme editing and question-led exploration.
 - [ ] Cost controls, usage reporting, rate limiting and provider fallbacks before general public rollout.
+
+
+## Alpha 2.1 — mixed GrantNav imports and funding theme clusters
+- [x] Handle 2025 GrantNav-style CSV fields including supplementary recipient region.
+- [x] Filter individual recipient grants and prevent their personal descriptions from reaching the organisational map.
+- [x] Explain skipped and excluded rows and the sampling limit explicitly.
+- [x] Funder-balanced detail subset for files with more than 1,200 eligible organisation grants.
+- [x] Aggregate themes from explicit source tags and matching title/description phrases, without creating graph edges.
+- [x] Theme-specific funders, recipients, multi-funded organisational bridges, amount totals by currency and inspectable grant evidence.
+- [x] Classify only when there is an explicit tag or phrase match; show unclassified coverage.
+- [x] Synthetic large/mixed-input tests. No upload of user grant data.
+- [ ] Full-dataset analysis and scalable stored maps for many thousands of awards, without sample truncation.
+- [ ] Named geographic and date/programme filters with source-to-beneficiary vs organisation-location distinctions.
+- [ ] Human-managed theme vocabulary and manual override/review of theme membership.
+- [ ] Embedding-based cluster enrichment and clearly sourced explanatory questions after provider configuration.
+- [ ] Network viewport level-of-detail clustering / virtualisation for very large imports.
