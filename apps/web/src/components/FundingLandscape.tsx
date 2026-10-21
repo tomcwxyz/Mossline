@@ -37,6 +37,7 @@ export function FundingWorkbench({onCreate,onClose}:{
 
   function analyse(next:ImportFile,override?:FundingMapping,newSource=false){
     if(newSource){workerRef.current?.terminate();workerRef.current=null;}
+    const needsFile=!workerRef.current;
     if(!workerRef.current){
       try{
         workerRef.current=new Worker(
@@ -81,7 +82,7 @@ export function FundingWorkbench({onCreate,onClose}:{
       worker.terminate();workerRef.current=null;
     };
     worker.postMessage({kind:"analyse",id,
-      ...(newSource?{file:next}:{}),
+      ...(needsFile?{file:next}:{}),
       ...(override?{mapping:override}:{})
     });
   }
@@ -227,7 +228,11 @@ export function FundingWorkbench({onCreate,onClose}:{
         Create funding landscape →
       </button>
     </>}
-    {error&&<p role="alert" className="funding-error">{error}</p>}
+    {error&&<div role="alert" className="funding-error">
+      <p>{error}</p>
+      {file&&!busy&&<button className="button-outline" type="button"
+        onClick={()=>analyse(file,mapping??undefined,true)}>Retry analysis</button>}
+    </div>}
   </section>;
 }
 
