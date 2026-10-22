@@ -26,6 +26,10 @@ import { FundingWorkbench, FundingInsights } from "./FundingLandscape";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
+import {deleteGeneralGraph,generalMapCounts,generalMapStub,
+  loadGeneralGraph,saveGeneralGraph,shouldStoreGeneralGraph}
+  from "../lib/general-map-store";
+import type {ColumnMapping} from "@mossline/graph-core";
 import demo from "../../../../data/demo.json";
 import communityExample from "../../../../data/community-example.json";
 
@@ -41,6 +45,8 @@ const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 // Avoid synchronously parsing an unexpectedly huge cached graph at page startup.
 const MAX_AUTO_RESTORE_CHARS=2_600_000;
 type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
+  /** Large generic map content is stored in IndexedDB, not localStorage. */
+  generalDatasetId?:string;sourceCounts?:{nodes:number;edges:number};
   /** Compact full-file aggregates, not original raw grant records. */
   fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
 const MAX_LOCAL_MAPS=8;
@@ -299,9 +305,27 @@ export function MapStudio() {
   const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
   const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
   const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
+  const [initialMapped,setInitialMapped]=useState<MappedPreview|null>(null);
+  const [showImportCoverage,setShowImportCoverage]=useState(false);
+  const [importBusy,setImportBusy]=useState(false);
+  const [importStage,setImportStage]=useState("");
+  const importWorkerRef=useRef<Worker|null>(null);
+  const importRequestRef=useRef(0);
+  const hydrationRef=useRef(0);
   const [mappingSession, setMappingSession] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
+
+  useEffect(()=>()=>{importWorkerRef.current?.terminate();
+    importWorkerRef.current=null;importRequestRef.current++;hydrationRef.current++;
+  },[]);
+
+  async function hydrateGeneralMap(entry:LocalMap){
+    if(!entry.generalDatasetId)return entry;
+    if(entry.graph.nodes.length||entry.graph.edges.length)return entry;
+    const graph=await loadGeneralGraph(entry.generalDatasetId);
+    return {...entry,graph};
+  }
 
   useEffect(() => {
     let loaded=ORIGINAL;
@@ -336,6 +360,15 @@ export function MapStudio() {
           const active=maps.find(m=>m.id===data.activeId)??maps[0];
           setHasSavedMapLibrary(true);
           setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
+          if(active.generalDatasetId){
+            const generation=++hydrationRef.current;
+            void hydrateGeneralMap(active).then(loaded=>{
+              if(generation!==hydrationRef.current)return;
+              setLocalMaps(previous=>previous.map(m=>m.id===loaded.id?loaded:m));
+              setGraph(loaded.graph);
+            }).catch(error=>setNotice(error instanceof Error?error.message:
+              "Could not restore the complete network from browser storage."));
+          }
           return;
         }
       }
@@ -421,8 +454,8 @@ export function MapStudio() {
     const withArtwork=showPftArtwork?applyAssetPack(graph,PFT_VISUAL_PACK):graph;
     return applyNodeStyleImages(withArtwork,nodeStyles);
   },[graph,showPftArtwork,nodeStyles]);
-  const proposedChanges=useMemo(()=>importPreview?.graph?
-    compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview]);
+  const proposedChanges=useMemo(()=>importMode==="replace"&&importPreview?.graph?
+    compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview,importMode]);
   const hasRemovals=!!proposedChanges &&
     (proposedChanges.nodes.removed>0 || proposedChanges.edges.removed>0);
   const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
@@ -705,7 +738,9 @@ export function MapStudio() {
     try {
       // Avoid writing a second redundant copy of the graph into browser storage.
       window.localStorage.setItem(MAP_LIBRARY_KEY,JSON.stringify({
-        activeId:nextActive.id,maps:nextMaps
+        activeId:nextActive.id,maps:nextMaps.map(m=>m.generalDatasetId?
+          {...m,graph:generalMapStub(m.graph),
+            sourceCounts:m.sourceCounts??generalMapCounts(m.graph)}:m)
       }));
       // Previous-version fallback is obsolete once the library has saved.
       window.localStorage.removeItem(STORAGE_KEY);
@@ -717,22 +752,26 @@ export function MapStudio() {
       return false;
     }
   }
-  function updateGraph(next:GraphDocument):boolean {
+  function updateGraph(next:GraphDocument,generalDatasetId?:string):boolean {
     const current=localMaps.find(x=>x.id===activeMapId);
     // A changed source graph invalidates previously calculated full-file facts.
     const entry:LocalMap=current?
-      {id:current.id,createdAt:current.createdAt,title:next.title,graph:next}:
-      {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next};
+      {id:current.id,createdAt:current.createdAt,title:next.title,graph:next,
+        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})}:
+      {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next,
+        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
     const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
     return persistMapLibrary(updated,entry);
   }
   function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
-    fundingDatasetId?:string):boolean {
+    fundingDatasetId?:string,generalDatasetId?:string):boolean {
     if(localMaps.length>=MAX_LOCAL_MAPS) {
       setNotice("This browser has eight maps. Export one before creating another.");
       return false;
     }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,graph:next,fundingAnalysis,fundingDatasetId};
+    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,
+      graph:next,fundingAnalysis,fundingDatasetId,
+      ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
     return persistMapLibrary([...localMaps,entry],entry);
   }
   function applyFundingProjection(next:GraphDocument):boolean{
@@ -742,37 +781,93 @@ export function MapStudio() {
     const maps=localMaps.map(m=>m.id===current.id?entry:m);
     return persistMapLibrary(maps,entry);
   }
-  function selectLocalMap(id:string) {
+  async function selectLocalMap(id:string){
     const entry=localMaps.find(x=>x.id===id);
-    if(entry&&persistMapLibrary(localMaps,entry)) {
-      setNotice("Opened ‘"+entry.title+"’. Your other maps are still saved in this browser.");
-      closeImport();
+    if(!entry)return;
+    const generation=++hydrationRef.current;
+    try{
+      const loaded=await hydrateGeneralMap(entry);
+      if(generation!==hydrationRef.current)return;
+      const maps=localMaps.map(m=>m.id===id?loaded:m);
+      if(persistMapLibrary(maps,loaded)){
+        setNotice("Opened ‘"+loaded.title+"’. Your other maps are still saved in this browser.");
+        closeImport();
+      }
+    }catch(error){
+      setNotice(error instanceof Error?error.message:"Could not reopen the complete network.");
     }
   }
 
-  async function onImport(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
-    event.target.value = "";
-    if (!files.length) return;
-    try {
-      const input = await Promise.all(files.map(async file => ({name:file.name,text:await file.text()})));
-      const analysis = input.length===1 ? discoverData(input[0]) : null;
-      const preview=analysis?.kind==="csv-table"?null:previewImport(input);
-      // A valid native Mossline graph is not an unsupported Kumu configuration.
-      setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
-      setMappingFile(analysis?.kind==="csv-table" ? input[0] : null);
-      setMappingSession(previous=>previous+1);
-      setAcknowledgeRemovals(false);
-      setImportMode("new");
-      setImportMapName(input.length===1?input[0].name.replace(/\.(csv|json)$/i,""):"Imported network");
-      setImportPreview(preview);
-      setNotice("");
-    } catch (error) {
-      setImportPreview(null);
-      setDiscovery(null);
-      setMappingFile(null);
-      setNotice("Import failed: " + (error instanceof Error ? error.message : "unable to read files"));
+  async function onImport(event:ChangeEvent<HTMLInputElement>){
+    const files=Array.from(event.target.files??[]);
+    event.target.value="";
+    if(!files.length)return;
+    if(files.some(f=>f.size>60_000_000)||
+      files.reduce((sum,f)=>sum+f.size,0)>60_000_000){
+      setNotice("Select CSV or JSON files totalling at most 60 MB for local import. "+
+        "Larger files will need streamed parsing.");return;
     }
+    importWorkerRef.current?.terminate();
+    importWorkerRef.current=null;
+    const id=++importRequestRef.current;
+    setImportBusy(true);setImportStage("Opening your files in a background worker…");
+    setShowImportCoverage(false);
+    setNotice("");setImportPreview(null);setDiscovery(null);
+    setMappingFile(null);setInitialMapped(null);
+    try{
+      const worker=new Worker(new URL("../workers/general-import.worker.ts",import.meta.url),
+        {type:"module"});
+      importWorkerRef.current=worker;
+      worker.onmessage=(event:MessageEvent<{
+        kind:"stage"|"analysed"|"mapped"|"failed";id:number;message?:string;
+        preview?:ImportPreview|null;discovery?:DataDiscovery|null;
+        initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
+      }>)=>{
+        const result=event.data;
+        if(result.id!==importRequestRef.current)return;
+        if(result.kind==="stage"){setImportStage(result.message??"Working…");return;}
+        setImportBusy(false);setImportStage("");
+        if(result.kind==="failed"){
+          setNotice(result.message??"Unable to import these source files.");return;
+        }
+        if(result.kind==="mapped"&&result.proposal){
+          previewMappedGraph(result.proposal);
+          return;
+        }
+        if(result.kind!=="analysed")return;
+        const preview=result.preview??null,analysis=result.discovery??null;
+        setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
+        // File contents remain in the worker; the mapping editor only needs
+        // a filename and the source discovery, never a second huge CSV string.
+        setMappingFile(analysis?.kind==="csv-table"?
+          {name:result.fileName??files[0].name,text:""}:null);
+        setInitialMapped(result.initial??null);
+        setMappingSession(v=>v+1);
+        setAcknowledgeRemovals(false);
+        setImportMode("new");
+        setImportMapName((result.fileName??"Imported network")
+          .replace(/\.(csv|json)$/i,""));
+        setImportPreview(preview);
+      };
+      worker.onerror=()=>{
+        if(importWorkerRef.current!==worker)return;
+        setImportBusy(false);setImportStage("");
+        setNotice("Background import failed. Try a smaller file or another browser.");
+        worker.terminate();importWorkerRef.current=null;
+      };
+      worker.postMessage({kind:"analyse",id,files});
+    }catch{
+      setImportBusy(false);setImportStage("");
+      setNotice("This browser could not start background data import.");
+    }
+  }
+
+  function buildMappedInWorker(mapping:ColumnMapping){
+    if(!importWorkerRef.current)return;
+    const id=++importRequestRef.current;
+    setImportBusy(true);setImportStage("Mapping every source record in the background…");
+    setImportPreview(null);
+    importWorkerRef.current.postMessage({kind:"map",id,mapping});
   }
 
   function previewMappedGraph(result: MappedPreview) {
@@ -784,6 +879,10 @@ export function MapStudio() {
   }
 
   function closeImport() {
+    setShowImportCoverage(false);
+    importWorkerRef.current?.terminate();importWorkerRef.current=null;
+    importRequestRef.current++;
+    setImportBusy(false);setImportStage("");setInitialMapped(null);
     setImportPreview(null);setDiscovery(null);setMappingFile(null);
     setAcknowledgeRemovals(false);setImportMode("new");setImportMapName("");
   }
@@ -800,18 +899,41 @@ export function MapStudio() {
     setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
   }
 
-  function applyImport() {
+  async function applyImport(){
     const preview=importPreview;
-    if(!preview?.graph||preview.issues.some(i=>i.severity==="error")||
-      preview.graph.nodes.length===0||
-      (importMode==="replace"&&hasRemovals&&!acknowledgeRemovals))return;
+    if(importBusy||!preview?.graph||preview.issues.some(i=>i.severity==="error")||
+      !preview.graph.nodes.length||(importMode==="replace"&&hasRemovals&&!acknowledgeRemovals))
+      return;
+    if(importMode==="new"&&localMaps.length>=MAX_LOCAL_MAPS)return;
     const proposed={...preview.graph,title:importMapName.trim().slice(0,100)||preview.graph.title};
-    const success=importMode==="new"?createNewMap(proposed):updateGraph(proposed);
-    if(!success)return;
-    closeImport();
-    setNotice((importMode==="new"?"Created new map ‘":"Updated map ‘")+proposed.title+
-      "’ with "+proposed.nodes.length+" entities and "+proposed.edges.length+
-      " relationships. Other maps remain in this browser.");
+    setImportBusy(true);setImportStage("Saving the complete network in this browser…");
+    let storageId:string|undefined;
+    try{
+      if(shouldStoreGeneralGraph(proposed)){
+        // Use a stable map ID as the IndexedDB key when replacing. Complete
+        // writes finish before changing the active map or dismissing the import.
+        storageId=importMode==="replace"?
+          (localMaps.find(m=>m.id===activeMapId)?.generalDatasetId??crypto.randomUUID()):
+          crypto.randomUUID();
+        await saveGeneralGraph(storageId,proposed);
+      }
+      const success=importMode==="new"?
+        createNewMap(proposed,undefined,undefined,storageId):
+        updateGraph(proposed,storageId);
+      if(!success){
+        // Existing replacement records may be overwritten; do not delete an
+        // old map's backing store on failure. The user can retry safely.
+        setNotice("Could not update your saved map library. The complete graph is "+
+          "preserved in browser storage; export a backup before clearing anything.");
+        return;
+      }
+      closeImport();
+      setNotice((importMode==="new"?"Created new map ‘":"Updated map ‘")+proposed.title+
+        "’ with all "+proposed.nodes.length+" entities and "+proposed.edges.length+
+        " relationships. Complete data stays in this browser.");
+    }catch(error){
+      setNotice(error instanceof Error?error.message:"Unable to store the complete network.");
+    }finally{setImportBusy(false);setImportStage("");}
   }
 
   function resetDemo() {
@@ -851,11 +973,12 @@ export function MapStudio() {
     {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
       <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
-      nodes:m.graph.nodes.length,edges:m.graph.edges.length,
+      nodes:m.sourceCounts?.nodes??m.graph.nodes.length,
+      edges:m.sourceCounts?.edges??m.graph.edges.length,
       updatedAt:m.createdAt,funding:!!m.fundingDatasetId,
       summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
         " grants in complete dataset":undefined}))}
-      onOpen={id=>{selectLocalMap(id);setExperienceSpace("studio");}}
+      onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
       onFunding={()=>{setShowFundingWorkbench(true);setExperienceSpace("studio");}}
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
@@ -891,7 +1014,7 @@ export function MapStudio() {
       </div>
       <div className="actions">
         <label className="map-library-chooser">Your maps
-          <select value={activeMapId??""} onChange={e=>selectLocalMap(e.target.value)}
+          <select value={activeMapId??""} onChange={e=>{void selectLocalMap(e.target.value);}}
             aria-label="Switch between maps saved in this browser">
             {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
           </select>
@@ -914,6 +1037,11 @@ export function MapStudio() {
         </details>
       </div>
     </section>
+    {importBusy&&<div className="notice" role="status">
+      <span>{importStage||"Preparing the complete network…"}</span>
+      <button type="button" disabled={importStage.startsWith("Saving")}
+        onClick={closeImport}>{importStage.startsWith("Saving")?"Saving…":"Cancel"}</button>
+    </div>}
     {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}>×</button></div>}
     {oversizedSavedMaps&&<div className="funding-csv-coverage" role="alert">
       <strong>Your previous browser maps were preserved without loading them.</strong>
@@ -1006,6 +1134,7 @@ export function MapStudio() {
         <p className="mapping-important">{discovery.reason}</p>}
       {discovery?.kind==="csv-table" && mappingFile &&
         <GuidedDiscovery key={mappingSession} file={mappingFile} discovery={discovery}
+          initialProposal={initialMapped} onBuild={buildMappedInWorker}
           onPreview={previewMappedGraph} onChange={()=>{
             setImportPreview(null);setAcknowledgeRemovals(false);
           }}/>}
@@ -1050,9 +1179,10 @@ export function MapStudio() {
           I have reviewed or exported the existing map.
         </label>}
       </div>}
-      {importPreview?.graph && <details className="import-coverage">
+      {importPreview?.graph && <details className="import-coverage"
+        onToggle={event=>setShowImportCoverage(event.currentTarget.open)}>
         <summary>Explore detailed data coverage</summary>
-        <CoverageReport graph={importPreview.graph} />
+        {showImportCoverage&&<CoverageReport graph={importPreview.graph} />}
       </details>}
       {importPreview?.graph && <div className="import-destination">
         <h3>What would you like to do with this network?</h3>
@@ -1073,11 +1203,11 @@ export function MapStudio() {
         {importMode==="new"&&localMaps.length>=MAX_LOCAL_MAPS&&
           <p role="alert">This browser already has eight maps. Export one before creating another.</p>}
         <button className="button-primary" type="button"
-          disabled={!importPreview.graph || !importPreview.graph.nodes.length ||
+          disabled={importBusy||!importPreview.graph || !importPreview.graph.nodes.length ||
             importPreview.issues.some(i=>i.severity==="error") ||
             (importMode==="new"&&localMaps.length>=MAX_LOCAL_MAPS) ||
             (importMode==="replace"&&hasRemovals&&!acknowledgeRemovals)}
-          onClick={applyImport}>
+          onClick={()=>{void applyImport();}}>
           {importMode==="new"?"Create new map and explore →":"Confirm updates to current map →"}
         </button>
       </div>}

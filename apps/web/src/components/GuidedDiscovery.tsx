@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
-  buildMappedGraph, type ColumnMapping, type DataDiscovery,
+  type ColumnMapping, type DataDiscovery,
   type ImportFile, type MappedPreview
 } from "@mossline/graph-core";
 import { DataMappingWorkbench } from "./DataMappingWorkbench";
@@ -13,19 +13,20 @@ type CsvDiscovery=Extract<DataDiscovery,{kind:"csv-table"}>;
  * Progressive disclosure: preview a plausible network before exposing graph
  * terminology, tables or mapping rules. Source assertions are not verified.
  */
-export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
-  file:ImportFile;discovery:CsvDiscovery;
+export function GuidedDiscovery({file,discovery,initialProposal,onPreview,onBuild,onChange}:{
+  file:ImportFile;discovery:CsvDiscovery;initialProposal:MappedPreview|null;
   onPreview:(proposal:MappedPreview)=>void;
+  onBuild:(mapping:ColumnMapping)=>void;
   onChange:()=>void;
 }){
   const [mapping,setMapping]=useState<ColumnMapping>(discovery.mapping);
   const [showAdjust,setShowAdjust]=useState(false);
   const [previewNotice,setPreviewNotice]=useState("");
-  const proposal=useMemo(()=>buildMappedGraph(file,mapping),[file,mapping]);
+  const [proposal,setProposal]=useState<MappedPreview|null>(initialProposal);
   const columns=discovery.columns.map(c=>c.name);
   const owners=[...new Set(mapping.rules.flatMap(r=>[r.fromColumn,r.toColumn]))];
   const examples=useMemo(()=>{
-    if(!proposal.graph)return [];
+    if(!proposal?.graph)return [];
     const names=new Map(proposal.graph.nodes.map(n=>[n.id,n.label]));
     const kinds=new Set<string>();
     return proposal.graph.edges.filter(edge=>{
@@ -37,14 +38,18 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
     }));
   },[proposal]);
   function update(next:ColumnMapping){
-    setMapping(next);setPreviewNotice("");onChange();
+    setMapping(next);setProposal(null);setPreviewNotice("");onChange();
   }
   function preview(){
-    const candidate=buildMappedGraph(file,mapping);
-    if(candidate.issues.some(x=>x.severity==="error")){
-      setPreviewNotice(candidate.issues.find(x=>x.severity==="error")?.message??"Please review your choices.");
-    }else setPreviewNotice("Preview prepared below. You can create this as a separate map.");
-    onPreview(candidate);
+    if(proposal){
+      if(proposal.issues.some(x=>x.severity==="error"))
+        setPreviewNotice(proposal.issues.find(x=>x.severity==="error")?.message??"Review your choices.");
+      else setPreviewNotice("Preview prepared below. Review before creating the map.");
+      onPreview(proposal);
+    }else{
+      setPreviewNotice("Generating the complete updated network in the background…");
+      onBuild(mapping);
+    }
   }
   const select=(current:string,change:(next:string)=>void,emptyLabel:string)=>{
     return <select value={current} onChange={e=>change(e.target.value)}>
@@ -60,8 +65,8 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
     <div className="discovery-preview">
       <div className="discovery-stats">
         <span><strong>{discovery.rowCount}</strong> spreadsheet rows</span>
-        <span><strong>{proposal.counts.nodes}</strong> possible things</span>
-        <span><strong>{proposal.counts.edges}</strong> recorded connections</span>
+        <span><strong>{proposal?.counts.nodes??"—"}</strong> possible things</span>
+        <span><strong>{proposal?.counts.edges??"—"}</strong> recorded connections</span>
       </div>
       {mapping.mode==="relationships"&&examples.length>0 ?
         <div className="discovery-paths">{examples.map(edge=>
@@ -73,7 +78,7 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
         <div className="discovery-entity-list">
           <p>This looks like a list of individual people, organisations or other things.
             We can explore those first, then add relationships when you have them.</p>
-          {proposal.graph?.nodes.slice(0,5).map(n=><span key={n.id}>{n.label}</span>)}
+          {proposal?.graph?.nodes.slice(0,5).map(n=><span key={n.id}>{n.label}</span>)}
         </div>}
       <p className="discovery-provenance">Names come from your file. Connection meanings are suggestions
         from its column names — not verified partnerships, funding or causation.</p>
@@ -82,7 +87,7 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
       <strong>Does this look roughly right?</strong>
       <div className="discovery-buttons">
         <button type="button" className="button-primary" onClick={preview}
-          disabled={!proposal.graph || proposal.counts.nodes===0}>
+          disabled={!!proposal&&(!proposal.graph||proposal.counts.nodes===0)}>
           Yes — show me the network →
         </button>
         <button type="button" className="button-outline" onClick={()=>setShowAdjust(v=>!v)}>
@@ -149,7 +154,7 @@ export function GuidedDiscovery({file,discovery,onPreview,onChange}:{
       <summary>Advanced mapping and saved recipes</summary>
       <p>For people who need precise entity categories, multiple relationship rules, or reusable mapping recipes.</p>
       <DataMappingWorkbench key={JSON.stringify(mapping)} file={file}
-        discovery={{...discovery,mapping}} onPreview={onPreview} onChange={onChange}/>
+        discovery={{...discovery,mapping}} onBuild={onBuild} onChange={onChange}/>
     </details>
   </section>;
 }
