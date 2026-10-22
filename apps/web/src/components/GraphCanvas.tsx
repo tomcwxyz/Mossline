@@ -91,6 +91,16 @@ export function GraphCanvas({
     });
   }
 
+  useEffect(()=>{
+    const element=rootRef.current;
+    if(!element)return;
+    // React's wheel delegation is passive. Cytoscape handles the zoom;
+    // this non-passive native listener keeps page scrolling outside the map.
+    const blockScroll=(event:WheelEvent)=>event.preventDefault();
+    element.addEventListener("wheel",blockScroll,{passive:false});
+    return ()=>element.removeEventListener("wheel",blockScroll);
+  },[]);
+
   useEffect(() => {
     let cancelled = false;
     void import("cytoscape").then(({ default: cytoscape }) => {
@@ -329,6 +339,25 @@ export function GraphCanvas({
     cy.elements(".path-step").removeClass("dimmed");
     refreshLabels(cy);
   }, [selectedId, selectedEdgeId, graph, ready, labelDensity]);
+
+  // Make selection a navigational action, not only a style change.
+  // The node and all recorded lines remain unchanged, and subsequent manual
+  // zoom/drag gestures do not reset the camera.
+  const lastFocused=useRef<string|null>(null);
+  useEffect(()=>{
+    if(!ready||!cyRef.current)return;
+    if(!selectedId){lastFocused.current=null;return;}
+    if(lastFocused.current===selectedId)return;
+    const cy=cyRef.current,node=cy.getElementById(selectedId);
+    if(!node.length)return;
+    lastFocused.current=selectedId;
+    const targetZoom=Math.max(cy.zoom(),Math.min(1.6,cy.maxZoom()));
+    const position=node.position();
+    const pan={x:cy.width()/2-position.x*targetZoom,
+      y:cy.height()/2-position.y*targetZoom};
+    cy.stop();
+    cy.animate({pan,zoom:targetZoom},{duration:280});
+  },[selectedId,ready,graph]);
 
   // Presentation state changes the canvas palette, not canonical node records.
   useEffect(() => {

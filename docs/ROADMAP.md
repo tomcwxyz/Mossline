@@ -493,3 +493,40 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Benchmark computed cross-project collaborations and Places view on
       exceptionally dense graphs; move expensive projections to workers if
       real-world tests warrant it.
+
+## Alpha 2.11 — consistent map interaction
+
+- [x] Full-source WebGL nodes highlight exact original recorded one-hop relationships
+      and neighbours, dimming unrelated nodes and lines rather than hiding them.
+- [x] Keep inferred associations out of the recorded-connection highlight.
+- [x] Node selection in the full graph smoothly pans to focus and zooms enough
+      for inspection; clicking empty canvas clears selection.
+- [x] Native non-passive wheel handling confines mouse/trackpad zoom to the
+      canvas instead of accidentally scrolling the whole page.
+- [x] Two-pointer pinch, pinch-centre pan, single-pointer drag, anchored mouse
+      zoom and zoom-fit buttons in full-source mode.
+- [x] Consistent selected-node camera focus in standard and grouped Cytoscape
+      map modes, preserving recorded neighbour emphasis.
+- [x] Keyboard/mouse search and source inspector remain alternatives to precise
+      touch selection in dense areas.
+- [x] Regression tests distinguish recorded source edges, parallel edges,
+      inferred associations and isolated entities.
+- [ ] Manual desktop Chrome/Firefox/Edge and Android/touch browser gesture QA.
+
+### Future — one upload entry point, extensible dataset discovery
+The homepage should eventually open one **Bring your data** journey, not force
+the user to guess the network semantics first. Initial browser-local sniffing
+will classify data by structural signals (CSV headers, sample rows, file pairs,
+JSON shape, Kumu metadata, record types and known schema signatures).
+Candidate adapters will return **proposed** import plans with confidence and
+rationale: funding awards, general entity lists, relationship tables, Kumu
+elements/connections, spatial data, survey flows and future formats.
+- Prefer rules and evidence to mandatory hosted AI classification.
+- For ambiguous or mixed-schema inputs, show two or more interpretations and
+  offer field mapping correction. Never silently discard unknown data columns.
+- Require explicit confirmation of entity identifiers, relationship direction,
+  private-record exclusions and aggregation rules before import.
+- Once understood, route the approved plan through the existing worker/IndexedDB
+  infrastructure. Preserve full source provenance; no first-N projection.
+- Treat provider-specific import adapters as extensions, not a growing nest of
+  special cases in the home page.
