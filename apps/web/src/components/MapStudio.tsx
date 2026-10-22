@@ -606,6 +606,9 @@ export function MapStudio() {
       accept=".csv,.json,application/json,text/csv"
       aria-label="Import a spreadsheet or Kumu network"
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
+    {notice&&<div className="notice" role="status"><span>{notice}</span>
+      <button type="button" aria-label="Dismiss message" onClick={()=>setNotice("")}>×</button>
+    </div>}
     {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
       <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
