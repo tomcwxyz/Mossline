@@ -552,3 +552,29 @@ elements/connections, spatial data, survey flows and future formats.
   currency input, Android/WebGL point-size ranges and source-evidence drill-down.
 - [ ] Future: configurable numeric measures with source schema/units and
   aggregation choices rather than hardcoding all datasets as funding.
+
+## Alpha 2.13 — source-grounded network cartography
+
+- [x] Replace the default type-ring relaxation on large graphs with deterministic
+  spatial areas anchored around high-degree **recorded** source connectors.
+  Multi-source BFS places adjacent source entities near navigable hubs.
+- [x] Keep unlinked records and components not reached by anchor hubs in clearly
+  identified source-type areas rather than implying invented connections.
+- [x] Spatially separate network areas without dropping or sampling source
+  nodes and relationships. Original node/edge identity, positions for pick
+  interaction, degree/amount node size and focus highlighting all remain.
+- [x] Add legible on-canvas area labels and subtle outlines at whole-graph scale,
+  with a short list of actual hub entities as navigation shortcuts.
+- [x] Choose **Network areas** versus **Entity types** layout, recomputed within
+  the existing browser worker and keeping the original graph untouched.
+- [x] Provide line visibility modes: subtle (default), all, or on selection.
+- [x] Regressions for two distinct funders, recorded one-hop focus and large
+  disconnected contact collections, deterministic layout and source coverage.
+- [ ] Verify geographic / topic-driven source layout options on mixed dataset
+  imports, without inferring real-world collaboration from a visual group.
+- [ ] Browser QA of dense 5,876-node / 7,560-edge funding map on Android and
+  desktop and screenshot visual assessment; tune label placement and touch
+  affordances from that evidence.
+- [ ] Improve cross-network placement with higher-quality multiscale force
+  relaxation if real-world sources show overlaps that cannot be resolved through
+  current bounded layout.

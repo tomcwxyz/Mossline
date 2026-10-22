@@ -105,3 +105,54 @@ test("mixed currencies do not imply comparable award amounts",()=>{
  assert.equal(geometry.amountCurrency,null);
  assert.equal(geometry.amountCount,0);
 });
+
+test("relationship-led layout creates meaningful connector areas without hiding source records",()=>{
+ const nodes=[
+  {id:"funder-a",label:"Foundation A",type:"funder" as const,tags:[]},
+  {id:"funder-b",label:"Foundation B",type:"funder" as const,tags:[]},
+  ...Array.from({length:18},(_,i)=>({id:"grant-"+i,
+   label:"Award "+i,type:"project" as const,tags:[]})),
+  {id:"isolated",label:"No recorded relationships",type:"organisation" as const,tags:[]}
+ ];
+ const edges=Array.from({length:18},(_,i)=>({
+  id:"award-"+i,source:i<9?"funder-a":"funder-b",
+  target:"grant-"+i,type:"awarded"
+ }));
+ const graph=parseGraphDocument({version:1,title:"Two funders",description:"",nodes,edges});
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.arrangement,"areas");
+ assert.equal(geometry.nodeCount,nodes.length);
+ assert.equal(geometry.edgeCount,edges.length);
+ assert.ok(geometry.areas.some(a=>a.label.includes("Foundation A")&&a.count===10));
+ assert.ok(geometry.areas.some(a=>a.label.includes("Foundation B")&&a.count===10));
+ assert.ok(geometry.areas.some(a=>a.kind==="unlinked"&&a.count===1));
+ assert.ok(geometry.hubs.some(h=>h.id==="funder-a"&&h.connections===9));
+ for(let i=0;i<edges.length;i++){
+  assert.equal(geometry.segments[4*i],
+    geometry.positions[2*geometry.endpoints[2*i]]);
+  assert.equal(geometry.segments[4*i+3],
+    geometry.positions[2*geometry.endpoints[2*i+1]+1]);
+ }
+ const focus=focusFullNetwork(geometry,"funder-a");
+ assert.equal(focus?.relationships,9);
+ assert.equal(focus?.neighbours,9);
+ assert.deepEqual(layoutFullNetwork(graph).positions,geometry.positions);
+ const categories=layoutFullNetwork(graph,"types");
+ assert.equal(categories.arrangement,"types");
+ assert.equal(categories.areas.length,0);
+ assert.deepEqual(categories.endpoints,geometry.endpoints);
+ assert.notDeepEqual(categories.positions,geometry.positions);
+});
+test("unlinked datasets retain every entity and distinguish source type without invented links",()=>{
+ const graph=parseGraphDocument({version:1,title:"Contacts",description:"",
+ nodes:Array.from({length:2647},(_,i)=>({id:"contact-"+i,label:"Contact "+i,
+ type:i%2?"organisation":"person",tags:[]})),edges:[]});
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.nodeCount,2647);
+ assert.equal(geometry.edgeCount,0);
+ assert.equal(geometry.hubs.length,0);
+ assert.equal(geometry.areas.reduce((sum,a)=>sum+a.count,0),2647);
+ assert.ok(geometry.areas.every(a=>a.kind==="unlinked"));
+ assert.ok([...geometry.positions].every(Number.isFinite));
+ assert.deepEqual(focusFullNetwork(geometry,"contact-1")?.relationships,0);
+});

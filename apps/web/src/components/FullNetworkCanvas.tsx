@@ -70,9 +70,11 @@ function midpoint(points:Point[]):Point{
 function distance(points:Point[]):number{
  return Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
 }
-export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,sizeMode="connections"}:{
+export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
+  sizeMode="connections",lineMode="subtle"}:{
  geometry:FullNetworkGeometry;selectedId?:string|null;onSelect:(id:string|null)=>void;
  onUnavailable?:()=>void;sizeMode?:"connections"|"amount";
+ lineMode?:"subtle"|"visible"|"focus";
 }){
  const canvas=useRef<HTMLCanvasElement>(null);
  const overlay=useRef<HTMLCanvasElement>(null);
@@ -86,6 +88,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,si
  const currentFocus=useRef<FullNetworkFocus|null>(focus);
  currentFocus.current=focus;
  const sizeModeRef=useRef(sizeMode);sizeModeRef.current=sizeMode;
+ const lineModeRef=useRef(lineMode);lineModeRef.current=lineMode;
  const index=useMemo(()=>new Map(geometry.ids.map((id,i)=>[id,i])),[geometry]);
  const pointers=useRef(new Map<number,Point>());
  const drag=useRef<Drag|null>(null);
@@ -198,9 +201,13 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,si
        gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
        gl.uniform1f(fade,1);
        gl.uniform1i(circle,0);gl.uniform1f(pointScale,1);
-       gl.uniform4f(colour,.54,.70,.61,selection ? .07 : .20);
-       lineAttribute(backgroundLines);
-       gl.drawArrays(gl.LINES,0,geometry.edgeCount*2);
+       const lineOpacity=selection?.05:lineModeRef.current==="focus"?0:
+         lineModeRef.current==="visible"?.34:.11;
+       if(lineOpacity>0){
+         gl.uniform4f(colour,.57,.75,.63,lineOpacity);
+         lineAttribute(backgroundLines);
+         gl.drawArrays(gl.LINES,0,geometry.edgeCount*2);
+       }
        gl.uniform1i(circle,1);
        gl.uniform1f(fade,selection?.13:1);
        gl.uniform1f(pointScale,1);
@@ -221,6 +228,35 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,si
        }
        const context=foreground.getContext("2d");if(!context)return;
        context.setTransform(ratio,0,0,ratio,0,0);context.clearRect(0,0,w,h);
+       // Label only the most substantial visual areas. These are derived
+       // arrangement areas, not verified real-world community membership.
+       if(geometry.arrangement==="areas"&&!selection){
+         const significant=geometry.areas.slice().sort((a,b)=>b.count-a.count).slice(0,10);
+         for(const area of significant){
+           const x=w/2+(area.x+c.offsetX)*c.zoom;
+           const y=h/2+(area.y+c.offsetY)*c.zoom;
+           const radius=Math.max(4,area.radius*c.zoom);
+           if(x+radius<0||y+radius<0||x-radius>w||y-radius>h)continue;
+           context.beginPath();context.arc(x,y,radius,0,Math.PI*2);
+           context.fillStyle="rgba(183,219,184,0.032)";context.fill();
+           context.strokeStyle="rgba(165,212,172,0.24)";
+           context.lineWidth=1;context.setLineDash([5,8]);context.stroke();
+           context.setLineDash([]);
+           const text=area.label.length>41?area.label.slice(0,39)+"…":area.label;
+           context.font="600 11px system-ui";
+           const labelW=Math.min(w-20,context.measureText(text).width+22);
+           if(labelW<=0)continue;
+           const bx=Math.max(8,Math.min(w-labelW-8,x-labelW/2));
+           const by=Math.max(8,Math.min(h-32,y-radius-15));
+           context.fillStyle="rgba(22,55,44,0.92)";
+           context.fillRect(bx,by,labelW,26);
+           context.strokeStyle="rgba(176,209,163,0.46)";
+           context.strokeRect(bx+.5,by+.5,labelW-1,25);
+           context.save();context.beginPath();context.rect(bx+6,by+3,labelW-12,22);
+           context.clip();context.fillStyle="#f5e8c6";
+           context.fillText(text,bx+10,by+17);context.restore();
+         }
+       }
        if(!selection)return;
        const i=selection.nodeIndex;
        const x=w/2+(geometry.positions[i*2]+c.offsetX)*c.zoom;
@@ -255,7 +291,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,si
      if(program)gl.deleteProgram(program);
    };
  },[geometry]);
- useEffect(()=>{draw.current?.();},[sizeMode]);
+ useEffect(()=>{draw.current?.();},[sizeMode,lineMode]);
  useEffect(()=>{
    const surface=canvas.current;
    if(!surface)return;
