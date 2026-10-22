@@ -17,8 +17,9 @@ const FIELDS:[keyof FundingMapping,string][]=[
  ["publicFlag","Public/private flag"]
 ];
 
-export function FundingWorkbench({onCreate,onClose}:{
+export function FundingWorkbench({onCreate,onClose,initialFile}:{
   onCreate:(graph:GraphDocument,analysis:FundingFullAnalysis,datasetId:string)=>boolean;onClose:()=>void;
+  initialFile?:File|null;
 }){
   const [file,setFile]=useState<ImportFile|null>(null);
   const [mapping,setMapping]=useState<FundingMapping|null>(null);
@@ -109,6 +110,21 @@ export function FundingWorkbench({onCreate,onClose}:{
     setParsed(null);setFullAnalysis(null);setDirty(false);
     analyse(next,undefined,true);
   }
+  useEffect(()=>{
+    if(!initialFile)return;
+    let cancelled=false;
+    setBusy(true);setStage("Reading recognised grant awards…");setError("");
+    void initialFile.text().then(text=>{
+      if(!cancelled)useFile({name:initialFile.name,text});
+    }).catch(()=>{
+      if(!cancelled){
+        setBusy(false);setStage("");
+        setError("Unable to read the original grant awards file. You can upload it again below.");
+      }
+    });
+    return ()=>{cancelled=true;};
+  },[initialFile]);
+
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
     if(!uploaded)return;
