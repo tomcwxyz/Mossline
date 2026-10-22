@@ -130,5 +130,5 @@ test("expanded overview validates inferred evidence in a hidden source group",()
  const expanded=projectAdaptiveGraph(index,organisationGroups);
  assert.equal(expanded.representedEdges,1);
  assert.equal(expanded.graph.edges.length,1);
- assert.equal(expanded.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds?.[0],"p0");
+ assert.deepEqual(expanded.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds,["p0"]);
 });
