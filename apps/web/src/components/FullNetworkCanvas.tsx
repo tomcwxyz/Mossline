@@ -546,7 +546,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
    <canvas ref={overlay} className="full-network-overlay" aria-hidden="true"/>
    <div className="atlas-scale-indicator" aria-live="off">
      <span className="atlas-scale-dot"/>
-     {detail==="landscape"?"Landscape":"Area":"Entity"}
+     {detail==="landscape"?"Landscape":detail==="area"?"Area":"Entity"}
      <span className="atlas-scale-tip"> · scroll to explore</span>
    </div>
    {hovered&&!selectedPreview&&
