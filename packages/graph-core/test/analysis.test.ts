@@ -129,3 +129,19 @@ test("destination discovery deduplicates multiple records for the same pair",()=
   const destinations=findReachableDestinations(duplicates,"a",{maxHops:1});
   assert.equal(destinations.filter(d=>d.nodeId==="b").length,1);
 });
+
+test("iterative junction analysis handles a 25,000-entity path without stack overflow",()=>{
+  const length=25000;
+  const graph={
+    version:1 as const,title:"Large source graph",description:"",
+    nodes:Array.from({length},(_,i)=>({id:"node-"+i,label:"Node "+i,
+      type:"organisation" as const,tags:[]})),
+    edges:Array.from({length:length-1},(_,i)=>({
+      id:"edge-"+i,source:"node-"+i,target:"node-"+(i+1),type:"recorded"
+    }))
+  };
+  const result=findStructuralJunctions(graph);
+  assert.equal(result.length,length-2);
+  assert.ok(result.every(x=>x.separatedGroups===2));
+  assert.equal(result.some(x=>x.nodeId==="node-0"||x.nodeId==="node-"+(length-1)),false);
+});

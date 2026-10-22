@@ -394,6 +394,13 @@ export function MapStudio() {
       setNotice("The saved artwork library could not be read; it was left unchanged.");
     }
   },[]);
+  const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
+  const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
+  // In the full-source experience the worker owns the source-graph query and
+  // drawing. Avoid preparing a second complete graph for the legacy canvas.
+  // Connections and Places continue to use their original analysis tools.
+  const sourceExplorerCandidate=view==="landscape"&&
+    (fullFundingView||wholeNetworkOpen||graph.nodes.length>260||graph.edges.length>650);
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
   const positionKey=[graphKey,view,layoutMode,basis].join(":");
   const activePositions=positionState.key===positionKey?positionState.positions:{};
@@ -440,7 +447,7 @@ export function MapStudio() {
     setNotice("Reset the on-screen arrangement. Saved perspectives remain unchanged.");
   }
   const pftAssets=useMemo(()=>matchAssetPack(graph,PFT_VISUAL_PACK),[graph]);
-  const atlasCoverage=useMemo(()=>buildUkAtlas(graph),[graph]);
+  const atlasCoverage=useMemo(()=>view==="atlas"?buildUkAtlas(graph):null,[graph,view]);
   // Match exact source IDs, so artwork is never attached to another dataset by name.
   const pftCompatible=pftAssets.matched>=5;
   const pftMapReference=pftCompatible&&PFT_VISUAL_PACK.basemap?
@@ -452,9 +459,10 @@ export function MapStudio() {
   const storyTitleText=story?.title || (pftCompatible?PFT_VISUAL_PACK.frontPage?.title:graph.title);
   const storyIntroText=story?.introduction || (pftCompatible?PFT_VISUAL_PACK.frontPage?.introduction:graph.description);
   const presentedGraph=useMemo(()=>{
+    if(sourceExplorerCandidate)return graph;
     const withArtwork=showPftArtwork?applyAssetPack(graph,PFT_VISUAL_PACK):graph;
     return applyNodeStyleImages(withArtwork,nodeStyles);
-  },[graph,showPftArtwork,nodeStyles]);
+  },[graph,showPftArtwork,nodeStyles,sourceExplorerCandidate]);
   const proposedChanges=useMemo(()=>importMode==="replace"&&importPreview?.graph?
     compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview,importMode]);
   const hasRemovals=!!proposedChanges &&
@@ -464,9 +472,11 @@ export function MapStudio() {
   const current = useMemo(() => view === "collaborations" ?
     collaborationGraph(presentedGraph, basis) : presentedGraph, [presentedGraph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
-  const filtered = useMemo(() => filterGraph(current, {
-    types: activeTypes, query, region, focusId, includeNeighbours: context
-  }), [current, activeTypes.join("|"), query, region, focusId, context]);
+  const filtered = useMemo(() => sourceExplorerCandidate ?
+    {graph:{...graph,nodes:[],edges:[]},contextNodeIds:[]}:
+    filterGraph(current,{types:activeTypes,query,region,focusId,
+      includeNeighbours:context}),
+  [sourceExplorerCandidate,graph,current,activeTypes.join("|"),query,region,focusId,context]);
   const selected = filtered.graph.nodes.find(n => n.id === selectedId) ?? null;
   const selectedEdge = filtered.graph.edges.find(e => e.id === selectedEdgeId) ?? null;
   function changeNodeAppearance(id:string,value:NodeStyleOverride|undefined) {
@@ -491,11 +501,13 @@ export function MapStudio() {
     setContext(true); setSelectedEdgeId(null); setSelectedId(id);
   }
   const names = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
-  const entityOptions = useMemo(() => [...graph.nodes].sort((a,b) => a.label.localeCompare(b.label)), [graph]);
-  const reachableDestinations = useMemo(() => traceFrom ?
+  const entityOptions = useMemo(() => traceOpen&&!sourceExplorerCandidate ?
+    [...graph.nodes].sort((a,b)=>a.label.localeCompare(b.label)):[],
+  [graph,traceOpen,sourceExplorerCandidate]);
+  const reachableDestinations = useMemo(() => traceOpen&&!sourceExplorerCandidate&&traceFrom ?
     findReachableDestinations(graph,traceFrom,{
       maxHops:5,excludeTypes:excludedRelationType?[excludedRelationType]:[]
-    }):[],[graph,traceFrom,excludedRelationType]);
+    }):[],[graph,traceFrom,excludedRelationType,traceOpen,sourceExplorerCandidate]);
   const distanceGroups = useMemo(() => {
     const groups=new Map<number,typeof reachableDestinations>();
     for(const entity of reachableDestinations)groups.set(entity.hops,[
@@ -503,8 +515,12 @@ export function MapStudio() {
     ]);
     return [...groups.entries()];
   },[reachableDestinations]);
-  const relationTypes = useMemo(() => [...new Set(graph.edges.filter(e=>!e.inferred).map(e=>e.type))].sort(), [graph]);
-  const junctions = useMemo(() => findStructuralJunctions(graph), [graph]);
+  const relationTypes = useMemo(() => traceOpen&&!sourceExplorerCandidate ?
+    [...new Set(graph.edges.filter(e=>!e.inferred).map(e=>e.type))].sort():[],
+  [graph,traceOpen,sourceExplorerCandidate]);
+  const [junctionPanelOpen,setJunctionPanelOpen]=useState(false);
+  const junctions = useMemo(() => junctionPanelOpen&&!sourceExplorerCandidate ?
+    findStructuralJunctions(graph):[],[graph,junctionPanelOpen,sourceExplorerCandidate]);
   const featuredJunctions = useMemo(() => junctions.filter(item =>
     ["organisation","project"].includes(graph.nodes.find(n=>n.id===item.nodeId)?.type ?? "")).slice(0,6),
   [junctions,graph]);
@@ -544,7 +560,9 @@ export function MapStudio() {
     setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
     setContext(true);setFocusId(null);pickNode(id);clearTrail();
   }
-  const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((v): v is string => !!v))].sort(), [graph]);
+  const regions = useMemo(() => sourceExplorerCandidate?[]:
+    [...new Set(graph.nodes.map(n => n.region).filter((v):v is string=>!!v))].sort(),
+  [graph,sourceExplorerCandidate]);
   const hubs = useMemo(() => {
     const counts = new Map<string, number>();
     for (const edge of filtered.graph.edges) {
@@ -558,9 +576,9 @@ export function MapStudio() {
       .sort((a, b) => b.connections - a.connections || a.node.label.localeCompare(b.node.label))
       .slice(0, 5);
   }, [filtered.graph]);
-  const totalTypes = useMemo(() => TYPE_KEYS.map(type => ({
-    type, count: graph.nodes.filter(n => n.type === type).length
-  })), [graph]);
+  const totalTypes = useMemo(() => sourceExplorerCandidate?[]:TYPE_KEYS.map(type=>({
+    type,count:graph.nodes.filter(n=>n.type===type).length
+  })),[graph,sourceExplorerCandidate]);
 
   function toggleType(type: NodeType) {
     setSelectedId(null);setSelectedEdgeId(null);
@@ -964,11 +982,9 @@ export function MapStudio() {
     }
   }
 
-  const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
-  const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
-  const largeActiveView=filtered.graph.nodes.length>260||filtered.graph.edges.length>650;
-  const usingSourceExplorer=view==="landscape"&&
-    (fullFundingView||wholeNetworkOpen||largeActiveView);
+  const largeActiveView=sourceExplorerCandidate||
+    filtered.graph.nodes.length>260||filtered.graph.edges.length>650;
+  const usingSourceExplorer=sourceExplorerCandidate;
 
   if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
@@ -1242,7 +1258,7 @@ export function MapStudio() {
           <button className={view === "landscape" ? "on" : ""} onClick={() => { setView("landscape"); setSelectedId(null); setFocusId(null); }}>✳ <span>Network</span></button>
           <button className={view === "collaborations" ? "on" : ""} onClick={() => { setView("collaborations"); setSelectedId(null); setFocusId(null); }}>◎ <span>Connections</span></button>
           <button className={view === "atlas" ? "on" : ""} onClick={() => {setView("atlas");setSelectedId(null);setFocusId(null);}}>
-            ◉ <span>Places{atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
+            ◉ <span>Places{atlasCoverage&&atlasCoverage.placed.length>0?" · "+atlasCoverage.placed.length:""}</span>
           </button>
         </div>
     </nav>
@@ -1480,8 +1496,9 @@ export function MapStudio() {
           </div>}
         </section>
         </details>}
-        {!usingSourceExplorer&&<details className="junction-panel">
-          <summary>Structural junctions <span>{featuredJunctions.length} shown</span></summary>
+        {!usingSourceExplorer&&<details className="junction-panel"
+          onToggle={event=>setJunctionPanelOpen(event.currentTarget.open)}>
+          <summary>Structural junctions {junctionPanelOpen&&<span>{featuredJunctions.length} shown</span>}</summary>
           <p className="help">Which organisations or projects hold different parts of the recorded network together? This is a structural test, not a judgement about importance or impact.</p>
           <label className="context-toggle">
             <input type="checkbox" checked={showJunctions} onChange={e=>setShowJunctions(e.target.checked)}/>
@@ -1544,7 +1561,8 @@ export function MapStudio() {
           <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}
             initialMode="full"/> :
         view!=="atlas"&&((view==="landscape"&&wholeNetworkOpen)||largeActiveView)?
-          <WholeGraphExplorer graph={view==="landscape"?graph:filtered.graph}/> :
+          <WholeGraphExplorer graph={view==="landscape"?graph:filtered.graph}
+            initialMode={view==="landscape"?"full":"overview"}/> :
         view==="atlas" ?
           <AtlasCanvas graph={filtered.graph} selectedId={selectedId}
             onSelect={pickNode} onPickEdge={pickEdge}
