@@ -225,9 +225,11 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
     {projection&&<>
       <div className="whole-graph-coverage" aria-live="polite">
         <span><strong>{projection.representedNodes.toLocaleString("en-GB")}</strong> of
-          {" "}{projection.totalNodes.toLocaleString("en-GB")} entities represented</span>
+          {" "}{projection.totalNodes.toLocaleString("en-GB")} source entities accounted for
+          {" "}(including those inside groups)</span>
         <span><strong>{projection.representedEdges.toLocaleString("en-GB")}</strong> of
-          {" "}{projection.totalEdges.toLocaleString("en-GB")} connections represented</span>
+          {" "}{projection.totalEdges.toLocaleString("en-GB")} source relationships accounted for
+          {" "}(including grouped lines)</span>
         <span>{viewMode==="full"&&fullGeometry?
           fullGeometry.nodeCount.toLocaleString("en-GB")+" source nodes · "+
             fullGeometry.edgeCount.toLocaleString("en-GB")+" original relationships available":
