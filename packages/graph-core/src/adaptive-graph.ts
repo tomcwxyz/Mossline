@@ -138,7 +138,19 @@ export function projectAdaptiveGraph(index:AdaptiveGraphIndex,requestedIds:strin
       continue;
     }
     const groupEdge=clusterIds.has(from)||clusterIds.has(to);
-    if(!groupEdge){originalEdges.push(edge);continue;}
+    if(!groupEdge){
+      // Evidence may refer to a source project/funder that is hidden inside a
+      // group or omitted from a derived Connections projection. Those IDs
+      // remain in the canonical source edge, but a standalone visual graph
+      // must not claim that undisplayed evidence is one of its own nodes.
+      const evidence=edge.evidenceNodeIds??[];
+      const visibleEvidence=evidence.filter(id=>memberToView.get(id)===id);
+      originalEdges.push(visibleEvidence.length===evidence.length?edge:{
+        ...edge,evidenceNodeIds:visibleEvidence,
+        properties:{...edge.properties,mosslineSourceEvidenceNodeIds:evidence}
+      });
+      continue;
+    }
     const direction=edge.direction??"directed";
     if(direction==="undirected"&&from>to)[from,to]=[to,from];
     const key=JSON.stringify([from,to,direction]);

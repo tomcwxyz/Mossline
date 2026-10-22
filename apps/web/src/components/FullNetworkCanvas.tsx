@@ -9,16 +9,17 @@ type Point={x:number;y:number};
 type Drag={x:number;y:number;offsetX:number;offsetY:number;moved:boolean};
 const vertex=`attribute vec2 a_pos;
 attribute float a_kind;
+attribute float a_size;
 varying float v_kind;
 uniform vec2 u_offset;
 uniform vec2 u_viewport;
 uniform float u_zoom;
-uniform float u_pointSize;
+uniform float u_pointScale;
 void main(){
  v_kind=a_kind;
  vec2 p=(a_pos+u_offset)*u_zoom;
  gl_Position=vec4(p.x/(u_viewport.x*.5),-p.y/(u_viewport.y*.5),0.0,1.0);
- gl_PointSize=u_pointSize;
+ gl_PointSize=clamp(a_size*u_pointScale,3.0,28.0);
 }`;
 const fragment=`precision mediump float;
 uniform vec4 u_colour;
@@ -26,7 +27,24 @@ uniform bool u_circle;
 uniform float u_fade;
 varying float v_kind;
 void main(){
- if(u_circle && length(gl_PointCoord-vec2(.5))>.5)discard;
+ if(u_circle){
+  vec2 point=gl_PointCoord*2.0-1.0;
+  if(v_kind>1.5 && v_kind<2.5){
+    // Funder = diamond.
+    if(abs(point.x)+abs(point.y)>1.0)discard;
+  }else if(v_kind>.5 && v_kind<1.5){
+    // Project / grant = square.
+    if(max(abs(point.x),abs(point.y))>.87)discard;
+  }else if(v_kind>2.5 && v_kind<3.5){
+    // Person = triangle.
+    if(point.y>0.78 || point.y<-0.77 ||
+      abs(point.x)>(.8-point.y)*.60)discard;
+  }else if(v_kind>3.5 && v_kind<4.5){
+    // Place = hexagon.
+    if(abs(point.x)>.88 || abs(point.y)>.95 ||
+      abs(point.x)*.58+abs(point.y)>.97)discard;
+  }else if(length(point)>1.0)discard;
+ }
  vec4 colour=u_colour;
  if(u_circle){
   if(v_kind<.5) colour=vec4(.54,.76,.56,.93);
@@ -52,9 +70,9 @@ function midpoint(points:Point[]):Point{
 function distance(points:Point[]):number{
  return Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
 }
-export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
+export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,sizeMode="connections"}:{
  geometry:FullNetworkGeometry;selectedId?:string|null;onSelect:(id:string|null)=>void;
- onUnavailable?:()=>void;
+ onUnavailable?:()=>void;sizeMode?:"connections"|"amount";
 }){
  const canvas=useRef<HTMLCanvasElement>(null);
  const overlay=useRef<HTMLCanvasElement>(null);
@@ -67,6 +85,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
  const focus=useMemo(()=>focusFullNetwork(geometry,selectedId),[geometry,selectedId]);
  const currentFocus=useRef<FullNetworkFocus|null>(focus);
  currentFocus.current=focus;
+ const sizeModeRef=useRef(sizeMode);sizeModeRef.current=sizeMode;
  const index=useMemo(()=>new Map(geometry.ids.map((id,i)=>[id,i])),[geometry]);
  const pointers=useRef(new Map<number,Point>());
  const drag=useRef<Drag|null>(null);
@@ -110,15 +129,20 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
      const backgroundLines=makeBuffer(geometry.segments,gl.STATIC_DRAW);
      const backgroundPoints=makeBuffer(geometry.positions,gl.STATIC_DRAW);
      const backgroundTypes=makeBuffer(geometry.types,gl.STATIC_DRAW);
+     const degreeSizes=makeBuffer(geometry.degreeSizes,gl.STATIC_DRAW);
+     const amountSizes=makeBuffer(geometry.amountSizes,gl.STATIC_DRAW);
      const selectedLines=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
      const selectedPoints=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
      const selectedTypes=makeBuffer(new Uint8Array(0),gl.DYNAMIC_DRAW);
+     const selectedDegreeSizes=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
+     const selectedAmountSizes=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
      const position=gl.getAttribLocation(program,"a_pos");
      const kind=gl.getAttribLocation(program,"a_kind");
+     const sizeAttr=gl.getAttribLocation(program,"a_size");
      const offset=gl.getUniformLocation(program,"u_offset");
      const viewport=gl.getUniformLocation(program,"u_viewport");
      const zoom=gl.getUniformLocation(program,"u_zoom");
-     const pointSize=gl.getUniformLocation(program,"u_pointSize");
+     const pointScale=gl.getUniformLocation(program,"u_pointScale");
      const colour=gl.getUniformLocation(program,"u_colour");
      const circle=gl.getUniformLocation(program,"u_circle");
      const fade=gl.getUniformLocation(program,"u_fade");
@@ -133,16 +157,24 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
        gl.bufferData(gl.ARRAY_BUFFER,selection?.nodes??new Float32Array(0),gl.DYNAMIC_DRAW);
        gl.bindBuffer(gl.ARRAY_BUFFER,selectedTypes);
        gl.bufferData(gl.ARRAY_BUFFER,selection?.types??new Uint8Array(0),gl.DYNAMIC_DRAW);
+       gl.bindBuffer(gl.ARRAY_BUFFER,selectedDegreeSizes);
+       gl.bufferData(gl.ARRAY_BUFFER,selection?.degreeSizes??new Float32Array(0),gl.DYNAMIC_DRAW);
+       gl.bindBuffer(gl.ARRAY_BUFFER,selectedAmountSizes);
+       gl.bufferData(gl.ARRAY_BUFFER,selection?.amountSizes??new Float32Array(0),gl.DYNAMIC_DRAW);
      };
-     const pointAttribute=(points:WebGLBuffer,types:WebGLBuffer)=>{
+     const pointAttribute=(points:WebGLBuffer,types:WebGLBuffer,sizes:WebGLBuffer)=>{
        gl.bindBuffer(gl.ARRAY_BUFFER,points);
        gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
        gl.bindBuffer(gl.ARRAY_BUFFER,types);
        gl.enableVertexAttribArray(kind);
        gl.vertexAttribPointer(kind,1,gl.UNSIGNED_BYTE,false,0,0);
+       gl.bindBuffer(gl.ARRAY_BUFFER,sizes);
+       gl.enableVertexAttribArray(sizeAttr);
+       gl.vertexAttribPointer(sizeAttr,1,gl.FLOAT,false,0,0);
      };
      const lineAttribute=(buffer:WebGLBuffer)=>{
        gl.disableVertexAttribArray(kind);gl.vertexAttrib1f(kind,0);
+       gl.disableVertexAttribArray(sizeAttr);gl.vertexAttrib1f(sizeAttr,1);
        gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
        gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
      };
@@ -165,24 +197,26 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
        gl.enableVertexAttribArray(position);
        gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
        gl.uniform1f(fade,1);
-       gl.uniform1i(circle,0);gl.uniform1f(pointSize,1);
+       gl.uniform1i(circle,0);gl.uniform1f(pointScale,1);
        gl.uniform4f(colour,.54,.70,.61,selection ? .07 : .20);
        lineAttribute(backgroundLines);
        gl.drawArrays(gl.LINES,0,geometry.edgeCount*2);
        gl.uniform1i(circle,1);
        gl.uniform1f(fade,selection?.13:1);
-       gl.uniform1f(pointSize,Math.max(2.5,Math.min(8,c.zoom*8)));
-       pointAttribute(backgroundPoints,backgroundTypes);
+       gl.uniform1f(pointScale,1);
+       pointAttribute(backgroundPoints,backgroundTypes,
+         sizeModeRef.current==="amount"?amountSizes:degreeSizes);
        gl.drawArrays(gl.POINTS,0,geometry.nodeCount);
        if(selection){
          update();
-         gl.uniform1i(circle,0);gl.uniform1f(pointSize,1);
+         gl.uniform1i(circle,0);gl.uniform1f(pointScale,1);
          gl.uniform4f(colour,1,.81,.48,.94);
          lineAttribute(selectedLines);
          gl.drawArrays(gl.LINES,0,selection.relationships*2);
          gl.uniform1i(circle,1);gl.uniform1f(fade,1);
-         gl.uniform1f(pointSize,Math.max(6,Math.min(13,c.zoom*11)));
-         pointAttribute(selectedPoints,selectedTypes);
+         gl.uniform1f(pointScale,1.4);
+         pointAttribute(selectedPoints,selectedTypes,
+           sizeModeRef.current==="amount"?selectedAmountSizes:selectedDegreeSizes);
          gl.drawArrays(gl.POINTS,0,selection.neighbourIndices.length);
        }
        const context=foreground.getContext("2d");if(!context)return;
@@ -221,6 +255,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
      if(program)gl.deleteProgram(program);
    };
  },[geometry]);
+ useEffect(()=>{draw.current?.();},[sizeMode]);
  useEffect(()=>{
    const surface=canvas.current;
    if(!surface)return;

@@ -530,3 +530,25 @@ elements/connections, spatial data, survey flows and future formats.
   infrastructure. Preserve full source provenance; no first-N projection.
 - Treat provider-specific import adapters as extensions, not a growing nest of
   special cases in the home page.
+
+## Alpha 2.12 — Funding graph visual encoding + Connections evidence fix
+
+- [x] Fix the full/adaptive Connections visual projection so references to
+  supporting source funders or projects are retained in provenance metadata
+  without pretending they are visible nodes or failing strict graph validation.
+  The canonical collaboration/source edges keep all original evidence IDs.
+- [x] Regression tests include external source evidence
+  `entity:id%3Agb-chc-200051` and grouped evidence nodes.
+- [x] Full-network rendering uses distinct GPU shapes (organisations circle,
+  funders diamond, projects/grants square, people triangle, places hexagon).
+- [x] Node size defaults to log-scaled count of original recorded connections.
+- [x] When award amounts are explicitly numerical and have one consistent
+  currency, allow size-by-award: grants reflect amounts awarded, funders the
+  summed awards and recipients summed receipts. Mixed currencies are never
+  combined into a misleading single node-size metric.
+- [x] Separate visual shape legend and size selector; source nodes/edges
+  remain complete and the selected-neighbour overlay stays source-grounded.
+- [ ] Real-dataset validation: connections on large funder maps, heterogeneous
+  currency input, Android/WebGL point-size ranges and source-evidence drill-down.
+- [ ] Future: configurable numeric measures with source schema/units and
+  aggregation choices rather than hardcoding all datasets as funding.

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {buildAdaptiveGraphIndex,projectAdaptiveGraph} from "../src/adaptive-graph.ts";
 import {parseGraphDocument} from "../src/schema.ts";
+import {collaborationGraph} from "../src/graph.ts";
 
 const make=(n:number)=>parseGraphDocument({
   version:1,title:"Complete network",description:"",
@@ -91,4 +92,43 @@ test("grants expand by their recorded funder before showing individual awards",(
  assert.ok(expanded.availableGroups.some(g=>g.label==="Funded by Amber Trust"));
  assert.ok(expanded.availableGroups.some(g=>g.label==="Funded by Blue Trust"));
  assert.equal(expanded.representedEdges,50);
+});
+
+test("Connections projection accepts source-backed inferred evidence that is not a visible organisation",()=>{
+ const source=parseGraphDocument({version:1,title:"Funders",description:"",
+ nodes:[{id:"org:a",label:"A",type:"organisation",tags:[]},
+   {id:"org:b",label:"B",type:"organisation",tags:[]},
+   {id:"entity:id%3Agb-chc-200051",label:"Charity funder",type:"funder",tags:[]}],
+ edges:[{id:"a",source:"org:a",target:"entity:id%3Agb-chc-200051",type:"funded by"},
+   {id:"b",source:"org:b",target:"entity:id%3Agb-chc-200051",type:"funded by"}]});
+ const collaborators=collaborationGraph(source,"funder");
+ assert.deepEqual(collaborators.edges[0].evidenceNodeIds,["entity:id%3Agb-chc-200051"]);
+ // This previously crashed when the full-graph renderer validated the
+ // organisation-only projection against absent supporting funder nodes.
+ const index=buildAdaptiveGraphIndex(collaborators);
+ const projection=projectAdaptiveGraph(index,[...index.groups.keys()]);
+ assert.equal(projection.graph.nodes.length,2);
+ assert.equal(projection.graph.edges.length,1);
+ assert.deepEqual(projection.graph.edges[0].evidenceNodeIds,[]);
+ assert.deepEqual(projection.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds,
+   ["entity:id%3Agb-chc-200051"]);
+ assert.deepEqual(collaborators.edges[0].evidenceNodeIds,
+   ["entity:id%3Agb-chc-200051"],"Original evidence must remain intact");
+});
+test("expanded overview validates inferred evidence in a hidden source group",()=>{
+ const source=parseGraphDocument({version:1,title:"Projects",description:"",
+ nodes:[{id:"org:a",label:"A",type:"organisation",tags:[]},
+   {id:"org:b",label:"B",type:"organisation",tags:[]},
+   ...Array.from({length:30},(_,i)=>({id:"p"+i,label:"Project "+i,type:"project",tags:[]}))],
+ edges:[{id:"shared",source:"org:a",target:"org:b",type:"similar",inferred:true,
+   evidenceNodeIds:["p0"]}]});
+ const index=buildAdaptiveGraphIndex(source);
+ const organisationGroups=[...index.groups.values()].filter(group=>
+   group.members.length>0&&group.members.every(id=>id.startsWith("org:")))
+   .map(group=>group.id);
+ assert.ok(organisationGroups.length>0);
+ const expanded=projectAdaptiveGraph(index,organisationGroups);
+ assert.equal(expanded.representedEdges,1);
+ assert.equal(expanded.graph.edges.length,1);
+ assert.deepEqual(expanded.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds,["p0"]);
 });
