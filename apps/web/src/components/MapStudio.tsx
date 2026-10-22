@@ -11,11 +11,13 @@ import {
   type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
   type GraphDocument, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
-  type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis
+  type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis,
+  MAP_LIBRARY_STORAGE_KEY,LEGACY_GRAPH_STORAGE_KEY
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
+import {PERSPECTIVES_STORAGE_KEY,ARTWORK_STORAGE_KEY} from "../lib/browser-storage-keys";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {ConnectionsExplorer} from "./ConnectionsExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
@@ -42,8 +44,6 @@ const TYPE_LABELS: Record<NodeType, string> = {
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
-const STORAGE_KEY = "mossline-demo-graph-v1";
-const MAP_LIBRARY_KEY="mossline-local-maps-v1";
 // Avoid synchronously parsing an unexpectedly huge cached graph at page startup.
 const MAX_AUTO_RESTORE_CHARS=2_600_000;
 type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
@@ -52,8 +52,6 @@ type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
   /** Compact full-file aggregates, not original raw grant records. */
   fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
 const MAX_LOCAL_MAPS=8;
-const SAVED_KEY = "mossline-perspectives-v1";
-const ASSET_KEY = "mossline-artwork-library-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
   name:"fictional-farming-relationships.csv",
@@ -175,7 +173,7 @@ export function MapStudio() {
   useEffect(() => {
     let loaded=ORIGINAL;
     try {
-      const saved=window.localStorage.getItem(STORAGE_KEY);
+      const saved=window.localStorage.getItem(LEGACY_GRAPH_STORAGE_KEY);
       if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS){
         loaded=parseGraphDocument(JSON.parse(saved));
         setHasSavedMapLibrary(true);
@@ -184,7 +182,7 @@ export function MapStudio() {
       // A damaged single-map cache must not destroy a valid map library.
     }
     try {
-      const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
+      const raw=window.localStorage.getItem(MAP_LIBRARY_STORAGE_KEY);
       if(raw) {
         if(raw.length>MAX_AUTO_RESTORE_CHARS){
           setOversizedSavedMaps(true);
@@ -226,13 +224,13 @@ export function MapStudio() {
 
   useEffect(() => {
     try {
-      const saved=window.localStorage.getItem(SAVED_KEY);
+      const saved=window.localStorage.getItem(PERSPECTIVES_STORAGE_KEY);
       if(saved) setPerspectives(parsePerspectives(JSON.parse(saved)));
-    } catch { window.localStorage.removeItem(SAVED_KEY); }
+    } catch { window.localStorage.removeItem(PERSPECTIVES_STORAGE_KEY); }
   }, []);
   useEffect(()=>{
     try {
-      const stored=window.localStorage.getItem(ASSET_KEY);
+      const stored=window.localStorage.getItem(ARTWORK_STORAGE_KEY);
       if(stored)setAssets(parseAssetLibrary(JSON.parse(stored)));
     }catch{
       setNotice("The saved artwork library could not be read; it was left unchanged.");
@@ -433,7 +431,7 @@ export function MapStudio() {
   function saveArtwork(next:LibraryAsset[]):boolean {
     try {
       const checked=parseAssetLibrary(next);
-      window.localStorage.setItem(ASSET_KEY,JSON.stringify(checked));
+      window.localStorage.setItem(ARTWORK_STORAGE_KEY,JSON.stringify(checked));
       setAssets(checked);
       return true;
     }catch{
@@ -493,17 +491,17 @@ export function MapStudio() {
           ids.add(id);
           return {...asset,id};
         })]);
-      const oldPerspectives=window.localStorage.getItem(SAVED_KEY);
-      const oldAssets=window.localStorage.getItem(ASSET_KEY);
+      const oldPerspectives=window.localStorage.getItem(PERSPECTIVES_STORAGE_KEY);
+      const oldAssets=window.localStorage.getItem(ARTWORK_STORAGE_KEY);
       try {
-        window.localStorage.setItem(SAVED_KEY,JSON.stringify(updatedViews));
-        window.localStorage.setItem(ASSET_KEY,JSON.stringify(updatedAssets));
+        window.localStorage.setItem(PERSPECTIVES_STORAGE_KEY,JSON.stringify(updatedViews));
+        window.localStorage.setItem(ARTWORK_STORAGE_KEY,JSON.stringify(updatedAssets));
       }catch(error){
         try {
-          if(oldPerspectives===null)window.localStorage.removeItem(SAVED_KEY);
-          else window.localStorage.setItem(SAVED_KEY,oldPerspectives);
-          if(oldAssets===null)window.localStorage.removeItem(ASSET_KEY);
-          else window.localStorage.setItem(ASSET_KEY,oldAssets);
+          if(oldPerspectives===null)window.localStorage.removeItem(PERSPECTIVES_STORAGE_KEY);
+          else window.localStorage.setItem(PERSPECTIVES_STORAGE_KEY,oldPerspectives);
+          if(oldAssets===null)window.localStorage.removeItem(ARTWORK_STORAGE_KEY);
+          else window.localStorage.setItem(ARTWORK_STORAGE_KEY,oldAssets);
         }catch{/* Browser storage may be unavailable; existing state is retained in memory. */}
         throw error;
       }
@@ -518,7 +516,7 @@ export function MapStudio() {
   function savePerspectives(next: SavedPerspective[]) {
     try {
       const validated=parsePerspectives(next);
-      window.localStorage.setItem(SAVED_KEY,JSON.stringify(validated));
+      window.localStorage.setItem(PERSPECTIVES_STORAGE_KEY,JSON.stringify(validated));
       setPerspectives(validated);
       return true;
     } catch { setNotice("Unable to save views in browser storage."); return false; }
@@ -602,13 +600,13 @@ export function MapStudio() {
     }
     try {
       // Avoid writing a second redundant copy of the graph into browser storage.
-      window.localStorage.setItem(MAP_LIBRARY_KEY,JSON.stringify({
+      window.localStorage.setItem(MAP_LIBRARY_STORAGE_KEY,JSON.stringify({
         activeId:nextActive.id,maps:nextMaps.map(m=>m.generalDatasetId?
           {...m,graph:generalMapStub(m.graph),
             sourceCounts:m.sourceCounts??generalMapCounts(m.graph)}:m)
       }));
       // Previous-version fallback is obsolete once the library has saved.
-      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
       setHasSavedMapLibrary(true);
       setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
       return true;
@@ -933,7 +931,7 @@ export function MapStudio() {
         The new importer will still analyse large files in the background.</p>
       <div className="actions">
         <button className="button-outline" type="button" onClick={()=>{
-          const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
+          const raw=window.localStorage.getItem(MAP_LIBRARY_STORAGE_KEY);
           if(!raw){setNotice("No saved map backup was found.");return;}
           const blob=new Blob([raw],{type:"application/json"});
           const url=URL.createObjectURL(blob);
@@ -944,8 +942,8 @@ export function MapStudio() {
         <button className="button-outline" type="button" disabled={!savedMapBackupMade}
           onClick={()=>{
             if(!window.confirm("Delete the oversized saved map collection from this browser? Only proceed after checking your downloaded backup."))return;
-            window.localStorage.removeItem(MAP_LIBRARY_KEY);
-            window.localStorage.removeItem(STORAGE_KEY);
+            window.localStorage.removeItem(MAP_LIBRARY_STORAGE_KEY);
+            window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
             setOversizedSavedMaps(false);setSavedMapBackupMade(false);
             setNotice("Large local cache reset. You can now create a new, smaller map.");
           }}>Reset oversized cached maps</button>
