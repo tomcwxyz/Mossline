@@ -257,6 +257,7 @@ export function MapStudio() {
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
+  const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
   const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
@@ -400,7 +401,8 @@ export function MapStudio() {
   // drawing. Avoid preparing a second complete graph for the legacy canvas.
   // Connections and Places continue to use their original analysis tools.
   const sourceExplorerCandidate=view==="landscape"&&
-    (fullFundingView||wholeNetworkOpen||graph.nodes.length>260||graph.edges.length>650);
+    (fullFundingView||(!detailedToolsOpen&&
+      (wholeNetworkOpen||graph.nodes.length>260||graph.edges.length>650)));
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
   const positionKey=[graphKey,view,layoutMode,basis].join(":");
   const activePositions=positionState.key===positionKey?positionState.positions:{};
@@ -727,6 +729,7 @@ export function MapStudio() {
   }
 
   function resetExplorer(next:GraphDocument) {
+    setDetailedToolsOpen(false);
     setGraph(next);setActiveStory(undefined);
     setPortablePreview(null);
     setNodeStyles({});
@@ -983,7 +986,8 @@ export function MapStudio() {
   }
 
   const largeActiveView=sourceExplorerCandidate||
-    filtered.graph.nodes.length>260||filtered.graph.edges.length>650;
+    (view==="collaborations"&&(filtered.graph.nodes.length>260||
+      filtered.graph.edges.length>650));
   const usingSourceExplorer=sourceExplorerCandidate;
 
   if(experienceSpace==="home")return <main className="shell mossline-home">
@@ -1529,7 +1533,15 @@ export function MapStudio() {
               "Focused detail only · choose Network for the full dataset":
               filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
           <div className="map-options">
+            {view==="landscape"&&!fullFundingView&&
+              (graph.nodes.length>260||graph.edges.length>650)&&
+              <button type="button" className="whole-network-entry"
+                aria-pressed={detailedToolsOpen}
+                onClick={()=>setDetailedToolsOpen(v=>!v)}>
+                {detailedToolsOpen?"← Back to full graph":"Detailed mapping tools"}
+              </button>}
             {view==="landscape"&&!fullFundingView&&!largeActiveView&&
+              !detailedToolsOpen&&
               <button type="button" className="whole-network-entry"
                 aria-pressed={wholeNetworkOpen} onClick={()=>setWholeNetworkOpen(v=>!v)}>
                 {wholeNetworkOpen?"← Standard canvas":"✳ Full graph + AI"}
@@ -1557,6 +1569,12 @@ export function MapStudio() {
             </div>}
           </div>
         </div>
+        {view==="landscape"&&detailedToolsOpen&&!fullFundingView&&
+          (graph.nodes.length>260||graph.edges.length>650)&&
+          <p className="help" role="status">Detailed editing and filters are available
+            for the full source map. Rendering and arranging every element here
+            may be slower on a phone. Your saved source records are unchanged.
+            Return to Full graph for worker-backed rendering.</p>}
         {fullFundingView?
           <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}
             initialMode="full"/> :
