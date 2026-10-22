@@ -470,3 +470,26 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Benchmark worker memory, transfer time, IndexedDB quotas, and large graph
       visualisation and analytics on devices with limited RAM.
 - [ ] Incremental streamed CSV parsing for files beyond the 60 MB local budget.
+
+## Alpha 2.10 — scale after import (large general networks)
+
+- [x] Avoid eager duplicate `filterGraph`/decorated graph creation while the
+      complete general network is displayed in the worker-backed full explorer.
+- [x] Open large general networks in WebGL Full graph by default; keep the
+      grouped overview as a selectable alternate.
+- [x] Preserve the original detailed mapping, appearance and filtering tools
+      through an explicit **Detailed mapping tools** opt-in for large maps.
+      Large Cytoscape layouts may be slow and are not the default on Android.
+- [x] Defer costly geographic atlas preparation until Places is selected.
+- [x] Defer relationship drop-down sorting and accessible trace preparation
+      until Follow a connection is open.
+- [x] Defer structural-junction analysis until its section is opened.
+- [x] Replace recursive structural junction DFS with an iterative Tarjan
+      implementation; regression test includes a 25,000-node chain.
+- [x] Coalesce WebGL canvas updates to animation frames rather than drawing
+      once per incoming pointermove/scroll event.
+- [ ] Validate on real mobile browser 2,000/10,000-row datasets (memory,
+      navigation, reload and touch gesture performance).
+- [ ] Benchmark computed cross-project collaborations and Places view on
+      exceptionally dense graphs; move expensive projections to workers if
+      real-world tests warrant it.

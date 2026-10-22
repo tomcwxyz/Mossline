@@ -154,41 +154,58 @@ export interface StructuralJunction {
  * Structural bottlenecks do not imply causal importance, leadership or trust.
  * Tarjan DFS is linear in vertices + edges, including disconnected graphs.
  */
+/** Tarjan articulation points, implemented with an explicit DFS stack.
+ * Deep organisation or project chains can contain tens of thousands of nodes:
+ * recursive DFS would overflow an Android/desktop JavaScript call stack.
+ * Each recorded undirected adjacency is visited a constant number of times.
+ */
 export function findStructuralJunctions(graph: GraphDocument): StructuralJunction[] {
-  const neighbours = new Map(graph.nodes.map(n => [n.id, new Set<string>()]));
-  for (const edge of graph.edges) {
-    if (edge.inferred || edge.source === edge.target) continue;
-    neighbours.get(edge.source)?.add(edge.target);
-    neighbours.get(edge.target)?.add(edge.source);
+  const adjacent=new Map(graph.nodes.map(node=>[node.id,new Set<string>()]));
+  for(const edge of graph.edges){
+    if(edge.inferred||edge.source===edge.target)continue;
+    adjacent.get(edge.source)?.add(edge.target);
+    adjacent.get(edge.target)?.add(edge.source);
   }
-  const entered = new Map<string, number>();
-  const low = new Map<string, number>();
-  const parent = new Map<string, string>();
-  const result: StructuralJunction[] = [];
-  let tick = 0;
-  function visit(node: string): void {
-    entered.set(node, ++tick);
-    low.set(node, tick);
-    let children = 0;
-    let cutChildren = 0;
-    for (const next of neighbours.get(node) ?? []) {
-      if (!entered.has(next)) {
-        parent.set(next, node);
-        children++;
-        visit(next);
-        low.set(node, Math.min(low.get(node)!, low.get(next)!));
-        if (low.get(next)! >= entered.get(node)!) cutChildren++;
-      } else if (next !== parent.get(node)) {
-        low.set(node, Math.min(low.get(node)!, entered.get(next)!));
+  type Frame={id:string;next:number;adjacent:string[]};
+  const discovered=new Map<string,number>(),low=new Map<string,number>();
+  const parent=new Map<string,string>(),children=new Map<string,number>();
+  const separatingChildren=new Map<string,number>();
+  const result:StructuralJunction[]=[];
+  let tick=0;
+  for(const root of adjacent.keys()){
+    if(discovered.has(root))continue;
+    discovered.set(root,++tick);low.set(root,tick);
+    const stack:Frame[]=[{id:root,next:0,adjacent:[...(adjacent.get(root)??[])]}];
+    while(stack.length){
+      const frame=stack[stack.length-1];
+      if(frame.next<frame.adjacent.length){
+        const next=frame.adjacent[frame.next++];
+        if(!discovered.has(next)){
+          parent.set(next,frame.id);
+          children.set(frame.id,(children.get(frame.id)??0)+1);
+          discovered.set(next,++tick);low.set(next,tick);
+          stack.push({id:next,next:0,adjacent:[...(adjacent.get(next)??[])]});
+        }else if(next!==parent.get(frame.id)){
+          low.set(frame.id,Math.min(low.get(frame.id)!,discovered.get(next)!));
+        }
+        continue;
+      }
+      stack.pop();
+      const ancestor=parent.get(frame.id);
+      if(ancestor){
+        low.set(ancestor,Math.min(low.get(ancestor)!,low.get(frame.id)!));
+        if(low.get(frame.id)!>=discovered.get(ancestor)!)
+          separatingChildren.set(ancestor,(separatingChildren.get(ancestor)??0)+1);
+      }
+      const isRoot=!parent.has(frame.id);
+      const childCount=children.get(frame.id)??0;
+      const cutCount=separatingChildren.get(frame.id)??0;
+      if((isRoot&&childCount>1)||(!isRoot&&cutCount>0)){
+        result.push({nodeId:frame.id,degree:adjacent.get(frame.id)?.size??0,
+          separatedGroups:isRoot?childCount:cutCount+1});
       }
     }
-    const isRoot = !parent.has(node);
-    const separatedGroups = isRoot ? children : cutChildren + 1;
-    if ((isRoot && children > 1) || (!isRoot && cutChildren > 0)) {
-      result.push({ nodeId: node, degree: neighbours.get(node)?.size ?? 0, separatedGroups });
-    }
   }
-  for (const id of neighbours.keys()) if (!entered.has(id)) visit(id);
-  return result.sort((a,b) => b.separatedGroups - a.separatedGroups ||
-    b.degree - a.degree || a.nodeId.localeCompare(b.nodeId));
+  return result.sort((a,b)=>b.separatedGroups-a.separatedGroups||
+    b.degree-a.degree||a.nodeId.localeCompare(b.nodeId));
 }
