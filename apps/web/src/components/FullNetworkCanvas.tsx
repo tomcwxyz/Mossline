@@ -66,6 +66,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
   let program:WebGLProgram|null=null,lineBuffer:WebGLBuffer|null=null,
       pointBuffer:WebGLBuffer|null=null,typeBuffer:WebGLBuffer|null=null,
       observer:ResizeObserver|null=null;
+  let pendingFrame:number|null=null;
   try{
    program=gl.createProgram();if(!program)throw Error("No WebGL programme");
    gl.attachShader(program,shader(gl,gl.VERTEX_SHADER,vert));
@@ -89,7 +90,6 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
    const colour=gl.getUniformLocation(program,"u_colour");
    const circle=gl.getUniformLocation(program,"u_circle");
    let initial=true;
-   let pendingFrame:number|null=null;
    const render=()=>{
     if(!canvas.current||!overlay.current)return;
     const w=Math.max(1,surface.clientWidth),h=Math.max(1,surface.clientHeight);
