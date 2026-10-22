@@ -4,17 +4,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
-  makePerspectiveBundle, readPerspectiveBundle, parseAssetLibrary,
   emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
-  auditGraph, collaborationGraph, compareGraphDocuments, explainRelationship, filterGraph, graphFingerprint, parseGraphDocument, parsePerspectives,
-  previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
-  type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
-  type GraphDocument, type GraphEdge, type GraphNode, type GraphAudit, type EvidencePath, type ConnectionTrail,
+  collaborationGraph, compareGraphDocuments, filterGraph, graphFingerprint, parseGraphDocument,
+  findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
+  type GraphDocument, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
-  type LibraryAsset, type PerspectiveBundle, type FundingFullAnalysis
+  type FundingFullAnalysis,
+  MAP_LIBRARY_STORAGE_KEY,LEGACY_GRAPH_STORAGE_KEY
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
+import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
+import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
+import {useNetworkImport} from "../hooks/useNetworkImport";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {ConnectionsExplorer} from "./ConnectionsExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
@@ -27,9 +29,10 @@ import { FundingWorkbench, FundingInsights } from "./FundingLandscape";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
-import {generalMapCounts,generalMapStub,
-  loadGeneralGraph,saveGeneralGraph,shouldStoreGeneralGraph}
+import {saveGeneralGraph,shouldStoreGeneralGraph}
   from "../lib/general-map-store";
+import {MAX_LOCAL_MAPS} from "../lib/map-library";
+import {useLocalMapLibrary} from "../hooks/useLocalMapLibrary";
 import type {ColumnMapping} from "@mossline/graph-core";
 import demo from "../../../../data/demo.json";
 import communityExample from "../../../../data/community-example.json";
@@ -41,27 +44,7 @@ const TYPE_LABELS: Record<NodeType, string> = {
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
-const STORAGE_KEY = "mossline-demo-graph-v1";
-const MAP_LIBRARY_KEY="mossline-local-maps-v1";
-// Avoid synchronously parsing an unexpectedly huge cached graph at page startup.
-const MAX_AUTO_RESTORE_CHARS=2_600_000;
-type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
-  /** Large generic map content is stored in IndexedDB, not localStorage. */
-  generalDatasetId?:string;sourceCounts?:{nodes:number;edges:number};
-  /** Compact full-file aggregates, not original raw grant records. */
-  fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
-const MAX_LOCAL_MAPS=8;
-const SAVED_KEY = "mossline-perspectives-v1";
-const ASSET_KEY = "mossline-artwork-library-v1";
 const DEMO_KEY = graphFingerprint(ORIGINAL);
-const DISCOVERY_EXAMPLE: ImportFile = {
-  name:"fictional-farming-relationships.csv",
-  text:"Organisation,Project,Funder,Region,Public\n" +
-    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\n" +
-    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\n" +
-    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n" +
-    "Hidden Example,Private Project,Private Funder,South West,FALSE\n"
-};
 type ViewMode = "landscape" | "collaborations" | "atlas";
 
 function saveJson(graph: GraphDocument) {
@@ -74,195 +57,17 @@ function saveJson(graph: GraphDocument) {
   URL.revokeObjectURL(url);
 }
 
-function CoverageReport({ graph }: { graph: GraphDocument }) {
-  const audit: GraphAudit = useMemo(() => auditGraph(graph), [graph]);
-  const { coverage, totals } = audit;
-  return <div className="coverage-report">
-    <p className="coverage-disclaimer">Coverage describes fields in this dataset; it is not an assessment of truth, accuracy or impact.</p>
-    <div className="coverage-grid">
-      <div><strong>{totals.nodes}</strong><span>Entities</span></div>
-      <div><strong>{totals.recorded}</strong><span>Recorded links</span></div>
-      <div><strong>{coverage.nodesWithOrigin} / {totals.nodes}</strong><span>Entities with source ID</span></div>
-      <div><strong>{coverage.relationshipsWithOrigin} / {totals.relationships}</strong><span>Links with source ID</span></div>
-      <div><strong>{coverage.nodesWithDescription} / {totals.nodes}</strong><span>Descriptions</span></div>
-      <div><strong>{coverage.nodesWithRegion} / {totals.nodes}</strong><span>Regions</span></div>
-    </div>
-    <div className="coverage-details">
-      <p><strong>{audit.isolated.length}</strong> entities without a connection in this dataset</p>
-      <p><strong>{audit.duplicateLabels.length}</strong> labels shared by more than one entity</p>
-      <p><strong>{audit.categories.other}</strong> entities classified as Other</p>
-      {audit.isolated.length > 0 && <details>
-        <summary>Show unconnected entities</summary>
-        <ul>{audit.isolated.slice(0,15).map(n=><li key={n.id}>{n.label}</li>)}</ul>
-        {audit.isolated.length>15 && <p>Showing the first 15; use the source dataset for the full list.</p>}
-      </details>}
-      {audit.duplicateLabels.length > 0 && <details>
-        <summary>Show repeated labels</summary>
-        <ul>{audit.duplicateLabels.slice(0,15).map(group=><li key={group.label}>
-          {group.label} ({group.ids.length} entities)
-        </li>)}</ul>
-      </details>}
-      {audit.sources.length > 0 && <details>
-        <summary>Source files and record counts</summary>
-        <ul>{audit.sources.map(source=><li key={source.system+":"+source.fileName}>
-          {source.fileName ?? source.system.toUpperCase()} · {source.nodes} entities · {source.relationships} links
-        </li>)}</ul>
-        <p>CSV references use logical record numbers, not physical line numbers. Kumu references use array positions.</p>
-      </details>}
-    </div>
-  </div>;
-}
-
-function NodeInspector({ node, graph, source, onPick, onPickEdge, onTraceFrom }: {
-  node: GraphNode;
-  graph: GraphDocument;
-  source: GraphDocument;
-  onPick: (id: string) => void;
-  onPickEdge: (id: string) => void;
-  onTraceFrom: (id: string) => void;
-}) {
-  const related = graph.edges.filter(e => e.source === node.id || e.target === node.id);
-  const links = related.flatMap(edge => {
-    const neighbour = graph.nodes.find(item => item.id === (edge.source === node.id ? edge.target : edge.source));
-    return neighbour ? [{ neighbour, edge }] : [];
-  });
-  return <div className="inspector-inner">
-    <div className={"inspector-cover " + node.type}>
-      {node.imageUrl ? <img src={node.imageUrl} alt="" referrerPolicy="no-referrer" loading="lazy" /> :
-        <div className="inspector-cover-art" aria-hidden="true">✳</div>}
-      <span>{node.type}</span>
-    </div>
-    <p className="eyebrow">{node.type}{node.region ? " · " + node.region : ""}</p>
-    <h2>{node.label}</h2>
-    <button type="button" className="inspect-trace-start" onClick={()=>onTraceFrom(node.id)}>
-      Explore connections from here →
-    </button>
-    <p className="description">{node.description ?? "No description yet. Add context to your data source."}</p>
-    <div className="inspector-stats">
-      <div><strong>{related.filter(e=>!e.inferred).length}</strong><small>Recorded links</small></div>
-      <div><strong>{related.filter(e=>e.inferred).length}</strong><small>Shared associations</small></div>
-    </div>
-    {node.tags.length>0 && <div className="inspector-tags">{node.tags.map(tag=>
-      <span key={tag}>{tag}</span>)}</div>}
-    {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
-    {node.origin && <p className="help">Imported from {node.origin.system.toUpperCase()} · source record {node.origin.recordId}
-      {node.origin.fileName && <> · file {node.origin.fileName}</>}
-      {node.origin.recordNumber && <> · record {node.origin.recordNumber}</>}
-    </p>}
-    {node.properties && Object.keys(node.properties).length > 0 && <details className="original-fields">
-      <summary>Original source fields ({Object.keys(node.properties).length})</summary>
-      <dl>{Object.entries(node.properties).map(([key,value]) =>
-        <div key={key}><dt>{key}</dt><dd>{typeof value === "string" ? value : JSON.stringify(value) ?? "—"}</dd></div>)}</dl>
-    </details>}
-    <div className="inspector-section">
-      <p className="eyebrow">Relationships · {links.length}</p>
-      {links.length === 0 && <p className="muted">No connected entities in the current map.</p>}
-      {links.map(({neighbour, edge}) => {
-        const supporting = (edge.evidenceNodeIds ?? []).map(id => source.nodes.find(n => n.id === id)?.label ?? id).join(", ");
-        return <div className="relation-row" key={edge.id}>
-          <button className="relation" onClick={() => onPick(neighbour.id)}>
-            <span className={"small-dot " + neighbour.type} />
-            <span><strong>{neighbour.label}</strong><small>{edge.type}{edge.inferred ? " · inferred" : ""}</small>
-              {supporting && <small>Shared through: {supporting}</small>}
-            </span>
-            <span aria-hidden="true">↗</span>
-          </button>
-          <button className="relation-evidence" onClick={() => onPickEdge(edge.id)}
-            aria-label={"Explain relationship with " + neighbour.label}>Why?</button>
-        </div>;
-      })}
-    </div>
-  </div>;
-}
-
-function EvidenceTrail({ path, source }: { path: EvidencePath | null; source: GraphDocument }) {
-  if (!path) return <p className="relationship-unresolved">No supporting source-record path found.</p>;
-  const names = new Map(source.nodes.map(n => [n.id, n.label]));
-  const edges = new Map(source.edges.map(e => [e.id, e.type]));
-  return <ol className="relationship-trail">
-    {path.nodeIds.map((id, index) => <li key={id + "-" + index}>
-      {index > 0 && <span className="trail-verb">{edges.get(path.edgeIds[index - 1]) ?? "linked to"}</span>}
-      <span>{names.get(id) ?? id}</span>
-    </li>)}
-  </ol>;
-}
-
-function RelationshipInspector({ edge, source, onPick, onEvidence }: {
-  edge: GraphEdge;
-  source: GraphDocument;
-  onPick: (id: string) => void;
-  onEvidence: (id: string) => void;
-}) {
-  const explanation = explainRelationship(source, edge);
-  return <div className="inspector-inner relationship-inspector">
-    <div className="relationship-header-illustration" aria-hidden="true"><span>◎</span></div>
-    <p className="eyebrow">Why are these connected?</p>
-    <h2>{explanation.status === "inferred" ? "A shared association." : "A recorded relationship."}</h2>
-    <div className="relationship-parties">
-      <button type="button" onClick={() => onPick(edge.source)}>{explanation.source?.label ?? edge.source}</button>
-      <span aria-hidden="true">↔</span>
-      <button type="button" onClick={() => onPick(edge.target)}>{explanation.target?.label ?? edge.target}</button>
-    </div>
-    <div className={"relationship-status " + explanation.status}>
-      {explanation.status === "inferred" ? "Inferred from source records" : "Recorded in dataset"}
-    </div>
-    <p className="description">{explanation.summary}</p>
-    {edge.description && <p className="description">{edge.description}</p>}
-    {explanation.status === "recorded" ? <>
-      <div className="relationship-facts">
-        <p><strong>Relationship</strong> {edge.type}</p>
-        <p><strong>Direction</strong> {edge.direction ?? "directed"}</p>
-        {edge.origin && <p><strong>Source record</strong> {edge.origin.system.toUpperCase()} · {edge.origin.recordId}
-          {edge.origin.fileName && <> · {edge.origin.fileName}</>}
-          {edge.origin.recordNumber && <> · record {edge.origin.recordNumber}</>}
-        </p>}
-      </div>
-      {edge.sourceUrl && <a href={edge.sourceUrl} target="_blank" rel="noreferrer">Inspect source record ↗</a>}
-      {edge.properties && Object.keys(edge.properties).length > 0 &&
-        <details className="original-fields">
-          <summary>Original relationship fields</summary>
-          <dl>{Object.entries(edge.properties).map(([key, value]) => <div key={key}>
-            <dt>{key}</dt><dd>{typeof value === "string" ? value : JSON.stringify(value) ?? "—"}</dd>
-          </div>)}</dl>
-        </details>}
-    </> : <>
-      <div className="inspector-section">
-        <p className="eyebrow">Supporting records · {explanation.supports.length}</p>
-        {explanation.supports.length === 0 &&
-          <p className="relationship-unresolved">This association has no supporting record IDs. Treat it as unsubstantiated.</p>}
-        {explanation.supports.map(support => <section key={support.nodeId} className="evidence-card">
-          <p className="evidence-kind">{support.type}</p>
-          <h3>{support.label}</h3>
-          <div className="evidence-side"><p>First entity’s path</p><EvidenceTrail path={support.fromSource} source={source}/></div>
-          <div className="evidence-side"><p>Second entity’s path</p><EvidenceTrail path={support.fromTarget} source={source}/></div>
-          <button type="button" className="evidence-explore" onClick={() => onEvidence(support.nodeId)}>
-            Explore {support.type} in the landscape ↗
-          </button>
-        </section>)}
-      </div>
-    </>}
-    <p className="relationship-caveat">This view explains the records present in Mossline. It does not verify the underlying claims.</p>
-  </div>;
-}
-
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
-  const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
   const mobileFiltersRef=useRef<HTMLElement|null>(null);
-  const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
-  const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
-  const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
-  const [activeMapId,setActiveMapId] = useState<string|null>(null);
-  const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
-  const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
   const [context, setContext] = useState(true);
@@ -304,10 +109,6 @@ export function MapStudio() {
     key:"",history:emptyLayoutHistory()
   });
   const dragStartRef=useRef<{key:string;positions:LayoutPositions}|null>(null);
-  const [perspectives, setPerspectives] = useState<SavedPerspective[]>([]);
-  const [assets,setAssets]=useState<LibraryAsset[]>([]);
-  const [portablePreview,setPortablePreview]=useState<PerspectiveBundle|null>(null);
-  const perspectiveFileRef=useRef<HTMLInputElement>(null);
   const [showSave, setShowSave] = useState(false);
   const [newName, setNewName] = useState("");
   const [storyTitle,setStoryTitle]=useState("");
@@ -315,99 +116,28 @@ export function MapStudio() {
   const [storyCover,setStoryCover]=useState("");
   const [activeStory,setActiveStory]=useState<SavedPerspective["presentation"]>();
   const [notice, setNotice] = useState("");
-  const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
-  const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
-  const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
-  const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
-  const [initialMapped,setInitialMapped]=useState<MappedPreview|null>(null);
-  const [importNeedsIndexedDb,setImportNeedsIndexedDb]=useState(false);
-  const [showImportCoverage,setShowImportCoverage]=useState(false);
-  const [importBusy,setImportBusy]=useState(false);
-  const [importStage,setImportStage]=useState("");
-  const importWorkerRef=useRef<Worker|null>(null);
-  const importRequestRef=useRef(0);
-  const hydrationRef=useRef(0);
-  const [mappingSession, setMappingSession] = useState(0);
+  const {
+    importMode,setImportMode,importMapName,setImportMapName,
+    importPreview,setImportPreview,acknowledgeRemovals,setAcknowledgeRemovals,
+    discovery,mappingFile,initialMapped,importNeedsIndexedDb,
+    showImportCoverage,setShowImportCoverage,importBusy,setImportBusy,
+    importStage,setImportStage,importWorkerRef,importRequestRef,
+    mappingSession,onImport,buildMappedInWorker,previewMappedGraph,closeImport,tryExampleDiscovery
+  }=useNetworkImport({
+    setNotice,
+    onImportStarted:()=>{setShowFundingWorkbench(false);setFundingInitialFile(null);},
+    onFundingFileDetected:file=>{setFundingInitialFile(file);setShowFundingWorkbench(true);}
+  });
+
+  const {hasSavedMapLibrary,localMaps,oversizedSavedMaps,savedMapBackupMade,
+    setSavedMapBackupMade,activeMapId,updateGraph,createNewMap,
+    applyFundingProjection,selectLocalMap,resetOversizedCache}=useLocalMapLibrary({
+      initialGraph:ORIGINAL,setGraph,resetExplorer,setNotice,onMapSelected:closeImport
+    });
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
 
-  useEffect(()=>()=>{importWorkerRef.current?.terminate();
-    importWorkerRef.current=null;importRequestRef.current++;hydrationRef.current++;
-  },[]);
 
-  async function hydrateGeneralMap(entry:LocalMap){
-    if(!entry.generalDatasetId)return entry;
-    if(entry.graph.nodes.length||entry.graph.edges.length)return entry;
-    const graph=await loadGeneralGraph(entry.generalDatasetId);
-    return {...entry,graph};
-  }
-
-  useEffect(() => {
-    let loaded=ORIGINAL;
-    try {
-      const saved=window.localStorage.getItem(STORAGE_KEY);
-      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS){
-        loaded=parseGraphDocument(JSON.parse(saved));
-        setHasSavedMapLibrary(true);
-      }
-    } catch {
-      // A damaged single-map cache must not destroy a valid map library.
-    }
-    try {
-      const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
-      if(raw) {
-        if(raw.length>MAX_AUTO_RESTORE_CHARS){
-          setOversizedSavedMaps(true);
-          setNotice("A large saved map collection was preserved but not loaded automatically. Export a backup before resetting it.");
-          const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
-          setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
-          return;
-        }
-        const data=JSON.parse(raw) as {activeId:string;maps:unknown[]};
-        if(Array.isArray(data.maps)&&data.maps.length>0&&data.maps.length<=MAX_LOCAL_MAPS) {
-          const maps:LocalMap[]=data.maps.map(item=>{
-            if(!item||typeof item!=="object")throw Error("Invalid stored map");
-            const entry=item as LocalMap;
-            if(typeof entry.id!=="string"||typeof entry.title!=="string"||
-              typeof entry.createdAt!=="number")throw Error("Invalid stored map");
-            return {...entry,graph:parseGraphDocument(entry.graph)};
-          });
-          const active=maps.find(m=>m.id===data.activeId)??maps[0];
-          setHasSavedMapLibrary(true);
-          setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
-          if(active.generalDatasetId){
-            const generation=++hydrationRef.current;
-            void hydrateGeneralMap(active).then(loaded=>{
-              if(generation!==hydrationRef.current)return;
-              setLocalMaps(previous=>previous.map(m=>m.id===loaded.id?loaded:m));
-              setGraph(loaded.graph);
-            }).catch(error=>setNotice(error instanceof Error?error.message:
-              "Could not restore the complete network from browser storage."));
-          }
-          return;
-        }
-      }
-    } catch {
-      setNotice("Your browser's saved map collection could not be read. The previous single-map data remains available.");
-    }
-    const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
-    setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
-  }, []);
-
-  useEffect(() => {
-    try {
-      const saved=window.localStorage.getItem(SAVED_KEY);
-      if(saved) setPerspectives(parsePerspectives(JSON.parse(saved)));
-    } catch { window.localStorage.removeItem(SAVED_KEY); }
-  }, []);
-  useEffect(()=>{
-    try {
-      const stored=window.localStorage.getItem(ASSET_KEY);
-      if(stored)setAssets(parseAssetLibrary(JSON.parse(stored)));
-    }catch{
-      setNotice("The saved artwork library could not be read; it was left unchanged.");
-    }
-  },[]);
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
   const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
   // In the full-source experience the worker owns the source-graph query and
@@ -417,6 +147,11 @@ export function MapStudio() {
     (fullFundingView||(!detailedToolsOpen&&
       (wholeNetworkOpen||graph.nodes.length>260||graph.edges.length>650)));
   const graphKey=useMemo(()=>graphFingerprint(graph),[graph]);
+  const {perspectives,assets,portablePreview,setPortablePreview,perspectiveFileRef,
+    savedForMap,savePerspectives,saveArtwork,addArtwork,
+    downloadPerspectives,previewPerspectiveImport,confirmPerspectiveImport}=
+    useSavedViewLibrary({graph,graphKey,setNotice});
+
   const positionKey=[graphKey,view,layoutMode,basis].join(":");
   const activePositions=positionState.key===positionKey?positionState.positions:{};
   const movementHistory=arrangementState.key===positionKey?
@@ -482,8 +217,6 @@ export function MapStudio() {
     compareGraphDocuments(graph,importPreview.graph):null,[graph,importPreview,importMode]);
   const hasRemovals=!!proposedChanges &&
     (proposedChanges.nodes.removed>0 || proposedChanges.edges.removed>0);
-  const savedForMap=useMemo(()=>perspectives.filter(p=>p.graphKey===graphKey)
-    .sort((a,b)=>b.createdAt-a.createdAt),[perspectives,graphKey]);
   const current = useMemo(() => view === "collaborations" ?
     collaborationGraph(presentedGraph, basis) : presentedGraph, [presentedGraph, view, basis]);
   const activeTypes = view === "collaborations" ? (["organisation"] as NodeType[]) : types;
@@ -600,100 +333,6 @@ export function MapStudio() {
     setTypes(previous => previous.includes(type) ? previous.filter(v => v !== type) : [...previous, type]);
   }
 
-  function saveArtwork(next:LibraryAsset[]):boolean {
-    try {
-      const checked=parseAssetLibrary(next);
-      window.localStorage.setItem(ASSET_KEY,JSON.stringify(checked));
-      setAssets(checked);
-      return true;
-    }catch{
-      setNotice("Could not save the artwork library. Existing entries were preserved.");
-      return false;
-    }
-  }
-  function addArtwork(asset:LibraryAsset):boolean {
-    if(assets.length>=60||assets.some(a=>a.url===asset.url))return false;
-    return saveArtwork([...assets,asset]);
-  }
-  function downloadPerspectives(){
-    if(savedForMap.length===0){setNotice("Save a perspective before exporting.");return;}
-    try{
-      const bundle=makePerspectiveBundle(graph,savedForMap,assets);
-      const blob=new Blob([JSON.stringify(bundle,null,2)],{type:"application/json"});
-      const href=URL.createObjectURL(blob);
-      const link=document.createElement("a");
-      link.href=href;link.download="mossline-perspectives-"+graphKey+".json";
-      link.click();
-      URL.revokeObjectURL(href);
-      setNotice("Exported "+savedForMap.length+" perspectives and "+assets.length+" artwork references. No graph records were included.");
-    }catch{
-      setNotice("Could not export this perspective bundle.");
-    }
-  }
-  async function previewPerspectiveImport(event:ChangeEvent<HTMLInputElement>){
-    const file=event.target.files?.[0];
-    event.target.value="";
-    if(!file)return;
-    setPortablePreview(null);
-    if(file.size>1024*1024){setNotice("Perspective bundles must be 1 MB or smaller.");return;}
-    try{
-      const bundle=readPerspectiveBundle(JSON.parse(await file.text()),graph);
-      if(perspectives.length+bundle.perspectives.length>40)
-        throw Error("Not enough space for these views (40 local views maximum).");
-      const newImages=bundle.assets.filter(asset=>!assets.some(a=>a.url===asset.url));
-      if(assets.length+newImages.length>60)
-        throw Error("Not enough space for artwork references (60 maximum).");
-      setPortablePreview(bundle);
-      setNotice("Reviewed import available. Confirm below to add the views without replacing existing ones.");
-    }catch(err){
-      setNotice(err instanceof Error?err.message:"Invalid perspective bundle.");
-    }
-  }
-  function confirmPerspectiveImport(){
-    if(!portablePreview)return;
-    try {
-      const checked=readPerspectiveBundle(portablePreview,graph);
-      const updatedViews=parsePerspectives([...perspectives,...checked.perspectives.map(item=>({
-        ...item,id:crypto.randomUUID()
-      }))]);
-      const ids=new Set(assets.map(a=>a.id));
-      const updatedAssets=parseAssetLibrary([...assets,...checked.assets.filter(a=>
-        !assets.some(existing=>existing.url===a.url)).map(asset=>{
-          const id=ids.has(asset.id)?crypto.randomUUID():asset.id;
-          ids.add(id);
-          return {...asset,id};
-        })]);
-      const oldPerspectives=window.localStorage.getItem(SAVED_KEY);
-      const oldAssets=window.localStorage.getItem(ASSET_KEY);
-      try {
-        window.localStorage.setItem(SAVED_KEY,JSON.stringify(updatedViews));
-        window.localStorage.setItem(ASSET_KEY,JSON.stringify(updatedAssets));
-      }catch(error){
-        try {
-          if(oldPerspectives===null)window.localStorage.removeItem(SAVED_KEY);
-          else window.localStorage.setItem(SAVED_KEY,oldPerspectives);
-          if(oldAssets===null)window.localStorage.removeItem(ASSET_KEY);
-          else window.localStorage.setItem(ASSET_KEY,oldAssets);
-        }catch{/* Browser storage may be unavailable; existing state is retained in memory. */}
-        throw error;
-      }
-      setPerspectives(updatedViews);
-      setAssets(updatedAssets);
-      setPortablePreview(null);
-      setNotice("Imported "+checked.perspectives.length+" new perspectives. Existing views and source graph were not overwritten.");
-    }catch(err){
-      setNotice(err instanceof Error?err.message:"Unable to import the bundle.");
-    }
-  }
-  function savePerspectives(next: SavedPerspective[]) {
-    try {
-      const validated=parsePerspectives(next);
-      window.localStorage.setItem(SAVED_KEY,JSON.stringify(validated));
-      setPerspectives(validated);
-      return true;
-    } catch { setNotice("Unable to save views in browser storage."); return false; }
-  }
-
   function saveCurrentPerspective(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const name=newName.trim().slice(0,60);
@@ -763,191 +402,6 @@ export function MapStudio() {
     setRegion("");
     setFocusId(null);
     setTypes(TYPE_KEYS);
-  }
-
-  function persistMapLibrary(nextMaps:LocalMap[],nextActive:LocalMap):boolean {
-    if(oversizedSavedMaps){
-      setNotice("The oversized map collection is protected. Export its backup and reset it before saving new maps.");
-      return false;
-    }
-    try {
-      // Avoid writing a second redundant copy of the graph into browser storage.
-      window.localStorage.setItem(MAP_LIBRARY_KEY,JSON.stringify({
-        activeId:nextActive.id,maps:nextMaps.map(m=>m.generalDatasetId?
-          {...m,graph:generalMapStub(m.graph),
-            sourceCounts:m.sourceCounts??generalMapCounts(m.graph)}:m)
-      }));
-      // Previous-version fallback is obsolete once the library has saved.
-      window.localStorage.removeItem(STORAGE_KEY);
-      setHasSavedMapLibrary(true);
-      setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
-      return true;
-    } catch {
-      setNotice("Unable to save the map collection in browser storage. Export your current map before continuing.");
-      return false;
-    }
-  }
-  function updateGraph(next:GraphDocument,generalDatasetId?:string):boolean {
-    const current=localMaps.find(x=>x.id===activeMapId);
-    // A changed source graph invalidates previously calculated full-file facts.
-    const entry:LocalMap=current?
-      {id:current.id,createdAt:current.createdAt,title:next.title,graph:next,
-        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})}:
-      {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next,
-        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
-    const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
-    return persistMapLibrary(updated,entry);
-  }
-  function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
-    fundingDatasetId?:string,generalDatasetId?:string):boolean {
-    if(localMaps.length>=MAX_LOCAL_MAPS) {
-      setNotice("This browser has eight maps. Export one before creating another.");
-      return false;
-    }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,
-      graph:next,fundingAnalysis,fundingDatasetId,
-      ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
-    return persistMapLibrary([...localMaps,entry],entry);
-  }
-  function applyFundingProjection(next:GraphDocument):boolean{
-    const current=localMaps.find(m=>m.id===activeMapId);
-    if(!current?.fundingDatasetId||!current.fundingAnalysis)return false;
-    const entry:LocalMap={...current,graph:next};
-    const maps=localMaps.map(m=>m.id===current.id?entry:m);
-    return persistMapLibrary(maps,entry);
-  }
-  async function selectLocalMap(id:string){
-    const entry=localMaps.find(x=>x.id===id);
-    if(!entry)return;
-    const generation=++hydrationRef.current;
-    try{
-      const loaded=await hydrateGeneralMap(entry);
-      if(generation!==hydrationRef.current)return;
-      const maps=localMaps.map(m=>m.id===id?loaded:m);
-      if(persistMapLibrary(maps,loaded)){
-        setNotice("Opened ‘"+loaded.title+"’. Your other maps are still saved in this browser.");
-        closeImport();
-      }
-    }catch(error){
-      setNotice(error instanceof Error?error.message:"Could not reopen the complete network.");
-    }
-  }
-
-  async function onImport(event:ChangeEvent<HTMLInputElement>){
-    const files=Array.from(event.target.files??[]);
-    event.target.value="";
-    if(!files.length)return;
-    if(files.some(f=>f.size>60_000_000)||
-      files.reduce((sum,f)=>sum+f.size,0)>60_000_000){
-      setNotice("Select CSV or JSON files totalling at most 60 MB for local import. "+
-        "Larger files will need streamed parsing.");return;
-    }
-    setShowFundingWorkbench(false);
-    setFundingInitialFile(null);
-    importWorkerRef.current?.terminate();
-    importWorkerRef.current=null;
-    const id=++importRequestRef.current;
-    setImportBusy(true);setImportStage("Opening your files in a background worker…");
-    setImportNeedsIndexedDb(false);
-    setShowImportCoverage(false);
-    setNotice("");setImportPreview(null);setDiscovery(null);
-    setMappingFile(null);setInitialMapped(null);
-    try{
-      const worker=new Worker(new URL("../workers/general-import.worker.ts",import.meta.url),
-        {type:"module"});
-      importWorkerRef.current=worker;
-      worker.onmessage=(event:MessageEvent<{
-        kind:"stage"|"analysed"|"mapped"|"funding-detected"|"failed";id:number;message?:string;
-        preview?:ImportPreview|null;discovery?:DataDiscovery|null;
-        initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
-        needsIndexedDb?:boolean;
-      }>)=>{
-        const result=event.data;
-        if(result.id!==importRequestRef.current)return;
-        if(result.kind==="stage"){setImportStage(result.message??"Working…");return;}
-        setImportBusy(false);setImportStage("");
-        if(result.kind==="funding-detected"){
-          closeImport();
-          setFundingInitialFile(files[0]);
-          setShowFundingWorkbench(true);
-          setNotice("This looks like grant awards data. Review the detected columns in the funding importer before creating your map.");
-          return;
-        }
-        if(result.kind==="failed"){
-          setNotice(result.message??"Unable to import these source files.");return;
-        }
-        if(result.kind==="mapped"&&result.proposal){
-          setImportNeedsIndexedDb(result.needsIndexedDb===true);
-          previewMappedGraph(result.proposal);
-          return;
-        }
-        if(result.kind!=="analysed")return;
-        const preview=result.preview??null,analysis=result.discovery??null;
-        setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
-        // File contents remain in the worker; the mapping editor only needs
-        // a filename and the source discovery, never a second huge CSV string.
-        setMappingFile(analysis?.kind==="csv-table"?
-          {name:result.fileName??files[0].name,text:""}:null);
-        setInitialMapped(result.initial??null);
-        setImportNeedsIndexedDb(result.needsIndexedDb===true);
-        setMappingSession(v=>v+1);
-        setAcknowledgeRemovals(false);
-        setImportMode("new");
-        setImportMapName((result.fileName??"Imported network")
-          .replace(/\.(csv|json)$/i,""));
-        setImportPreview(preview);
-      };
-      worker.onerror=()=>{
-        if(importWorkerRef.current!==worker)return;
-        setImportBusy(false);setImportStage("");
-        setNotice("Background import failed. Try a smaller file or another browser.");
-        worker.terminate();importWorkerRef.current=null;
-      };
-      worker.postMessage({kind:"analyse",id,files});
-    }catch{
-      setImportBusy(false);setImportStage("");
-      setNotice("This browser could not start background data import.");
-    }
-  }
-
-  function buildMappedInWorker(mapping:ColumnMapping){
-    if(!importWorkerRef.current)return;
-    const id=++importRequestRef.current;
-    setImportBusy(true);setImportStage("Mapping every source record in the background…");
-    setImportPreview(null);
-    importWorkerRef.current.postMessage({kind:"map",id,mapping});
-  }
-
-  function previewMappedGraph(result: MappedPreview) {
-    setAcknowledgeRemovals(false);
-    setImportPreview({
-      graph:result.graph, issues:result.issues,source:"csv",
-      counts:{nodes:result.counts.nodes,edges:result.counts.edges}
-    });
-  }
-
-  function closeImport() {
-    setShowImportCoverage(false);
-    setImportNeedsIndexedDb(false);
-    importWorkerRef.current?.terminate();importWorkerRef.current=null;
-    importRequestRef.current++;
-    setImportBusy(false);setImportStage("");setInitialMapped(null);
-    setImportPreview(null);setDiscovery(null);setMappingFile(null);
-    setAcknowledgeRemovals(false);setImportMode("new");setImportMapName("");
-  }
-
-  function tryExampleDiscovery() {
-    importWorkerRef.current?.terminate();importWorkerRef.current=null;
-    importRequestRef.current++;setImportNeedsIndexedDb(false);
-    const analysis=discoverData(DISCOVERY_EXAMPLE);
-    setDiscovery(analysis);
-    setMappingFile(DISCOVERY_EXAMPLE);
-    setMappingSession(previous=>previous+1);
-    setImportPreview(null);
-    setAcknowledgeRemovals(false);
-    setImportMode("new");
-    setImportMapName("Fictional farming network");
-    setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
   }
 
   async function applyImport(){
@@ -1023,6 +477,9 @@ export function MapStudio() {
       accept=".csv,.json,application/json,text/csv"
       aria-label="Import a spreadsheet or Kumu network"
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
+    {notice&&<div className="notice" role="status"><span>{notice}</span>
+      <button type="button" aria-label="Dismiss message" onClick={()=>setNotice("")}>×</button>
+    </div>}
     {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
       <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
@@ -1103,7 +560,7 @@ export function MapStudio() {
         The new importer will still analyse large files in the background.</p>
       <div className="actions">
         <button className="button-outline" type="button" onClick={()=>{
-          const raw=window.localStorage.getItem(MAP_LIBRARY_KEY);
+          const raw=window.localStorage.getItem(MAP_LIBRARY_STORAGE_KEY);
           if(!raw){setNotice("No saved map backup was found.");return;}
           const blob=new Blob([raw],{type:"application/json"});
           const url=URL.createObjectURL(blob);
@@ -1114,10 +571,8 @@ export function MapStudio() {
         <button className="button-outline" type="button" disabled={!savedMapBackupMade}
           onClick={()=>{
             if(!window.confirm("Delete the oversized saved map collection from this browser? Only proceed after checking your downloaded backup."))return;
-            window.localStorage.removeItem(MAP_LIBRARY_KEY);
-            window.localStorage.removeItem(STORAGE_KEY);
-            setOversizedSavedMaps(false);setSavedMapBackupMade(false);
-            setNotice("Large local cache reset. You can now create a new, smaller map.");
+            if(resetOversizedCache())
+              setNotice("Large local cache reset. You can now create a new, smaller map.");
           }}>Reset oversized cached maps</button>
       </div>
     </div>}

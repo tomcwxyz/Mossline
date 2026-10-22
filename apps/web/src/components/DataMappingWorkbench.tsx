@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import {MAPPING_RECIPES_STORAGE_KEY} from "../lib/browser-storage-keys";
 import {
   checkRecipeColumns, makeMappingRecipe,
   parseMappingRecipe, parseMappingRecipes,
@@ -12,7 +13,6 @@ import {
 type CsvDiscovery = Extract<DataDiscovery, {kind:"csv-table"}>;
 const types:NodeType[]=["organisation","project","funder","person","place","topic","methodology","outcome","other"];
 const labelType=(value:NodeType)=>value.charAt(0).toUpperCase()+value.slice(1);
-const RECIPES_KEY="mossline-mapping-recipes-v1";
 function exportRecipe(recipe:MappingRecipe) {
   const blob=new Blob([JSON.stringify(recipe,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
@@ -40,7 +40,7 @@ export function DataMappingWorkbench({file,discovery,onBuild,onChange}:{
   const columns=discovery.columns.map(c=>c.name);
   useEffect(()=>{
     try {
-      const stored=window.localStorage.getItem(RECIPES_KEY);
+      const stored=window.localStorage.getItem(MAPPING_RECIPES_STORAGE_KEY);
       if(stored) setRecipes(parseMappingRecipes(JSON.parse(stored)));
     } catch {
       setRecipeNote("Saved recipes could not be read. The browser data was left unchanged.");
@@ -51,7 +51,7 @@ export function DataMappingWorkbench({file,discovery,onBuild,onChange}:{
   function storeRecipes(next:MappingRecipe[]) {
     try {
       const valid=parseMappingRecipes(next);
-      window.localStorage.setItem(RECIPES_KEY,JSON.stringify(valid));
+      window.localStorage.setItem(MAPPING_RECIPES_STORAGE_KEY,JSON.stringify(valid));
       setRecipes(valid);
       return true;
     } catch {
