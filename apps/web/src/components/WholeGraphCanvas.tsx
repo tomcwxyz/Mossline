@@ -140,6 +140,8 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
     <div ref={root} className="whole-graph-canvas" role="img"
       aria-label="Complete network overview. Select an entity to inspect its original relationships or a group to open it. The adjacent lists support keyboard navigation."/>
     <CytoscapeNavigationControls cyRef={cyRef} ready={ready}
-      fitPadding={60} ariaLabel="Whole network navigation"/>
+      fitPadding={60} ariaLabel="Whole network navigation"
+      hasSelection={!!(selectedId||selectedEdgeId)}
+      onClearSelection={()=>clearSelection.current()}/>
   </div>;
 }
