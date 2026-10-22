@@ -227,8 +227,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         <span><strong>{projection.representedEdges.toLocaleString("en-GB")}</strong> of
           {" "}{projection.totalEdges.toLocaleString("en-GB")} connections represented</span>
         <span>{viewMode==="full"&&fullGeometry?
-          fullGeometry.nodeCount.toLocaleString("en-GB")+" original nodes drawn · "+
-            fullGeometry.edgeCount.toLocaleString("en-GB")+" original lines":
+          fullGeometry.nodeCount.toLocaleString("en-GB")+" source nodes · "+
+            fullGeometry.edgeCount.toLocaleString("en-GB")+" original relationships available":
           projection.visibleNodes+" summary nodes · "+projection.visibleEdges+" summary lines · "+
             projection.clusterCount+" groups"}</span>
       </div>
