@@ -191,7 +191,7 @@ test("generic source import can be reviewed and cancelled without replacing save
     .setInputFiles({name:"relationships.csv",mimeType:"text/csv",buffer:Buffer.from(csv)});
   const preview=page.getByRole("region",{name:"Data discovery and import preview"});
   await expect(preview).toBeVisible();
-  await expect(preview.getByText(/Map your existing data|Import preview/)).toBeVisible();
+  await expect(preview.locator("h2")).toHaveText(/Map your existing data|Import preview/);
   await expect(page.getByRole("region",{name:"Create a funding landscape"})).toHaveCount(0);
   await preview.getByRole("button",{name:"Close"}).click();
   await expect(preview).toHaveCount(0);
