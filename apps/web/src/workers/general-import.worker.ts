@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import {discoverData,previewImport,buildMappedGraph,
+import {discoverData,previewImport,buildMappedGraph,isFundingAwardsCsv,
   type DataDiscovery,type ImportPreview,type ImportFile,type ColumnMapping,
   type MappedPreview} from "@mossline/graph-core";
 
@@ -17,6 +17,10 @@ self.onmessage=(event:MessageEvent<Command>)=>{
      current=[];
      notify({kind:"stage",id:job.id,message:"Reading source files in the background…"});
      current=await Promise.all(job.files.map(async f=>({name:f.name,text:await f.text()})));
+     if(current.length===1&&isFundingAwardsCsv(current[0])){
+       notify({kind:"funding-detected",id:job.id});
+       return;
+     }
      notify({kind:"stage",id:job.id,message:"Discovering columns and source relationships…"});
      const discovery:DataDiscovery|null=current.length===1?
        discoverData(current[0]):null;
