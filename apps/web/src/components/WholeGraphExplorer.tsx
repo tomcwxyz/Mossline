@@ -153,6 +153,10 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
     const item=projection?.graph.edges.find(e=>e.id===id);
     if(item)setSelectedEdge(item);
   }
+  function clearSelection(){
+    setInspection(null);setSelectedEdge(null);setHistory([]);
+    setMatches(null);setNotice("");
+  }
   function search(event:FormEvent<HTMLFormElement>){
     event.preventDefault();
     if(!searchTerm.trim()){setMatches(null);return;}
@@ -284,8 +288,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           }}
           onSelect={id=>{
             if(id){setFocusAreaId(null);navigate(id);}
-            else {setInspection(null);setSelectedEdge(null);setHistory([]);
-              setMatches(null);setNotice("");}
+            else clearSelection();
           }}
           onUnavailable={()=>{
             setViewMode("overview");
@@ -295,7 +298,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         <WholeGraphCanvas projection={projection}
           selectedId={selectedEdge?null:(inspection?.node.id??null)}
           selectedEdgeId={selectedEdge?.id??null}
-          onPickNode={pickNode} onPickEdge={pickEdge}/>}
+          onPickNode={pickNode} onPickEdge={pickEdge}
+          onClearSelection={clearSelection}/>}
       {viewMode==="full"&&fullGeometry&&
         <div className="whole-graph-areas-panel" aria-label="Explore source network areas">
           {fullGeometry.areas.length>0&&<p>
