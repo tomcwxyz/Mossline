@@ -6,8 +6,7 @@ import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
   emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
   collaborationGraph, compareGraphDocuments, filterGraph, graphFingerprint, parseGraphDocument,
-  previewImport, discoverData, findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
-  type ImportPreview, type ImportFile, type DataDiscovery, type MappedPreview,
+  findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
   type GraphDocument, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
   type FundingFullAnalysis,
@@ -17,6 +16,7 @@ import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanva
 import {StartScreen} from "./StartScreen";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
 import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
+import {useNetworkImport} from "../hooks/useNetworkImport";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {ConnectionsExplorer} from "./ConnectionsExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
@@ -45,14 +45,6 @@ const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
 const DEMO_KEY = graphFingerprint(ORIGINAL);
-const DISCOVERY_EXAMPLE: ImportFile = {
-  name:"fictional-farming-relationships.csv",
-  text:"Organisation,Project,Funder,Region,Public\n" +
-    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE\n" +
-    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE\n" +
-    "Village Growers,Food Futures Lab,Green Field Foundation,Yorkshire,TRUE\n" +
-    "Hidden Example,Private Project,Private Funder,South West,FALSE\n"
-};
 type ViewMode = "landscape" | "collaborations" | "atlas";
 
 function saveJson(graph: GraphDocument) {
@@ -72,12 +64,10 @@ export function MapStudio() {
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
   const mobileFiltersRef=useRef<HTMLElement|null>(null);
-  const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
-  const [importMapName,setImportMapName]=useState("");
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
   const [context, setContext] = useState(true);
@@ -126,29 +116,27 @@ export function MapStudio() {
   const [storyCover,setStoryCover]=useState("");
   const [activeStory,setActiveStory]=useState<SavedPerspective["presentation"]>();
   const [notice, setNotice] = useState("");
+  const {
+    importMode,setImportMode,importMapName,setImportMapName,
+    importPreview,setImportPreview,acknowledgeRemovals,setAcknowledgeRemovals,
+    discovery,mappingFile,initialMapped,importNeedsIndexedDb,
+    showImportCoverage,setShowImportCoverage,importBusy,setImportBusy,
+    importStage,setImportStage,importWorkerRef,importRequestRef,
+    mappingSession,onImport,buildMappedInWorker,closeImport,tryExampleDiscovery
+  }=useNetworkImport({
+    setNotice,
+    onImportStarted:()=>{setShowFundingWorkbench(false);setFundingInitialFile(null);},
+    onFundingFileDetected:file=>{setFundingInitialFile(file);setShowFundingWorkbench(true);}
+  });
+
   const {hasSavedMapLibrary,localMaps,oversizedSavedMaps,savedMapBackupMade,
     setSavedMapBackupMade,activeMapId,updateGraph,createNewMap,
     applyFundingProjection,selectLocalMap,resetOversizedCache}=useLocalMapLibrary({
       initialGraph:ORIGINAL,setGraph,resetExplorer,setNotice,onMapSelected:closeImport
     });
-  const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
-  const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
-  const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
-  const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
-  const [initialMapped,setInitialMapped]=useState<MappedPreview|null>(null);
-  const [importNeedsIndexedDb,setImportNeedsIndexedDb]=useState(false);
-  const [showImportCoverage,setShowImportCoverage]=useState(false);
-  const [importBusy,setImportBusy]=useState(false);
-  const [importStage,setImportStage]=useState("");
-  const importWorkerRef=useRef<Worker|null>(null);
-  const importRequestRef=useRef(0);
-  const [mappingSession, setMappingSession] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
 
-  useEffect(()=>()=>{importWorkerRef.current?.terminate();
-    importWorkerRef.current=null;importRequestRef.current++;
-  },[]);
 
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
   const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
@@ -414,123 +402,6 @@ export function MapStudio() {
     setRegion("");
     setFocusId(null);
     setTypes(TYPE_KEYS);
-  }
-
-  async function onImport(event:ChangeEvent<HTMLInputElement>){
-    const files=Array.from(event.target.files??[]);
-    event.target.value="";
-    if(!files.length)return;
-    if(files.some(f=>f.size>60_000_000)||
-      files.reduce((sum,f)=>sum+f.size,0)>60_000_000){
-      setNotice("Select CSV or JSON files totalling at most 60 MB for local import. "+
-        "Larger files will need streamed parsing.");return;
-    }
-    setShowFundingWorkbench(false);
-    setFundingInitialFile(null);
-    importWorkerRef.current?.terminate();
-    importWorkerRef.current=null;
-    const id=++importRequestRef.current;
-    setImportBusy(true);setImportStage("Opening your files in a background worker…");
-    setImportNeedsIndexedDb(false);
-    setShowImportCoverage(false);
-    setNotice("");setImportPreview(null);setDiscovery(null);
-    setMappingFile(null);setInitialMapped(null);
-    try{
-      const worker=new Worker(new URL("../workers/general-import.worker.ts",import.meta.url),
-        {type:"module"});
-      importWorkerRef.current=worker;
-      worker.onmessage=(event:MessageEvent<{
-        kind:"stage"|"analysed"|"mapped"|"funding-detected"|"failed";id:number;message?:string;
-        preview?:ImportPreview|null;discovery?:DataDiscovery|null;
-        initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
-        needsIndexedDb?:boolean;
-      }>)=>{
-        const result=event.data;
-        if(result.id!==importRequestRef.current)return;
-        if(result.kind==="stage"){setImportStage(result.message??"Working…");return;}
-        setImportBusy(false);setImportStage("");
-        if(result.kind==="funding-detected"){
-          closeImport();
-          setFundingInitialFile(files[0]);
-          setShowFundingWorkbench(true);
-          setNotice("This looks like grant awards data. Review the detected columns in the funding importer before creating your map.");
-          return;
-        }
-        if(result.kind==="failed"){
-          setNotice(result.message??"Unable to import these source files.");return;
-        }
-        if(result.kind==="mapped"&&result.proposal){
-          setImportNeedsIndexedDb(result.needsIndexedDb===true);
-          previewMappedGraph(result.proposal);
-          return;
-        }
-        if(result.kind!=="analysed")return;
-        const preview=result.preview??null,analysis=result.discovery??null;
-        setDiscovery(preview?.source==="mossline"&&preview.graph?null:analysis);
-        // File contents remain in the worker; the mapping editor only needs
-        // a filename and the source discovery, never a second huge CSV string.
-        setMappingFile(analysis?.kind==="csv-table"?
-          {name:result.fileName??files[0].name,text:""}:null);
-        setInitialMapped(result.initial??null);
-        setImportNeedsIndexedDb(result.needsIndexedDb===true);
-        setMappingSession(v=>v+1);
-        setAcknowledgeRemovals(false);
-        setImportMode("new");
-        setImportMapName((result.fileName??"Imported network")
-          .replace(/\.(csv|json)$/i,""));
-        setImportPreview(preview);
-      };
-      worker.onerror=()=>{
-        if(importWorkerRef.current!==worker)return;
-        setImportBusy(false);setImportStage("");
-        setNotice("Background import failed. Try a smaller file or another browser.");
-        worker.terminate();importWorkerRef.current=null;
-      };
-      worker.postMessage({kind:"analyse",id,files});
-    }catch{
-      setImportBusy(false);setImportStage("");
-      setNotice("This browser could not start background data import.");
-    }
-  }
-
-  function buildMappedInWorker(mapping:ColumnMapping){
-    if(!importWorkerRef.current)return;
-    const id=++importRequestRef.current;
-    setImportBusy(true);setImportStage("Mapping every source record in the background…");
-    setImportPreview(null);
-    importWorkerRef.current.postMessage({kind:"map",id,mapping});
-  }
-
-  function previewMappedGraph(result: MappedPreview) {
-    setAcknowledgeRemovals(false);
-    setImportPreview({
-      graph:result.graph, issues:result.issues,source:"csv",
-      counts:{nodes:result.counts.nodes,edges:result.counts.edges}
-    });
-  }
-
-  function closeImport() {
-    setShowImportCoverage(false);
-    setImportNeedsIndexedDb(false);
-    importWorkerRef.current?.terminate();importWorkerRef.current=null;
-    importRequestRef.current++;
-    setImportBusy(false);setImportStage("");setInitialMapped(null);
-    setImportPreview(null);setDiscovery(null);setMappingFile(null);
-    setAcknowledgeRemovals(false);setImportMode("new");setImportMapName("");
-  }
-
-  function tryExampleDiscovery() {
-    importWorkerRef.current?.terminate();importWorkerRef.current=null;
-    importRequestRef.current++;setImportNeedsIndexedDb(false);
-    const analysis=discoverData(DISCOVERY_EXAMPLE);
-    setDiscovery(analysis);
-    setMappingFile(DISCOVERY_EXAMPLE);
-    setMappingSession(previous=>previous+1);
-    setImportPreview(null);
-    setAcknowledgeRemovals(false);
-    setImportMode("new");
-    setImportMapName("Fictional farming network");
-    setNotice("Fictional example spreadsheet analysed. Review the suggested mappings before generating a graph.");
   }
 
   async function applyImport(){
