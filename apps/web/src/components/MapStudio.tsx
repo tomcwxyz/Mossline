@@ -122,7 +122,7 @@ export function MapStudio() {
     discovery,mappingFile,initialMapped,importNeedsIndexedDb,
     showImportCoverage,setShowImportCoverage,importBusy,setImportBusy,
     importStage,setImportStage,importWorkerRef,importRequestRef,
-    mappingSession,onImport,buildMappedInWorker,closeImport,tryExampleDiscovery
+    mappingSession,onImport,buildMappedInWorker,previewMappedGraph,closeImport,tryExampleDiscovery
   }=useNetworkImport({
     setNotice,
     onImportStarted:()=>{setShowFundingWorkbench(false);setFundingInitialFile(null);},
