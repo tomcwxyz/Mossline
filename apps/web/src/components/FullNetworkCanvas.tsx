@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect,useMemo,useRef,useState,type PointerEvent as ReactPointerEvent} from "react";
-import {focusFullNetwork,atlasDetailLevel,visibleAtlasNodeLabels,
+import {focusFullNetwork,atlasDetailLevel,visibleAtlasNodeLabels,canvasPixelRatio,
   type FullNetworkFocus,type FullNetworkGeometry,type GraphNode,
   type AtlasDetail} from "@mossline/graph-core";
 
@@ -12,49 +12,62 @@ const vertex=`attribute vec2 a_pos;
 attribute float a_kind;
 attribute float a_size;
 varying float v_kind;
+varying float v_pointPixels;
 uniform vec2 u_offset;
 uniform vec2 u_viewport;
 uniform float u_zoom;
 uniform float u_pointScale;
+uniform float u_pixelRatio;
 void main(){
  v_kind=a_kind;
  vec2 p=(a_pos+u_offset)*u_zoom;
  gl_Position=vec4(p.x/(u_viewport.x*.5),-p.y/(u_viewport.y*.5),0.0,1.0);
- gl_PointSize=clamp(a_size*u_pointScale,3.0,28.0);
+ // gl_PointSize is measured in *physical framebuffer pixels*, not CSS pixels.
+ gl_PointSize=clamp(a_size*u_pointScale*u_pixelRatio,
+   2.0*u_pixelRatio,24.0*u_pixelRatio);
+ v_pointPixels=gl_PointSize;
 }`;
 const fragment=`precision mediump float;
 uniform vec4 u_colour;
 uniform bool u_circle;
 uniform float u_fade;
 varying float v_kind;
+varying float v_pointPixels;
 void main(){
- if(u_circle){
-  vec2 point=gl_PointCoord*2.0-1.0;
-  if(v_kind>1.5 && v_kind<2.5){
-    // Funder = diamond.
-    if(abs(point.x)+abs(point.y)>1.0)discard;
-  }else if(v_kind>.5 && v_kind<1.5){
-    // Project / grant = square.
-    if(max(abs(point.x),abs(point.y))>.87)discard;
-  }else if(v_kind>2.5 && v_kind<3.5){
-    // Person = triangle.
-    if(point.y>0.78 || point.y<-0.77 ||
-      abs(point.x)>(.8-point.y)*.60)discard;
-  }else if(v_kind>3.5 && v_kind<4.5){
-    // Place = hexagon.
-    if(abs(point.x)>.88 || abs(point.y)>.95 ||
-      abs(point.x)*.58+abs(point.y)>.97)discard;
-  }else if(length(point)>1.0)discard;
- }
  vec4 colour=u_colour;
  if(u_circle){
+  vec2 point=gl_PointCoord*2.0-1.0;
+  float boundary;
+  if(v_kind>1.5 && v_kind<2.5){
+   // Diamond — funder
+   boundary=abs(point.x)+abs(point.y)-.86;
+  }else if(v_kind>.5 && v_kind<1.5){
+   // Square — award or project
+   boundary=max(abs(point.x),abs(point.y))-.83;
+  }else if(v_kind>2.5 && v_kind<3.5){
+   // Triangle — person
+   boundary=max(max(point.y-.75,-point.y-.76),
+     abs(point.x)-(.76-point.y)*.57);
+  }else if(v_kind>3.5 && v_kind<4.5){
+   // Hexagon — place
+   boundary=max(max(abs(point.x)-.82,abs(point.y)-.88),
+     abs(point.x)*.58+abs(point.y)-.91);
+  }else{
+   // Round — organisation and other entities
+   boundary=length(point)-.88;
+  }
+  // Analytic alpha coverage: smooth silhouettes even without multisample
+  // support. A physical-pixel-sized ramp preserves crispness at high DPR.
+  float feather=clamp(1.4/max(1.0,v_pointPixels),.024,.30);
+  float coverage=1.0-smoothstep(-feather,feather,boundary);
+  if(coverage<.012)discard;
   if(v_kind<.5) colour=vec4(.54,.76,.56,.93);
   else if(v_kind<1.5) colour=vec4(.91,.73,.41,.91);
   else if(v_kind<2.5) colour=vec4(.55,.73,.91,.94);
   else if(v_kind<3.5) colour=vec4(.81,.57,.72,.91);
   else if(v_kind<4.5) colour=vec4(.69,.77,.68,.91);
   else colour=vec4(.79,.81,.65,.90);
-  colour.a*=u_fade;
+  colour.a*=u_fade*coverage;
  }
  gl_FragColor=colour;
 }`;
@@ -118,7 +131,10 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
  useEffect(()=>{
    const surface=canvas.current,foreground=overlay.current;
    if(!surface||!foreground)return;
-   const gl=surface.getContext("webgl",{alpha:false,antialias:false,preserveDrawingBuffer:false});
+   const gl=surface.getContext("webgl",{alpha:false,antialias:true,
+     preserveDrawingBuffer:false,depth:false,stencil:false}) ??
+     surface.getContext("webgl",{alpha:false,antialias:false,
+       preserveDrawingBuffer:false,depth:false,stencil:false});
    if(!gl){unavailable.current?.();return;}
    const buffers:WebGLBuffer[]=[];
    let program:WebGLProgram|null=null;
@@ -155,6 +171,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      const viewport=gl.getUniformLocation(program,"u_viewport");
      const zoom=gl.getUniformLocation(program,"u_zoom");
      const pointScale=gl.getUniformLocation(program,"u_pointScale");
+     const pixelRatio=gl.getUniformLocation(program,"u_pixelRatio");
      const colour=gl.getUniformLocation(program,"u_colour");
      const circle=gl.getUniformLocation(program,"u_circle");
      const fade=gl.getUniformLocation(program,"u_fade");
@@ -193,7 +210,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      const render=()=>{
        if(!canvas.current||!overlay.current)return;
        const w=Math.max(1,surface.clientWidth),h=Math.max(1,surface.clientHeight);
-       const ratio=Math.min(2,window.devicePixelRatio||1);
+       const ratio=canvasPixelRatio(w,h,window.devicePixelRatio||1);
        const pw=Math.max(1,Math.round(w*ratio)),ph=Math.max(1,Math.round(h*ratio));
        if(surface.width!==pw||surface.height!==ph){
          surface.width=pw;surface.height=ph;
@@ -207,6 +224,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        gl.viewport(0,0,pw,ph);
        gl.clearColor(.07,.16,.14,1);gl.clear(gl.COLOR_BUFFER_BIT);
        gl.useProgram(program);gl.uniform2f(viewport,w,h);
+       gl.uniform1f(pixelRatio,ratio);
        gl.uniform2f(offset,c.offsetX,c.offsetY);gl.uniform1f(zoom,c.zoom);
        gl.enableVertexAttribArray(position);
        gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
@@ -262,8 +280,8 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
              context.quadraticCurveTo((p.x+q.x)/2-dy/len*bend,
                (p.y+q.y)/2+dx/len*bend,q.x,q.y);
              context.strokeStyle=geometry.arrangement==="themes"?
-               "rgba(225,190,116,.30)":"rgba(151,199,162,.29)";
-             context.lineWidth=1+4*Math.log1p(link.count)/Math.log1p(max);
+               "rgba(225,190,116,.23)":"rgba(151,199,162,.22)";
+             context.lineWidth=.8+2.2*Math.log1p(link.count)/Math.log1p(max);
              context.lineCap="round";context.stroke();
            }
          }
