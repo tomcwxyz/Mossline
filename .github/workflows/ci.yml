@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, "feat/**"]
 # Run feature validation on pull requests, not twice for both push and PR.
 concurrency:
   group: mossline-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
