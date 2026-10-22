@@ -1714,3 +1714,6 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
   }
   .mossline-studio .inspector{order:2}
 }
+
+/* Recovery uses a light canvas, so it needs its own readable eyebrow colour. */
+.recovery-shell .eyebrow{color:#355746}
