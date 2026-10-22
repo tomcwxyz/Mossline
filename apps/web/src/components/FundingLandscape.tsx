@@ -17,8 +17,9 @@ const FIELDS:[keyof FundingMapping,string][]=[
  ["publicFlag","Public/private flag"]
 ];
 
-export function FundingWorkbench({onCreate,onClose}:{
+export function FundingWorkbench({onCreate,onClose,initialFile}:{
   onCreate:(graph:GraphDocument,analysis:FundingFullAnalysis,datasetId:string)=>boolean;onClose:()=>void;
+  initialFile?:File|null;
 }){
   const [file,setFile]=useState<ImportFile|null>(null);
   const [mapping,setMapping]=useState<FundingMapping|null>(null);
@@ -41,6 +42,8 @@ export function FundingWorkbench({onCreate,onClose}:{
   },[]);
   const columns=mapping?Object.values(mapping):[];
   const allOptions=[...new Set([...headings,...columns])].filter(Boolean);
+  const needsReview=Boolean(parsed && (parsed.counts.individualExcluded>0 ||
+    parsed.issues.some(issue=>issue.severity==="warning"||issue.severity==="error")));
 
   function analyse(next:ImportFile,override?:FundingMapping,newSource=false){
     if(newSource){workerRef.current?.terminate();workerRef.current=null;}
@@ -107,6 +110,21 @@ export function FundingWorkbench({onCreate,onClose}:{
     setParsed(null);setFullAnalysis(null);setDirty(false);
     analyse(next,undefined,true);
   }
+  useEffect(()=>{
+    if(!initialFile)return;
+    let cancelled=false;
+    setBusy(true);setStage("Reading recognised grant awards…");setError("");
+    void initialFile.text().then(text=>{
+      if(!cancelled)useFile({name:initialFile.name,text});
+    }).catch(()=>{
+      if(!cancelled){
+        setBusy(false);setStage("");
+        setError("Unable to read the original grant awards file. You can upload it again below.");
+      }
+    });
+    return ()=>{cancelled=true;};
+  },[initialFile]);
+
   async function loadFile(event:ChangeEvent<HTMLInputElement>){
     const uploaded=event.target.files?.[0];event.target.value="";
     if(!uploaded)return;
@@ -143,7 +161,7 @@ export function FundingWorkbench({onCreate,onClose}:{
   }
   async function create(){
     if(!parsed?.graph||!fullAnalysis||!workerRef.current||busy||dirty||
-      parsed.issues.some(i=>i.severity==="error")||!reviewed)return;
+      parsed.issues.some(i=>i.severity==="error")||(needsReview&&!reviewed))return;
     const id=++requestRef.current;
     setBusy(true);setStage("Saving the complete dataset for future exploration…");setError("");
     try{
@@ -252,12 +270,12 @@ export function FundingWorkbench({onCreate,onClose}:{
         <ul>{parsed.issues.slice(0,40).map((issue,i)=>
           <li key={i}>{issue.severity}: {issue.message}</li>)}</ul>
       </details>}
-      {parsed.graph&&<label className="funding-confirm">
+      {parsed.graph&&needsReview&&<label className="funding-confirm">
         <input type="checkbox" checked={reviewed} onChange={e=>setReviewed(e.target.checked)}/>
         I have checked the grant column mapping and any excluded or uncertain
         records. All eligible awards will be saved in the complete network.
       </label>}
-      <button type="button" className="button-primary" disabled={!reviewed||!parsed.graph||busy||dirty||
+      <button type="button" className="button-primary" disabled={(needsReview&&!reviewed)||!parsed.graph||busy||dirty||
         parsed.issues.some(i=>i.severity==="error")} onClick={()=>void create()}>
         Create funding landscape →
       </button>
@@ -302,10 +320,11 @@ export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,o
     </p>}
     {fullAnalysis&&fullAnalysis.grants>facts.awardCount&&
       <p className="funding-cluster-caveat">
-        Full-data funding figures above cover {fullAnalysis.grants} unique eligible grants.
-        The network visualisation below and the pairwise comparison list show
-        a funder-balanced selection of {facts.awardCount} grants.
-        They are for exploration and are not representative of the whole dataset.
+        The totals above cover all {fullAnalysis.grants.toLocaleString("en-GB")} eligible grants.
+        The main Network view retains the complete source graph. The pairwise
+        comparisons in this analysis panel use a separate funder-balanced selection
+        of {facts.awardCount.toLocaleString("en-GB")} grants; do not interpret those
+        comparisons as representative of the entire dataset.
       </p>}
     {fullAnalysis&&<details className="funding-full-overview">
       <summary>Explore funders, repeated recipients and locations across all {fullAnalysis.grants} grants</summary>
@@ -330,9 +349,9 @@ export function FundingInsights({graph,fullAnalysis,datasetId,onViewProjection,o
     </details>}
     <div className="funding-insight-columns">
       <div className="funding-insight-column">
-        <h3>Shared recipients {fullAnalysis?.grants!==facts.awardCount?"· network selection":""}</h3>
+        <h3>Shared recipients {fullAnalysis?.grants!==facts.awardCount?"· analysis selection":""}</h3>
         <p>Organisations recorded as receiving awards from more than one funder
-          {fullAnalysis?.grants!==facts.awardCount?" in the selected network view":""}.</p>
+          {fullAnalysis?.grants!==facts.awardCount?" in the selected analysis subset":""}.</p>
         {facts.multiFunded.length===0?<p className="funding-muted">No overlaps recorded in these grants.</p>:
           <ul>{facts.multiFunded.slice(0,8).map(item=><li key={item.id}>
             <button type="button" onClick={()=>onExplore(item.id)}>

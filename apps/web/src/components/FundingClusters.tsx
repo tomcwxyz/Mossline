@@ -16,7 +16,7 @@ export function FundingClusters({graph,fullAnalysis,onExplore}:{
   ]),[graph,fullAnalysis]);
   const graphButton=(id:string,label:string)=><button type="button"
     disabled={!graphIds.has(id)} title={graphIds.has(id)?"Explore this entity in the network":
-      "Included in full-data analysis, but not in the reduced network view"}
+      "Available in the full Network view; not selectable from this analysis subset"}
     onClick={()=>onExplore(id)}>{label}</button>;
   const [filter,setFilter]=useState<"all"|"funders"|"source">("all");
   const [showMore,setShowMore]=useState(false);
@@ -105,9 +105,9 @@ export function FundingClusters({graph,fullAnalysis,onExplore}:{
         <details className="funding-cluster-detail">
           <summary>Explore organisations and evidence</summary>
           {fullDataset&&<p className="funding-cluster-scope">
-            Some full-data records may not be in the reduced network canvas.
-            Their evidence remains visible here, but network exploration is available
-            only for records included in the visual selection.</p>}
+            The full Network view contains all source records. Links in this
+            analysis panel can select entities from the older, smaller analysis
+            subset; use Network search to find any other source entity.</p>}
           <div>
             <h4>Funders appearing in this theme</h4>
             <ul>{c.funderIds.slice(0,12).map(id=><li key={id}>

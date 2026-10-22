@@ -251,12 +251,15 @@ export function MapStudio() {
   const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
+  const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
+  const mobileFiltersRef=useRef<HTMLElement|null>(null);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
   const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
   const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
+  const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
   const [importMapName,setImportMapName]=useState("");
@@ -271,6 +274,15 @@ export function MapStudio() {
   const [activeRouteIndex, setActiveRouteIndex] = useState(0);
   const [excludedRelationType, setExcludedRelationType] = useState("");
   const [showJunctions, setShowJunctions] = useState(false);
+  useEffect(()=>{
+    if(!mobileFiltersOpen)return;
+    const onKeyDown=(event:KeyboardEvent)=>{
+      if(event.key==="Escape")setMobileFiltersOpen(false);
+    };
+    document.addEventListener("keydown",onKeyDown);
+    mobileFiltersRef.current?.focus();
+    return ()=>document.removeEventListener("keydown",onKeyDown);
+  },[mobileFiltersOpen]);
   const [connectionMessage, setConnectionMessage] = useState("");
   const connectionTrail = connectionTrails[activeRouteIndex] ?? null;
   const [view, setView] = useState<ViewMode>("landscape");
@@ -830,6 +842,8 @@ export function MapStudio() {
       setNotice("Select CSV or JSON files totalling at most 60 MB for local import. "+
         "Larger files will need streamed parsing.");return;
     }
+    setShowFundingWorkbench(false);
+    setFundingInitialFile(null);
     importWorkerRef.current?.terminate();
     importWorkerRef.current=null;
     const id=++importRequestRef.current;
@@ -843,7 +857,7 @@ export function MapStudio() {
         {type:"module"});
       importWorkerRef.current=worker;
       worker.onmessage=(event:MessageEvent<{
-        kind:"stage"|"analysed"|"mapped"|"failed";id:number;message?:string;
+        kind:"stage"|"analysed"|"mapped"|"funding-detected"|"failed";id:number;message?:string;
         preview?:ImportPreview|null;discovery?:DataDiscovery|null;
         initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
         needsIndexedDb?:boolean;
@@ -852,6 +866,13 @@ export function MapStudio() {
         if(result.id!==importRequestRef.current)return;
         if(result.kind==="stage"){setImportStage(result.message??"Working…");return;}
         setImportBusy(false);setImportStage("");
+        if(result.kind==="funding-detected"){
+          closeImport();
+          setFundingInitialFile(files[0]);
+          setShowFundingWorkbench(true);
+          setNotice("This looks like grant awards data. Review the detected columns in the funding importer before creating your map.");
+          return;
+        }
         if(result.kind==="failed"){
           setNotice(result.message??"Unable to import these source files.");return;
         }
@@ -974,7 +995,7 @@ export function MapStudio() {
   }
   function openCommunityExample() {
     if(createNewMap(COMMUNITY_EXAMPLE)) {
-      setNotice("Opened a separate fictional community network. Try Landscape, Collaborations and UK atlas; your other maps are preserved.");
+      setNotice("Opened a separate fictional community network. Try Network, Connections and Places; your other maps are preserved.");
       closeImport();
     }
   }
@@ -993,7 +1014,7 @@ export function MapStudio() {
 
   if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal"/> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -1012,7 +1033,7 @@ export function MapStudio() {
         " grants in complete dataset":undefined}))}
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
-      onFunding={()=>{setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onFunding={()=>{setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
@@ -1021,11 +1042,11 @@ export function MapStudio() {
 
   return <main className="shell mossline-studio">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right">
         <button className="studio-home-link" type="button"
           onClick={()=>{closeImport();setShowFundingWorkbench(false);setExperienceSpace("home");}}>
-          ← Your maps</button>
+          ← All maps</button>
         <span className="local-tag"><span className="signal" /> Saved in this browser</span>
       </div>
     </header>
@@ -1045,7 +1066,7 @@ export function MapStudio() {
           graph.description}</p>
       </div>
       <div className="actions">
-        <label className="map-library-chooser">Your maps
+        <label className="map-library-chooser">Current map
           <select value={activeMapId??""} onChange={e=>{void selectLocalMap(e.target.value);}}
             aria-label="Switch between maps saved in this browser">
             {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
@@ -1059,7 +1080,7 @@ export function MapStudio() {
         <details className="studio-action-menu">
           <summary>More actions</summary>
           <div className="studio-action-popover">
-            <button type="button" onClick={()=>setShowFundingWorkbench(v=>!v)}>
+            <button type="button" onClick={()=>{setFundingInitialFile(null);setShowFundingWorkbench(v=>!v);}}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
             {fullFundingView?<a href="/recover">↓ Back up full funding dataset</a>:
@@ -1101,20 +1122,8 @@ export function MapStudio() {
       </div>
     </div>}
 
-    <details className="example-library">
-      <summary>Explore example networks · community and farming</summary>
-      <p>Examples demonstrate what Mossline can do with different kinds of data.
-        They are fictional, optional and never overwrite your current map.</p>
-      <div className="example-community">
-        <div><strong>Neighbourhood Connections</strong>
-          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
-        <button type="button" className="button-outline" onClick={openCommunityExample}>
-          Open community example →</button>
-      </div>
-      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
-    </details>
-    {showFundingWorkbench&&<FundingWorkbench
-      onClose={()=>setShowFundingWorkbench(false)}
+    {showFundingWorkbench&&<FundingWorkbench initialFile={fundingInitialFile}
+      onClose={()=>{setShowFundingWorkbench(false);setFundingInitialFile(null);}}
       onCreate={(next,fullAnalysis,datasetId)=>{
         if(!createNewMap(next,fullAnalysis,datasetId))return false;
         setNotice("Funding landscape created. The Network view opens all eligible grants and recorded relationships; optional detailed analysis is available below.");
@@ -1268,12 +1277,20 @@ export function MapStudio() {
         </div>
     </nav>
     <section className="workspace">
-      <aside className="sidebar studio-simplified-sidebar">
+      <button type="button" className="studio-mobile-filter-toggle"
+        aria-controls="studio-filters" aria-expanded={mobileFiltersOpen}
+        onClick={()=>setMobileFiltersOpen(true)}>☷ Find, filter &amp; tools</button>
+      {mobileFiltersOpen&&<button type="button" className="studio-mobile-filter-backdrop"
+        aria-label="Close map filters" onClick={()=>setMobileFiltersOpen(false)}/>}
+      <aside id="studio-filters" ref={mobileFiltersRef} tabIndex={-1}
+        className={"sidebar studio-simplified-sidebar"+(mobileFiltersOpen?" mobile-open":"")}>
+        <button type="button" className="studio-mobile-filter-close"
+          onClick={()=>setMobileFiltersOpen(false)}>← Back to network</button>
         <p className="eyebrow">Explore this network</p>
         {usingSourceExplorer?<p className="help">This workspace explores the complete
           source network. Use Find or Ask this network on the canvas to follow
-          any entity and its original relationships. Switch to the grouped
-          overview or individual GPU rendering within the canvas.</p>:<>
+          any entity and its recorded relationships. Choose a grouped overview or
+          inspect individual connections in the network.</p>:<>
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
           <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
@@ -1520,8 +1537,9 @@ export function MapStudio() {
         <div className="sidebar-divider" />
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
-          <p className="help">Imported JSON is kept in this browser only. MCP reads the bundled demo unless configured separately.</p>
-          <button className="text-button" onClick={resetDemo}>Restore example landscape ↗</button>
+          <p className="help">Maps are saved in this browser. Download a backup before clearing browser data or changing devices.</p>
+          <a className="text-button" href="/recover">Manage map backups ↗</a>
+          {graphKey===DEMO_KEY&&<button className="text-button" onClick={resetDemo}>Restore example ↗</button>}
         </div>
       </aside>
       <div className={"map-panel"+(illustrated?" editorial-style":"")}>
@@ -1545,7 +1563,7 @@ export function MapStudio() {
               !detailedToolsOpen&&
               <button type="button" className="whole-network-entry"
                 aria-pressed={wholeNetworkOpen} onClick={()=>setWholeNetworkOpen(v=>!v)}>
-                {wholeNetworkOpen?"← Standard canvas":"✳ Full graph + AI"}
+                {wholeNetworkOpen?"← Standard canvas":"Explore full network"}
               </button>}
             {view!=="atlas"&&!usingSourceExplorer&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
@@ -1605,7 +1623,7 @@ export function MapStudio() {
         <div className="map-bottomline"><span>{view==="atlas"?
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
-          <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
+          <span>{view==="atlas"?"Approximate geographic projection":"Recorded relationships, with evidence"}</span></div>
       </div>
       <aside className="inspector">
         {usingSourceExplorer?<div className="empty-inspector">
@@ -1634,6 +1652,18 @@ export function MapStudio() {
           </div>}
       </aside>
     </section>
+    <details className="example-library">
+      <summary>Explore example networks · community and farming</summary>
+      <p>Examples demonstrate what Mossline can do with different kinds of data.
+        They are fictional, optional and never overwrite your current map.</p>
+      <div className="example-community">
+        <div><strong>Neighbourhood Connections</strong>
+          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
+        <button type="button" className="button-outline" onClick={openCommunityExample}>
+          Open community example →</button>
+      </div>
+      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
+    </details>
     <details className="studio-deep-dive" open={insightsOpen}
       onToggle={e=>setInsightsOpen(e.currentTarget.open)}>
       <summary>Explore analysis, evidence &amp; funding patterns</summary>

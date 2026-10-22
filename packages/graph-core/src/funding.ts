@@ -32,6 +32,37 @@ export function suggestFundingMapping(headers:string[]):FundingMapping{
     field,headers.find(h=>variants.some(alias=>normalise(alias)===normalise(h)))??""
   ])) as FundingMapping;
 }
+/** Recognise a grant-awards CSV before the generic importer invents an entity list.
+ * Only inspects the header, so even very large files remain cheap to classify.
+ * A generic organisation/funder relationships table is deliberately not sufficient.
+ */
+export function isFundingAwardsCsv(file:ImportFile):boolean {
+  if(!/\.csv$/i.test(file.name))return false;
+  const input=file.text.replace(/^\uFEFF/,"");
+  let quoted=false,stop=-1;
+  for(let i=0;i<Math.min(input.length,32_768);i++){
+    const c=input[i];
+    if(c==='"'){
+      if(quoted&&input[i+1]==='"'){i++;continue;}
+      quoted=!quoted;
+    }else if(!quoted&&(c==="\n"||c==="\r")){stop=i;break;}
+  }
+  if(stop<0)return false;
+  let headings:string[];
+  try{headings=parseCsv(input.slice(0,stop))[0]??[];}
+  catch{return false;}
+  const mapping=suggestFundingMapping(headings);
+  if(!mapping.funder||!mapping.recipient)return false;
+  // Grant identifiers, award amounts and grant-specific metadata distinguish
+  // actual award records from ordinary links between organisations and funders.
+  const signals=[mapping.grantId,mapping.amount,mapping.date,mapping.programme]
+    .filter(Boolean).length;
+  const explicit360=headings.some(h=>/^Funding Org:Name$/i.test(h.trim()))&&
+    headings.some(h=>/^Recipient Org:Name$/i.test(h.trim()));
+  return explicit360||signals>=2||
+    (signals>=1&&headings.some(h=>/\b(grant|award)\b/i.test(h)));
+}
+
 function stableHash(input:string):string{
   let hash=2166136261;
   for(let i=0;i<input.length;i++)hash=Math.imul(hash^input.charCodeAt(i),16777619)>>>0;

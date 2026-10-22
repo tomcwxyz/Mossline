@@ -8,7 +8,8 @@ export function GeneralMapRecovery({linkedIds}:{linkedIds:string[]}){
  const workerRef=useRef<Worker|null>(null),sequence=useRef(0);
  const fileInput=useRef<HTMLInputElement>(null);
  const [maps,setMaps]=useState<GeneralMapInfo[]>([]);
- const [busy,setBusy]=useState(false),[error,setError]=useState("");
+ const [busy,setBusy]=useState(false),[ready,setReady]=useState(false);
+ const [error,setError]=useState("");
  const [message,setMessage]=useState("");
  useEffect(()=>{
   let worker:Worker;
@@ -16,11 +17,12 @@ export function GeneralMapRecovery({linkedIds}:{linkedIds:string[]}){
    worker=new Worker(new URL("../workers/general-map-recovery.worker.ts",import.meta.url),
      {type:"module"});
   }catch{setError("This browser cannot open the general network recovery worker.");return;}
-  workerRef.current=worker;setBusy(true);
+  workerRef.current=worker;setReady(false);setBusy(true);
   worker.onmessage=(event:MessageEvent<Reply>)=>{
    const reply=event.data;if(reply.id!==sequence.current)return;
    if(reply.kind==="stage"){setMessage(reply.message??"Processing…");return;}
    setBusy(false);
+   if(reply.kind==="listed")setReady(true);
    if(reply.kind==="failed"){setError(reply.message??"Backup failed");return;}
    setError("");
    if(reply.maps)setMaps(reply.maps);
@@ -42,7 +44,7 @@ export function GeneralMapRecovery({linkedIds}:{linkedIds:string[]}){
   return ()=>{worker.terminate();workerRef.current=null;sequence.current++;};
  },[]);
  function send(kind:"export"|"restore",file?:File){
-  if(!workerRef.current||busy)return;
+  if(!workerRef.current||busy||!ready)return;
   setError("");setBusy(true);setMessage("Preparing the network backup…");
   workerRef.current.postMessage({kind,id:++sequence.current,...(file?{file}:{})});
  }
@@ -66,18 +68,19 @@ export function GeneralMapRecovery({linkedIds}:{linkedIds:string[]}){
       {" "}{map.edges.toLocaleString("en-GB")} relationships
       {linked.has(map.id)?" · Linked to saved map":" · Not referenced in map library"}
     </li>)}</ul>
-  </div>:!busy?<p>No complete generic networks detected in browser storage.</p>:null}
+  </div>:ready&&!busy?<p>No complete generic networks detected in browser storage.</p>:null}
   <div className="recovery-actions">
-    <button type="button" disabled={busy||!maps.length}
+    <button type="button" disabled={!ready||busy||!maps.length}
       onClick={()=>send("export")}>↓ Download all complete general networks</button>
-    <button type="button" className="recovery-secondary" disabled={busy}
+    <button type="button" className="recovery-secondary" disabled={!ready||busy}
       onClick={()=>fileInput.current?.click()}>↑ Restore general network backup</button>
   </div>
   <input ref={fileInput} hidden type="file" accept=".json,application/json"
     aria-label="Choose full general network backup"
     onChange={e=>{const file=e.target.files?.[0];e.target.value="";
       void restore(file);}}/>
-  {busy&&<p role="status">Reading complete networks in the background…</p>}
+  {!ready&&<p role="status">Checking this browser’s complete-network storage…</p>}
+  {busy&&ready&&<p role="status">Reading complete networks in the background…</p>}
   {message&&<p role="status" className="recovery-notice">{message}</p>}
   {error&&<p role="alert" className="recovery-error">{error}</p>}
   <p className="recovery-note">Backups contain original node descriptions and other source

@@ -2,6 +2,7 @@
 
 import {useEffect,useRef,useState} from "react";
 import {FundingDatasetRecovery} from "./FundingDatasetRecovery";
+import {GeneralMapRecovery} from "./GeneralMapRecovery";
 import {LEGACY_GRAPH_STORAGE_KEY,MAP_LIBRARY_STORAGE_KEY,
   type MapRecoveryInfo} from "@mossline/graph-core";
 
@@ -60,7 +61,7 @@ export function MapRecovery(){
           setHasLibrary(!!message.nextRaw);setHasLegacy(!!message.legacyRaw);
           setMaps(message.maps??[]);setActiveId(message.activeId??"");
           setSelected(message.activeId??message.maps?.[0]?.id??"");
-          setNotice("Map backup restored in this browser. If it references funding datasets, restore their separate backup too.");
+          setNotice("Map backup restored in this browser. Restore any separately stored complete general networks and funding datasets as well.");
           setError("");setBusy(false);setReady(true);setConfirmedBackup(false);
           if(message.nextRaw)worker.postMessage({type:"inspect",
             raw:message.nextRaw,requestId:++requestRef.current});
@@ -200,8 +201,9 @@ export function MapRecovery(){
         <h2>1. Back up or restore your maps</h2>
         <p>Save your original map-library cache, including the legacy copy if one exists.
           Check the download in your computer's Downloads folder before removing anything.
-          <strong> This backup does not include full funding datasets held separately in
-          IndexedDB.</strong> Download those using the funding section below.</p>
+          <strong> This backup contains map names and references, but not complete
+          general networks or funding datasets stored separately in this browser.</strong>
+          Download the corresponding complete-network backups below too.</p>
         <button type="button" onClick={exportBackup} disabled={!hasLibrary&&!hasLegacy}>
           ↓ Download map-library backup
         </button>
@@ -213,8 +215,8 @@ export function MapRecovery(){
           aria-label="Choose map-library backup JSON"
           onChange={e=>{const file=e.target.files?.[0];e.target.value="";
             void restoreBackup(file);}}/>
-        <p>Restoring a map backup replaces this browser's saved maps. It does not restore
-          its separate full funding datasets; restore those below as well.</p>
+        <p>Restoring a map backup replaces this browser's saved map list. It does not restore
+          complete general networks or funding datasets; restore those separately below.</p>
       </section>
       <section className="recovery-section">
         <h2>2. Select a map to remove</h2>
@@ -251,15 +253,17 @@ export function MapRecovery(){
             onClick={clearSavedMaps}>Clear all saved maps</button>
         </div>
       </section>
+      <GeneralMapRecovery linkedIds={maps.flatMap(m=>m.generalDatasetId?
+        [m.generalDatasetId]:[])} />
       <FundingDatasetRecovery linkedDatasetIds={maps.flatMap(m=>m.fundingDatasetId?
         [m.fundingDatasetId]:[])} canInspectMaps={ready&&!error}/>
       {notice&&<p className="recovery-notice" role="status">{notice}</p>}
       {error&&<p className="recovery-error" role="alert">{error}</p>}
       <p className="recovery-note">This only affects locally saved map entries.
         Hosted publications and the Neon database are not touched.
-        Full funding datasets held in IndexedDB are not automatically erased with maps.
-        Use the separate section above to back up, restore or remove them. Keep both
-        backups together when moving work to a new browser.
+        Complete general networks and funding datasets held in IndexedDB are not automatically
+         erased with map entries. Use the sections above to back up or restore them.
+         Keep the map-library backup with both complete-network backups when moving browsers.
         A backup export may contain sensitive descriptions, so store it securely.
       </p>
     </div>
