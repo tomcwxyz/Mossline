@@ -30,9 +30,10 @@ import { FundingWorkbench, FundingInsights } from "./FundingLandscape";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
-import {generalMapCounts,generalMapStub,
-  loadGeneralGraph,saveGeneralGraph,shouldStoreGeneralGraph}
+import {saveGeneralGraph,shouldStoreGeneralGraph}
   from "../lib/general-map-store";
+import {MAX_LOCAL_MAPS} from "../lib/map-library";
+import {useLocalMapLibrary} from "../hooks/useLocalMapLibrary";
 import type {ColumnMapping} from "@mossline/graph-core";
 import demo from "../../../../data/demo.json";
 import communityExample from "../../../../data/community-example.json";
@@ -44,14 +45,6 @@ const TYPE_LABELS: Record<NodeType, string> = {
 const TYPE_KEYS = Object.keys(TYPE_LABELS) as NodeType[];
 const ORIGINAL = parseGraphDocument(demo);
 const COMMUNITY_EXAMPLE = parseGraphDocument(communityExample);
-// Avoid synchronously parsing an unexpectedly huge cached graph at page startup.
-const MAX_AUTO_RESTORE_CHARS=2_600_000;
-type LocalMap = {id:string;createdAt:number;title:string;graph:GraphDocument;
-  /** Large generic map content is stored in IndexedDB, not localStorage. */
-  generalDatasetId?:string;sourceCounts?:{nodes:number;edges:number};
-  /** Compact full-file aggregates, not original raw grant records. */
-  fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
-const MAX_LOCAL_MAPS=8;
 const DEMO_KEY = graphFingerprint(ORIGINAL);
 const DISCOVERY_EXAMPLE: ImportFile = {
   name:"fictional-farming-relationships.csv",
@@ -76,15 +69,10 @@ function saveJson(graph: GraphDocument) {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
-  const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
   const mobileFiltersRef=useRef<HTMLElement|null>(null);
-  const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
-  const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
-  const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
-  const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
@@ -143,6 +131,11 @@ export function MapStudio() {
   const [storyCover,setStoryCover]=useState("");
   const [activeStory,setActiveStory]=useState<SavedPerspective["presentation"]>();
   const [notice, setNotice] = useState("");
+  const {hasSavedMapLibrary,localMaps,oversizedSavedMaps,savedMapBackupMade,
+    setSavedMapBackupMade,activeMapId,updateGraph,createNewMap,
+    applyFundingProjection,selectLocalMap,resetOversizedCache}=useLocalMapLibrary({
+      initialGraph:ORIGINAL,setGraph,resetExplorer,setNotice,onMapSelected:closeImport
+    });
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
   const [acknowledgeRemovals,setAcknowledgeRemovals] = useState(false);
   const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
@@ -154,73 +147,13 @@ export function MapStudio() {
   const [importStage,setImportStage]=useState("");
   const importWorkerRef=useRef<Worker|null>(null);
   const importRequestRef=useRef(0);
-  const hydrationRef=useRef(0);
   const [mappingSession, setMappingSession] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
 
   useEffect(()=>()=>{importWorkerRef.current?.terminate();
-    importWorkerRef.current=null;importRequestRef.current++;hydrationRef.current++;
+    importWorkerRef.current=null;importRequestRef.current++;
   },[]);
-
-  async function hydrateGeneralMap(entry:LocalMap){
-    if(!entry.generalDatasetId)return entry;
-    if(entry.graph.nodes.length||entry.graph.edges.length)return entry;
-    const graph=await loadGeneralGraph(entry.generalDatasetId);
-    return {...entry,graph};
-  }
-
-  useEffect(() => {
-    let loaded=ORIGINAL;
-    try {
-      const saved=window.localStorage.getItem(LEGACY_GRAPH_STORAGE_KEY);
-      if(saved&&saved.length<=MAX_AUTO_RESTORE_CHARS){
-        loaded=parseGraphDocument(JSON.parse(saved));
-        setHasSavedMapLibrary(true);
-      }
-    } catch {
-      // A damaged single-map cache must not destroy a valid map library.
-    }
-    try {
-      const raw=window.localStorage.getItem(MAP_LIBRARY_STORAGE_KEY);
-      if(raw) {
-        if(raw.length>MAX_AUTO_RESTORE_CHARS){
-          setOversizedSavedMaps(true);
-          setNotice("A large saved map collection was preserved but not loaded automatically. Export a backup before resetting it.");
-          const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
-          setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
-          return;
-        }
-        const data=JSON.parse(raw) as {activeId:string;maps:unknown[]};
-        if(Array.isArray(data.maps)&&data.maps.length>0&&data.maps.length<=MAX_LOCAL_MAPS) {
-          const maps:LocalMap[]=data.maps.map(item=>{
-            if(!item||typeof item!=="object")throw Error("Invalid stored map");
-            const entry=item as LocalMap;
-            if(typeof entry.id!=="string"||typeof entry.title!=="string"||
-              typeof entry.createdAt!=="number")throw Error("Invalid stored map");
-            return {...entry,graph:parseGraphDocument(entry.graph)};
-          });
-          const active=maps.find(m=>m.id===data.activeId)??maps[0];
-          setHasSavedMapLibrary(true);
-          setLocalMaps(maps);setActiveMapId(active.id);setGraph(active.graph);
-          if(active.generalDatasetId){
-            const generation=++hydrationRef.current;
-            void hydrateGeneralMap(active).then(loaded=>{
-              if(generation!==hydrationRef.current)return;
-              setLocalMaps(previous=>previous.map(m=>m.id===loaded.id?loaded:m));
-              setGraph(loaded.graph);
-            }).catch(error=>setNotice(error instanceof Error?error.message:
-              "Could not restore the complete network from browser storage."));
-          }
-          return;
-        }
-      }
-    } catch {
-      setNotice("Your browser's saved map collection could not be read. The previous single-map data remains available.");
-    }
-    const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,graph:loaded,createdAt:Date.now()};
-    setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
-  }, []);
 
   useEffect(() => {
     try {
@@ -593,74 +526,6 @@ export function MapStudio() {
     setTypes(TYPE_KEYS);
   }
 
-  function persistMapLibrary(nextMaps:LocalMap[],nextActive:LocalMap):boolean {
-    if(oversizedSavedMaps){
-      setNotice("The oversized map collection is protected. Export its backup and reset it before saving new maps.");
-      return false;
-    }
-    try {
-      // Avoid writing a second redundant copy of the graph into browser storage.
-      window.localStorage.setItem(MAP_LIBRARY_STORAGE_KEY,JSON.stringify({
-        activeId:nextActive.id,maps:nextMaps.map(m=>m.generalDatasetId?
-          {...m,graph:generalMapStub(m.graph),
-            sourceCounts:m.sourceCounts??generalMapCounts(m.graph)}:m)
-      }));
-      // Previous-version fallback is obsolete once the library has saved.
-      window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
-      setHasSavedMapLibrary(true);
-      setLocalMaps(nextMaps);setActiveMapId(nextActive.id);resetExplorer(nextActive.graph);
-      return true;
-    } catch {
-      setNotice("Unable to save the map collection in browser storage. Export your current map before continuing.");
-      return false;
-    }
-  }
-  function updateGraph(next:GraphDocument,generalDatasetId?:string):boolean {
-    const current=localMaps.find(x=>x.id===activeMapId);
-    // A changed source graph invalidates previously calculated full-file facts.
-    const entry:LocalMap=current?
-      {id:current.id,createdAt:current.createdAt,title:next.title,graph:next,
-        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})}:
-      {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next,
-        ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
-    const updated=current?localMaps.map(x=>x.id===current.id?entry:x):[...localMaps,entry];
-    return persistMapLibrary(updated,entry);
-  }
-  function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
-    fundingDatasetId?:string,generalDatasetId?:string):boolean {
-    if(localMaps.length>=MAX_LOCAL_MAPS) {
-      setNotice("This browser has eight maps. Export one before creating another.");
-      return false;
-    }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),title:next.title,
-      graph:next,fundingAnalysis,fundingDatasetId,
-      ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
-    return persistMapLibrary([...localMaps,entry],entry);
-  }
-  function applyFundingProjection(next:GraphDocument):boolean{
-    const current=localMaps.find(m=>m.id===activeMapId);
-    if(!current?.fundingDatasetId||!current.fundingAnalysis)return false;
-    const entry:LocalMap={...current,graph:next};
-    const maps=localMaps.map(m=>m.id===current.id?entry:m);
-    return persistMapLibrary(maps,entry);
-  }
-  async function selectLocalMap(id:string){
-    const entry=localMaps.find(x=>x.id===id);
-    if(!entry)return;
-    const generation=++hydrationRef.current;
-    try{
-      const loaded=await hydrateGeneralMap(entry);
-      if(generation!==hydrationRef.current)return;
-      const maps=localMaps.map(m=>m.id===id?loaded:m);
-      if(persistMapLibrary(maps,loaded)){
-        setNotice("Opened ‘"+loaded.title+"’. Your other maps are still saved in this browser.");
-        closeImport();
-      }
-    }catch(error){
-      setNotice(error instanceof Error?error.message:"Could not reopen the complete network.");
-    }
-  }
-
   async function onImport(event:ChangeEvent<HTMLInputElement>){
     const files=Array.from(event.target.files??[]);
     event.target.value="";
@@ -942,10 +807,8 @@ export function MapStudio() {
         <button className="button-outline" type="button" disabled={!savedMapBackupMade}
           onClick={()=>{
             if(!window.confirm("Delete the oversized saved map collection from this browser? Only proceed after checking your downloaded backup."))return;
-            window.localStorage.removeItem(MAP_LIBRARY_STORAGE_KEY);
-            window.localStorage.removeItem(LEGACY_GRAPH_STORAGE_KEY);
-            setOversizedSavedMaps(false);setSavedMapBackupMade(false);
-            setNotice("Large local cache reset. You can now create a new, smaller map.");
+            if(resetOversizedCache())
+              setNotice("Large local cache reset. You can now create a new, smaller map.");
           }}>Reset oversized cached maps</button>
       </div>
     </div>}
