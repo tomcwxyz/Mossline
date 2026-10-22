@@ -630,3 +630,22 @@ elements/connections, spatial data, survey flows and future formats.
       datasets, desktop pointer precision and Android touch/memory.
 - [ ] Broader UX testing of keyboard navigation and 100k-node performance.
 - [ ] Curated, evidence-based story paths and richer theme overlaps later.
+
+## Alpha 2.16 — sharp high-density graph rendering
+- [x] Render source-node shapes with shader-based analytic edge coverage
+  (smooth circles, diamonds, squares, triangles and hexagons), not hard
+  per-fragment discard at geometric boundaries.
+- [x] Correct WebGL point sizes for actual framebuffer pixel ratio;
+  mark sizes remain visually consistent in CSS pixels.
+- [x] Prefer multisample WebGL antialiasing for original straight edges,
+  and retain standard context fallback.
+- [x] Supersample ordinary-DPR displays moderately; apply an adaptive pixel
+  budget to bound GPU buffers on large screens/Android devices.
+- [x] Reduce thickness and opacity of aggregate cross-area links to keep
+  large landscape views calmer and less blocky.
+- [x] Unit-test DPR scaling, point size bounds and large viewport caps.
+- [ ] Compare Chrome desktop and Android screenshots at whole-area, selected
+  entity and full-graph zoom levels. Confirm WebGL1 point-size limits on
+  tested GPUs; render-mode fallback must continue to work.
+- [ ] Consider dedicated screen-space line geometry where WebGL1 multisample
+  line quality remains device dependent; no hidden removal of source edges.

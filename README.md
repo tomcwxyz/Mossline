@@ -1013,3 +1013,18 @@ sizing and existing mapping tools are unchanged.
 
 Remaining: real-device visual QA and optional high-quality authored
 map layers, including downloadable view snapshots and curated story paths.
+
+## Alpha 2.16 — crisp graph display
+
+Large-source-network marks now use antialiased procedural shapes, with
+WebGL point size compensated for the canvas backing pixel ratio. The
+renderer requests multisample antialiasing, with normal WebGL context
+fallback, and uses a bounded adaptive pixel ratio for both the GPU and
+high-DPI text/area overlays. This addresses pixelated edges on high-density
+screens and at low map zoom without hiding original nodes or relationships.
+
+The full source graph, its recorded/inferred distinctions, layout, node
+picking, focus, area grouping, evidence and source data remain unchanged.
+High-resolution screens consume more framebuffer memory; the view enforces
+a pixel budget. Canvas quality must still be visually tested on actual
+browser/GPU combinations, particularly Android WebGL1.
