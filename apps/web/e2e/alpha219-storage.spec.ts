@@ -133,3 +133,46 @@ test("existing general and funding v1 datasets remain readable and portable",asy
     {id:"historical-funding",description:"Original funder evidence"}
   ]);
 });
+
+
+test("saved perspectives survive reload and export without changing graph records",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  const saved=page.locator("details.studio-tool-group")
+    .filter({has:page.locator("summary", {hasText:"Saved views"})});
+  await saved.locator("summary").click();
+  await saved.getByRole("button",{name:"+ Save"}).click();
+  await page.locator("#save-view-name").fill("Test evidence perspective");
+  await saved.getByRole("button",{name:"Save view",exact:true}).click();
+  await expect(saved.getByText("Test evidence perspective")).toBeVisible();
+  const before=await page.evaluate(()=>({
+    graph:localStorage.getItem("mossline-local-maps-v1"),
+    saved:localStorage.getItem("mossline-perspectives-v1")
+  }));
+  expect(before.saved).toContain("Test evidence perspective");
+  await page.reload();
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  const restored=page.locator("details.studio-tool-group")
+    .filter({has:page.locator("summary",{hasText:"Saved views"})});
+  await restored.locator("summary").click();
+  await expect(restored.getByText("Test evidence perspective")).toBeVisible();
+  const download=page.waitForEvent("download");
+  await restored.getByRole("button",{name:/Export views/}).click();
+  const file=await download;
+  const json=JSON.parse((await readFile(await file.path())).toString());
+  expect(JSON.stringify(json)).toContain("Test evidence perspective");
+  expect(await page.evaluate(()=>localStorage.getItem("mossline-local-maps-v1")))
+    .toBe(before.graph);
+});
+
+test("a damaged saved-view cache is not silently deleted",async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.setItem("mossline-perspectives-v1","{unrecoverable-old-data");
+  });
+  await page.goto("/");
+  await expect(page.getByRole("status").filter({
+    hasText:/Saved perspectives could not be read/
+  })).toHaveCount(1);
+  expect(await page.evaluate(()=>localStorage.getItem("mossline-perspectives-v1")))
+    .toBe("{unrecoverable-old-data");
+});
