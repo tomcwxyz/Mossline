@@ -262,3 +262,26 @@ test("no original relationship lines are invented on isolated graphs",()=>{
  assert.equal(geometry.nodeArea.length,500);
  assert.equal(geometry.edgeCount,0);
 });
+
+test("smooth geometry and hub emphasis preserve every source relationship",()=>{
+ const graph=parseGraphDocument({version:1,title:"Funder hubs",description:"",
+  nodes:[{id:"hub",label:"Funder",type:"funder",tags:[]},
+   ...Array.from({length:24},(_,i)=>({id:"grant"+i,label:"Grant "+i,
+    type:"project",tags:[]})),
+   {id:"isolated",label:"Unlinked",type:"organisation",tags:[]}],
+  edges:Array.from({length:24},(_,i)=>({id:"award"+i,
+   source:"hub",target:"grant"+i,type:"recorded"}))
+ });
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.edgeCount,24);
+ assert.equal(geometry.recordedDegree[0],24);
+ assert.equal(geometry.recordedDegree[25],0);
+ assert.deepEqual([...geometry.prominentIndices],[0]);
+ assert.equal(geometry.strokeVertices.length,24*4*6*7);
+ assert.ok(geometry.strokeVertices.every(Number.isFinite));
+ assert.equal(focusFullNetwork(geometry,"hub")?.sourceEdgeIndices.length,24);
+ assert.equal(focusFullNetwork(geometry,"isolated")?.relationships,0);
+ // The hub pass is a style only; all nodes remain searchable and renderable.
+ assert.equal(geometry.ids.length,26);
+ assert.equal(geometry.positions.length,52);
+});

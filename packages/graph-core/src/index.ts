@@ -35,3 +35,5 @@ export * from "./connections-browser";
 export * from "./atlas-detail";
 
 export * from "./render-resolution";
+
+export * from "./graph-render-geometry";
