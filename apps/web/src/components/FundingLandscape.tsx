@@ -221,12 +221,12 @@ export function FundingWorkbench({onCreate,onClose}:{
         <div><strong>{fullAnalysis?.recipients??0}</strong><span>Recipient organisations</span></div>
 
       </div>
-      <p className="funding-csv-coverage" role="status">
+      {parsed.graph&&fullAnalysis&&<p className="funding-csv-coverage" role="status">
         <strong>The complete network will open by default.</strong>
         {" "}All {fullAnalysis?.grants??0} eligible grant records and their original
         funder → award → recipient connections are retained in browser storage.
-        Nothing is reduced to a 75-record view.
-      </p>
+        The smaller legacy detail editor does not limit the main network.
+      </p>}
       {parsed.counts.individualExcluded>0&&
         <div className="funding-csv-coverage" role="status">
           <p><strong>{parsed.counts.individualExcluded} individual-recipient awards excluded.</strong>
