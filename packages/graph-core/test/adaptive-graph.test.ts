@@ -105,7 +105,8 @@ test("Connections projection accepts source-backed inferred evidence that is not
  assert.deepEqual(collaborators.edges[0].evidenceNodeIds,["entity:id%3Agb-chc-200051"]);
  // This previously crashed when the full-graph renderer validated the
  // organisation-only projection against absent supporting funder nodes.
- const projection=projectAdaptiveGraph(buildAdaptiveGraphIndex(collaborators));
+ const index=buildAdaptiveGraphIndex(collaborators);
+ const projection=projectAdaptiveGraph(index,[...index.groups.keys()]);
  assert.equal(projection.graph.nodes.length,2);
  assert.equal(projection.graph.edges.length,1);
  assert.deepEqual(projection.graph.edges[0].evidenceNodeIds,[]);
@@ -122,7 +123,12 @@ test("expanded overview validates inferred evidence in a hidden source group",()
  edges:[{id:"shared",source:"org:a",target:"org:b",type:"similar",inferred:true,
    evidenceNodeIds:["p0"]}]});
  const index=buildAdaptiveGraphIndex(source);
- const collapsed=projectAdaptiveGraph(index);
- assert.equal(collapsed.representedEdges,1);
- assert.equal(collapsed.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds?.[0],"p0");
+ const organisationGroups=[...index.groups.values()].filter(group=>
+   group.members.length>0&&group.members.every(id=>id.startsWith("org:")))
+   .map(group=>group.id);
+ assert.ok(organisationGroups.length>0);
+ const expanded=projectAdaptiveGraph(index,organisationGroups);
+ assert.equal(expanded.representedEdges,1);
+ assert.equal(expanded.graph.edges.length,1);
+ assert.equal(expanded.graph.edges[0].properties?.mosslineSourceEvidenceNodeIds?.[0],"p0");
 });
