@@ -1,105 +1,57 @@
 import type {GraphDocument} from "@mossline/graph-core";
+import {deleteIndexedDbRecord,getIndexedDbRecord,scanIndexedDbRecords,
+  writeIndexedDbRecords,type IndexedDbStoreSpec} from "./indexeddb-store";
 
+/** This is the original funding store, not a new migration destination. */
 export const FUNDING_DATASET_DB="mossline-funding-datasets-v1";
-const STORE="datasets";
+export const FUNDING_DATASET_STORE:IndexedDbStoreSpec={
+  database:FUNDING_DATASET_DB,store:"datasets",version:1,
+  unavailable:"This browser does not support IndexedDB dataset storage.",
+  openError:"Could not open dataset storage",
+  blocked:"Dataset storage is blocked by another browser tab"
+};
 export type StoredFundingDataset={
   id:string;createdAt:number;sourceTitle:string;grantCount:number;
   graph:GraphDocument;
 };
-function open():Promise<IDBDatabase>{
-  if(typeof indexedDB==="undefined")return Promise.reject(
-    new Error("This browser does not support IndexedDB dataset storage."));
-  return new Promise((resolve,reject)=>{
-    const request=indexedDB.open(FUNDING_DATASET_DB,1);
-    request.onupgradeneeded=()=>{
-      const database=request.result;
-      if(!database.objectStoreNames.contains(STORE))database.createObjectStore(STORE,{keyPath:"id"});
-    };
-    request.onerror=()=>reject(request.error??Error("Could not open dataset storage"));
-    request.onsuccess=()=>resolve(request.result);
-    request.onblocked=()=>reject(Error("Dataset storage is blocked by another browser tab"));
-  });
-}
+
+/** Save a full funding dataset in its existing IndexedDB format. */
 export async function saveFundingDataset(graph:GraphDocument):Promise<string>{
-  const db=await open();
   const id=crypto.randomUUID();
-  try{
-    await new Promise<void>((resolve,reject)=>{
-      const transaction=db.transaction(STORE,"readwrite");
-      transaction.oncomplete=()=>resolve();
-      transaction.onerror=()=>reject(transaction.error??Error("Could not save funding dataset"));
-      transaction.onabort=()=>reject(transaction.error??Error("Dataset storage transaction aborted"));
-      transaction.objectStore(STORE).put({
-        id,createdAt:Date.now(),sourceTitle:graph.title,
-        grantCount:graph.nodes.filter(n=>n.properties?.mosslineFundingGrant===true).length,
-        graph
-      } satisfies StoredFundingDataset);
-    });
-    return id;
-  }finally{db.close();}
+  await writeIndexedDbRecords(FUNDING_DATASET_STORE,[{
+    id,createdAt:Date.now(),sourceTitle:graph.title,
+    grantCount:graph.nodes.filter(n=>n.properties?.mosslineFundingGrant===true).length,
+    graph
+  } satisfies StoredFundingDataset],"put",{aborted:"Could not save funding dataset"});
+  return id;
 }
 export async function loadFundingDataset(id:string):Promise<StoredFundingDataset>{
-  const db=await open();
-  try{
-    const result=await new Promise<StoredFundingDataset|undefined>((resolve,reject)=>{
-      const t=db.transaction(STORE,"readonly");
-      const request=t.objectStore(STORE).get(id);
-      request.onsuccess=()=>resolve(request.result as StoredFundingDataset|undefined);
-      request.onerror=()=>reject(request.error??Error("Cannot load saved funding data"));
-    });
-    if(!result)throw Error("Full funding dataset not found on this browser. Reimport its CSV to restore it.");
-    if(!result.graph||!Array.isArray(result.graph.nodes)||!Array.isArray(result.graph.edges))
-      throw Error("The stored funding dataset is incomplete. Reimport its CSV.");
-    return result;
-  }finally{db.close();}
+  const result=await getIndexedDbRecord<StoredFundingDataset>(
+    FUNDING_DATASET_STORE,id,"Cannot load saved funding data");
+  if(!result)throw Error("Full funding dataset not found on this browser. Reimport its CSV to restore it.");
+  if(!result.graph||!Array.isArray(result.graph.nodes)||!Array.isArray(result.graph.edges))
+    throw Error("The stored funding dataset is incomplete. Reimport its CSV.");
+  return result;
 }
 export async function deleteFundingDataset(id:string):Promise<void>{
-  const db=await open();
-  try{
-    await new Promise<void>((resolve,reject)=>{
-      const transaction=db.transaction(STORE,"readwrite");
-      transaction.oncomplete=()=>resolve();
-      transaction.onerror=()=>reject(transaction.error??Error("Could not delete dataset"));
-      transaction.objectStore(STORE).delete(id);
-    });
-  }finally{db.close();}
+  await deleteIndexedDbRecord(FUNDING_DATASET_STORE,id,"Could not delete dataset");
 }
 
-
-/** Metadata and large graph reads happen in a Web Worker, not during React rendering. */
+/** Metadata and large graph reads happen in a Web Worker, not React rendering. */
 export type FundingDatasetSummary=Omit<StoredFundingDataset,"graph">;
 export async function listFundingDatasets():Promise<FundingDatasetSummary[]>{
-  const db=await open();
-  try{
-    return await new Promise((resolve,reject)=>{
-      const entries:FundingDatasetSummary[]=[];
-      const request=db.transaction(STORE,"readonly").objectStore(STORE).openCursor();
-      request.onerror=()=>reject(request.error??Error("Cannot list funding datasets"));
-      request.onsuccess=()=>{
-        const cursor=request.result;
-        if(!cursor){resolve(entries.sort((a,b)=>b.createdAt-a.createdAt));return;}
-        const {id,createdAt,sourceTitle,grantCount}=cursor.value as StoredFundingDataset;
-        entries.push({id,createdAt,sourceTitle,grantCount});
-        cursor.continue();
-      };
-    });
-  }finally{db.close();}
+  const entries=await scanIndexedDbRecords<StoredFundingDataset,FundingDatasetSummary>(
+    FUNDING_DATASET_STORE,({id,createdAt,sourceTitle,grantCount})=>({
+      id,createdAt,sourceTitle,grantCount
+    }),"Cannot list funding datasets");
+  return entries.sort((a,b)=>b.createdAt-a.createdAt);
 }
 
 /** Atomic add-only restore: any existing ID aborts the entire transaction. */
 export async function restoreFundingDatasets(datasets:StoredFundingDataset[]):Promise<void>{
-  if(datasets.length===0)return;
-  const db=await open();
-  try{
-    await new Promise<void>((resolve,reject)=>{
-      const transaction=db.transaction(STORE,"readwrite");
-      transaction.oncomplete=()=>resolve();
-      transaction.onabort=()=>reject(transaction.error?.name==="ConstraintError"?
-        Error("A dataset from this backup already exists here. Nothing was replaced. "+
-          "Remove the conflicting dataset only after checking it is no longer needed."):
-        transaction.error??Error("Dataset restoration failed; no datasets were imported."));
-      transaction.onerror=()=>{/* onabort provides the rollback result */};
-      for(const dataset of datasets)transaction.objectStore(STORE).add(dataset);
-    });
-  }finally{db.close();}
+  await writeIndexedDbRecords(FUNDING_DATASET_STORE,datasets,"add",{
+    aborted:"Dataset restoration failed; no datasets were imported.",
+    constraint:"A dataset from this backup already exists here. Nothing was replaced. "+
+      "Remove the conflicting dataset only after checking it is no longer needed."
+  });
 }
