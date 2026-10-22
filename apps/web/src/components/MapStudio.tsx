@@ -974,7 +974,7 @@ export function MapStudio() {
   }
   function openCommunityExample() {
     if(createNewMap(COMMUNITY_EXAMPLE)) {
-      setNotice("Opened a separate fictional community network. Try Landscape, Collaborations and UK atlas; your other maps are preserved.");
+      setNotice("Opened a separate fictional community network. Try Network, Connections and Places; your other maps are preserved.");
       closeImport();
     }
   }
@@ -993,7 +993,7 @@ export function MapStudio() {
 
   if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right"><span className="local-tag"><span className="signal"/> Browser-local studio</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
@@ -1021,11 +1021,11 @@ export function MapStudio() {
 
   return <main className="shell mossline-studio">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.5</small></div>
+      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right">
         <button className="studio-home-link" type="button"
           onClick={()=>{closeImport();setShowFundingWorkbench(false);setExperienceSpace("home");}}>
-          ← Your maps</button>
+          ← All maps</button>
         <span className="local-tag"><span className="signal" /> Saved in this browser</span>
       </div>
     </header>
@@ -1045,7 +1045,7 @@ export function MapStudio() {
           graph.description}</p>
       </div>
       <div className="actions">
-        <label className="map-library-chooser">Your maps
+        <label className="map-library-chooser">Current map
           <select value={activeMapId??""} onChange={e=>{void selectLocalMap(e.target.value);}}
             aria-label="Switch between maps saved in this browser">
             {localMaps.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}
@@ -1101,18 +1101,6 @@ export function MapStudio() {
       </div>
     </div>}
 
-    <details className="example-library">
-      <summary>Explore example networks · community and farming</summary>
-      <p>Examples demonstrate what Mossline can do with different kinds of data.
-        They are fictional, optional and never overwrite your current map.</p>
-      <div className="example-community">
-        <div><strong>Neighbourhood Connections</strong>
-          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
-        <button type="button" className="button-outline" onClick={openCommunityExample}>
-          Open community example →</button>
-      </div>
-      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
-    </details>
     {showFundingWorkbench&&<FundingWorkbench
       onClose={()=>setShowFundingWorkbench(false)}
       onCreate={(next,fullAnalysis,datasetId)=>{
@@ -1272,8 +1260,8 @@ export function MapStudio() {
         <p className="eyebrow">Explore this network</p>
         {usingSourceExplorer?<p className="help">This workspace explores the complete
           source network. Use Find or Ask this network on the canvas to follow
-          any entity and its original relationships. Switch to the grouped
-          overview or individual GPU rendering within the canvas.</p>:<>
+          any entity and its recorded relationships. Choose a grouped overview or
+          inspect individual connections in the network.</p>:<>
         <div className="filter-heading">
           <p className="eyebrow">Find & filter</p>
           <button onClick={() => { setTypes(TYPE_KEYS); setQuery(""); setBasis("all"); setRegion(""); setFocusId(null); setSelectedId(null); }}>Clear</button>
@@ -1520,8 +1508,9 @@ export function MapStudio() {
         <div className="sidebar-divider" />
         <div className="sidebar-bottom">
           <p className="eyebrow">Your data stays yours</p>
-          <p className="help">Imported JSON is kept in this browser only. MCP reads the bundled demo unless configured separately.</p>
-          <button className="text-button" onClick={resetDemo}>Restore example landscape ↗</button>
+          <p className="help">Maps are saved in this browser. Download a backup before clearing browser data or changing devices.</p>
+          <a className="text-button" href="/recover">Manage map backups ↗</a>
+          {graphKey===DEMO_KEY&&<button className="text-button" onClick={resetDemo}>Restore example ↗</button>}
         </div>
       </aside>
       <div className={"map-panel"+(illustrated?" editorial-style":"")}>
@@ -1545,7 +1534,7 @@ export function MapStudio() {
               !detailedToolsOpen&&
               <button type="button" className="whole-network-entry"
                 aria-pressed={wholeNetworkOpen} onClick={()=>setWholeNetworkOpen(v=>!v)}>
-                {wholeNetworkOpen?"← Standard canvas":"✳ Full graph + AI"}
+                {wholeNetworkOpen?"← Standard canvas":"Explore full network"}
               </button>}
             {view!=="atlas"&&!usingSourceExplorer&&<label>Layout <select aria-label="Network layout" value={layoutMode}
               onChange={event => setLayoutMode(event.target.value as NetworkLayout)}>
@@ -1605,7 +1594,7 @@ export function MapStudio() {
         <div className="map-bottomline"><span>{view==="atlas"?
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
-          <span>{view==="atlas"?"Approximate geographic projection":"Built with Cytoscape.js"}</span></div>
+          <span>{view==="atlas"?"Approximate geographic projection":"Recorded relationships, with evidence"}</span></div>
       </div>
       <aside className="inspector">
         {usingSourceExplorer?<div className="empty-inspector">
@@ -1634,6 +1623,18 @@ export function MapStudio() {
           </div>}
       </aside>
     </section>
+    <details className="example-library">
+      <summary>Explore example networks · community and farming</summary>
+      <p>Examples demonstrate what Mossline can do with different kinds of data.
+        They are fictional, optional and never overwrite your current map.</p>
+      <div className="example-community">
+        <div><strong>Neighbourhood Connections</strong>
+          <span>15 entities · 16 relationships · UK locations · no special artwork or data format</span></div>
+        <button type="button" className="button-outline" onClick={openCommunityExample}>
+          Open community example →</button>
+      </div>
+      <PftVisualShowcase onOpenSample={openPftVisualExample}/>
+    </details>
     <details className="studio-deep-dive" open={insightsOpen}
       onToggle={e=>setInsightsOpen(e.currentTarget.open)}>
       <summary>Explore analysis, evidence &amp; funding patterns</summary>
