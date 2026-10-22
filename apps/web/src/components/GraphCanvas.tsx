@@ -412,7 +412,9 @@ export function GraphCanvas({
 
   return <div className={"graph-stage"+(illustrated?" illustrated":"")}>
     <div ref={rootRef} aria-label="Interactive network map. Select a node or relationship line to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
-    <CytoscapeNavigationControls cyRef={cyRef} ready={ready} fitPadding={65}/>
+    <CytoscapeNavigationControls cyRef={cyRef} ready={ready} fitPadding={65}
+      hasSelection={!!(selectedId||selectedEdgeId)}
+      onClearSelection={()=>onSelectRef.current(null)}/>
     {layoutMode === "regions" && <span className="regional-hint">Grouped by region · not a geographic map</span>}
     <div className="graph-legend" aria-label="Network legend">
       {graph.nodes.some(n=>n.type==="organisation")&&<span><i className="legend-symbol organisation"/> Organisation</span>}
