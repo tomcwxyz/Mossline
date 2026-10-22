@@ -7,7 +7,7 @@ import {loadFundingDataset} from "../lib/funding-dataset-store";
 
 type Job={
   kind:"overview"|"search"|"select"|"inspect"|"full"|"layout";
-  arrangement?:"areas"|"types";id:number;mode?:"full"|"overview";
+  arrangement?:"areas"|"types"|"themes";id:number;mode?:"full"|"overview";
   datasetId?:string;graph?:GraphDocument;expandedIds?:string[];
   nodeId?:string;query?:string;page?:number;
 };

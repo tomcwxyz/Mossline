@@ -578,3 +578,34 @@ elements/connections, spatial data, survey flows and future formats.
 - [ ] Improve cross-network placement with higher-quality multiscale force
   relaxation if real-world sources show overlaps that cannot be resolved through
   current bounded layout.
+
+## Alpha 2.14 — thematic exploration + evidence-first Connections
+
+- [x] Add **Themes and cause areas** as a third WebGL arrangement for complete
+  source networks, with the same worker-backed layout, node/edge coverage,
+  search, full inspector and zoom/pinch as other layouts.
+- [x] Use source-supplied themes/tags first and explicit grant programmes as
+  supplementary source categories. Project description phrase matches are only
+  displayed as **Possible:** categories, never verified claims. Without theme
+  labels, keep the data in an explicit **No theme supplied** area.
+- [x] Organisations/funders without tags may be placed alongside the most
+  frequently linked classified grants for navigation only; no source records,
+  labels or relationships are mutated.
+- [x] Provide clickable thematic-area chips to centre and zoom into one area.
+- [x] Improve WebGL default readability by showing source lines upon selection,
+  scaling background marks for dense graphs and collision-checking the small
+  set of area labels (instead of stacking unreadable labels).
+- [x] Replace default dense Connections/association graph with an evidence-
+  first relationship reader: top organisations, search, focused relationship
+  snapshot, connected-organisation list and expandable supporting evidence.
+  Clearly distinguish recorded links from shared associations, which do not
+  establish collaboration. Keep full association overview in Advanced.
+- [x] Core regression tests for thematic coverage and provenance, sparse
+  unlabelled networks, shared-funder evidence and dense association indexing.
+- [ ] Test against the actual user-imported funding map, browser interaction
+  and Android pinch/touch performance.
+- [ ] Add optional embedding-powered *suggestions* for unclassified records
+  only after model configuration, operator consent and a review workflow.
+  Do not silently rewrite authoritative imported theme labels.
+- [ ] Support multiple thematic memberships and weighted visual relationships
+  between themes, rather than assigning one primary category per entity.
