@@ -121,16 +121,44 @@ test("large general maps can be backed up and recovered in a new browser profile
  const targetPage=await target.newPage();
  targetPage.on("dialog",dialog=>{void dialog.accept();});
  await targetPage.goto("/recover");
+ // Restore controls become available only after the background worker has
+ // finished inspecting this browser's empty IndexedDB. Do not bypass the UI.
+ const generalTarget=targetPage.getByRole("region",{name:"Complete general network recovery"});
+ await expect(generalTarget.getByRole("button",{name:/Restore general network backup/i}))
+   .toBeEnabled();
  await targetPage.locator('input[aria-label="Choose full general network backup"]').setInputFiles({
    name:"general.json",mimeType:"application/json",buffer:generalBytes
  });
  await expect(targetPage.getByText(/Restored 1 complete networks/i)).toBeVisible();
+ await expect(generalTarget.getByText(/2,800 entities/)).toBeVisible();
+ await expect(targetPage.getByRole("button",{name:/Restore map-library backup/i})).toBeEnabled();
  await targetPage.locator('input[aria-label="Choose map-library backup JSON"]').setInputFiles({
    name:"library.json",mimeType:"application/json",buffer:libraryBytes
  });
  await expect(targetPage.getByText(/Map backup restored in this browser/i)).toBeVisible();
  await targetPage.goto("/");
  await expect(targetPage.getByText("Large recovery fixture")).toBeVisible();
+ await targetPage.getByRole("button",{name:/Large recovery fixture/i}).click();
+ await expect(targetPage.getByRole("heading",{name:/Large recovery fixture/i})).toBeVisible();
+ // Assert the full network is genuinely present, not merely a stub list entry.
+ const verified=await targetPage.evaluate(async()=>{
+   return await new Promise<{nodes:number;edges:number}>((resolve,reject)=>{
+     const request=indexedDB.open("mossline-general-maps-v1");
+     request.onerror=()=>reject(request.error);
+     request.onsuccess=()=>{
+       const db=request.result,read=db.transaction("graphs").objectStore("graphs")
+         .get("synthetic-general-recovery");
+       read.onsuccess=()=>{
+         const graph=read.result?.graph;
+         db.close();
+         if(!graph)return reject(Error("Restored source dataset is missing"));
+         resolve({nodes:graph.nodes.length,edges:graph.edges.length});
+       };
+       read.onerror=()=>reject(read.error);
+     };
+   });
+ });
+ expect(verified).toEqual({nodes:2800,edges:2799});
  await target.close();
 });
 
