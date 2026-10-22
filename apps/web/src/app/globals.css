@@ -1454,3 +1454,19 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
 .whole-graph-focus-count strong{color:#2a523d}
 @media(max-width:600px){.full-network-gesture-hint{font-size:10px;bottom:8px;left:8px;
   max-width:calc(100% - 90px)}}
+
+/* Alpha 2.12 · source-grounded type/size encodings for complete WebGL graphs. */
+.whole-graph-encoding-controls{display:flex;align-items:center;gap:9px 16px;
+  flex-wrap:wrap;padding:10px 12px;border:1px solid #b7cbb2;
+  border-radius:9px;background:#f3f7ed;margin:10px 0 8px}
+.whole-graph-encoding-controls label{font-size:11px;font-weight:700;color:#35543a}
+.whole-graph-encoding-controls select{font-size:12px;background:#fff;border:1px solid #97b69a;
+  color:#294b36;border-radius:7px;padding:8px}
+.whole-graph-shape-key{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.whole-graph-shape-key span{display:inline-flex;align-items:center;gap:5px;
+  color:#48654c;font-size:10px}
+.node-shape-key{display:inline-block;width:10px;height:10px;background:#91b99a}
+.node-shape-key.circle{border-radius:50%}
+.node-shape-key.diamond{background:#87b3d6;transform:rotate(45deg) scale(.85)}
+.node-shape-key.square{background:#e3bb75}
+@media(max-width:650px){.whole-graph-encoding-controls{align-items:flex-start;gap:7px 12px}}

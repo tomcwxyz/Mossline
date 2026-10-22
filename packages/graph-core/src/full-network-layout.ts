@@ -6,6 +6,9 @@ import type {GraphDocument,GraphNode} from "./schema";
  */
 export type FullNetworkGeometry={
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
+  /** Pixel-size encoding. The two measures are deliberately independent of node type. */
+  degreeSizes:Float32Array;amountSizes:Float32Array;
+  amountCurrency:string|null;amountCount:number;
   /** Indices of the exact endpoints of each original source relationship. */
   endpoints:Uint32Array;
   /** 1 when this is a recorded relationship, 0 when explicitly inferred. */
@@ -45,11 +48,31 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
   }
   const pairs=new Uint32Array(graph.edges.length*2);
   const recorded=new Uint8Array(graph.edges.length);
+  const degree=new Uint32Array(count);
+  const awards=new Float64Array(count);
+  const awardCurrencies=new Set<string>();
+  let amountCount=0;
+  for(const node of graph.nodes){
+    const p=node.properties;
+    if(p?.mosslineFundingGrant!==true)continue;
+    const amount=p.amountAwarded,currency=p.currency;
+    if(typeof amount!=="number"||!Number.isFinite(amount)||amount<=0||
+      typeof currency!=="string"||!currency.trim())continue;
+    amountCount++;
+    awardCurrencies.add(currency.toUpperCase().trim());
+    const grantIndex=map.get(node.id)!;
+    awards[grantIndex]+=amount;
+    const funder=typeof p.funderId==="string"?map.get(p.funderId):undefined;
+    const recipient=typeof p.recipientId==="string"?map.get(p.recipientId):undefined;
+    if(funder!==undefined)awards[funder]+=amount;
+    if(recipient!==undefined&&recipient!==funder)awards[recipient]+=amount;
+  }
   for(let i=0;i<graph.edges.length;i++){
     const edge=graph.edges[i],a=map.get(edge.source),b=map.get(edge.target);
     if(a===undefined||b===undefined)throw Error("Source relationship endpoint is missing.");
     pairs[i*2]=a;pairs[i*2+1]=b;
     recorded[i]=edge.inferred===true?0:1;
+    if(recorded[i]){degree[a]++;if(a!==b)degree[b]++;}
   }
   // A constrained, deterministic neighbour relaxation highlights broad graph
   // structure while retaining category anchors. O(iterations * (N + E)).
@@ -78,6 +101,22 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
     segments[4*i]=positions[a];segments[4*i+1]=positions[a+1];
     segments[4*i+2]=positions[b];segments[4*i+3]=positions[b+1];
   }
+  // Log-scaled marks preserve the visual distinction of sparse nodes
+  // without allowing one giant funder to dominate thousands of tiny grants.
+  const degreeSizes=new Float32Array(count);
+  const amountSizes=new Float32Array(count);
+  // Linear pass: never spread unbounded user arrays into function arguments.
+  let globalMaxDegree=1,maxAward=0;
+  for(let i=0;i<count;i++){
+    globalMaxDegree=Math.max(globalMaxDegree,degree[i]);
+    maxAward=Math.max(maxAward,awards[i]);
+  }
+  const amountCurrency=awardCurrencies.size===1?[...awardCurrencies][0]:null;
+  for(let i=0;i<count;i++){
+    degreeSizes[i]=3.5+11*Math.log1p(degree[i])/Math.log1p(globalMaxDegree);
+    amountSizes[i]=amountCurrency&&maxAward>0&&awards[i]>0?
+      3.5+11*Math.log1p(awards[i])/Math.log1p(maxAward):3.5;
+  }
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   for(let i=0;i<count;i++){
     const x=positions[2*i],y=positions[2*i+1];
@@ -86,6 +125,7 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
   }
   if(!count){minX=minY=-1;maxX=maxY=1;}
   return {ids,labels,types,positions,segments,endpoints:pairs,recorded,
+    degreeSizes,amountSizes,amountCurrency,amountCount:amountCurrency?amountCount:0,
     nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
 }
@@ -96,7 +136,7 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
  */
 export type FullNetworkFocus={
   nodeIndex:number;neighbourIndices:Uint32Array;
-  nodes:Float32Array;types:Uint8Array;lines:Float32Array;
+  nodes:Float32Array;types:Uint8Array;degreeSizes:Float32Array;amountSizes:Float32Array;lines:Float32Array;
   relationships:number;neighbours:number;
 };
 export function focusFullNetwork(geometry:FullNetworkGeometry,id:string|null|undefined):
@@ -116,14 +156,16 @@ export function focusFullNetwork(geometry:FullNetworkGeometry,id:string|null|und
   }
   const neighbourIndices=new Uint32Array([...nearby]);
   const nodes=new Float32Array(nearby.size*2),types=new Uint8Array(nearby.size);
+  const degreeSizes=new Float32Array(nearby.size),amountSizes=new Float32Array(nearby.size);
   let i=0;
   for(const n of nearby){
     nodes[i*2]=geometry.positions[n*2];
     nodes[i*2+1]=geometry.positions[n*2+1];
-    types[i]=geometry.types[n];i++;
+    types[i]=geometry.types[n];
+    degreeSizes[i]=geometry.degreeSizes[n];amountSizes[i]=geometry.amountSizes[n];i++;
   }
   const lines=new Float32Array(edges.length*4);
   edges.forEach((edge,i)=>lines.set(geometry.segments.subarray(edge*4,edge*4+4),i*4));
-  return {nodeIndex:center,neighbourIndices,nodes,types,lines,
+  return {nodeIndex:center,neighbourIndices,nodes,types,degreeSizes,amountSizes,lines,
     relationships:edges.length,neighbours:Math.max(0,nearby.size-1)};
 }

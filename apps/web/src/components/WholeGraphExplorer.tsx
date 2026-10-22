@@ -29,6 +29,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const resetOnOverview=useRef(false);
   const [expanded,setExpanded]=useState<string[]>([]);
   const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
+  const [nodeSizeMode,setNodeSizeMode]=useState<"connections"|"amount">("connections");
   const [aiOpen,setAiOpen]=useState(false);
   const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
@@ -57,6 +58,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
       setFullGeometry(null);setViewMode(initialMode);
+      setNodeSizeMode("connections");
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
@@ -228,8 +230,24 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           projection.visibleNodes+" summary nodes · "+projection.visibleEdges+" summary lines · "+
             projection.clusterCount+" groups"}</span>
       </div>
+      {viewMode==="full"&&fullGeometry&&
+        <div className="whole-graph-encoding-controls">
+          <label htmlFor="whole-graph-size-mode">Node size</label>
+          <select id="whole-graph-size-mode" value={nodeSizeMode}
+            onChange={event=>setNodeSizeMode(event.target.value as "connections"|"amount")}>
+            <option value="connections">Number of recorded links</option>
+            {fullGeometry.amountCurrency&&fullGeometry.amountCount>0&&
+              <option value="amount">Award amounts ({fullGeometry.amountCurrency})</option>}
+          </select>
+          <div className="whole-graph-shape-key" aria-label="Node shapes">
+            <span><i className="node-shape-key circle"/> Organisation</span>
+            <span><i className="node-shape-key diamond"/> Funder</span>
+            <span><i className="node-shape-key square"/> Project / grant</span>
+          </div>
+        </div>}
       {viewMode==="full"&&fullGeometry?
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
+          sizeMode={nodeSizeMode}
           onSelect={id=>{
             if(id)navigate(id);
             else {setInspection(null);setSelectedEdge(null);setHistory([]);
@@ -252,6 +270,16 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         {selectedFocus.relationships===0&&" No recorded connections exist for this entity in the uploaded data."}
         {" "}Tap empty space to clear the focus.
       </p>}
+      {viewMode==="full"&&fullGeometry&&
+        <p className="whole-graph-full-caption" role="status">
+          Node shape identifies the entity type. Size uses a restrained logarithmic scale
+          {nodeSizeMode==="amount"?
+            " of recorded grant amounts in "+fullGeometry.amountCurrency+
+            " (funder totals awarded, recipient totals received; only known amounts are counted).":
+            " of recorded connections."}{" "}
+          {nodeSizeMode==="connections"&&
+            "An award amount is available as an alternative only for datasets with one known currency."}
+        </p>}
       {viewMode==="full"&&fullGeometry&&
         <p className="whole-graph-full-caption" role="status">
           Showing all {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and

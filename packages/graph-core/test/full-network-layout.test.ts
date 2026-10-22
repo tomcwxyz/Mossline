@@ -59,3 +59,49 @@ test("large parallel source graph focuses without inventing relationships",()=>{
  assert.equal(focus?.relationships,2);
  assert.equal(focus?.neighbours,2);
 });
+
+test("funding size encodes recorded degree independently from single-currency amounts",()=>{
+ const graph=parseGraphDocument({version:1,title:"Funding",description:"",
+ nodes:[
+  {id:"f",label:"Funder",type:"funder",tags:[]},
+  {id:"r",label:"Recipient",type:"organisation",tags:[]},
+  {id:"g1",label:"Grant 10k",type:"project",tags:[],
+   properties:{mosslineFundingGrant:true,amountAwarded:10000,currency:"GBP",funderId:"f",recipientId:"r"}},
+  {id:"g2",label:"Grant 90k",type:"project",tags:[],
+   properties:{mosslineFundingGrant:true,amountAwarded:90000,currency:"GBP",funderId:"f",recipientId:"r"}},
+  {id:"other",label:"Unrelated",type:"organisation",tags:[]}
+ ],
+ edges:[
+  {id:"e1",source:"f",target:"g1",type:"awarded"},
+  {id:"e2",source:"g1",target:"r",type:"awarded to"},
+  {id:"e3",source:"f",target:"g2",type:"awarded"},
+  {id:"e4",source:"g2",target:"r",type:"awarded to"}
+ ]});
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.amountCurrency,"GBP");
+ assert.equal(geometry.amountCount,2);
+ assert.equal(geometry.degreeSizes.length,5);
+ assert.equal(geometry.amountSizes.length,5);
+ assert.ok(geometry.degreeSizes[0]>geometry.degreeSizes[4]);
+ assert.ok(geometry.amountSizes[0]>geometry.amountSizes[3]);
+ assert.ok(geometry.amountSizes[3]>geometry.amountSizes[2]);
+ assert.equal(geometry.amountSizes[4],3.5);
+ const focus=focusFullNetwork(geometry,"f");
+ assert.ok(focus);
+ assert.equal(focus.degreeSizes.length,3);
+ assert.equal(focus.amountSizes.length,3);
+});
+test("mixed currencies do not imply comparable award amounts",()=>{
+ const graph=parseGraphDocument({version:1,title:"Mixed",description:"",
+ nodes:[
+  {id:"f",label:"Funder",type:"funder",tags:[]},
+  {id:"g1",label:"GBP",type:"project",tags:[],properties:{
+   mosslineFundingGrant:true,amountAwarded:500,currency:"GBP",funderId:"f"}},
+  {id:"g2",label:"USD",type:"project",tags:[],properties:{
+   mosslineFundingGrant:true,amountAwarded:800,currency:"USD",funderId:"f"}}],
+ edges:[{id:"e1",source:"f",target:"g1",type:"funded"},
+  {id:"e2",source:"f",target:"g2",type:"funded"}]});
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.amountCurrency,null);
+ assert.equal(geometry.amountCount,0);
+});
