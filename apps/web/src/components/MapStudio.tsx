@@ -26,7 +26,7 @@ import { FundingWorkbench, FundingInsights } from "./FundingLandscape";
 import { PFT_VISUAL_PACK } from "../data/pft-visual-pack";
 import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
-import {deleteGeneralGraph,generalMapCounts,generalMapStub,
+import {generalMapCounts,generalMapStub,
   loadGeneralGraph,saveGeneralGraph,shouldStoreGeneralGraph}
   from "../lib/general-map-store";
 import type {ColumnMapping} from "@mossline/graph-core";
@@ -1097,8 +1097,9 @@ export function MapStudio() {
         </div>
         <button className="button-outline" onClick={closeImport}>Close</button>
       </div>
-      <p className="help">Nothing has been changed. We can create a separate map from this data, keeping your
-        current map safely in Your maps. Your files are processed in this browser.</p>
+      <p className="help">Nothing has been changed. We can create a separate map from this data,
+        keeping your current map safely in Your maps. Full CSV/Kumu mapping runs in a
+        background worker; the complete resulting graph is saved in this browser.</p>
       {discovery?.kind==="kumu-configuration" && <div className="kumu-discovery">
         <p className="eyebrow">Configuration discovered · {discovery.title}</p>
         <div className="kumu-discovery-stats">

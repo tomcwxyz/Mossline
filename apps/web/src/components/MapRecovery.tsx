@@ -149,7 +149,7 @@ export function MapRecovery(){
     }
     if(!window.confirm("Restore this map-library backup? Existing saved maps in this browser "+
       "will be REPLACED. Export and check a fresh backup of your current work first. "+
-      "Full funding datasets must be restored separately."))return;
+      "Complete general and funding datasets must be restored separately."))return;
     try{
       setBusy(true);setError("");setNotice("Validating map backup in a background worker…");
       workerRef.current?.postMessage({type:"restore",requestId:++requestRef.current,

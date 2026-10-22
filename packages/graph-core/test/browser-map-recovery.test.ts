@@ -31,3 +31,17 @@ test("malformed, ambiguous or duplicate maps are rejected before deletion",()=>{
  assert.throws(()=>readMapLibraryForRecovery(JSON.stringify({maps:[{id:"id",title:"No graph",createdAt:1}]})),/no graph/);
  assert.throws(()=>omitRecoveryMap({activeId:"id",maps:[fake("id",2)]},"other"),/not found/);
 });
+
+test("recovery lists actual counts for IndexedDB-backed generic map stubs",()=>{
+ const stub={id:"general",createdAt:1700000000,title:"Full collaboration landscape",
+  generalDatasetId:"graph-store-id",
+  sourceCounts:{nodes:2400,edges:3700},
+  graph:{version:1,title:"Full collaboration landscape",description:"",
+    nodes:[],edges:[]}};
+ const parsed=readMapLibraryForRecovery(JSON.stringify({activeId:stub.id,maps:[stub]}));
+ assert.deepEqual(listRecoveryMaps(parsed),[{
+   id:"general",title:"Full collaboration landscape",createdAt:1700000000,
+   nodes:2400,edges:3700,generalDatasetId:"graph-store-id",
+   fundingDatasetId:undefined
+ }]);
+});

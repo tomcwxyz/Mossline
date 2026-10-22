@@ -452,3 +452,21 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [x] Add regression coverage for exact source-network GPU geometry and no
       misleading sample-limit warnings.
 - [ ] Manual Android and desktop browser acceptance on real 2k+ award import.
+
+## Alpha 2.9 — general networks at funding-import scale
+
+- [x] Read general CSV/Kumu/native JSON File objects inside a Web Worker.
+- [x] Run CSV discovery and all full-file mapped previews in the worker,
+      preserving guided adjustments and advanced mapping recipes.
+- [x] Store original large non-funding graphs in browser IndexedDB, not the
+      synchronous 2.6-million-character map-library restoration path.
+- [x] Persist metadata/reference and exact counts while keeping the complete
+      graph available to the existing network, analysis and mapping tools.
+- [x] Automatically hydrate large generic maps on browser reopen or map switch.
+- [x] Add all-dataset generic IndexedDB backup/restore and recovery status.
+- [x] Preserve the original simple localStorage route for small maps.
+- [ ] Manual Android acceptance with 2k/10k rows and malformed/multi-file Kumu
+      imports, including browser reload and separate backup/restore.
+- [ ] Benchmark worker memory, transfer time, IndexedDB quotas, and large graph
+      visualisation and analytics on devices with limited RAM.
+- [ ] Incremental streamed CSV parsing for files beyond the 60 MB local budget.

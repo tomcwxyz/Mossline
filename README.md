@@ -921,3 +921,36 @@ To enable the models, configure the existing server-only
 `NEXT_PUBLIC_*` variables. The public app works with AI disabled.
 Before enabling broad access, implement quotas, rate limiting, privacy
 governance, costs and provider-health monitoring.
+
+## Alpha 2.9 — general-purpose large-network imports
+
+The **Map your own data** route now reads CSV, Kumu JSON, native Mossline JSON
+and multi-file Kumu CSV exports using a browser Web Worker. The original
+general-purpose column discovery, editable rules, map-versus-relationship
+choices, provenance handling and reusable recipes remain supported.
+Re-mapping the **complete** CSV also runs in the worker, not in React.
+
+Current import budget is **60 MB total per upload**. This is not a streamed
+parser; particularly wide/complex source files may still require substantial
+browser memory. Files do not leave the browser. Native JSON and multi-file
+elements/connections are not treated as funding datasets.
+
+When an imported graph is too large to store safely in the small browser
+`localStorage` map library, Mossline stores the **entire original graph**
+in IndexedDB first. The map library retains a reference, title and exact node/
+edge counts. Opening or switching back to a map hydrates the complete graph,
+including its original properties and relationship evidence. It does not
+substitute a first-N record selection. Smaller maps retain the existing
+straightforward localStorage flow.
+
+**Backup matters:** IndexedDB is browser- and device-local. For large generic
+maps, visit **Recover browser data** and download both the map-library backup
+**and** the **complete general networks** backup before clearing browser storage
+or switching devices. A map-library JSON backup alone contains pointers, not
+the underlying large graphs. The ordinary **Export this map** action in the
+studio also exports the currently opened complete native graph.
+
+The first release is optimised for preserving large uploads and background
+parsing; other advanced graph analytics and visual layouts can still require
+significant memory on low-powered devices. Benchmarking and streaming parsing
+for files larger than 60 MB remain future work.
