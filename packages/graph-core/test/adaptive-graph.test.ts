@@ -75,6 +75,22 @@ test("expansion budget refuses a dense fully expanded hairball rather than hidin
  assert.throws(()=>projectAdaptiveGraph(index,[...index.groups.keys()]),/visible connections/);
 });
 
+test("a missing region does not create a meaningless extra grouping level",()=>{
+ const graph=parseGraphDocument({version:1,title:"Unknown regions",description:"",
+  nodes:Array.from({length:120},(_,i)=>({
+   id:"f"+i,label:"Funder "+String(i).padStart(3,"0"),type:"funder",tags:[]})),
+  edges:[]});
+ const index=buildAdaptiveGraphIndex(graph);
+ const first=projectAdaptiveGraph(index);
+ const root=first.availableGroups.find(g=>g.label==="Funders");
+ assert.ok(root);
+ const expanded=projectAdaptiveGraph(index,[root!.id]);
+ assert.ok(expanded.availableGroups.length>0);
+ assert.ok(expanded.availableGroups.every(g=>g.label!=="Region not recorded"));
+ assert.equal(expanded.representedNodes,120);
+ assert.equal(expanded.totalNodes,120);
+});
+
 test("grants expand by their recorded funder before showing individual awards",()=>{
  const graph=parseGraphDocument({version:1,title:"Funding",description:"",
  nodes:[{id:"a",label:"Amber Trust",type:"funder",tags:[]},
