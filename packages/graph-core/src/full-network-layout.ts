@@ -1,5 +1,6 @@
 import type {GraphDocument,GraphNode} from "./schema";
-import {arrangeNetworkAreas,type NetworkArea,type NetworkHub} from "./network-areas";
+import {arrangeNetworkAreas,type NetworkArea,type NetworkHub,
+  type NetworkAreaLink} from "./network-areas";
 
 /** Every node and every source relationship is mapped into GPU-ready geometry.
  * This is deliberately independent of the grouped adaptive projection.
@@ -8,6 +9,8 @@ import {arrangeNetworkAreas,type NetworkArea,type NetworkHub} from "./network-ar
 export type NetworkArrangement="areas"|"types"|"themes";
 export type FullNetworkGeometry={
   arrangement:NetworkArrangement;areas:NetworkArea[];hubs:NetworkHub[];
+  /** Position-independent, recorded-only links between visual atlas areas. */
+  nodeArea:Uint16Array;areaLinks:NetworkAreaLink[];
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
   /** Pixel-size encoding. The two measures are deliberately independent of node type. */
   degreeSizes:Float32Array;amountSizes:Float32Array;
@@ -132,12 +135,14 @@ export function layoutFullNetwork(graph:GraphDocument,
   const geometry:FullNetworkGeometry={ids,labels,types,positions,segments,
     endpoints:pairs,recorded,degreeSizes,amountSizes,
     amountCurrency,amountCount:amountCurrency?amountCount:0,
-    arrangement,areas:[],hubs:[],nodeCount:count,edgeCount:graph.edges.length,
+    arrangement,areas:[],hubs:[],nodeArea:new Uint16Array(count),areaLinks:[],
+    nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
   if(arrangement!=="types"){
     const presentation=arrangeNetworkAreas(graph,geometry,
       arrangement==="themes"?"themes":"areas");
     geometry.areas=presentation.areas;geometry.hubs=presentation.hubs;
+    geometry.nodeArea=presentation.nodeArea;geometry.areaLinks=presentation.areaLinks;
   }
   return geometry;
 }

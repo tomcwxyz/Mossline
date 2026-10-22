@@ -609,3 +609,24 @@ elements/connections, spatial data, survey flows and future formats.
   Do not silently rewrite authoritative imported theme labels.
 - [ ] Support multiple thematic memberships and weighted visual relationships
   between themes, rather than assigning one primary category per entity.
+
+## Alpha 2.15 — multiscale cartographic atlas
+- [x] Calculate deterministic area membership and original recorded
+      cross-area edge counts in the graph-core worker.
+- [x] Render subtle, curved source-count-weighted inter-area bundles at
+      landscape zoom; they are visual summaries, not added source edges.
+- [x] Switch progressively from area-level labels to selectively labelled
+      source entities using screen-pixel scale and collision bounds.
+- [x] Use layered, muted area contours and typographic labels with compact
+      source counts; preserve exact node shapes and relative sizes.
+- [x] Provide contextual source entity previews on selection and small hover
+      hints for desktop; keep full provenance/relationship inspector accessible.
+- [x] Direct area selection from canvas, animated area zoom and return to
+      landscape; desktop wheel and Android pointer/pinch support retained.
+- [x] Add regression checks proving aggregation preserves original edges,
+      inferred associations cannot create cross-area summaries and isolated
+      nodes generate no fictional links.
+- [ ] Real-browser visual acceptance on 6k-node funding and mixed generic
+      datasets, desktop pointer precision and Android touch/memory.
+- [ ] Broader UX testing of keyboard navigation and 100k-node performance.
+- [ ] Curated, evidence-based story paths and richer theme overlaps later.

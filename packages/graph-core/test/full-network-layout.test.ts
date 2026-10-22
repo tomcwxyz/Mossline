@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {parseGraphDocument} from "../src/schema.ts";
 import {layoutFullNetwork,focusFullNetwork} from "../src/full-network-layout.ts";
+import {atlasDetailLevel,visibleAtlasNodeLabels} from "../src/atlas-detail.ts";
 test("full network GPU geometry includes every source entity and parallel edge",()=>{
  const graph=parseGraphDocument({version:1,title:"All",description:"",
   nodes:Array.from({length:900},(_,i)=>({id:"n"+i,label:"Node "+i,
@@ -194,4 +195,70 @@ test("no supplied cause areas are not made up by thematic presentation",()=>{
  assert.equal(geometry.areas.length,1);
  assert.equal(geometry.areas[0].label,"No theme supplied");
  assert.equal(geometry.areas[0].count,2);
+});
+
+test("atlas uses recorded-only bridge counts between visual areas",()=>{
+ const nodes=[
+  {id:"hub-a",label:"Community fund A",type:"funder",tags:[]},
+  {id:"hub-b",label:"Community fund B",type:"funder",tags:[]},
+  ...Array.from({length:9},(_,i)=>({id:"a"+i,label:"Award A "+i,
+   type:"project",tags:[]})),
+  ...Array.from({length:9},(_,i)=>({id:"b"+i,label:"Award B "+i,
+   type:"project",tags:[]}))
+ ];
+ const edges=[
+  ...Array.from({length:9},(_,i)=>({
+   id:"ea"+i,source:"hub-a",target:"a"+i,type:"award"})),
+  ...Array.from({length:9},(_,i)=>({
+   id:"eb"+i,source:"hub-b",target:"b"+i,type:"award"})),
+  {id:"cross-recorded",source:"a0",target:"b0",type:"recorded"},
+  {id:"cross-inferred",source:"a1",target:"b1",type:"similar",inferred:true}
+ ];
+ const graph=parseGraphDocument({version:1,title:"Atlas",description:"",nodes,edges});
+ const geometry=layoutFullNetwork(graph,"areas");
+ assert.equal(geometry.nodeCount,nodes.length);
+ assert.equal(geometry.edgeCount,edges.length);
+ assert.equal(geometry.nodeArea.length,nodes.length);
+ assert.equal(geometry.areaLinks.reduce((n,x)=>n+x.count,0),1);
+ assert.equal(geometry.areaLinks[0].count,1);
+ assert.ok(geometry.areas.some(a=>a.id===geometry.areaLinks[0].sourceId));
+ assert.ok(geometry.areas.some(a=>a.id===geometry.areaLinks[0].targetId));
+ assert.deepEqual(layoutFullNetwork(graph,"areas").areaLinks,geometry.areaLinks);
+ assert.deepEqual(layoutFullNetwork(graph,"areas").nodeArea,geometry.nodeArea);
+ assert.equal(focusFullNetwork(geometry,"a0")?.relationships,2);
+});
+test("atlas scale reveals progressively more detail without mutating source graph",()=>{
+ const graph=parseGraphDocument({version:1,title:"Scale",description:"",
+  nodes:[
+   {id:"a",label:"Alpha",type:"organisation",tags:[]},
+   {id:"b",label:"Beta",type:"project",tags:[]},
+   {id:"c",label:"Gamma",type:"project",tags:[]},
+   {id:"d",label:"Delta",type:"project",tags:[]}
+  ],
+  edges:[
+   {id:"ab",source:"a",target:"b",type:"recorded"},
+   {id:"ac",source:"a",target:"c",type:"recorded"},
+   {id:"ad",source:"a",target:"d",type:"recorded"}
+  ]});
+ const geometry=layoutFullNetwork(graph);
+ const snapshot=Array.from(geometry.positions);
+ const radius=geometry.areas[0].radius;
+ assert.equal(atlasDetailLevel(geometry,10/radius),"landscape");
+ assert.equal(atlasDetailLevel(geometry,150/radius),"area");
+ assert.equal(atlasDetailLevel(geometry,300/radius),"entity");
+ assert.deepEqual(visibleAtlasNodeLabels(geometry,10/radius,0,0,800,600),[]);
+ const labels=visibleAtlasNodeLabels(geometry,300/radius,
+   -geometry.areas[0].x,-geometry.areas[0].y,800,600,12);
+ assert.ok(labels.length>0);
+ assert.ok(labels.length<=12);
+ assert.deepEqual(Array.from(geometry.positions),snapshot);
+});
+test("no original relationship lines are invented on isolated graphs",()=>{
+ const graph=parseGraphDocument({version:1,title:"Isolated",description:"",
+  nodes:Array.from({length:500},(_,i)=>({id:"n"+i,label:"Node "+i,
+    type:i%2?"organisation":"project",tags:[]})),edges:[]});
+ const geometry=layoutFullNetwork(graph);
+ assert.equal(geometry.areaLinks.length,0);
+ assert.equal(geometry.nodeArea.length,500);
+ assert.equal(geometry.edgeCount,0);
 });
