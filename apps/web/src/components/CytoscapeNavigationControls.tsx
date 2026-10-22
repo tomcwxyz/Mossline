@@ -19,8 +19,9 @@ export function useContainGraphWheel(root:RefObject<HTMLDivElement|null>):void{
 }
 
 export function CytoscapeNavigationControls({cyRef,ready,fitPadding=65,
-  ariaLabel="Network navigation"}:{
+  ariaLabel="Network navigation",hasSelection=false,onClearSelection}:{
     cyRef:RefObject<Core|null>;ready:boolean;fitPadding?:number;ariaLabel?:string;
+    hasSelection?:boolean;onClearSelection?:()=>void;
   }){
   return <div className="graph-tools" aria-label={ariaLabel}>
     <button type="button" disabled={!ready} title="Zoom in" aria-label="Zoom in"
@@ -32,5 +33,8 @@ export function CytoscapeNavigationControls({cyRef,ready,fitPadding=65,
     <button type="button" disabled={!ready} title="Fit network to view"
       aria-label="Fit network to view"
       onClick={()=>cyRef.current?.fit(undefined,fitPadding)}>⤢</button>
+    {hasSelection&&onClearSelection&&
+      <button type="button" disabled={!ready} title="Clear selection"
+        aria-label="Clear selection" onClick={onClearSelection}>×</button>}
   </div>;
 }
