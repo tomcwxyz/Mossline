@@ -61,7 +61,7 @@ export function MapRecovery(){
           setHasLibrary(!!message.nextRaw);setHasLegacy(!!message.legacyRaw);
           setMaps(message.maps??[]);setActiveId(message.activeId??"");
           setSelected(message.activeId??message.maps?.[0]?.id??"");
-          setNotice("Map backup restored in this browser. If it references funding datasets, restore their separate backup too.");
+          setNotice("Map backup restored in this browser. Restore any separately stored complete general networks and funding datasets as well.");
           setError("");setBusy(false);setReady(true);setConfirmedBackup(false);
           if(message.nextRaw)worker.postMessage({type:"inspect",
             raw:message.nextRaw,requestId:++requestRef.current});
