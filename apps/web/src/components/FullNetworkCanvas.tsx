@@ -89,6 +89,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
    const colour=gl.getUniformLocation(program,"u_colour");
    const circle=gl.getUniformLocation(program,"u_circle");
    let initial=true;
+   let pendingFrame:number|null=null;
    const render=()=>{
     if(!canvas.current||!overlay.current)return;
     const w=Math.max(1,surface.clientWidth),h=Math.max(1,surface.clientHeight);
@@ -139,13 +140,20 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
     ctx.fillStyle="#173d31";ctx.fillRect(x+17,y-18,labelWidth+16,25);
     ctx.fillStyle="#fff3d5";ctx.fillText(label,x+25,y);
    };
-   draw.current=render;render();
-   observer=new ResizeObserver(render);observer.observe(surface);
+   const schedule=()=>{
+      if(pendingFrame!==null)return;
+      pendingFrame=requestAnimationFrame(()=>{
+        pendingFrame=null;render();
+      });
+    };
+    draw.current=schedule;render();
+    observer=new ResizeObserver(schedule);observer.observe(surface);
   }catch{
    draw.current=null;onGpuFailure.current?.();
   }
   return ()=>{
     observer?.disconnect();draw.current=null;
+    if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);
     if(lineBuffer)gl.deleteBuffer(lineBuffer);
     if(pointBuffer)gl.deleteBuffer(pointBuffer);
     if(typeBuffer)gl.deleteBuffer(typeBuffer);
