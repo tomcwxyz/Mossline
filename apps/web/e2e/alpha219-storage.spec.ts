@@ -177,3 +177,24 @@ test("a damaged saved-view cache is not silently deleted",async({page})=>{
   expect(await page.evaluate(()=>localStorage.getItem("mossline-perspectives-v1")))
     .toBe("{unrecoverable-old-data");
 });
+
+test("generic source import can be reviewed and cancelled without replacing saved maps",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  const before=await page.evaluate(()=>localStorage.getItem("mossline-local-maps-v1"));
+  const csv=[
+    "Organisation,Project,Funder,Region,Public",
+    "Moorland Co-operative,Living Soil Trials,Common Acre Fund,North East,TRUE",
+    "River Network,Living Soil Trials,Common Acre Fund,North West,TRUE"
+  ].join("\n");
+  await page.locator('input[aria-label="Discover data from a Kumu JSON export or a CSV spreadsheet"]')
+    .setInputFiles({name:"relationships.csv",mimeType:"text/csv",buffer:Buffer.from(csv)});
+  const preview=page.getByRole("region",{name:"Data discovery and import preview"});
+  await expect(preview).toBeVisible();
+  await expect(preview.getByText(/Map your existing data|Import preview/)).toBeVisible();
+  await expect(page.getByRole("region",{name:"Create a funding landscape"})).toHaveCount(0);
+  await preview.getByRole("button",{name:"Close"}).click();
+  await expect(preview).toHaveCount(0);
+  expect(await page.evaluate(()=>localStorage.getItem("mossline-local-maps-v1")))
+    .toEqual(before);
+});
