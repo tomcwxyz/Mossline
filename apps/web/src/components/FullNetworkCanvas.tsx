@@ -100,11 +100,11 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable}:{
      gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);
      gl.deleteShader(v);gl.deleteShader(f);
      if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error("Cannot link graph renderer");
-     const makeBuffer=(data:BufferSource,usage:number)=>{
+     const makeBuffer=(data:Float32Array|Uint8Array,usage:number)=>{
        const buffer=gl.createBuffer();
        if(!buffer)throw Error("Browser GPU memory unavailable");
        buffers.push(buffer);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-       gl.bufferData(gl.ARRAY_BUFFER,data,usage);
+       gl.bufferData(gl.ARRAY_BUFFER,data as BufferSource,usage);
        return buffer;
      };
      const backgroundLines=makeBuffer(geometry.segments,gl.STATIC_DRAW);
