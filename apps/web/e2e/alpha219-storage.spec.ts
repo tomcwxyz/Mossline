@@ -151,7 +151,8 @@ test("saved perspectives survive reload and export without changing graph record
   }));
   expect(before.saved).toContain("Test evidence perspective");
   await page.reload();
-  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  await page.locator(".studio-start-maplist button")
+    .filter({hasText:"Neighbourhood Connections"}).click();
   const restored=page.locator("details.studio-tool-group")
     .filter({has:page.locator("summary",{hasText:"Saved views"})});
   await restored.locator("summary").click();
