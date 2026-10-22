@@ -1656,3 +1656,32 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
 @media(prefers-reduced-motion:reduce){
  .atlas-entity-preview{backdrop-filter:none}
 }
+
+/* Alpha 2.18: canvas-first workspace, without hiding important context. */
+.mossline-studio .topbar{min-height:61px}
+.mossline-studio .heading{padding:13px 0 12px;gap:18px;align-items:center}
+.mossline-studio .heading h1{font-size:clamp(24px,2.4vw,34px);line-height:1.15}
+.mossline-studio .heading .eyebrow{margin-bottom:5px}
+.mossline-studio .heading .subtitle{margin-top:6px;line-height:1.4}
+.mossline-studio .studio-primary-views{padding-bottom:8px}
+.mossline-studio .studio-primary-views .view-switch button{padding:10px 17px}
+.mossline-studio .workspace{min-height:600px}
+.mossline-studio .example-library{margin:18px 0 0}
+.mossline-studio .map-topline{min-height:45px;padding:10px 15px}
+.mossline-studio .map-bottomline{padding:9px 15px}
+.mossline-studio .studio-simplified-sidebar{padding:16px 14px}
+.mossline-studio .inspector{padding:18px 14px}
+.mossline-studio .map-bottomline span{color:#d0e0d0}
+.mossline-studio .map-topline span{color:#d9e7d5}
+@media(max-width:680px){
+  .mossline-studio .topbar{min-height:55px}
+  .mossline-studio .heading{padding:10px 0;gap:10px}
+  .mossline-studio .heading h1{font-size:clamp(21px,6vw,30px)}
+  .mossline-studio .heading .subtitle{display:none}
+  .mossline-studio .actions{margin-top:10px;gap:7px}
+  .mossline-studio .actions .map-library-chooser{max-width:49%}
+  .mossline-studio .actions .map-library-chooser select{max-width:100%}
+  .mossline-studio .studio-primary-views .view-switch button{padding:9px 11px}
+  .mossline-studio .map-topline{padding:10px;align-items:flex-start}
+  .mossline-studio .map-bottomline{font-size:11px}
+}
