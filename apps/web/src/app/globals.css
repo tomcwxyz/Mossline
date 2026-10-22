@@ -1470,3 +1470,23 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
 .node-shape-key.diamond{background:#87b3d6;transform:rotate(45deg) scale(.85)}
 .node-shape-key.square{background:#e3bb75}
 @media(max-width:650px){.whole-graph-encoding-controls{align-items:flex-start;gap:7px 12px}}
+
+/* Alpha 2.13: relationship-led landscape, quiet cartography and hub navigation. */
+.whole-graph-areas-panel{border:1px solid #9fbaa5;border-radius:11px;
+  padding:12px 15px;margin:12px 0 5px;background:#e3efdf;color:#294b38}
+.whole-graph-areas-panel p{font-size:11px;line-height:1.65;margin:0 0 6px}
+.whole-graph-hub-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  margin-top:10px}
+.whole-graph-hub-heading{font-size:11px;font-weight:700;margin-right:5px;
+  color:#34573e}
+.whole-graph-hub-buttons button{display:flex;flex-direction:column;gap:3px;
+  max-width:min(100%,230px);font-size:11px;text-align:left;font-weight:650;
+  overflow:hidden;text-overflow:ellipsis;border:1px solid #acc4ad;
+  border-radius:8px;background:#fbfcf7;color:#264d35;padding:9px 12px}
+.whole-graph-hub-buttons button:hover{border-color:#467751;background:#f0f6e9}
+.whole-graph-hub-buttons button:disabled{opacity:.55}
+.whole-graph-hub-buttons small{font-size:10px;color:#617c66;font-weight:500}
+@media(max-width:620px){.whole-graph-hub-buttons{display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr))}
+  .whole-graph-hub-heading{grid-column:1/-1}
+  .whole-graph-hub-buttons button{min-width:0;max-width:none}}

@@ -30,6 +30,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const [expanded,setExpanded]=useState<string[]>([]);
   const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
   const [nodeSizeMode,setNodeSizeMode]=useState<"connections"|"amount">("connections");
+  const [arrangement,setArrangement]=useState<"areas"|"types">("areas");
+  const [lineMode,setLineMode]=useState<"subtle"|"visible"|"focus">("subtle");
   const [aiOpen,setAiOpen]=useState(false);
   const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
@@ -58,7 +60,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
       setFullGeometry(null);setViewMode(initialMode);
-      setNodeSizeMode("connections");
+      setNodeSizeMode("connections");setArrangement("areas");setLineMode("subtle");
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
@@ -112,7 +114,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         setBusy(false);setStatus("");
         setError("The complete-network worker stopped unexpectedly. Source data is unchanged.");
       };
-      instance.postMessage({kind:initialMode,id,datasetId,graph,expandedIds:[]});
+      instance.postMessage({kind:initialMode,id,datasetId,graph,expandedIds:[],arrangement:"areas"});
     }catch{
       setBusy(false);setError("This browser could not open complete-network exploration.");
     }
@@ -225,19 +227,37 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         <span><strong>{projection.representedEdges.toLocaleString("en-GB")}</strong> of
           {" "}{projection.totalEdges.toLocaleString("en-GB")} connections represented</span>
         <span>{viewMode==="full"&&fullGeometry?
-          fullGeometry.nodeCount.toLocaleString("en-GB")+" original nodes drawn · "+
-            fullGeometry.edgeCount.toLocaleString("en-GB")+" original lines":
+          fullGeometry.nodeCount.toLocaleString("en-GB")+" source nodes · "+
+            fullGeometry.edgeCount.toLocaleString("en-GB")+" original relationships available":
           projection.visibleNodes+" summary nodes · "+projection.visibleEdges+" summary lines · "+
             projection.clusterCount+" groups"}</span>
       </div>
       {viewMode==="full"&&fullGeometry&&
         <div className="whole-graph-encoding-controls">
+          <label htmlFor="whole-graph-arrangement">Arrange by</label>
+          <select id="whole-graph-arrangement" value={arrangement} disabled={busy}
+            onChange={event=>{
+              const value=event.target.value as "areas"|"types";
+              setArrangement(value);
+              submit({kind:"layout",arrangement:value},
+                "Rearranging the entire original network…");
+            }}>
+            <option value="areas">Network areas</option>
+            <option value="types">Entity types</option>
+          </select>
           <label htmlFor="whole-graph-size-mode">Node size</label>
           <select id="whole-graph-size-mode" value={nodeSizeMode}
             onChange={event=>setNodeSizeMode(event.target.value as "connections"|"amount")}>
             <option value="connections">Number of recorded links</option>
             {fullGeometry.amountCurrency&&fullGeometry.amountCount>0&&
               <option value="amount">Award amounts ({fullGeometry.amountCurrency})</option>}
+          </select>
+          <label htmlFor="whole-graph-line-mode">Connections</label>
+          <select id="whole-graph-line-mode" value={lineMode}
+            onChange={event=>setLineMode(event.target.value as "subtle"|"visible"|"focus")}>
+            <option value="subtle">Subtle</option>
+            <option value="visible">Show all</option>
+            <option value="focus">On selection</option>
           </select>
           <div className="whole-graph-shape-key" aria-label="Node shapes">
             <span><i className="node-shape-key circle"/> Organisation</span>
@@ -247,7 +267,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         </div>}
       {viewMode==="full"&&fullGeometry?
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
-          sizeMode={nodeSizeMode}
+          sizeMode={nodeSizeMode} lineMode={lineMode}
           onSelect={id=>{
             if(id)navigate(id);
             else {setInspection(null);setSelectedEdge(null);setHistory([]);
@@ -262,6 +282,26 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           selectedId={selectedEdge?null:(inspection?.node.id??null)}
           selectedEdgeId={selectedEdge?.id??null}
           onPickNode={pickNode} onPickEdge={pickEdge}/>}
+      {viewMode==="full"&&fullGeometry&&
+        <div className="whole-graph-areas-panel" aria-label="Explore source network areas">
+          {fullGeometry.areas.length>0&&<p>
+            <strong>{fullGeometry.areas.length} visual network areas.</strong>
+            {" "}Arranged around high-degree source entities or grouped by recorded
+            connectivity and entity type. These are navigation aids, not verified communities.
+          </p>}
+          {fullGeometry.hubs.length>0&&<div className="whole-graph-hub-buttons">
+            <span className="whole-graph-hub-heading">Explore key connectors</span>
+            {fullGeometry.hubs.slice(0,6).map(hub=>
+              <button type="button" key={hub.id} disabled={busy}
+                onClick={()=>navigate(hub.id)} title={hub.type}>
+                {hub.label}
+                <small>{hub.connections.toLocaleString("en-GB")} links</small>
+              </button>)}
+          </div>}
+          {fullGeometry.areas.length>0&&!fullGeometry.hubs.length&&
+            <p>No recorded relationships link these entities.
+              Areas are grouped for browsing by source entity type.</p>}
+        </div>}
       {selectedFocus&&inspection&&<p className="whole-graph-focus-count" role="status">
         <strong>{inspection.node.label}</strong> · {selectedFocus.relationships} original
         {" "}{selectedFocus.relationships===1?"relationship":"relationships"} highlighted ·
@@ -272,7 +312,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       </p>}
       {viewMode==="full"&&fullGeometry&&
         <p className="whole-graph-full-caption" role="status">
-          Node shape identifies the entity type. Size uses a restrained logarithmic scale
+          Shapes identify entity types; network areas are a visual arrangement,
+          not confirmed associations. Node size uses a restrained logarithmic scale
           {nodeSizeMode==="amount"?
             " of recorded grant amounts in "+fullGeometry.amountCurrency+
             " (funder totals awarded, recipient totals received; only known amounts are counted).":
@@ -282,9 +323,12 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         </p>}
       {viewMode==="full"&&fullGeometry&&
         <p className="whole-graph-full-caption" role="status">
-          Showing all {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and
-          {" "}{fullGeometry.edgeCount.toLocaleString("en-GB")} original relationship lines —
-          without grouping or sampling. Zoom, pan, or use search to inspect the network.
+          All {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and
+          {" "}{fullGeometry.edgeCount.toLocaleString("en-GB")} original relationships
+          remain in this complete network; {lineMode==="focus"?
+            "lines appear when you select an entity":lineMode==="visible"?
+            "all lines are shown":"lines are kept deliberately subtle"}.
+          Zoom, pan, or use search to inspect the network.
         </p>}
       <details className="network-ai-disclosure"
         onToggle={event=>setAiOpen(event.currentTarget.open)}>

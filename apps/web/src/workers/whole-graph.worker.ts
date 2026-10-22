@@ -6,7 +6,8 @@ import {buildAdaptiveGraphIndex,projectAdaptiveGraph,
 import {loadFundingDataset} from "../lib/funding-dataset-store";
 
 type Job={
-  kind:"overview"|"search"|"select"|"inspect"|"full";id:number;mode?:"full"|"overview";
+  kind:"overview"|"search"|"select"|"inspect"|"full"|"layout";
+  arrangement?:"areas"|"types";id:number;mode?:"full"|"overview";
   datasetId?:string;graph?:GraphDocument;expandedIds?:string[];
   nodeId?:string;query?:string;page?:number;
 };
@@ -35,13 +36,14 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
         message:"Preparing the whole-network view…"});
       const projection=projectAdaptiveGraph(index,job.expandedIds??[]);
       self.postMessage({kind:"result",action:"overview",id:job.id,projection});
-    }else if(job.kind==="full"){
+    }else if(job.kind==="full"||job.kind==="layout"){
       self.postMessage({kind:"stage",id:job.id,
-        message:"Positioning every original entity and relationship…"});
-      const geometry=layoutFullNetwork(index.source);
+        message:job.arrangement==="types"?
+          "Arranging source entities by type…":"Arranging relationships into navigable network areas…"});
+      const geometry=layoutFullNetwork(index.source,job.arrangement??"areas");
       // Precompute a small grouped representation for immediate fallback and
       // switching modes, but start by displaying every original node and edge.
-      const projection=projectAdaptiveGraph(index,[]);
+      const projection=job.kind==="full"?projectAdaptiveGraph(index,[]):undefined;
       self.postMessage({kind:"result",action:"full",id:job.id,geometry,projection},
         [geometry.positions.buffer,geometry.segments.buffer,geometry.types.buffer,
           geometry.endpoints.buffer,geometry.recorded.buffer,

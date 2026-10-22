@@ -1,10 +1,13 @@
 import type {GraphDocument,GraphNode} from "./schema";
+import {arrangeNetworkAreas,type NetworkArea,type NetworkHub} from "./network-areas";
 
 /** Every node and every source relationship is mapped into GPU-ready geometry.
  * This is deliberately independent of the grouped adaptive projection.
  * Coordinates are computed in the background worker; no source edges are dropped.
  */
+export type NetworkArrangement="areas"|"types";
 export type FullNetworkGeometry={
+  arrangement:NetworkArrangement;areas:NetworkArea[];hubs:NetworkHub[];
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
   /** Pixel-size encoding. The two measures are deliberately independent of node type. */
   degreeSizes:Float32Array;amountSizes:Float32Array;
@@ -22,7 +25,8 @@ function hash(value:string):number{
   for(let i=0;i<value.length;i++)h=Math.imul(h^value.charCodeAt(i),16777619)>>>0;
   return h>>>0;
 }
-export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
+export function layoutFullNetwork(graph:GraphDocument,
+  arrangement:NetworkArrangement="areas"):FullNetworkGeometry{
   const count=graph.nodes.length;
   const ids=graph.nodes.map(n=>n.id);
   const labels=graph.nodes.map(n=>n.label);
@@ -77,7 +81,8 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
   // A constrained, deterministic neighbour relaxation highlights broad graph
   // structure while retaining category anchors. O(iterations * (N + E)).
   // No graph-size-dependent truncation of source records.
-  const iterations=count>50000?8:count>15000?16:count>3000?28:45;
+  const iterations=arrangement==="types"?
+    (count>50000?8:count>15000?16:count>3000?28:45):0;
   const totals=new Float64Array(count*2),degrees=new Uint32Array(count);
   for(let pass=0;pass<iterations;pass++){
     totals.fill(0);degrees.fill(0);
@@ -124,10 +129,16 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
     maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
   }
   if(!count){minX=minY=-1;maxX=maxY=1;}
-  return {ids,labels,types,positions,segments,endpoints:pairs,recorded,
-    degreeSizes,amountSizes,amountCurrency,amountCount:amountCurrency?amountCount:0,
-    nodeCount:count,edgeCount:graph.edges.length,
+  const geometry:FullNetworkGeometry={ids,labels,types,positions,segments,
+    endpoints:pairs,recorded,degreeSizes,amountSizes,
+    amountCurrency,amountCount:amountCurrency?amountCount:0,
+    arrangement,areas:[],hubs:[],nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
+  if(arrangement==="areas"){
+    const presentation=arrangeNetworkAreas(graph,geometry);
+    geometry.areas=presentation.areas;geometry.hubs=presentation.hubs;
+  }
+  return geometry;
 }
 
 /** The highlighted subset is derived exclusively from original recorded source
