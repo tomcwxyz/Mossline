@@ -7,6 +7,7 @@ export type NetworkArea={
  anchorId?:string;kind:"linked"|"unlinked"|"hub"|"theme";
 };
 export type NetworkHub={id:string;label:string;type:string;connections:number};
+export type NetworkAreaLink={sourceId:string;targetId:string;count:number};
 const golden=Math.PI*(3-Math.sqrt(5));
 function hash(value:string){
  let h=2166136261;
@@ -83,9 +84,10 @@ function labelType(type:string){return type==="organisation"?"organisations":
  */
 export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeometry,
  mode:"areas"|"themes"="areas"):
- {areas:NetworkArea[];hubs:NetworkHub[]}{
+ {areas:NetworkArea[];hubs:NetworkHub[];
+  nodeArea:Uint16Array;areaLinks:NetworkAreaLink[]}{
  const n=geometry.nodeCount;
- if(!n)return {areas:[],hubs:[]};
+ if(!n)return {areas:[],hubs:[],nodeArea:new Uint16Array(0),areaLinks:[]};
  const adjacent:number[][]=Array.from({length:n},()=>[]);
  const degree=new Uint32Array(n);
  for(let i=0;i<geometry.edgeCount;i++){
@@ -172,6 +174,28 @@ export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeom
   }
   center.push({x,y,radius});
  }
+ // The identifiers below are a visual atlas index, never source graph facts.
+ // Cross-area ribbons count only recorded relationships (parallel edges count).
+ const areaByKey=new Map(visible.map((group,i)=>[group.key,i]));
+ const nodeArea=new Uint16Array(n);
+ for(let i=0;i<n;i++){
+  const group=groups[assignment[i]];
+  nodeArea[i]=areaByKey.get(group.key)??0;
+ }
+ const bridges=new Map<string,{from:number;to:number;count:number}>();
+ for(let e=0;e<geometry.edgeCount;e++){
+  if(!geometry.recorded[e])continue;
+  const a=nodeArea[geometry.endpoints[e*2]],b=nodeArea[geometry.endpoints[e*2+1]];
+  if(a===b)continue;
+  const from=Math.min(a,b),to=Math.max(a,b),key=from+":"+to;
+  const entry=bridges.get(key);
+  if(entry)entry.count++;else bridges.set(key,{from,to,count:1});
+ }
+ const areaLinks=[...bridges.values()].map(link=>({
+   sourceId:visible[link.from].key,targetId:visible[link.to].key,
+   count:link.count
+ })).sort((a,b)=>b.count-a.count||
+   a.sourceId.localeCompare(b.sourceId)||a.targetId.localeCompare(b.targetId));
  const seedPos=new Float32Array(n*2);
  const labelAreas:NetworkArea[]=[];
  for(let a=0;a<visible.length;a++){
@@ -228,7 +252,7 @@ export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeom
  }
  geometry.bounds={minX,minY,maxX,maxY};
  return {
-  areas:labelAreas,
+  areas:labelAreas,nodeArea,areaLinks,
   hubs:ranked.slice(0,8).map(i=>({id:graph.nodes[i].id,
    label:graph.nodes[i].label,type:graph.nodes[i].type,connections:degree[i]}))
  };

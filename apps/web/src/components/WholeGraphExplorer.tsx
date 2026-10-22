@@ -33,6 +33,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const [arrangement,setArrangement]=useState<"areas"|"types"|"themes">("areas");
   const [focusAreaId,setFocusAreaId]=useState<string|null>(null);
   const [lineMode,setLineMode]=useState<"subtle"|"visible"|"focus">("focus");
+  const inspectorRef=useRef<HTMLElement|null>(null);
   const [aiOpen,setAiOpen]=useState(false);
   const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
@@ -271,6 +272,14 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
           sizeMode={nodeSizeMode} lineMode={lineMode}
           focusAreaId={focusAreaId}
+          selectedPreview={inspection?.node}
+          selectedRelationships={inspection?.totalRelationships??0}
+          onDetails={()=>inspectorRef.current?.scrollIntoView({
+            behavior:"smooth",block:"start"})}
+          onAreaSelect={id=>{
+            setFocusAreaId(id);setInspection(null);setSelectedEdge(null);
+            setNotice("");
+          }}
           onSelect={id=>{
             if(id){setFocusAreaId(null);navigate(id);}
             else {setInspection(null);setSelectedEdge(null);setHistory([]);
@@ -355,8 +364,11 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       <div className="whole-graph-bottom">
         <section className="whole-graph-groups">
           <h4>Explore the landscape</h4>
-          <p>Each group represents the exact number of source entities shown.
-            Select a group to expand it, or search to jump directly to an entity.</p>
+          <p>{viewMode==="full"?
+            "Move from broad areas to individual records. Select an area to zoom, "+
+            "then choose an entity to reveal source evidence. Zoom back out to "+
+            "see the whole network.":
+            "Select an exact-count group to expand it, or search for an entity."}</p>
           {viewMode==="full"?<p>The whole source graph is visible. Search any entity, or select a point to follow its real connections.</p>:
           projection.availableGroups.length?
             <div className="whole-graph-group-list">
@@ -368,7 +380,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
             </div>:
             <p>All entities here are individual source records.</p>}
         </section>
-        <section className="whole-graph-inspector" aria-label="Entity and connection details">
+        <section ref={inspectorRef} className="whole-graph-inspector" aria-label="Entity and connection details">
           {selectedEdge?<div className="whole-graph-selected-edge">
             <div className="whole-graph-results-header"><h4>Relationship</h4>
               <button type="button" onClick={()=>setSelectedEdge(null)}>Close</button></div>

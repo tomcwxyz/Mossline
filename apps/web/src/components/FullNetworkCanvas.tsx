@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect,useMemo,useRef,type PointerEvent as ReactPointerEvent} from "react";
-import {focusFullNetwork,type FullNetworkFocus,type FullNetworkGeometry}
-  from "@mossline/graph-core";
+import {useEffect,useMemo,useRef,useState,type PointerEvent as ReactPointerEvent} from "react";
+import {focusFullNetwork,atlasDetailLevel,visibleAtlasNodeLabels,
+  type FullNetworkFocus,type FullNetworkGeometry,type GraphNode,
+  type AtlasDetail} from "@mossline/graph-core";
 
 type Camera={offsetX:number;offsetY:number;zoom:number};
 type Point={x:number;y:number};
@@ -71,11 +72,19 @@ function distance(points:Point[]):number{
  return Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
 }
 export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
-  sizeMode="connections",lineMode="focus",focusAreaId}:{
+  sizeMode="connections",lineMode="focus",focusAreaId,selectedPreview,
+  selectedRelationships=0,onDetails,onAreaSelect}:{
  geometry:FullNetworkGeometry;selectedId?:string|null;onSelect:(id:string|null)=>void;
  onUnavailable?:()=>void;sizeMode?:"connections"|"amount";
  lineMode?:"subtle"|"visible"|"focus";focusAreaId?:string|null;
+ selectedPreview?:GraphNode|null;selectedRelationships?:number;
+ onDetails?:()=>void;onAreaSelect?:(id:string|null)=>void;
 }){
+ const [detail,setDetail]=useState<AtlasDetail>("landscape");
+ const [hovered,setHovered]=useState<{id:string;label:string;type:number;x:number;y:number}|null>(null);
+ const hoverAt=useRef(0);
+ const areaSelect=useRef(onAreaSelect);
+ areaSelect.current=onAreaSelect;
  const canvas=useRef<HTMLCanvasElement>(null);
  const overlay=useRef<HTMLCanvasElement>(null);
  const camera=useRef<Camera>({offsetX:0,offsetY:0,zoom:1});
@@ -193,6 +202,8 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        }
        if(initial){fit();initial=false;}
        const c=camera.current,selection=currentFocus.current;
+       const level=atlasDetailLevel(geometry,c.zoom);
+       setDetail(previous=>previous===level?previous:level);
        gl.viewport(0,0,pw,ph);
        gl.clearColor(.07,.16,.14,1);gl.clear(gl.COLOR_BUFFER_BIT);
        gl.useProgram(program);gl.uniform2f(viewport,w,h);
@@ -209,8 +220,9 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
          gl.drawArrays(gl.LINES,0,geometry.edgeCount*2);
        }
        gl.uniform1i(circle,1);
-       gl.uniform1f(fade,selection?.13:1);
-       gl.uniform1f(pointScale,geometry.nodeCount>1200&&c.zoom<1?.78:1);
+       gl.uniform1f(fade,selection?.13:level==="landscape"?.60:level==="area"?.83:1);
+       gl.uniform1f(pointScale,level==="landscape"?.70:
+         geometry.nodeCount>1200&&c.zoom<1?.82:1);
        pointAttribute(backgroundPoints,backgroundTypes,
          sizeModeRef.current==="amount"?amountSizes:degreeSizes);
        gl.drawArrays(gl.POINTS,0,geometry.nodeCount);
@@ -228,53 +240,90 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        }
        const context=foreground.getContext("2d");if(!context)return;
        context.setTransform(ratio,0,0,ratio,0,0);context.clearRect(0,0,w,h);
-       // Label only the most substantial visual areas. These are derived
-       // arrangement areas, not verified real-world community membership.
-       if(geometry.arrangement!=="types"&&!selection){
-         // Labels are cartographic aids, so avoid drawing them over one another.
-         // On mobile fewer labels appear; the matching area list remains accessible.
-         const placed:{x:number;y:number;w:number;h:number}[]=[];
-         const limit=w<600?5:8;
-         const significant=geometry.areas.slice().sort((a,b)=>b.count-a.count)
-           .slice(0,limit);
-         for(const area of significant){
-           const x=w/2+(area.x+c.offsetX)*c.zoom;
-           const y=h/2+(area.y+c.offsetY)*c.zoom;
-           const radius=Math.max(4,area.radius*c.zoom);
-           if(x+radius<0||y+radius<0||x-radius>w||y-radius>h)continue;
-           context.beginPath();context.arc(x,y,radius,0,Math.PI*2);
-           context.fillStyle=geometry.arrangement==="themes"?
-             "rgba(212,189,117,0.043)":"rgba(183,219,184,0.026)";
-           context.fill();
-           context.strokeStyle=geometry.arrangement==="themes"?
-             "rgba(218,189,115,0.32)":"rgba(165,212,172,0.19)";
-           context.lineWidth=1;context.setLineDash([4,7]);context.stroke();
-           context.setLineDash([]);
-           context.font="600 11px system-ui";
-           const text=area.label.length>35?area.label.slice(0,33)+"…":area.label;
-           const labelW=Math.max(70,Math.min(w-24,context.measureText(text).width+26));
-           if(labelW<=0)continue;
-           const x0=Math.max(8,Math.min(w-labelW-8,x-labelW/2));
-           const options=[y-radius-28,y+radius+4,y-13,y+15];
-           let by=-1;
-           for(const candidate of options){
-             const proposed={x:x0,y:candidate,w:labelW,h:27};
-             if(candidate<8||candidate>h-35)continue;
-             if(placed.every(r=>r.x+r.w+6<proposed.x||
-               proposed.x+proposed.w+6<r.x||
-               r.y+r.h+5<proposed.y||
-               proposed.y+proposed.h+5<r.y)){by=candidate;break;}
+
+       // Atlas scale draws aggregated recorded links only at landscape level.
+       // The complete original node and edge geometry remains unchanged.
+       if(geometry.arrangement!=="types"&&geometry.areas.length){
+         const toScreen=(x:number,y:number)=>({
+           x:w/2+(x+c.offsetX)*c.zoom,y:h/2+(y+c.offsetY)*c.zoom
+         });
+         const areas=new Map(geometry.areas.map(area=>[area.id,area]));
+         if(!selection&&level==="landscape"){
+           const links=geometry.areaLinks.slice(0,w<650?14:26);
+           const max=links[0]?.count??1;
+           for(const link of links){
+             const a=areas.get(link.sourceId),b=areas.get(link.targetId);
+             if(!a||!b)continue;
+             const p=toScreen(a.x,a.y),q=toScreen(b.x,b.y);
+             const dx=q.x-p.x,dy=q.y-p.y,len=Math.hypot(dx,dy)||1;
+             // Curve offset is tied to endpoints, never to fictional edges.
+             const bend=Math.min(45,len*.14);
+             context.beginPath();context.moveTo(p.x,p.y);
+             context.quadraticCurveTo((p.x+q.x)/2-dy/len*bend,
+               (p.y+q.y)/2+dx/len*bend,q.x,q.y);
+             context.strokeStyle=geometry.arrangement==="themes"?
+               "rgba(225,190,116,.30)":"rgba(151,199,162,.29)";
+             context.lineWidth=1+4*Math.log1p(link.count)/Math.log1p(max);
+             context.lineCap="round";context.stroke();
            }
-           if(by<0)continue;
-           placed.push({x:x0,y:by,w:labelW,h:27});
-           context.fillStyle="rgba(21,52,41,0.93)";
-           context.fillRect(x0,by,labelW,27);
-           context.strokeStyle=geometry.arrangement==="themes"?
-             "rgba(216,191,128,0.50)":"rgba(176,209,163,0.42)";
-           context.strokeRect(x0+.5,by+.5,labelW-1,26);
-           context.save();context.beginPath();context.rect(x0+5,by+2,labelW-10,23);
-           context.clip();context.fillStyle="#f4e8c8";
-           context.fillText(text,x0+9,by+17);context.restore();
+         }
+         const significant=geometry.areas.slice()
+           .sort((a,b)=>b.count-a.count)
+           .slice(0,level==="landscape"?(w<600?5:10):geometry.areas.length);
+         const occupied:{x:number;y:number;w:number;h:number}[]=[];
+         const palette=[
+           ["#9abe95","#a5c99e"],["#d8b77f","#e2cc9d"],
+           ["#80b3bd","#a9d0d5"],["#b6a0c3","#d0c2d9"]
+         ];
+         for(let i=0;i<significant.length;i++){
+           const area=significant[i],p=toScreen(area.x,area.y);
+           const radius=Math.max(8,area.radius*c.zoom);
+           if(p.x+radius<0||p.y+radius<0||p.x-radius>w||p.y-radius>h)continue;
+           const swatch=palette[i%palette.length];
+           context.beginPath();
+           context.ellipse(p.x,p.y,radius*1.04,radius*.90,0,0,Math.PI*2);
+           context.fillStyle=geometry.arrangement==="themes"?
+             "rgba(210,179,108,.045)":"rgba(143,192,156,.035)";
+           context.fill();
+           context.strokeStyle=swatch[0]+"49";
+           context.lineWidth=1.2;context.setLineDash([3,6]);
+           context.stroke();context.setLineDash([]);
+           if(level==="entity")continue;
+           const text=area.label.length>29?area.label.slice(0,27)+"…":area.label;
+           const textCount=" · "+area.count.toLocaleString("en-GB");
+           const full=text+textCount;
+           context.font="600 11px system-ui";
+           const labelW=Math.min(w-24,context.measureText(full).width+27);
+           const bx=Math.max(8,Math.min(w-labelW-8,p.x-labelW/2));
+           const possibilities=[p.y-radius-29,p.y+radius+8,p.y-12,p.y+17];
+           for(const y of possibilities){
+             if(y<8||y>h-32)continue;
+             if(occupied.some(r=>bx<r.x+r.w+5&&bx+labelW+5>r.x&&
+               y<r.y+r.h+5&&y+26+5>r.y))continue;
+             occupied.push({x:bx,y,w:labelW,h:26});
+             context.fillStyle="rgba(18,50,40,.95)";
+             context.fillRect(bx,y,labelW,26);
+             context.fillStyle=swatch[0];context.fillRect(bx,y,3,26);
+             context.font="600 11px system-ui";
+             context.save();context.beginPath();
+             context.rect(bx+7,y+2,Math.max(0,labelW-14),23);context.clip();
+             context.fillStyle="#f3ebcf";
+             context.fillText(full,bx+11,y+17);context.restore();
+             break;
+           }
+         }
+       }
+       if(!selection){
+         const labels=visibleAtlasNodeLabels(geometry,c.zoom,
+           c.offsetX,c.offsetY,w,h,w<650?8:26);
+         for(const node of labels){
+           const isHub=geometry.degreeSizes[node.index]>9;
+           context.fillStyle=isHub?"rgba(20,56,43,.89)":"rgba(21,48,41,.77)";
+           context.font=isHub?"600 11px system-ui":"10px system-ui";
+           const tw=context.measureText(node.label).width;
+           context.fillRect(node.x-3,node.y-2,tw+10,18);
+           context.fillStyle=isHub?"#f2e6b7":"#d5e5d0";
+           context.fillText(node.label,node.x+2,node.y+11);
          }
        }
        if(!selection)return;
@@ -391,6 +440,18 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
    c.offsetY=(y-h/2)/c.zoom-worldY;
    draw.current?.();
  };
+ const pickAt=(x:number,y:number,w:number,h:number,threshold=15)=>{
+   const c=camera.current;
+   const wx=(x-w/2)/c.zoom-c.offsetX,wy=(y-h/2)/c.zoom-c.offsetY;
+   const maxSq=(threshold/c.zoom)**2;
+   let match=-1,nearest=maxSq;
+   for(let i=0;i<geometry.nodeCount;i++){
+     const dx=geometry.positions[i*2]-wx,dy=geometry.positions[i*2+1]-wy;
+     const squared=dx*dx+dy*dy;
+     if(squared<nearest){nearest=squared;match=i;}
+   }
+   return match;
+ };
  const pointerDown=(event:ReactPointerEvent<HTMLCanvasElement>)=>{
    stopAnimation();
    event.currentTarget.setPointerCapture(event.pointerId);
@@ -405,7 +466,18 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      pinch.current={mid:midpoint(positions),distance:Math.max(1,distance(positions))};
    }
  };
- const pointerMove=(event:React.PointerEvent<HTMLCanvasElement>)=>{
+ const pointerMove=(event:ReactPointerEvent<HTMLCanvasElement>)=>{
+   if(!pointers.current.size&&event.pointerType==="mouse"){
+     const now=performance.now();
+     if(now-hoverAt.current>95){
+       hoverAt.current=now;
+       const rect=event.currentTarget.getBoundingClientRect();
+       const x=event.clientX-rect.left,y=event.clientY-rect.top;
+       const i=pickAt(x,y,rect.width,rect.height,12);
+       setHovered(i<0?null:{id:geometry.ids[i],label:geometry.labels[i],
+         type:geometry.types[i],x,y});
+     }
+   }
    if(!pointers.current.has(event.pointerId))return;
    pointers.current.set(event.pointerId,{x:event.clientX,y:event.clientY});
    const positions=[...pointers.current.values()];
@@ -444,23 +516,26 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
    }
    if(cancelled||!wasSingle||!point||point.moved)return;
    const rect=event.currentTarget.getBoundingClientRect();
-   const c=camera.current;
-   const wx=(event.clientX-rect.left-rect.width/2)/c.zoom-c.offsetX;
-   const wy=(event.clientY-rect.top-rect.height/2)/c.zoom-c.offsetY;
-   const maxDistance=Math.max(8,16/c.zoom),maxSq=maxDistance*maxDistance;
-   let match=-1,nearest=maxSq;
-   for(let i=0;i<geometry.nodeCount;i++){
-     const dx=geometry.positions[i*2]-wx,dy=geometry.positions[i*2+1]-wy;
-     const squared=dx*dx+dy*dy;
-     if(squared<nearest){nearest=squared;match=i;}
+   const x=event.clientX-rect.left,y=event.clientY-rect.top;
+   const match=pickAt(x,y,rect.width,rect.height);
+   if(match>=0){pick.current(geometry.ids[match]);return;}
+   if(geometry.arrangement!=="types"){
+     const c=camera.current;
+     const wx=(x-rect.width/2)/c.zoom-c.offsetX;
+     const wy=(y-rect.height/2)/c.zoom-c.offsetY;
+     const area=geometry.areas
+       .filter(a=>Math.hypot(a.x-wx,a.y-wy)<=a.radius)
+       .sort((a,b)=>Math.hypot(a.x-wx,a.y-wy)-Math.hypot(b.x-wx,b.y-wy))[0];
+     if(area){areaSelect.current?.(area.id);return;}
    }
-   pick.current(match>=0?geometry.ids[match]:null);
+   pick.current(null);
  };
  return <div className="whole-graph-stage full-network-stage">
    <canvas ref={canvas} className="full-network-canvas" role="img"
      aria-label={"Full graph: "+geometry.nodeCount+" source entities and "+
        geometry.edgeCount+" recorded and inferred relationship lines. Select a point to focus its recorded connections. Pinch or scroll to zoom; drag to pan."}
      onPointerDown={pointerDown} onPointerMove={pointerMove}
+     onPointerLeave={()=>setHovered(null)}
      onPointerUp={event=>pointerEnd(event)}
      onPointerCancel={event=>pointerEnd(event,true)}
      onDoubleClick={event=>{
@@ -469,7 +544,50 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        zoomTo.current(1.8,event.clientX-rect.left,event.clientY-rect.top);
      }}/>
    <canvas ref={overlay} className="full-network-overlay" aria-hidden="true"/>
+   <div className="atlas-scale-indicator" aria-live="off">
+     <span className="atlas-scale-dot"/>
+     {detail==="landscape"?"Landscape":detail==="area"?"Area":"Entity"}
+     <span className="atlas-scale-tip"> · scroll to explore</span>
+   </div>
+   {hovered&&!selectedPreview&&
+     <div className="atlas-hover-hint" style={{left:Math.min(
+       (canvas.current?.clientWidth??650)-200,hovered.x+15),
+       top:Math.max(8,hovered.y-42)}} role="status">
+       <strong>{hovered.label}</strong>
+       <small>{["Organisation","Project / grant","Funder","Person","Place",
+         "Topic","Method","Outcome","Other"][hovered.type]??"Entity"} · click to explore</small>
+     </div>}
+   {selectedPreview&&
+     <aside className="atlas-entity-preview" aria-label={"Selected "+selectedPreview.type}>
+       <div className="atlas-entity-kicker">
+         <span>{selectedPreview.type}</span>
+         <button type="button" aria-label="Clear selection"
+           onClick={()=>pick.current(null)}>×</button>
+       </div>
+       <h4>{selectedPreview.label}</h4>
+       {selectedPreview.description&&
+         <p>{selectedPreview.description.slice(0,220)}
+           {selectedPreview.description.length>220?"…":""}</p>}
+       {selectedPreview.region&&<p className="atlas-entity-meta">
+         {selectedPreview.region}</p>}
+       {selectedPreview.tags.length>0&&<div className="atlas-entity-tags">
+         {selectedPreview.tags.slice(0,4).map(tag=><span key={tag}>{tag}</span>)}
+       </div>}
+       <div className="atlas-entity-links">
+         <strong>{selectedRelationships.toLocaleString("en-GB")}</strong>
+         <span>source relationship records</span>
+       </div>
+       <button className="atlas-preview-details" type="button"
+         onClick={onDetails}>Explore evidence and connections →</button>
+       {selectedPreview.sourceUrl&&<a href={selectedPreview.sourceUrl}
+         target="_blank" rel="noopener noreferrer">Open source record ↗</a>}
+     </aside>}
    <div className="graph-tools" aria-label="Full-network navigation">
+     {focusAreaId&&<button type="button" className="atlas-back-button"
+       aria-label="Return to landscape" title="Return to landscape"
+       onClick={()=>{
+         stopAnimation();fit();areaSelect.current?.(null);pick.current(null);
+       }}>↶</button>}
      <button type="button" onClick={()=>{
        stopAnimation();const s=canvas.current;
        if(s)zoomTo.current(1.5,s.clientWidth/2,s.clientHeight/2);

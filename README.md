@@ -983,3 +983,33 @@ complete visual association graph is still accessible in the advanced panel.
 The full GPU network now defaults to relationship lines on selection,
 allows switching back to all/subtle lines and avoids colliding large area
 labels at low zoom. Browser storage and source evidence stay unchanged.
+
+## Alpha 2.15 — a multiscale network atlas
+
+The **Full graph** experience progressively reveals different levels of
+information as users zoom, without sampling or dropping the complete original
+dataset:
+
+- **Landscape:** quiet source-derived areas, sizes and total records, with up
+  to 26 subtle curved *aggregations* of recorded cross-area connections.
+  Curve width reflects the number of underlying source edges; no new
+  relationship is asserted or added to the source graph.
+- **Area:** area boundaries plus selected significant entity labels.
+- **Entity:** individual source entities receive collision-aware labels near
+  the current viewport. Selecting one highlights its original recorded
+  neighbours and relationships.
+- Selecting an entity offers a small contextual source preview with its
+  description, tags, region, recorded relationship count, evidence link and a
+  shortcut to the full source inspector below. Empty-space selection, mouse
+  wheel, pinch/drag, atlas-wide fit and area navigation remain available.
+
+Areas remain explicitly derived visual navigation aids, never verified social
+communities. Only **recorded** original edges count towards bundled
+cross-area links; inferred/shared associations do not.
+
+The source graph, all original node and edge identities, source provenance,
+full search, grouped view, thematic/cause-area arrangement, amount/degree
+sizing and existing mapping tools are unchanged.
+
+Remaining: real-device visual QA and optional high-quality authored
+map layers, including downloadable view snapshots and curated story paths.
