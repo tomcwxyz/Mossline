@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import {
-  buildMappedGraph, checkRecipeColumns, makeMappingRecipe,
+  checkRecipeColumns, makeMappingRecipe,
   parseMappingRecipe, parseMappingRecipes,
   type ColumnMapping, type DataDiscovery, type ImportFile, type MappingRecipe,
-  type MappedPreview, type NodeType, type RelationshipRule
+  type NodeType, type RelationshipRule
 } from "@mossline/graph-core";
 
 type CsvDiscovery = Extract<DataDiscovery, {kind:"csv-table"}>;
@@ -24,14 +24,14 @@ function exportRecipe(recipe:MappingRecipe) {
   URL.revokeObjectURL(url);
 }
 
-export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
+export function DataMappingWorkbench({file,discovery,onBuild,onChange}:{
   file:ImportFile;
   discovery:CsvDiscovery;
-  onPreview:(preview:MappedPreview)=>void;
+  onBuild:(mapping:ColumnMapping)=>void;
   onChange:()=>void;
 }) {
   const [mapping,setMapping]=useState<ColumnMapping>(discovery.mapping);
-  const [lastPreview,setLastPreview]=useState<MappedPreview|null>(null);
+
   const [recipes,setRecipes]=useState<MappingRecipe[]>([]);
   const [recipeName,setRecipeName]=useState("");
   const [selectedRecipeId,setSelectedRecipeId]=useState("");
@@ -76,7 +76,6 @@ export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
     if(!selectedRecipe || !compatibility?.usable) return;
     setMapping(selectedRecipe.mapping);
     setRecipeName(selectedRecipe.name);
-    setLastPreview(null);
     onChange();
     setRecipeNote("Loaded revision "+selectedRecipe.revision+
       ". Review the suggested relationships, then preview against the current file.");
@@ -109,7 +108,6 @@ export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
   }
   const update=(next:ColumnMapping)=>{
     setMapping(next);
-    setLastPreview(null);
     onChange();
   };
   const editRule=(index:number,patch:Partial<RelationshipRule>)=>{
@@ -120,11 +118,7 @@ export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
     {columns.map(col=><option value={col} key={col}>{col}</option>)}
   </>;
   const typeOptions=types.map(type=><option value={type} key={type}>{labelType(type)}</option>);
-  const apply=()=>{
-    const result=buildMappedGraph(file,mapping);
-    setLastPreview(result);
-    onPreview(result);
-  };
+  const apply=()=>onBuild(mapping);
   return <section className="mapping-workbench" aria-label="Map your spreadsheet into a network">
     <div className="mapping-intro">
       <p className="eyebrow">Discover → Map → Preview → Confirm</p>
@@ -259,9 +253,7 @@ export function DataMappingWorkbench({file,discovery,onPreview,onChange}:{
     <p className="mapping-caution">A shared row is not necessarily proof of collaboration, funding or causation.
       Check the labels and source data before confirming. This work is performed locally in your browser.</p>
     <button className="button-primary" type="button" onClick={apply}>Preview proposed graph →</button>
-    {lastPreview&&<p role="status" className="mapping-last">Proposal: {lastPreview.counts.nodes} entities,
-      {lastPreview.counts.edges} relationships, {lastPreview.counts.skipped} skipped rows.
-      {lastPreview.issues.some(i=>i.severity==="error")?" Correct the mapping and try again.":" Review the result below before confirming."}
-    </p>}
+    <p className="mapping-last">Complete source rows are mapped in a browser worker,
+      keeping the editor responsive. Review the generated network above before confirming.</p>
   </section>;
 }
