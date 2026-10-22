@@ -134,7 +134,7 @@ export function layoutFullNetwork(graph:GraphDocument,
     amountCurrency,amountCount:amountCurrency?amountCount:0,
     arrangement,areas:[],hubs:[],nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
-  if(arrangement==="areas"){
+  if(arrangement!=="types"){
     const presentation=arrangeNetworkAreas(graph,geometry,
       arrangement==="themes"?"themes":"areas");
     geometry.areas=presentation.areas;geometry.hubs=presentation.hubs;
