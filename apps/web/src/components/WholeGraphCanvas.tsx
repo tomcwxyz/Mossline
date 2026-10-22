@@ -15,6 +15,12 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
   const [ready,setReady]=useState(false);
   pickNode.current=onPickNode;pickEdge.current=onPickEdge;
   useEffect(()=>{
+    const element=root.current;if(!element)return;
+    const blockScroll=(event:WheelEvent)=>event.preventDefault();
+    element.addEventListener("wheel",blockScroll,{passive:false});
+    return ()=>element.removeEventListener("wheel",blockScroll);
+  },[]);
+  useEffect(()=>{
     let cancelled=false;
     void import("cytoscape").then(({default:cytoscape})=>{
       if(cancelled||!root.current)return;
@@ -117,7 +123,13 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
       }
     });
     const target=selectedId&&!selectedEdgeId?cy.getElementById(selectedId):null;
-    if(target?.length)cy.center(target);
+    if(target?.length){
+      const focusZoom=Math.max(cy.zoom(),Math.min(1.55,cy.maxZoom()));
+      const point=target.position();
+      cy.stop();
+      cy.animate({pan:{x:cy.width()/2-point.x*focusZoom,
+        y:cy.height()/2-point.y*focusZoom},zoom:focusZoom},{duration:260});
+    }
   },[selectedId,selectedEdgeId,projection,ready]);
 
   return <div className="whole-graph-stage">

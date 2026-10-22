@@ -6,6 +6,10 @@ import type {GraphDocument,GraphNode} from "./schema";
  */
 export type FullNetworkGeometry={
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
+  /** Indices of the exact endpoints of each original source relationship. */
+  endpoints:Uint32Array;
+  /** 1 when this is a recorded relationship, 0 when explicitly inferred. */
+  recorded:Uint8Array;
   nodeCount:number;edgeCount:number;bounds:{minX:number;minY:number;maxX:number;maxY:number};
 };
 const CATEGORIES=["organisation","project","funder","person","place","topic",
@@ -40,10 +44,12 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
     positions[i*2+1]=seeds[i*2+1]=y;
   }
   const pairs=new Uint32Array(graph.edges.length*2);
+  const recorded=new Uint8Array(graph.edges.length);
   for(let i=0;i<graph.edges.length;i++){
     const edge=graph.edges[i],a=map.get(edge.source),b=map.get(edge.target);
     if(a===undefined||b===undefined)throw Error("Source relationship endpoint is missing.");
     pairs[i*2]=a;pairs[i*2+1]=b;
+    recorded[i]=edge.inferred===true?0:1;
   }
   // A constrained, deterministic neighbour relaxation highlights broad graph
   // structure while retaining category anchors. O(iterations * (N + E)).
@@ -79,6 +85,45 @@ export function layoutFullNetwork(graph:GraphDocument):FullNetworkGeometry{
     maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
   }
   if(!count){minX=minY=-1;maxX=maxY=1;}
-  return {ids,labels,types,positions,segments,nodeCount:count,edgeCount:graph.edges.length,
+  return {ids,labels,types,positions,segments,endpoints:pairs,recorded,
+    nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
+}
+
+/** The highlighted subset is derived exclusively from original recorded source
+ * edges. Inferred/shared associations are deliberately not presented as facts.
+ * All geometry in the original network remains available for dimmed context.
+ */
+export type FullNetworkFocus={
+  nodeIndex:number;neighbourIndices:Uint32Array;
+  nodes:Float32Array;types:Uint8Array;lines:Float32Array;
+  relationships:number;neighbours:number;
+};
+export function focusFullNetwork(geometry:FullNetworkGeometry,id:string|null|undefined):
+  FullNetworkFocus|null {
+  if(!id)return null;
+  const center=geometry.ids.indexOf(id);
+  if(center<0)return null;
+  const nearby=new Set<number>([center]);
+  const edges:number[]=[];
+  for(let e=0;e<geometry.edgeCount;e++){
+    if(!geometry.recorded[e])continue;
+    const a=geometry.endpoints[e*2],b=geometry.endpoints[e*2+1];
+    if(a===center||b===center){
+      edges.push(e);
+      nearby.add(a);nearby.add(b);
+    }
+  }
+  const neighbourIndices=new Uint32Array([...nearby]);
+  const nodes=new Float32Array(nearby.size*2),types=new Uint8Array(nearby.size);
+  let i=0;
+  for(const n of nearby){
+    nodes[i*2]=geometry.positions[n*2];
+    nodes[i*2+1]=geometry.positions[n*2+1];
+    types[i]=geometry.types[n];i++;
+  }
+  const lines=new Float32Array(edges.length*4);
+  edges.forEach((edge,i)=>lines.set(geometry.segments.subarray(edge*4,edge*4+4),i*4));
+  return {nodeIndex:center,neighbourIndices,nodes,types,lines,
+    relationships:edges.length,neighbours:Math.max(0,nearby.size-1)};
 }

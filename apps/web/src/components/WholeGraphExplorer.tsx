@@ -1,12 +1,12 @@
 "use client";
 
-import {useEffect,useRef,useState,type FormEvent} from "react";
+import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {AdaptiveGraphProjection,GraphDocument,GraphEdge,NetworkInspection,
   NetworkSearch} from "@mossline/graph-core";
 import {WholeGraphCanvas} from "./WholeGraphCanvas";
 import {FullNetworkCanvas} from "./FullNetworkCanvas";
 import {NetworkAI} from "./NetworkAI";
-import type {FullNetworkGeometry} from "@mossline/graph-core";
+import {focusFullNetwork,type FullNetworkGeometry} from "@mossline/graph-core";
 
 type Reply={
   kind:"stage"|"result"|"failed";action?:"overview"|"search"|"select"|"inspect"|"full";
@@ -43,6 +43,9 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const [status,setStatus]=useState("");
   const [error,setError]=useState("");
   const [notice,setNotice]=useState("");
+  const selectedFocus=useMemo(()=>fullGeometry&&viewMode==="full"?
+    focusFullNetwork(fullGeometry,inspection?.node.id):null,
+    [fullGeometry,viewMode,inspection?.node.id]);
 
   useEffect(()=>{
     let instance:Worker|undefined;
@@ -227,7 +230,11 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       </div>
       {viewMode==="full"&&fullGeometry?
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
-          onSelect={id=>navigate(id)}
+          onSelect={id=>{
+            if(id)navigate(id);
+            else {setInspection(null);setSelectedEdge(null);setHistory([]);
+              setMatches(null);setNotice("");}
+          }}
           onUnavailable={()=>{
             setViewMode("overview");
             setError("Full-graph WebGL rendering is unavailable in this browser. "+
@@ -237,6 +244,14 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           selectedId={selectedEdge?null:(inspection?.node.id??null)}
           selectedEdgeId={selectedEdge?.id??null}
           onPickNode={pickNode} onPickEdge={pickEdge}/>}
+      {selectedFocus&&inspection&&<p className="whole-graph-focus-count" role="status">
+        <strong>{inspection.node.label}</strong> · {selectedFocus.relationships} original
+        {" "}{selectedFocus.relationships===1?"relationship":"relationships"} highlighted ·
+        {" "}{selectedFocus.neighbours} directly connected
+        {" "}{selectedFocus.neighbours===1?"entity":"entities"}.
+        {selectedFocus.relationships===0&&" No recorded connections exist for this entity in the uploaded data."}
+        {" "}Tap empty space to clear the focus.
+      </p>}
       {viewMode==="full"&&fullGeometry&&
         <p className="whole-graph-full-caption" role="status">
           Showing all {fullGeometry.nodeCount.toLocaleString("en-GB")} source entities and
