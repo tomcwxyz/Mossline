@@ -216,26 +216,31 @@ export function FundingWorkbench({onCreate,onClose}:{
     </div>}
     {file&&mapping&&parsed&&!dirty&&!busy&&<>
       <div className="funding-preview-stats">
-        <div><strong>{fullAnalysis?.grants??0}</strong><span>Unique grants analysed (full data)</span></div>
-        <div><strong>{fullAnalysis?.funders??0}</strong><span>Funders (full data)</span></div>
-        <div><strong>{fullAnalysis?.recipients??0}</strong><span>Recipients (full data)</span></div>
-        <div><strong>{parsed.counts.importedGrants}</strong><span>Grants in network view</span></div>
+        <div><strong>{fullAnalysis?.grants??0}</strong><span>Eligible grants in the complete network</span></div>
+        <div><strong>{fullAnalysis?.funders??0}</strong><span>Funders in the complete network</span></div>
+        <div><strong>{fullAnalysis?.recipients??0}</strong><span>Recipient organisations</span></div>
+
       </div>
-      {(parsed.counts.individualExcluded>0||parsed.counts.overflowExcluded>0)&&
+      {parsed.graph&&fullAnalysis&&<p className="funding-csv-coverage" role="status">
+        <strong>The complete network will open by default.</strong>
+        {" "}All {fullAnalysis?.grants??0} eligible grant records and their original
+        funder → award → recipient connections are retained in browser storage.
+        The smaller legacy detail editor does not limit the main network.
+      </p>}
+      {parsed.counts.individualExcluded>0&&
         <div className="funding-csv-coverage" role="status">
-          {parsed.counts.individualExcluded>0&&<p><strong>{parsed.counts.individualExcluded}
-          {" "}individual-recipient awards excluded.</strong> No recipient names or personal
-            grant details from these records are included in the map.</p>}
-          {parsed.counts.overflowExcluded>0&&<p><strong>Large export:</strong>
-            {" "}{parsed.counts.eligibleOrganisationRows} eligible organisational records were
-            detected, but only {parsed.counts.importedGrants} are being mapped.
-            {parsed.counts.overflowExcluded} remaining records are not represented.
-            The selection balances funders for network exploration; it is not a
-            statistically representative sample. <strong>All {fullAnalysis?.grants??0}
-            {" "}unique eligible organisation awards are nevertheless analysed</strong>
-            {" "}in the full funding totals and theme clusters. Filter the CSV
-            for more detailed mapping.</p>}
+          <p><strong>{parsed.counts.individualExcluded} individual-recipient awards excluded.</strong>
+          {" "}No recipient names or personal grant details from these records
+          are included in the map.</p>
         </div>}
+      {parsed.counts.overflowExcluded>0&&
+        <details className="funding-advanced">
+          <summary>About the older detailed editor</summary>
+          <p>For compatibility, an optional detailed editing view retains up to{" "}
+            {parsed.counts.importedGrants} funder-balanced grant records. That smaller
+            selection does not affect the complete network, its funding analysis,
+            source search or full-graph display.</p>
+        </details>}
       {examples.length>0&&<div className="funding-import-review">
         <strong>Example recorded relationships</strong>
         <ul>{examples.map((item,i)=><li key={i}>
@@ -249,8 +254,8 @@ export function FundingWorkbench({onCreate,onClose}:{
       </details>}
       {parsed.graph&&<label className="funding-confirm">
         <input type="checkbox" checked={reviewed} onChange={e=>setReviewed(e.target.checked)}/>
-        These are the funding records I want to map; excluded records and any
-        uncertain identities have been reviewed.
+        I have checked the grant column mapping and any excluded or uncertain
+        records. All eligible awards will be saved in the complete network.
       </label>}
       <button type="button" className="button-primary" disabled={!reviewed||!parsed.graph||busy||dirty||
         parsed.issues.some(i=>i.severity==="error")} onClick={()=>void create()}>

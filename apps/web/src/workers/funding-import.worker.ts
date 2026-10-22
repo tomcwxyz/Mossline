@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import {buildFundingFullAnalysis,importFundingCsv,parseCsv,projectFundingGraph,
+import {buildFundingFullAnalysis,importFundingCsv,parseCsv,
   type FundingMapping,type GraphDocument,type ImportFile} from "@mossline/graph-core";
 import {saveFundingDataset} from "../lib/funding-dataset-store";
 
@@ -63,12 +63,12 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
         funder:nodesById.get(String(n.properties?.funderId))??"Unknown funder",
         recipient:nodesById.get(String(n.properties?.recipientId))??"Unknown recipient"
       }));
-    // Never transfer the full award graph or raw CSV back to the main thread.
-    // The first network projection is small; later queries can reach all grants from IndexedDB.
-    const projection=projectFundingGraph(currentFullGraph,{pageSize:75});
-    self.postMessage({kind:"result",id:job.id,headings,graph:projection.graph,
+    // Persist the complete graph in IndexedDB when the user confirms.
+    // The legacy bounded detail graph is held only as a small saved-map
+    // companion. It must not be presented as the complete network.
+    self.postMessage({kind:"result",id:job.id,headings,graph:imported.graph,
       mapping:imported.mapping,issues:imported.issues,
-      counts:{...imported.counts,importedGrants:projection.displayedGrants},fullAnalysis,examples});
+      counts:imported.counts,fullAnalysis,examples});
   }catch(error){
     self.postMessage({kind:"failed",id:job.id,
       message:error instanceof Error?error.message:"The CSV could not be analysed."});

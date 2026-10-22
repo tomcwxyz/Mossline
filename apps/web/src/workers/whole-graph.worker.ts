@@ -15,7 +15,7 @@ let loadedId="",index:AdaptiveGraphIndex|null=null,
 self.onmessage=async(event:MessageEvent<Job>)=>{
   const job=event.data;
   try{
-    if(job.kind==="overview"){
+    if(job.kind==="overview"||job.kind==="full"){
       if(job.graph){
         index=buildAdaptiveGraphIndex(job.graph);
         navigation=buildNetworkNavigation(job.graph);
@@ -39,7 +39,10 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
       self.postMessage({kind:"stage",id:job.id,
         message:"Positioning every original entity and relationship…"});
       const geometry=layoutFullNetwork(index.source);
-      self.postMessage({kind:"result",action:"full",id:job.id,geometry},
+      // Precompute a small grouped representation for immediate fallback and
+      // switching modes, but start by displaying every original node and edge.
+      const projection=projectAdaptiveGraph(index,[]);
+      self.postMessage({kind:"result",action:"full",id:job.id,geometry,projection},
         [geometry.positions.buffer,geometry.segments.buffer,geometry.types.buffer]);
     }else if(job.kind==="search"){
       const matches=searchNetwork(navigation,job.query??"",20);

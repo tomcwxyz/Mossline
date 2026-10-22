@@ -147,10 +147,10 @@ export function importFundingCsv(file:ImportFile,mapping?:FundingMapping):Fundin
     "Date Modified where available. Earlier versions are excluded from totals."});
   if(individualExcluded)issues.push({severity:"warning",message:
     individualExcluded+" grants to individuals were excluded; no individual recipient details were added to the map"});
-  if(overflowExcluded)issues.push({severity:"warning",message:
-    "Large GrantNav extract: all eligible organisation grants are included in the full-data analysis, "+
-    "but "+overflowExcluded+" records are omitted from the detailed network canvas. "+
-    "That canvas contains up to "+maxDetailedGrants+" funder-balanced grants; it is not a representative sample."});
+  // The bounded graph below is retained only for legacy detailed editing.
+  // All eligible grant records remain in analysisGraph, persisted to IndexedDB,
+  // and available in the complete network. Never warn that those grants are
+  // absent from the user's main map.
   if(missingOrganisation)issues.push({severity:"warning",message:
     missingOrganisation+" rows lacked a usable organisation grant relationship or had invalid fields"});
   const nodes=new Map<string,GraphNode>();

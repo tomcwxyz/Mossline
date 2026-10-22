@@ -957,7 +957,7 @@ export function MapStudio() {
       onClose={()=>setShowFundingWorkbench(false)}
       onCreate={(next,fullAnalysis,datasetId)=>{
         if(!createNewMap(next,fullAnalysis,datasetId))return false;
-        setNotice("Created a funding landscape. Open Network to explore the complete recorded funding graph; deeper analysis is available below.");
+        setNotice("Funding landscape created. The Network view opens all eligible grants and recorded relationships; optional detailed analysis is available below.");
         return true;
       }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
@@ -1399,7 +1399,8 @@ export function MapStudio() {
           </div>
         </div>
         {fullFundingView?
-          <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}/> :
+          <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}
+            initialMode="full"/> :
         view!=="atlas"&&((view==="landscape"&&wholeNetworkOpen)||largeActiveView)?
           <WholeGraphExplorer graph={view==="landscape"?graph:filtered.graph}/> :
         view==="atlas" ?
