@@ -23,13 +23,13 @@ const sample=[columns.join(","),
 test("recognises 360Giving awards through the generic CSV door, not ordinary network tables",()=>{
  assert.equal(isFundingAwardsCsv({name:"360giving.csv",text:sample}),true);
  assert.equal(isFundingAwardsCsv({name:"ordinary.csv",
-   text:"Organisation,Project,Funder,Region\\nExample,Programme,Foundation,North East"}),false);
+   text:"Organisation,Project,Funder,Region\nExample,Programme,Foundation,North East"}),false);
  assert.equal(isFundingAwardsCsv({name:"awards.csv",
-   text:"Funder,Recipient,Amount Awarded,Award Date\\nTrust,Charity,100,2026-01-01"}),true);
+   text:"Funder,Recipient,Amount Awarded,Award Date\nTrust,Charity,100,2026-01-01"}),true);
  assert.equal(isFundingAwardsCsv({name:"grants.json",text:sample}),false);
  assert.equal(isFundingAwardsCsv({name:"invalid.csv",text:"Funder,Recipient"}),false);
  assert.equal(isFundingAwardsCsv({name:"quoted.csv",
-   text:'"Funding Org:Name","Recipient Org:Name","Grant Programme:Title"\\n"Trust","Charity","Core"'}),true);
+   text:'"Funding Org:Name","Recipient Org:Name","Grant Programme:Title"\n"Trust","Charity","Core"'}),true);
 });
 
 test("detects common 360Giving flat CSV field names",()=>{
