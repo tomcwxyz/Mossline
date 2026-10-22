@@ -22,3 +22,8 @@ jobs:
         run: npm run typecheck
       - name: Build web app
         run: npm run build
+
+      - name: Install headless browser
+        run: npx playwright install --with-deps chromium
+      - name: Smoke-test the product and accessibility
+        run: npm run test:e2e
