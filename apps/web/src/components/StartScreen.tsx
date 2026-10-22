@@ -15,14 +15,28 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
         <h1>See the relationships, not just the parts<span className="heading-period">.</span></h1>
         <p>Bring your organisations, projects, places and people into a living network.
           Start with what you have, then discover the connections worth exploring.</p>
-        <div className="studio-start-actions">
-          <button type="button" className="button-primary" onClick={onImport}>
-            ↑ Explore your data
+        <p className="studio-start-choose">How would you like to start?</p>
+        <div className="studio-start-route-choices" role="group" aria-label="Choose a data import route">
+          <button type="button" onClick={onImport}>
+            <span className="studio-start-route-icon" aria-hidden="true">▦</span>
+            <span className="studio-start-route-description">
+              <strong>Map your own data</strong>
+              <small>Organisations, people, projects or places · CSV, Kumu and JSON</small>
+            </span>
+            <span aria-hidden="true">→</span>
           </button>
-          <button type="button" className="button-outline" onClick={onCommunity}>
-            Try an example network →
+          <button type="button" onClick={onFunding}>
+            <span className="studio-start-route-icon" aria-hidden="true">◎</span>
+            <span className="studio-start-route-description">
+              <strong>Explore funding data</strong>
+              <small>Grant awards, funders and recipients · complete source network</small>
+            </span>
+            <span aria-hidden="true">→</span>
           </button>
         </div>
+        <button type="button" className="studio-start-try" onClick={onCommunity}>
+          Or try an example network →
+        </button>
         <p className="studio-start-privacy">No account needed · Your working data stays in this browser</p>
       </div>
       <div className="studio-start-art" aria-hidden="true">
@@ -34,7 +48,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
         </svg>
       </div>
     </section>
-    <div className="studio-start-grid">
+    <div className="studio-start-grid studio-start-single">
       <section className="studio-start-card" aria-labelledby="start-maps">
         <div className="studio-start-card-head">
           <div><p className="eyebrow">Pick up where you left off</p>
@@ -57,26 +71,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
           <button type="button" className="studio-start-quiet" onClick={onCommunity}>
             Open an example →</button></>}
       </section>
-      <section className="studio-start-card studio-start-bring" aria-labelledby="start-bring">
-        <p className="eyebrow">Start something new</p>
-        <h2 id="start-bring">Bring a network to life</h2>
-        <p>Use what you already have. Mossline can help you turn rows and relationships
-          into something you can explore.</p>
-        <div className="studio-start-choices">
-          <button type="button" onClick={onImport}>
-            <span aria-hidden="true">▦</span>
-            <span><strong>Import a spreadsheet or Kumu export</strong>
-              <small>Discover entities and relationships from CSV or JSON</small></span>
-            <span aria-hidden="true">→</span>
-          </button>
-          <button type="button" onClick={onFunding}>
-            <span aria-hidden="true">◎</span>
-            <span><strong>Explore a funding landscape</strong>
-              <small>Understand funders, awards and recipients across a dataset</small></span>
-            <span aria-hidden="true">→</span>
-          </button>
-        </div>
-      </section>
+
     </div>
     <details className="studio-start-more">
       <summary>More ways to get started</summary>

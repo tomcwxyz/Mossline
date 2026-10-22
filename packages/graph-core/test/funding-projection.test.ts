@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {importFundingCsv} from "../src/funding.ts";
 import {projectFundingGraph,MAX_FUNDING_CANVAS_GRANTS} from "../src/funding-projection.ts";
 import {buildFundingFullAnalysis} from "../src/funding-clusters.ts";
+import {layoutFullNetwork} from "../src/full-network-layout.ts";
 
 const rows=["Identifier,Funding Org:Name,Recipient Org:Name,Title,Description,Amount Awarded,Currency,Recipient Region"];
 for(let i=0;i<520;i++)rows.push(
@@ -48,4 +49,14 @@ test("out-of-range pages clamp and never exceed the canvas limit",()=>{
  assert.equal(projection.page,5);
  assert.equal(projection.pageSize,120);
  assert.equal(projection.pages,5);
+});
+
+test("full-funding graph has drawable geometry for every grant and original connection",()=>{
+ const geometry=layoutFullNetwork(full);
+ assert.equal(geometry.nodeCount,full.nodes.length);
+ assert.equal(geometry.edgeCount,full.edges.length);
+ assert.equal(geometry.segments.length,full.edges.length*4);
+ assert.equal(full.nodes.filter(n=>n.type==="project").length,520);
+ assert.ok(!imported.issues.some(issue=>/not represented|omitted from the detailed network canvas|Large GrantNav extract/i.test(issue.message)),
+   "The smaller legacy editing graph must not be presented as a limit on the complete map");
 });

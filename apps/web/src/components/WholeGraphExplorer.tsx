@@ -19,7 +19,9 @@ type Reply={
 /** All navigation, search and relationship detail use the canonical source
  * graph in one worker. Only the visual representation is grouped.
  */
-export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:GraphDocument}){
+export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
+  datasetId?:string;graph?:GraphDocument;initialMode?:"overview"|"full";
+}){
   const worker=useRef<Worker|null>(null);
   const request=useRef(0);
   const pendingExpanded=useRef<string[]>([]);
@@ -51,7 +53,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
       const id=++request.current;
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
-      setFullGeometry(null);setViewMode("overview");
+      setFullGeometry(null);setViewMode(initialMode);
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
@@ -65,6 +67,7 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
         }
         setError("");
         if(msg.action==="full"&&msg.geometry){
+          if(msg.projection)setProjection(msg.projection);
           setFullGeometry(msg.geometry);
           setViewMode("full");
           return;
@@ -104,12 +107,12 @@ export function WholeGraphExplorer({datasetId,graph}:{datasetId?:string;graph?:G
         setBusy(false);setStatus("");
         setError("The complete-network worker stopped unexpectedly. Source data is unchanged.");
       };
-      instance.postMessage({kind:"overview",id,datasetId,graph,expandedIds:[]});
+      instance.postMessage({kind:initialMode,id,datasetId,graph,expandedIds:[]});
     }catch{
       setBusy(false);setError("This browser could not open complete-network exploration.");
     }
     return ()=>{request.current++;instance?.terminate();worker.current=null;};
-  },[datasetId,graph]);
+  },[datasetId,graph,initialMode]);
 
   function submit(job:Record<string,unknown>,message:string){
     if(!worker.current||busy)return;

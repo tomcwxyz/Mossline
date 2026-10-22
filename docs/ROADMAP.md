@@ -436,3 +436,19 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Budget limits, auth, model audit, user-level quotas and comprehensive privacy review.
 - [ ] True layout persistence and semantic zoom / organisation clusters with meaningful positioning.
 - [ ] Add relationship descriptions to the embedding index under a separately approved policy.
+
+## Alpha 2.8 — one entry route and complete funding graph by default
+
+- [x] Replace ambiguous "Explore your data" launch button with the actual two
+      import choices at the top: general CSV/Kumu/JSON and funding awards.
+- [x] Remove duplicate import choices further down the welcome page.
+- [x] Open funded datasets directly in the all-node/all-edge WebGL view;
+      the grouped summary stays available as an explicit alternative.
+- [x] Stop creating a default 75-grant network projection during funding import.
+      Complete source grants are persisted to IndexedDB; a bounded detailed
+      editing graph remains only as a compatibility companion.
+- [x] Replace misleading "not represented" and small-canvas warning text with
+      accurate full-dataset totals and a quiet explanation of the old detail view.
+- [x] Add regression coverage for exact source-network GPU geometry and no
+      misleading sample-limit warnings.
+- [ ] Manual Android and desktop browser acceptance on real 2k+ award import.
