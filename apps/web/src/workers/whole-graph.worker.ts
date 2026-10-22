@@ -48,7 +48,8 @@ self.onmessage=async(event:MessageEvent<Job>)=>{
         [geometry.positions.buffer,geometry.segments.buffer,geometry.types.buffer,
           geometry.endpoints.buffer,geometry.recorded.buffer,
           geometry.degreeSizes.buffer,geometry.amountSizes.buffer,
-          geometry.nodeArea.buffer]);
+          geometry.nodeArea.buffer,geometry.strokeVertices.buffer,
+          geometry.recordedDegree.buffer,geometry.prominentIndices.buffer]);
     }else if(job.kind==="search"){
       const matches=searchNetwork(navigation,job.query??"",20);
       self.postMessage({kind:"result",action:"search",id:job.id,matches});

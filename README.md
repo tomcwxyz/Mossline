@@ -1028,3 +1028,22 @@ picking, focus, area grouping, evidence and source data remain unchanged.
 High-resolution screens consume more framebuffer memory; the view enforces
 a pixel budget. Canvas quality must still be visually tested on actual
 browser/GPU combinations, particularly Android WebGL1.
+
+## Alpha 2.17 — smooth source edges and landscape hub hierarchy
+
+The Full graph no longer relies on variable-quality WebGL1 hardware line
+primitives for original relationships. Background and selection lines are
+GPU-rendered as gently curved, analytically anti-aliased strokes; thickness
+is constant in CSS pixels across camera zoom and Retina/Android framebuffer
+resolutions. Stroke data is prepared in the network worker once per layout
+and curved selection subsets are derived from their exact source edge IDs.
+
+At the widest zoom, complete graph coverage is retained but ordinary nodes
+are visually quieter. Only genuinely well-connected source nodes receive
+an additional luminous, larger prominence pass. Isolated, uniform-degree
+and incomplete networks do not get invented hubs. When a node is selected,
+the original recorded one-hop relationships are emphasised exactly as before.
+
+The displayed curves and glow are **presentation choices only**. No new
+source edges, thematic claims, grant values, or relationships are generated,
+and no records are dropped from graph search, inspection or export.

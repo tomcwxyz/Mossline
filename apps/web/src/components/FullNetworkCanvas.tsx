@@ -2,6 +2,7 @@
 
 import {useEffect,useMemo,useRef,useState,type PointerEvent as ReactPointerEvent} from "react";
 import {focusFullNetwork,atlasDetailLevel,visibleAtlasNodeLabels,canvasPixelRatio,
+  buildSmoothStrokeVertices,STROKE_STRIDE,
   type FullNetworkFocus,type FullNetworkGeometry,type GraphNode,
   type AtlasDetail} from "@mossline/graph-core";
 
@@ -71,6 +72,46 @@ void main(){
  }
  gl_FragColor=colour;
 }`;
+// GPU-expanded quadratic strokes use screen-space triangles instead of
+// platform-dependent WebGL1 line widths. Every triangle corresponds to an
+// original recorded or inferred edge, never to a new relationship.
+const strokeVertex=`attribute vec2 a_first;
+attribute vec2 a_second;
+attribute vec3 a_curve;
+uniform vec2 u_offset;
+uniform vec2 u_viewport;
+uniform float u_zoom;
+uniform float u_width;
+uniform float u_soft;
+varying float v_across;
+void main(){
+ vec2 from=(a_first+u_offset)*u_zoom;
+ vec2 to=(a_second+u_offset)*u_zoom;
+ vec2 delta=to-from;
+ float distance=max(length(delta),.0001);
+ vec2 normal=vec2(-delta.y,delta.x)/distance;
+ float t=a_curve.x;
+ float bend=a_curve.z*min(28.0,distance*.13);
+ vec2 centre=mix(from,to,t)+normal*(4.0*t*(1.0-t)*bend);
+ vec2 tangent=delta+normal*(4.0*(1.0-2.0*t)*bend);
+ float tangentLength=max(length(tangent),.0001);
+ vec2 perpendicular=vec2(-tangent.y,tangent.x)/tangentLength;
+ v_across=a_curve.y*(u_width*.5+u_soft);
+ vec2 p=centre+perpendicular*v_across;
+ gl_Position=vec4(p.x/(u_viewport.x*.5),
+   -p.y/(u_viewport.y*.5),0.0,1.0);
+}`;
+const strokeFragment=`precision mediump float;
+uniform vec4 u_strokeColour;
+uniform float u_width;
+uniform float u_soft;
+varying float v_across;
+void main(){
+ float alpha=1.0-smoothstep(max(0.0,u_width*.5-u_soft),
+   u_width*.5+u_soft,abs(v_across));
+ if(alpha<.015)discard;
+ gl_FragColor=vec4(u_strokeColour.rgb,u_strokeColour.a*alpha);
+}`;
 function compile(gl:WebGLRenderingContext,type:number,source:string){
  const shader=gl.createShader(type);
  if(!shader)throw Error("No WebGL shader");
@@ -138,6 +179,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
    if(!gl){unavailable.current?.();return;}
    const buffers:WebGLBuffer[]=[];
    let program:WebGLProgram|null=null;
+   let strokeProgram:WebGLProgram|null=null;
    let observer:ResizeObserver|null=null;
    let pending:number|null=null;
    let uploaded:FullNetworkFocus|null=null;
@@ -147,6 +189,14 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);
      gl.deleteShader(v);gl.deleteShader(f);
      if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error("Cannot link graph renderer");
+     strokeProgram=gl.createProgram();
+     if(!strokeProgram)throw Error("Cannot create smooth stroke renderer");
+     const sv=compile(gl,gl.VERTEX_SHADER,strokeVertex);
+     const sf=compile(gl,gl.FRAGMENT_SHADER,strokeFragment);
+     gl.attachShader(strokeProgram,sv);gl.attachShader(strokeProgram,sf);
+     gl.linkProgram(strokeProgram);gl.deleteShader(sv);gl.deleteShader(sf);
+     if(!gl.getProgramParameter(strokeProgram,gl.LINK_STATUS))
+       throw Error("Cannot link smooth stroke renderer");
      const makeBuffer=(data:Float32Array|Uint8Array,usage:number)=>{
        const buffer=gl.createBuffer();
        if(!buffer)throw Error("Browser GPU memory unavailable");
@@ -154,12 +204,30 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        gl.bufferData(gl.ARRAY_BUFFER,data as BufferSource,usage);
        return buffer;
      };
-     const backgroundLines=makeBuffer(geometry.segments,gl.STATIC_DRAW);
+     const backgroundLines=makeBuffer(geometry.strokeVertices,gl.STATIC_DRAW);
+     const heroIndices=geometry.prominentIndices;
+     const heroPositions=new Float32Array(heroIndices.length*2);
+     const heroTypes=new Uint8Array(heroIndices.length);
+     const heroDegreeSizes=new Float32Array(heroIndices.length);
+     const heroAmountSizes=new Float32Array(heroIndices.length);
+     for(let i=0;i<heroIndices.length;i++){
+       const id=heroIndices[i];
+       heroPositions[i*2]=geometry.positions[id*2];
+       heroPositions[i*2+1]=geometry.positions[id*2+1];
+       heroTypes[i]=geometry.types[id];
+       heroDegreeSizes[i]=geometry.degreeSizes[id];
+       heroAmountSizes[i]=geometry.amountSizes[id];
+     }
+     const heroPoints=makeBuffer(heroPositions,gl.STATIC_DRAW);
+     const heroKinds=makeBuffer(heroTypes,gl.STATIC_DRAW);
+     const heroDegrees=makeBuffer(heroDegreeSizes,gl.STATIC_DRAW);
+     const heroAmounts=makeBuffer(heroAmountSizes,gl.STATIC_DRAW);
      const backgroundPoints=makeBuffer(geometry.positions,gl.STATIC_DRAW);
      const backgroundTypes=makeBuffer(geometry.types,gl.STATIC_DRAW);
      const degreeSizes=makeBuffer(geometry.degreeSizes,gl.STATIC_DRAW);
      const amountSizes=makeBuffer(geometry.amountSizes,gl.STATIC_DRAW);
      const selectedLines=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
+     let selectedVertexCount=0;
      const selectedPoints=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
      const selectedTypes=makeBuffer(new Uint8Array(0),gl.DYNAMIC_DRAW);
      const selectedDegreeSizes=makeBuffer(new Float32Array(0),gl.DYNAMIC_DRAW);
@@ -175,13 +243,26 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      const colour=gl.getUniformLocation(program,"u_colour");
      const circle=gl.getUniformLocation(program,"u_circle");
      const fade=gl.getUniformLocation(program,"u_fade");
+     const strokeFirst=gl.getAttribLocation(strokeProgram,"a_first");
+     const strokeSecond=gl.getAttribLocation(strokeProgram,"a_second");
+     const strokeCurve=gl.getAttribLocation(strokeProgram,"a_curve");
+     const strokeOffset=gl.getUniformLocation(strokeProgram,"u_offset");
+     const strokeViewport=gl.getUniformLocation(strokeProgram,"u_viewport");
+     const strokeZoom=gl.getUniformLocation(strokeProgram,"u_zoom");
+     const strokeWidth=gl.getUniformLocation(strokeProgram,"u_width");
+     const strokeSoft=gl.getUniformLocation(strokeProgram,"u_soft");
+     const strokeColour=gl.getUniformLocation(strokeProgram,"u_strokeColour");
      let initial=true;
      const update=()=>{
        const selection=currentFocus.current;
        if(selection===uploaded)return;
        uploaded=selection;
        gl.bindBuffer(gl.ARRAY_BUFFER,selectedLines);
-       gl.bufferData(gl.ARRAY_BUFFER,selection?.lines??new Float32Array(0),gl.DYNAMIC_DRAW);
+       const smoothSelection=selection?
+         buildSmoothStrokeVertices(selection.lines,selection.sourceEdgeIndices):
+         new Float32Array(0);
+       selectedVertexCount=smoothSelection.length/STROKE_STRIDE;
+       gl.bufferData(gl.ARRAY_BUFFER,smoothSelection,gl.DYNAMIC_DRAW);
        gl.bindBuffer(gl.ARRAY_BUFFER,selectedPoints);
        gl.bufferData(gl.ARRAY_BUFFER,selection?.nodes??new Float32Array(0),gl.DYNAMIC_DRAW);
        gl.bindBuffer(gl.ARRAY_BUFFER,selectedTypes);
@@ -201,11 +282,35 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        gl.enableVertexAttribArray(sizeAttr);
        gl.vertexAttribPointer(sizeAttr,1,gl.FLOAT,false,0,0);
      };
-     const lineAttribute=(buffer:WebGLBuffer)=>{
-       gl.disableVertexAttribArray(kind);gl.vertexAttrib1f(kind,0);
-       gl.disableVertexAttribArray(sizeAttr);gl.vertexAttrib1f(sizeAttr,1);
+     const drawSmoothStrokes=(
+       buffer:WebGLBuffer,vertices:number,
+       c:Camera,w:number,h:number,dpr:number,
+       rgba:[number,number,number,number],thickness:number
+     )=>{
+       if(!vertices)return;
+       gl.disableVertexAttribArray(position);
+       gl.disableVertexAttribArray(kind);
+       gl.disableVertexAttribArray(sizeAttr);
+       gl.useProgram(strokeProgram);
+       gl.uniform2f(strokeOffset,c.offsetX,c.offsetY);
+       gl.uniform2f(strokeViewport,w,h);
+       gl.uniform1f(strokeZoom,c.zoom);
+       gl.uniform1f(strokeWidth,thickness);
+       gl.uniform1f(strokeSoft,.9/dpr);
+       gl.uniform4f(strokeColour,...rgba);
        gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-       gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
+       gl.enableVertexAttribArray(strokeFirst);
+       gl.enableVertexAttribArray(strokeSecond);
+       gl.enableVertexAttribArray(strokeCurve);
+       gl.vertexAttribPointer(strokeFirst,2,gl.FLOAT,false,STROKE_STRIDE*4,0);
+       gl.vertexAttribPointer(strokeSecond,2,gl.FLOAT,false,STROKE_STRIDE*4,8);
+       gl.vertexAttribPointer(strokeCurve,3,gl.FLOAT,false,STROKE_STRIDE*4,16);
+       gl.drawArrays(gl.TRIANGLES,0,vertices);
+       gl.disableVertexAttribArray(strokeFirst);
+       gl.disableVertexAttribArray(strokeSecond);
+       gl.disableVertexAttribArray(strokeCurve);
+       gl.useProgram(program);
+       gl.enableVertexAttribArray(position);
      };
      const render=()=>{
        if(!canvas.current||!overlay.current)return;
@@ -233,23 +338,34 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        const lineOpacity=selection?.05:lineModeRef.current==="focus"?0:
          lineModeRef.current==="visible"?.34:.11;
        if(lineOpacity>0){
-         gl.uniform4f(colour,.57,.75,.63,lineOpacity);
-         lineAttribute(backgroundLines);
-         gl.drawArrays(gl.LINES,0,geometry.edgeCount*2);
+         drawSmoothStrokes(backgroundLines,
+           geometry.strokeVertices.length/STROKE_STRIDE,c,w,h,ratio,
+           [.57,.75,.63,lineOpacity],
+           lineModeRef.current==="visible"?1.15:.8);
        }
        gl.uniform1i(circle,1);
-       gl.uniform1f(fade,selection?.13:level==="landscape"?.60:level==="area"?.83:1);
+       gl.uniform1f(fade,selection?.13:
+         level==="landscape"?(heroIndices.length?.25:.57):
+         level==="area"?.75:1);
        gl.uniform1f(pointScale,level==="landscape"?.70:
          geometry.nodeCount>1200&&c.zoom<1?.82:1);
        pointAttribute(backgroundPoints,backgroundTypes,
          sizeModeRef.current==="amount"?amountSizes:degreeSizes);
        gl.drawArrays(gl.POINTS,0,geometry.nodeCount);
+       if(!selection&&level==="landscape"&&heroIndices.length){
+         pointAttribute(heroPoints,heroKinds,
+           sizeModeRef.current==="amount"?heroAmounts:heroDegrees);
+         // Two restrained passes give genuine hubs a softly luminous
+         // silhouette; source nodes never disappear or become fake groups.
+         gl.uniform1f(pointScale,1.75);gl.uniform1f(fade,.13);
+         gl.drawArrays(gl.POINTS,0,heroIndices.length);
+         gl.uniform1f(pointScale,1.15);gl.uniform1f(fade,.98);
+         gl.drawArrays(gl.POINTS,0,heroIndices.length);
+       }
        if(selection){
          update();
-         gl.uniform1i(circle,0);gl.uniform1f(pointScale,1);
-         gl.uniform4f(colour,1,.81,.48,.94);
-         lineAttribute(selectedLines);
-         gl.drawArrays(gl.LINES,0,selection.relationships*2);
+         drawSmoothStrokes(selectedLines,selectedVertexCount,c,w,h,ratio,
+           [1,.81,.48,.96],2.4);
          gl.uniform1i(circle,1);gl.uniform1f(fade,1);
          gl.uniform1f(pointScale,1.4);
          pointAttribute(selectedPoints,selectedTypes,
@@ -376,6 +492,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      draw.current=null;
      buffers.forEach(buffer=>gl.deleteBuffer(buffer));
      if(program)gl.deleteProgram(program);
+     if(strokeProgram)gl.deleteProgram(strokeProgram);
    };
  },[geometry]);
  useEffect(()=>{draw.current?.();},[sizeMode,lineMode]);

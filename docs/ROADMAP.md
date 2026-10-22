@@ -649,3 +649,25 @@ elements/connections, spatial data, survey flows and future formats.
   tested GPUs; render-mode fallback must continue to work.
 - [ ] Consider dedicated screen-space line geometry where WebGL1 multisample
   line quality remains device dependent; no hidden removal of source edges.
+
+## Alpha 2.17 — smoother graph relationships and clearer distant zoom
+- [x] Replace platform-dependent WebGL1 `gl.LINES` for original source
+  relationships with screen-space, antialiased quadratic stroke triangles.
+  The stroke thickness is stable in CSS pixels throughout pan and zoom.
+- [x] Tessellate the source stroke geometry in the browser worker after
+  layout, with bounded curve subdivisions for dense graphs. Build selected
+  stroke meshes from the exact recorded evidence edges, preserving parallel
+  links and deterministic bend direction across views.
+- [x] Keep the original node/edge arrays and source provenance intact;
+  smooth curves are display geometry, never newly inferred relationships.
+- [x] At distant landscape zoom, keep every source node represented but make
+  background marks quieter while drawing an extra halo and clear type/size
+  treatment only for nodes with genuinely above-background recorded degree.
+- [x] Flat-degree and isolated networks receive no arbitrary invented hubs.
+  Selection restores grounded one-hop connections and isolates the context.
+- [x] Regression checks cover source counts, parallel/degenerate line
+  geometry, curves for dense datasets, true high-degree hub ranking and
+  unchanged user data.
+- [ ] Visually compare desktop and Android Chrome output on real 2k–6k
+  funding/network datasets, including selection and mouse/touch transitions.
+- [ ] Profile 50k+ edge mesh memory and WebGL performance on low-end GPUs.

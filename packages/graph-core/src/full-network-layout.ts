@@ -1,6 +1,7 @@
 import type {GraphDocument,GraphNode} from "./schema";
 import {arrangeNetworkAreas,type NetworkArea,type NetworkHub,
   type NetworkAreaLink} from "./network-areas";
+import {buildSmoothStrokeVertices,prominentNetworkIndices} from "./graph-render-geometry";
 
 /** Every node and every source relationship is mapped into GPU-ready geometry.
  * This is deliberately independent of the grouped adaptive projection.
@@ -11,6 +12,10 @@ export type FullNetworkGeometry={
   arrangement:NetworkArrangement;areas:NetworkArea[];hubs:NetworkHub[];
   /** Position-independent, recorded-only links between visual atlas areas. */
   nodeArea:Uint16Array;areaLinks:NetworkAreaLink[];
+  /** WebGL1-compatible antialiased curved stroke geometry; source edges intact. */
+  strokeVertices:Float32Array;
+  /** Unmodified recorded degree ranking, used for landscape emphasis. */
+  recordedDegree:Uint32Array;prominentIndices:Uint32Array;
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
   /** Pixel-size encoding. The two measures are deliberately independent of node type. */
   degreeSizes:Float32Array;amountSizes:Float32Array;
@@ -134,6 +139,8 @@ export function layoutFullNetwork(graph:GraphDocument,
   if(!count){minX=minY=-1;maxX=maxY=1;}
   const geometry:FullNetworkGeometry={ids,labels,types,positions,segments,
     endpoints:pairs,recorded,degreeSizes,amountSizes,
+    recordedDegree:degree,prominentIndices:prominentNetworkIndices(degree),
+    strokeVertices:new Float32Array(0),
     amountCurrency,amountCount:amountCurrency?amountCount:0,
     arrangement,areas:[],hubs:[],nodeArea:new Uint16Array(count),areaLinks:[],
     nodeCount:count,edgeCount:graph.edges.length,
@@ -144,6 +151,9 @@ export function layoutFullNetwork(graph:GraphDocument,
     geometry.areas=presentation.areas;geometry.hubs=presentation.hubs;
     geometry.nodeArea=presentation.nodeArea;geometry.areaLinks=presentation.areaLinks;
   }
+  // Stroke tessellation runs in the dataset worker after the final layout,
+  // never on each camera move, and does not change canonical graph edges.
+  geometry.strokeVertices=buildSmoothStrokeVertices(geometry.segments);
   return geometry;
 }
 
@@ -155,6 +165,7 @@ export type FullNetworkFocus={
   nodeIndex:number;neighbourIndices:Uint32Array;
   nodes:Float32Array;types:Uint8Array;degreeSizes:Float32Array;amountSizes:Float32Array;lines:Float32Array;
   relationships:number;neighbours:number;
+  sourceEdgeIndices:Uint32Array;
 };
 export function focusFullNetwork(geometry:FullNetworkGeometry,id:string|null|undefined):
   FullNetworkFocus|null {
@@ -184,5 +195,6 @@ export function focusFullNetwork(geometry:FullNetworkGeometry,id:string|null|und
   const lines=new Float32Array(edges.length*4);
   edges.forEach((edge,i)=>lines.set(geometry.segments.subarray(edge*4,edge*4+4),i*4));
   return {nodeIndex:center,neighbourIndices,nodes,types,degreeSizes,amountSizes,lines,
+    sourceEdgeIndices:Uint32Array.from(edges),
     relationships:edges.length,neighbours:Math.max(0,nearby.size-1)};
 }
