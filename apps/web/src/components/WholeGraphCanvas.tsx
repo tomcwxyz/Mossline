@@ -2,24 +2,25 @@
 
 import {useEffect,useRef,useState} from "react";
 import type {Core} from "cytoscape";
+import {CytoscapeNavigationControls,useContainGraphWheel}
+  from "./CytoscapeNavigationControls";
+import {focusCytoscapeNode} from "../lib/cytoscape-viewport";
 import type {AdaptiveGraphProjection} from "@mossline/graph-core";
 
-export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNode,onPickEdge}:{
+export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNode,onPickEdge,onClearSelection}:{
   projection:AdaptiveGraphProjection;
   selectedId:string|null;selectedEdgeId:string|null;
-  onPickNode:(id:string)=>void;onPickEdge:(id:string)=>void;
+  onPickNode:(id:string)=>void;onPickEdge:(id:string)=>void;onClearSelection:()=>void;
 }){
   const root=useRef<HTMLDivElement>(null);
   const cyRef=useRef<Core|null>(null);
   const pickNode=useRef(onPickNode),pickEdge=useRef(onPickEdge);
+  const clearSelection=useRef(onClearSelection);
+  const lastFocused=useRef<string|null>(null);
   const [ready,setReady]=useState(false);
   pickNode.current=onPickNode;pickEdge.current=onPickEdge;
-  useEffect(()=>{
-    const element=root.current;if(!element)return;
-    const blockScroll=(event:WheelEvent)=>event.preventDefault();
-    element.addEventListener("wheel",blockScroll,{passive:false});
-    return ()=>element.removeEventListener("wheel",blockScroll);
-  },[]);
+  clearSelection.current=onClearSelection;
+  useContainGraphWheel(root);
   useEffect(()=>{
     let cancelled=false;
     void import("cytoscape").then(({default:cytoscape})=>{
@@ -61,6 +62,9 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
         ]});
       cy.on("tap","node",event=>pickNode.current(event.target.id()));
       cy.on("tap","edge",event=>pickEdge.current(event.target.id()));
+      cy.on("tap",event=>{
+        if(event.target===cy)clearSelection.current();
+      });
       cyRef.current=cy;setReady(true);
     });
     return ()=>{cancelled=true;cyRef.current?.destroy();cyRef.current=null;};
@@ -122,30 +126,22 @@ export function WholeGraphCanvas({projection,selectedId,selectedEdgeId,onPickNod
         edge.connectedNodes().removeClass("dimmed").addClass("neighbour");
       }
     });
-    const target=selectedId&&!selectedEdgeId?cy.getElementById(selectedId):null;
-    if(target?.length){
-      const focusZoom=Math.max(cy.zoom(),Math.min(1.55,cy.maxZoom()));
-      const point=target.position();
-      cy.stop();
-      cy.animate({pan:{x:cy.width()/2-point.x*focusZoom,
-        y:cy.height()/2-point.y*focusZoom},zoom:focusZoom},{duration:260});
+    if(!selectedId||selectedEdgeId){
+      lastFocused.current=null;
+    }else if(lastFocused.current!==selectedId&&
+      focusCytoscapeNode(cy,selectedId,1.55,260)){
+      // A zoom/pan gesture or grouped projection repaint must not
+      // force the camera back to a previously focused entity.
+      lastFocused.current=selectedId;
     }
   },[selectedId,selectedEdgeId,projection,ready]);
 
   return <div className="whole-graph-stage">
     <div ref={root} className="whole-graph-canvas" role="img"
       aria-label="Complete network overview. Select an entity to inspect its original relationships or a group to open it. The adjacent lists support keyboard navigation."/>
-    <div className="graph-tools" aria-label="Whole network navigation">
-      <button type="button" onClick={()=>{
-        const cy=cyRef.current;if(cy)cy.zoom({level:Math.min(4,cy.zoom()*1.3),
-          renderedPosition:{x:cy.width()/2,y:cy.height()/2}});
-      }} aria-label="Zoom in">+</button>
-      <button type="button" onClick={()=>{
-        const cy=cyRef.current;if(cy)cy.zoom({level:Math.max(.15,cy.zoom()/1.3),
-          renderedPosition:{x:cy.width()/2,y:cy.height()/2}});
-      }} aria-label="Zoom out">−</button>
-      <button type="button" onClick={()=>cyRef.current?.fit(undefined,60)}
-        aria-label="Fit whole network">⤢</button>
-    </div>
+    <CytoscapeNavigationControls cyRef={cyRef} ready={ready}
+      fitPadding={60} ariaLabel="Whole network navigation"
+      hasSelection={!!(selectedId||selectedEdgeId)}
+      onClearSelection={()=>clearSelection.current()}/>
   </div>;
 }

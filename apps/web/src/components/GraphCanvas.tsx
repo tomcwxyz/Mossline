@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Core } from "cytoscape";
+import {CytoscapeNavigationControls,useContainGraphWheel} from "./CytoscapeNavigationControls";
+import {focusCytoscapeNode} from "../lib/cytoscape-viewport";
 import type { GraphDocument, NodeStyleOverride } from "@mossline/graph-core";
 
 export type NetworkLayout = "organic" | "radial" | "regions";
@@ -91,15 +93,7 @@ export function GraphCanvas({
     });
   }
 
-  useEffect(()=>{
-    const element=rootRef.current;
-    if(!element)return;
-    // React's wheel delegation is passive. Cytoscape handles the zoom;
-    // this non-passive native listener keeps page scrolling outside the map.
-    const blockScroll=(event:WheelEvent)=>event.preventDefault();
-    element.addEventListener("wheel",blockScroll,{passive:false});
-    return ()=>element.removeEventListener("wheel",blockScroll);
-  },[]);
+  useContainGraphWheel(rootRef);
 
   useEffect(() => {
     let cancelled = false;
@@ -348,15 +342,8 @@ export function GraphCanvas({
     if(!ready||!cyRef.current)return;
     if(!selectedId){lastFocused.current=null;return;}
     if(lastFocused.current===selectedId)return;
-    const cy=cyRef.current,node=cy.getElementById(selectedId);
-    if(!node.length)return;
-    lastFocused.current=selectedId;
-    const targetZoom=Math.max(cy.zoom(),Math.min(1.6,cy.maxZoom()));
-    const position=node.position();
-    const pan={x:cy.width()/2-position.x*targetZoom,
-      y:cy.height()/2-position.y*targetZoom};
-    cy.stop();
-    cy.animate({pan,zoom:targetZoom},{duration:280});
+    if(focusCytoscapeNode(cyRef.current,selectedId))
+      lastFocused.current=selectedId;
   },[selectedId,ready,graph]);
 
   // Presentation state changes the canvas palette, not canonical node records.
@@ -423,20 +410,11 @@ export function GraphCanvas({
     refreshLabels(cy);
   }, [pathIdentity, ready, graph, view, layoutMode]);
 
-  const zoom = (factor: number) => {
-    const cy = cyRef.current;
-    if (!cy) return;
-    cy.zoom({ level: Math.min(3.5, Math.max(0.18, cy.zoom() * factor)),
-      renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
-  };
-
   return <div className={"graph-stage"+(illustrated?" illustrated":"")}>
     <div ref={rootRef} aria-label="Interactive network map. Select a node or relationship line to inspect it, drag to pan and scroll to zoom." role="img" className="graph-canvas" />
-    <div className="graph-tools" aria-label="Network navigation">
-      <button type="button" onClick={() => zoom(1.35)} aria-label="Zoom in" title="Zoom in">+</button>
-      <button type="button" onClick={() => zoom(1 / 1.35)} aria-label="Zoom out" title="Zoom out">−</button>
-      <button type="button" onClick={() => cyRef.current?.fit(undefined, 65)} aria-label="Fit network to view" title="Fit to view">⤢</button>
-    </div>
+    <CytoscapeNavigationControls cyRef={cyRef} ready={ready} fitPadding={65}
+      hasSelection={!!(selectedId||selectedEdgeId)}
+      onClearSelection={()=>onSelectRef.current(null)}/>
     {layoutMode === "regions" && <span className="regional-hint">Grouped by region · not a geographic map</span>}
     <div className="graph-legend" aria-label="Network legend">
       {graph.nodes.some(n=>n.type==="organisation")&&<span><i className="legend-symbol organisation"/> Organisation</span>}
