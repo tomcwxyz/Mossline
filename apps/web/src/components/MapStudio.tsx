@@ -251,6 +251,8 @@ export function MapStudio() {
   const [hasSavedMapLibrary,setHasSavedMapLibrary]=useState(false);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
+  const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
+  const mobileFiltersRef=useRef<HTMLElement|null>(null);
   const [localMaps,setLocalMaps] = useState<LocalMap[]>([]);
   const [oversizedSavedMaps,setOversizedSavedMaps]=useState(false);
   const [savedMapBackupMade,setSavedMapBackupMade]=useState(false);
@@ -272,6 +274,15 @@ export function MapStudio() {
   const [activeRouteIndex, setActiveRouteIndex] = useState(0);
   const [excludedRelationType, setExcludedRelationType] = useState("");
   const [showJunctions, setShowJunctions] = useState(false);
+  useEffect(()=>{
+    if(!mobileFiltersOpen)return;
+    const onKeyDown=(event:KeyboardEvent)=>{
+      if(event.key==="Escape")setMobileFiltersOpen(false);
+    };
+    document.addEventListener("keydown",onKeyDown);
+    mobileFiltersRef.current?.focus();
+    return ()=>document.removeEventListener("keydown",onKeyDown);
+  },[mobileFiltersOpen]);
   const [connectionMessage, setConnectionMessage] = useState("");
   const connectionTrail = connectionTrails[activeRouteIndex] ?? null;
   const [view, setView] = useState<ViewMode>("landscape");
@@ -1266,7 +1277,15 @@ export function MapStudio() {
         </div>
     </nav>
     <section className="workspace">
-      <aside className="sidebar studio-simplified-sidebar">
+      <button type="button" className="studio-mobile-filter-toggle"
+        aria-controls="studio-filters" aria-expanded={mobileFiltersOpen}
+        onClick={()=>setMobileFiltersOpen(true)}>☷ Find, filter &amp; tools</button>
+      {mobileFiltersOpen&&<button type="button" className="studio-mobile-filter-backdrop"
+        aria-label="Close map filters" onClick={()=>setMobileFiltersOpen(false)}/>}
+      <aside id="studio-filters" ref={mobileFiltersRef} tabIndex={-1}
+        className={"sidebar studio-simplified-sidebar"+(mobileFiltersOpen?" mobile-open":"")}>
+        <button type="button" className="studio-mobile-filter-close"
+          onClick={()=>setMobileFiltersOpen(false)}>← Back to network</button>
         <p className="eyebrow">Explore this network</p>
         {usingSourceExplorer?<p className="help">This workspace explores the complete
           source network. Use Find or Ask this network on the canvas to follow
