@@ -224,3 +224,20 @@ test("the beginner farming sample produces seven entities, six links and no inve
   assert.equal(proposal.issues.some(x=>x.message.includes("Conflicting descriptions")),false);
   assert.equal(proposal.graph.nodes.some(n=>n.label==="Hidden Example"),false);
 });
+
+test("general CSV mapping preserves every source entity and link for 2,000 rows",()=>{
+ const rows=["From,To,Type,Description,Region,Public"];
+ for(let i=0;i<2000;i++)
+   rows.push("Group "+i+",Project "+i+",supports,Recorded source "+i+",North East,TRUE");
+ const input=file("large-general.csv",rows.join("\n"));
+ const discovered=discoverData(input);
+ if(discovered.kind!=="csv-table")throw Error("Expected CSV discovery");
+ assert.equal(discovered.rowCount,2000);
+ const mapped=buildMappedGraph(input,discovered.mapping);
+ assert.ok(mapped.graph);
+ assert.equal(mapped.graph.nodes.length,4000);
+ assert.equal(mapped.graph.edges.length,2000);
+ assert.equal(mapped.counts.skipped,0);
+ assert.equal(mapped.graph.edges.at(-1)?.origin?.recordNumber,2001);
+ assert.equal(mapped.graph.edges.length,mapped.counts.edges);
+});
