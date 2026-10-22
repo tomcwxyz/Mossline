@@ -30,8 +30,9 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const [expanded,setExpanded]=useState<string[]>([]);
   const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
   const [nodeSizeMode,setNodeSizeMode]=useState<"connections"|"amount">("connections");
-  const [arrangement,setArrangement]=useState<"areas"|"types">("areas");
-  const [lineMode,setLineMode]=useState<"subtle"|"visible"|"focus">("subtle");
+  const [arrangement,setArrangement]=useState<"areas"|"types"|"themes">("areas");
+  const [focusAreaId,setFocusAreaId]=useState<string|null>(null);
+  const [lineMode,setLineMode]=useState<"subtle"|"visible"|"focus">("focus");
   const [aiOpen,setAiOpen]=useState(false);
   const [fullGeometry,setFullGeometry]=useState<FullNetworkGeometry|null>(null);
   const [projection,setProjection]=useState<AdaptiveGraphProjection|null>(null);
@@ -60,7 +61,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
       setFullGeometry(null);setViewMode(initialMode);
-      setNodeSizeMode("connections");setArrangement("areas");setLineMode("subtle");
+      setNodeSizeMode("connections");setArrangement("areas");setLineMode("focus");setFocusAreaId(null);
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
@@ -237,13 +238,14 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           <label htmlFor="whole-graph-arrangement">Arrange by</label>
           <select id="whole-graph-arrangement" value={arrangement} disabled={busy}
             onChange={event=>{
-              const value=event.target.value as "areas"|"types";
-              setArrangement(value);
+              const value=event.target.value as "areas"|"types"|"themes";
+              setArrangement(value);setFocusAreaId(null);
               submit({kind:"layout",arrangement:value},
                 "Rearranging the entire original network…");
             }}>
             <option value="areas">Network areas</option>
             <option value="types">Entity types</option>
+            <option value="themes">Themes and cause areas</option>
           </select>
           <label htmlFor="whole-graph-size-mode">Node size</label>
           <select id="whole-graph-size-mode" value={nodeSizeMode}
@@ -268,8 +270,9 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       {viewMode==="full"&&fullGeometry?
         <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
           sizeMode={nodeSizeMode} lineMode={lineMode}
+          focusAreaId={focusAreaId}
           onSelect={id=>{
-            if(id)navigate(id);
+            if(id){setFocusAreaId(null);navigate(id);}
             else {setInspection(null);setSelectedEdge(null);setHistory([]);
               setMatches(null);setNotice("");}
           }}
@@ -285,10 +288,24 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       {viewMode==="full"&&fullGeometry&&
         <div className="whole-graph-areas-panel" aria-label="Explore source network areas">
           {fullGeometry.areas.length>0&&<p>
-            <strong>{fullGeometry.areas.length} visual network areas.</strong>
-            {" "}Arranged around high-degree source entities or grouped by recorded
-            connectivity and entity type. These are navigation aids, not verified communities.
+            <strong>{fullGeometry.areas.length} {arrangement==="themes"?
+              "thematic areas":"visual network areas"}.</strong>
+            {" "}{arrangement==="themes"?
+              "Grouped using supplied themes, programme names and clearly marked possible topics; ambiguous records remain unclassified. Themes are not verified communities, and a grant with several themes is placed under one primary label only.":
+              "Arranged around highly connected source entities or grouped by connectivity and entity type. These are navigation aids, not verified communities."}
           </p>}
+          {arrangement==="themes"&&fullGeometry.areas.length>0&&
+            <div className="whole-graph-theme-areas">
+              {fullGeometry.areas.slice(0,14).map(area=>
+                <button key={area.id} type="button"
+                  className={focusAreaId===area.id?"active":""}
+                  onClick={()=>{
+                    setFocusAreaId(area.id);setInspection(null);setSelectedEdge(null);
+                  }}>
+                  <strong>{area.label}</strong>
+                  <small>{area.count.toLocaleString("en-GB")} entities · focus area</small>
+                </button>)}
+            </div>}
           {fullGeometry.hubs.length>0&&<div className="whole-graph-hub-buttons">
             <span className="whole-graph-hub-heading">Explore key connectors</span>
             {fullGeometry.hubs.slice(0,6).map(hub=>
@@ -312,7 +329,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       </p>}
       {viewMode==="full"&&fullGeometry&&
         <p className="whole-graph-full-caption" role="status">
-          Shapes identify entity types; network areas are a visual arrangement,
+          Shapes identify entity types; spatial areas are a visual arrangement,
           not confirmed associations. Node size uses a restrained logarithmic scale
           {nodeSizeMode==="amount"?
             " of recorded grant amounts in "+fullGeometry.amountCurrency+

@@ -16,6 +16,7 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
+import {ConnectionsExplorer} from "./ConnectionsExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
 import { NodeAppearanceEditor } from "./NodeAppearanceEditor";
@@ -1575,7 +1576,9 @@ export function MapStudio() {
             for the full source map. Rendering and arranging every element here
             may be slower on a phone. Your saved source records are unchanged.
             Return to Full graph for worker-backed rendering.</p>}
-        {fullFundingView?
+        {view==="collaborations"&&largeActiveView?
+          <ConnectionsExplorer graph={current} sourceGraph={graph}/> :
+        fullFundingView?
           <WholeGraphExplorer datasetId={activeFundingMap!.fundingDatasetId!}
             initialMode="full"/> :
         view!=="atlas"&&((view==="landscape"&&wholeNetworkOpen)||largeActiveView)?

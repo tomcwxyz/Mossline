@@ -1,9 +1,10 @@
 import type {GraphDocument} from "./schema";
 import type {FullNetworkGeometry} from "./full-network-layout";
+import {TOPIC_BRIDGES} from "./funding";
 
 export type NetworkArea={
  id:string;label:string;count:number;x:number;y:number;radius:number;
- anchorId?:string;kind:"linked"|"unlinked"|"hub";
+ anchorId?:string;kind:"linked"|"unlinked"|"hub"|"theme";
 };
 export type NetworkHub={id:string;label:string;type:string;connections:number};
 const golden=Math.PI*(3-Math.sqrt(5));
@@ -12,6 +13,66 @@ function hash(value:string){
  for(let i=0;i<value.length;i++)h=Math.imul(h^value.charCodeAt(i),16777619)>>>0;
  return h/4294967296;
 }
+
+type ThemeChoice={key:string;label:string;origin:"source"|"suggested"|"unlabelled"};
+function normalTheme(value:string):string{
+ return value.trim().replace(/\s+/g," ").slice(0,75);
+}
+/** Existing tags/programmes are source assertions. Phrase matches are only
+ * optional navigational suggestions, never authoritative classifications.
+ * Organisation/funder placements use links to source-classified grants.
+ */
+function thematicChoices(graph:GraphDocument,adjacent:number[][]):ThemeChoice[]{
+ const choices:(ThemeChoice|null)[]=Array.from({length:graph.nodes.length},()=>null);
+ const read=(i:number):ThemeChoice|null=>{
+  const generic=new Set(["general","other","community","unspecified","miscellaneous"]);
+  const node=graph.nodes[i],tags=node.tags.map(normalTheme).filter(Boolean).sort((a,b)=>
+   Number(generic.has(a.toLowerCase()))-Number(generic.has(b.toLowerCase()))||
+   b.length-a.length||a.localeCompare(b,"en-GB"));
+  const own=tags[0];
+  if(own)return {key:"tag:"+own.toLocaleLowerCase("en-GB"),
+   label:own,origin:"source"};
+  const programme=node.properties?.programme;
+  if(node.properties?.mosslineFundingGrant===true&&typeof programme==="string"&&
+   normalTheme(programme))return {key:"programme:"+normalTheme(programme).toLocaleLowerCase("en-GB"),
+    label:"Programme: "+normalTheme(programme),origin:"source"};
+  if(node.properties?.mosslineFundingGrant===true){
+   const prose=(node.label+" "+(node.description??"")).toLowerCase();
+   for(const rule of TOPIC_BRIDGES){
+    if(rule.phrases.some(phrase=>{
+     const needle=phrase.toLowerCase();
+     return prose.includes(needle);
+    }))return {key:"suggestion:"+rule.topic.toLowerCase(),label:"Possible: "+rule.topic,
+      origin:"suggested"};
+   }
+  }
+  return null;
+ };
+ for(let i=0;i<graph.nodes.length;i++){
+  choices[i]=read(i);
+ }
+ // Source-related funders/recipients inherit a navigational primary theme from
+ // recorded grant neighbours, rather than inventing a new node property.
+ for(let i=0;i<graph.nodes.length;i++){
+  if(choices[i])continue;
+  const neighbours=adjacent[i],freq=new Map<string,{choice:ThemeChoice;n:number}>();
+  for(const other of neighbours){
+   if(graph.nodes[other].properties?.mosslineFundingGrant!==true)continue;
+   const theme=choices[other];if(!theme)continue;
+   const entry=freq.get(theme.key);
+   freq.set(theme.key,{choice:theme,n:(entry?.n??0)+1});
+  }
+  const candidate=[...freq.values()].sort((a,b)=>b.n-a.n||
+   a.choice.key.localeCompare(b.choice.key));
+  if(candidate.length&&(candidate.length===1||candidate[0].n>candidate[1].n))
+   choices[i]=candidate[0].choice;
+ }
+ return choices.map(item=>{
+  const choice=item??{key:"unlabelled",label:"No theme supplied",origin:"unlabelled" as const};
+  return choice;
+ });
+}
+
 function labelType(type:string){return type==="organisation"?"organisations":
  type==="project"?"projects or grants":type==="funder"?"funders":
  type==="person"?"people":type==="place"?"places":type+" entities";}
@@ -20,7 +81,8 @@ function labelType(type:string){return type==="organisation"?"organisations":
  * 'Areas' are spatial navigation, not detected real-world communities.
  * No source relationship or isolated node is omitted.
  */
-export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeometry):
+export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeometry,
+ mode:"areas"|"themes"="areas"):
  {areas:NetworkArea[];hubs:NetworkHub[]}{
  const n=geometry.nodeCount;
  if(!n)return {areas:[],hubs:[]};
@@ -37,13 +99,36 @@ export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeom
     graph.nodes[a].id.localeCompare(graph.nodes[b].id));
  // Keep a short, navigable set of anchor hubs, rather than making each
  // recipient or funder a separate tiny island.
- const seeds=ranked.slice(0,Math.min(12,Math.max(4,Math.round(Math.sqrt(n)/6))));
+ const seeds=mode==="themes"?[]:
+  ranked.slice(0,Math.min(12,Math.max(4,Math.round(Math.sqrt(n)/6))));
  const assignment=new Int32Array(n).fill(-1),queue:number[]=[];
  const groups:{key:string;label:string;indices:number[];anchor?:number;
    kind:NetworkArea["kind"]}[]=seeds.map((node,i)=>({
   key:"hub:"+graph.nodes[node].id,label:"Around "+graph.nodes[node].label,
   indices:[],anchor:node,kind:"hub"
  }));
+ if(mode==="themes"){
+  const themes=thematicChoices(graph,adjacent);
+  const freq=new Map<string,number>();
+  for(const theme of themes)freq.set(theme.key,(freq.get(theme.key)??0)+1);
+  const top=new Set([...freq].filter(([key])=>key!=="unlabelled")
+    .sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))
+    .slice(0,14).map(([key])=>key));
+  const groupForKey=new Map<string,number>();
+  themes.forEach((theme,i)=>{
+   const key=theme.key==="unlabelled"?"unlabelled":
+     top.has(theme.key)?theme.key:"other-themes";
+   let group=groupForKey.get(key);
+   if(group===undefined){
+    group=groups.length;groupForKey.set(key,group);
+    groups.push({key:"theme:"+key,
+     label:key==="other-themes"?"Other labelled themes":
+       key==="unlabelled"?"No theme supplied":theme.label,
+     kind:"theme",indices:[]});
+   }
+   assignment[i]=group;
+  });
+ }
  for(let i=0;i<seeds.length;i++){assignment[seeds[i]]=i;queue.push(seeds[i]);}
  // Multi-source breadth-first expansion ensures each assigned area is
  // connected by recorded source edges to its anchor. Ties favour bigger hubs.
@@ -119,7 +204,7 @@ export function arrangeNetworkAreas(graph:GraphDocument,geometry:FullNetworkGeom
    counts[a]++;counts[b]++;
   }
   for(let i=0;i<n;i++){
-   if(!counts[i]||seeds.includes(i))continue;
+   if(!counts[i]||(mode==="areas"&&seeds.includes(i)))continue;
    const k=2*i;
    geometry.positions[k]=.77*geometry.positions[k]+
      .14*(sums[k]/counts[i])+.09*seedPos[k];

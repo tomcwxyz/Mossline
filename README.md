@@ -954,3 +954,32 @@ The first release is optimised for preserving large uploads and background
 parsing; other advanced graph analytics and visual layouts can still require
 significant memory on low-powered devices. Benchmarking and streaming parsing
 for files larger than 60 MB remain future work.
+
+## Alpha 2.14 — Understanding a network
+
+**Themes and cause areas** is an additional whole-graph layout, not a separate
+dataset. It groups all original source entities into visual areas using
+imported tags/themes and recorded programme names. Where the source has no
+theme but a clear text phrase matches an existing explicit rule, the label is
+marked **Possible:** and should be reviewed by the data owner. Untagged
+entities remain present. The system never treats co-location in a theme
+area as a documented partnership, award or relationship. A record with
+several themes has one primary visual placement at this stage; its source
+tags remain unchanged and discoverable.
+
+You do **not** need an embedding model or hosted LLM to use source-led theme
+layout. An optional embedding-assisted categorisation workflow can be
+introduced later to suggest themes for missing/unusual descriptions, but
+it must remain opt-in, explain source evidence and support human approval.
+
+**Connections** for large organisational association sets now starts in an
+evidence-led reader rather than a seven-box summary of thousands of
+associations. Search/select an organisation, see only a few illustrative
+spokes and all its recorded/shared associations in a paginated list;
+expand **Why are these connected?** to see the supporting source entities.
+Shared-funder/project associations are not confirmed collaboration. The
+complete visual association graph is still accessible in the advanced panel.
+
+The full GPU network now defaults to relationship lines on selection,
+allows switching back to all/subtle lines and avoids colliding large area
+labels at low zoom. Browser storage and source evidence stay unchanged.

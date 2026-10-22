@@ -29,3 +29,5 @@ export * from "./network-navigation";
 export * from "./full-network-layout";
 
 export * from "./network-semantic";
+
+export * from "./connections-browser";

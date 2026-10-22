@@ -71,10 +71,10 @@ function distance(points:Point[]):number{
  return Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
 }
 export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
-  sizeMode="connections",lineMode="subtle"}:{
+  sizeMode="connections",lineMode="focus",focusAreaId}:{
  geometry:FullNetworkGeometry;selectedId?:string|null;onSelect:(id:string|null)=>void;
  onUnavailable?:()=>void;sizeMode?:"connections"|"amount";
- lineMode?:"subtle"|"visible"|"focus";
+ lineMode?:"subtle"|"visible"|"focus";focusAreaId?:string|null;
 }){
  const canvas=useRef<HTMLCanvasElement>(null);
  const overlay=useRef<HTMLCanvasElement>(null);
@@ -210,7 +210,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        }
        gl.uniform1i(circle,1);
        gl.uniform1f(fade,selection?.13:1);
-       gl.uniform1f(pointScale,1);
+       gl.uniform1f(pointScale,geometry.nodeCount>1200&&c.zoom<1?.78:1);
        pointAttribute(backgroundPoints,backgroundTypes,
          sizeModeRef.current==="amount"?amountSizes:degreeSizes);
        gl.drawArrays(gl.POINTS,0,geometry.nodeCount);
@@ -230,31 +230,51 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        context.setTransform(ratio,0,0,ratio,0,0);context.clearRect(0,0,w,h);
        // Label only the most substantial visual areas. These are derived
        // arrangement areas, not verified real-world community membership.
-       if(geometry.arrangement==="areas"&&!selection){
-         const significant=geometry.areas.slice().sort((a,b)=>b.count-a.count).slice(0,10);
+       if(geometry.arrangement!=="types"&&!selection){
+         // Labels are cartographic aids, so avoid drawing them over one another.
+         // On mobile fewer labels appear; the matching area list remains accessible.
+         const placed:{x:number;y:number;w:number;h:number}[]=[];
+         const limit=w<600?5:8;
+         const significant=geometry.areas.slice().sort((a,b)=>b.count-a.count)
+           .slice(0,limit);
          for(const area of significant){
            const x=w/2+(area.x+c.offsetX)*c.zoom;
            const y=h/2+(area.y+c.offsetY)*c.zoom;
            const radius=Math.max(4,area.radius*c.zoom);
            if(x+radius<0||y+radius<0||x-radius>w||y-radius>h)continue;
            context.beginPath();context.arc(x,y,radius,0,Math.PI*2);
-           context.fillStyle="rgba(183,219,184,0.032)";context.fill();
-           context.strokeStyle="rgba(165,212,172,0.24)";
-           context.lineWidth=1;context.setLineDash([5,8]);context.stroke();
+           context.fillStyle=geometry.arrangement==="themes"?
+             "rgba(212,189,117,0.043)":"rgba(183,219,184,0.026)";
+           context.fill();
+           context.strokeStyle=geometry.arrangement==="themes"?
+             "rgba(218,189,115,0.32)":"rgba(165,212,172,0.19)";
+           context.lineWidth=1;context.setLineDash([4,7]);context.stroke();
            context.setLineDash([]);
-           const text=area.label.length>41?area.label.slice(0,39)+"…":area.label;
            context.font="600 11px system-ui";
-           const labelW=Math.min(w-20,context.measureText(text).width+22);
+           const text=area.label.length>35?area.label.slice(0,33)+"…":area.label;
+           const labelW=Math.max(70,Math.min(w-24,context.measureText(text).width+26));
            if(labelW<=0)continue;
-           const bx=Math.max(8,Math.min(w-labelW-8,x-labelW/2));
-           const by=Math.max(8,Math.min(h-32,y-radius-15));
-           context.fillStyle="rgba(22,55,44,0.92)";
-           context.fillRect(bx,by,labelW,26);
-           context.strokeStyle="rgba(176,209,163,0.46)";
-           context.strokeRect(bx+.5,by+.5,labelW-1,25);
-           context.save();context.beginPath();context.rect(bx+6,by+3,labelW-12,22);
-           context.clip();context.fillStyle="#f5e8c6";
-           context.fillText(text,bx+10,by+17);context.restore();
+           const x0=Math.max(8,Math.min(w-labelW-8,x-labelW/2));
+           const options=[y-radius-28,y+radius+4,y-13,y+15];
+           let by=-1;
+           for(const candidate of options){
+             const proposed={x:x0,y:candidate,w:labelW,h:27};
+             if(candidate<8||candidate>h-35)continue;
+             if(placed.every(r=>r.x+r.w+6<proposed.x||
+               proposed.x+proposed.w+6<r.x||
+               r.y+r.h+5<proposed.y||
+               proposed.y+proposed.h+5<r.y)){by=candidate;break;}
+           }
+           if(by<0)continue;
+           placed.push({x:x0,y:by,w:labelW,h:27});
+           context.fillStyle="rgba(21,52,41,0.93)";
+           context.fillRect(x0,by,labelW,27);
+           context.strokeStyle=geometry.arrangement==="themes"?
+             "rgba(216,191,128,0.50)":"rgba(176,209,163,0.42)";
+           context.strokeRect(x0+.5,by+.5,labelW-1,26);
+           context.save();context.beginPath();context.rect(x0+5,by+2,labelW-10,23);
+           context.clip();context.fillStyle="#f4e8c8";
+           context.fillText(text,x0+9,by+17);context.restore();
          }
        }
        if(!selection)return;
@@ -336,6 +356,31 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
    animation.current=requestAnimationFrame(step);
    return stopAnimation;
  },[selectedId,geometry,index]);
+ useEffect(()=>{
+   if(!focusAreaId||!canvas.current)return;
+   const area=geometry.areas.find(item=>item.id===focusAreaId);
+   if(!area)return;
+   stopAnimation();
+   const surface=canvas.current,from={...camera.current};
+   const maxZoom=Math.min(surface.clientWidth,surface.clientHeight)/
+     (2*Math.max(55,area.radius)+110);
+   const target:Camera={offsetX:-area.x,offsetY:-area.y,
+     zoom:Math.max(.08,Math.min(12,maxZoom))};
+   const reduceMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+   if(reduceMotion){camera.current=target;draw.current?.();return;}
+   let start:number|null=null;
+   const step=(time:number)=>{
+     if(start===null)start=time;
+     const t=Math.min(1,(time-start)/320),k=1-(1-t)**3;
+     camera.current={offsetX:from.offsetX+(target.offsetX-from.offsetX)*k,
+       offsetY:from.offsetY+(target.offsetY-from.offsetY)*k,
+       zoom:from.zoom+(target.zoom-from.zoom)*k};
+     draw.current?.();
+     animation.current=t<1?requestAnimationFrame(step):null;
+   };
+   animation.current=requestAnimationFrame(step);
+   return stopAnimation;
+ },[focusAreaId,geometry]);
  zoomTo.current=(factor:number,x:number,y:number)=>{
    const surface=canvas.current;if(!surface)return;
    const c=camera.current,w=surface.clientWidth,h=surface.clientHeight;

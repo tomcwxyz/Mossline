@@ -156,3 +156,42 @@ test("unlinked datasets retain every entity and distinguish source type without 
  assert.ok([...geometry.positions].every(Number.isFinite));
  assert.deepEqual(focusFullNetwork(geometry,"contact-1")?.relationships,0);
 });
+
+test("thematic layout uses source labels and programmes and retains every entity and relationship",()=>{
+ const graph=parseGraphDocument({version:1,title:"Funding themes",description:"",
+  nodes:[
+   {id:"f",label:"Fund Alpha",type:"funder",tags:[]},
+   {id:"a",label:"Food project",type:"project",tags:["Food security","Community"],
+    properties:{mosslineFundingGrant:true,funderId:"f",recipientId:"r"}},
+   {id:"b",label:"Nature",type:"project",tags:["Environment"],
+    properties:{mosslineFundingGrant:true,funderId:"f",recipientId:"r"}},
+   {id:"r",label:"Charity",type:"organisation",tags:[]},
+   {id:"p",label:"Uncategorised person",type:"person",tags:[]}
+  ],
+  edges:[{id:"fa",source:"f",target:"a",type:"awarded"},
+   {id:"fb",source:"f",target:"b",type:"awarded"},
+   {id:"ar",source:"a",target:"r",type:"received"},
+   {id:"br",source:"b",target:"r",type:"received"}]});
+ const frozen=JSON.stringify(graph);
+ const geometry=layoutFullNetwork(graph,"themes");
+ assert.equal(geometry.arrangement,"themes");
+ assert.equal(geometry.nodeCount,5);
+ assert.equal(geometry.edgeCount,4);
+ assert.equal(geometry.areas.reduce((sum,a)=>sum+a.count,0),5);
+ assert.ok(geometry.areas.some(a=>a.label==="Food security"&&a.kind==="theme"));
+ assert.ok(geometry.areas.some(a=>a.label==="Environment"&&a.kind==="theme"));
+ assert.ok(geometry.areas.some(a=>a.label==="No theme supplied"));
+ assert.deepEqual(geometry.positions,layoutFullNetwork(graph,"themes").positions);
+ assert.equal(JSON.stringify(graph),frozen,"Theme layout must not modify imported node tags or edges");
+ assert.equal(focusFullNetwork(geometry,"f")?.relationships,2);
+});
+test("no supplied cause areas are not made up by thematic presentation",()=>{
+ const graph=parseGraphDocument({version:1,title:"No tags",description:"",
+  nodes:[{id:"a",label:"A",type:"organisation",tags:[]},
+   {id:"b",label:"B",type:"organisation",tags:[]}],
+  edges:[{id:"ab",source:"a",target:"b",type:"recorded"}]});
+ const geometry=layoutFullNetwork(graph,"themes");
+ assert.equal(geometry.areas.length,1);
+ assert.equal(geometry.areas[0].label,"No theme supplied");
+ assert.equal(geometry.areas[0].count,2);
+});

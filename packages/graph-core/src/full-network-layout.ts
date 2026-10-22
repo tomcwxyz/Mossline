@@ -5,7 +5,7 @@ import {arrangeNetworkAreas,type NetworkArea,type NetworkHub} from "./network-ar
  * This is deliberately independent of the grouped adaptive projection.
  * Coordinates are computed in the background worker; no source edges are dropped.
  */
-export type NetworkArrangement="areas"|"types";
+export type NetworkArrangement="areas"|"types"|"themes";
 export type FullNetworkGeometry={
   arrangement:NetworkArrangement;areas:NetworkArea[];hubs:NetworkHub[];
   ids:string[];labels:string[];types:Uint8Array;positions:Float32Array;segments:Float32Array;
@@ -134,8 +134,9 @@ export function layoutFullNetwork(graph:GraphDocument,
     amountCurrency,amountCount:amountCurrency?amountCount:0,
     arrangement,areas:[],hubs:[],nodeCount:count,edgeCount:graph.edges.length,
     bounds:{minX,minY,maxX,maxY}};
-  if(arrangement==="areas"){
-    const presentation=arrangeNetworkAreas(graph,geometry);
+  if(arrangement!=="types"){
+    const presentation=arrangeNetworkAreas(graph,geometry,
+      arrangement==="themes"?"themes":"areas");
     geometry.areas=presentation.areas;geometry.hubs=presentation.hubs;
   }
   return geometry;
