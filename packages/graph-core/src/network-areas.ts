@@ -25,8 +25,10 @@ function normalTheme(value:string):string{
 function thematicChoices(graph:GraphDocument,adjacent:number[][]):ThemeChoice[]{
  const choices:(ThemeChoice|null)[]=Array.from({length:graph.nodes.length},()=>null);
  const read=(i:number):ThemeChoice|null=>{
+  const generic=new Set(["general","other","community","unspecified","miscellaneous"]);
   const node=graph.nodes[i],tags=node.tags.map(normalTheme).filter(Boolean).sort((a,b)=>
-   a.localeCompare(b,"en-GB"));
+   Number(generic.has(a.toLowerCase()))-Number(generic.has(b.toLowerCase()))||
+   b.length-a.length||a.localeCompare(b,"en-GB"));
   const own=tags[0];
   if(own)return {key:"tag:"+own.toLocaleLowerCase("en-GB"),
    label:own,origin:"source"};

@@ -71,7 +71,7 @@ export function ConnectionsExplorer({graph,sourceGraph}:{
          <p><strong>{fmt(entity.links)}</strong> connections in this view:
            {" "}{fmt(entity.recorded)} recorded and {fmt(entity.shared)} shared associations.</p>
        </div>
-       <div className="connection-reader-radial" role="img"
+       <div className="connection-reader-radial" role="group"
          aria-label={entity.node.label+" and "+spokes.length+
            " of its directly connected organisations. All connections are listed alongside."}>
          <svg viewBox="0 0 520 365" aria-hidden="true">
@@ -113,8 +113,7 @@ export function ConnectionsExplorer({graph,sourceGraph}:{
          })}
        </div>
        <p className="connection-reader-diagram-note">A readable snapshot of up to seven
-         direct relationships, not a sampled source graph. Choose any name or
-         explore the full list to follow all connections.</p>
+         direct relationships. This is only a preview; use the full list to follow every source connection.</p>
      </div>
      <div className="connection-reader-list">
        <div className="connection-reader-list-title">
