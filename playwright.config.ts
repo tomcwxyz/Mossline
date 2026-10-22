@@ -11,6 +11,7 @@ export default defineConfig({
     ...devices["Desktop Chrome"],
     baseURL:"http://127.0.0.1:3000",
     trace:"retain-on-failure",
+    screenshot:"only-on-failure",
   },
   webServer:{
     command:"npm run start --workspace @mossline/web -- -p 3000",
