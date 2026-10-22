@@ -1,6 +1,36 @@
 import {test,expect} from "@playwright/test";
 import {readFile} from "node:fs/promises";
 
+test("existing saved maps open, switch and retain v1 library IDs",async({page})=>{
+  await page.addInitScript(()=>{
+    const graph=(title:string)=>({
+      version:1,title,description:"Imported local network",
+      nodes:[{id:title+"-1",label:"Community organisation",type:"organisation",tags:[]}],
+      edges:[]
+    });
+    localStorage.setItem("mossline-local-maps-v1",JSON.stringify({
+      activeId:"historic-second",maps:[
+        {id:"historic-first",createdAt:1700000000000,title:"Map One",graph:graph("Map One")},
+        {id:"historic-second",createdAt:1700000000001,title:"Map Two",graph:graph("Map Two")}
+      ]
+    }));
+  });
+  await page.goto("/");
+  const savedMaps=page.locator(".studio-start-maplist");
+  await expect(savedMaps.getByRole("button",{name:/Map One/})).toBeVisible();
+  await expect(savedMaps.getByRole("button",{name:/Map Two/})).toBeVisible();
+  await savedMaps.getByRole("button",{name:/Map One/}).click();
+  await expect(page.getByRole("heading",{name:/Map One/})).toBeVisible();
+  await page.getByRole("combobox",{name:/Switch between maps/}).selectOption("historic-second");
+  await expect(page.getByRole("heading",{name:/Map Two/})).toBeVisible();
+  const stored=await page.evaluate(()=>JSON.parse(
+    localStorage.getItem("mossline-local-maps-v1")??"{}"
+  ) as {activeId:string;maps:{id:string;graph:{nodes:unknown[]}}[]});
+  expect(stored.activeId).toBe("historic-second");
+  expect(stored.maps.map(m=>m.id)).toEqual(["historic-first","historic-second"]);
+  expect(stored.maps.every(m=>m.graph.nodes.length===1)).toBe(true);
+});
+
 /** Exercise *existing* v1 browser databases through the unchanged recovery UI.
  * No production browser data is ever touched: Playwright creates a fresh context.
  */
