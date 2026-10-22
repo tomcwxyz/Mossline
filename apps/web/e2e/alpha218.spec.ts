@@ -1,5 +1,6 @@
 import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import {readFile} from "node:fs/promises";
 
 const grantCsv=[
  "Identifier,Funding Org:Name,Recipient Org:Name,Amount Awarded,Award Date",
@@ -64,6 +65,73 @@ test("generic CSV upload recognises real grants and preserves the file",async({p
  await expect(funding).toBeVisible();
  await expect(funding.getByText("synthetic-grants.csv")).toBeVisible();
  await expect(funding.getByRole("button",{name:/Create funding landscape/i})).toBeEnabled();
+});
+
+test("large general maps can be backed up and recovered in a new browser profile",async({browser})=>{
+ const source=await browser.newContext({acceptDownloads:true});
+ const sourcePage=await source.newPage();
+ await sourcePage.goto("/recover");
+ await sourcePage.evaluate(async()=>{
+   const datasetId="synthetic-general-recovery";
+   const count=2_800;
+   const graph={
+     version:1,title:"Large recovery fixture",description:"Synthetic browser recovery test",
+     nodes:Array.from({length:count},(_,i)=>({
+       id:"org-"+i,label:"Example "+i,type:"organisation",tags:[]
+     })),
+     edges:Array.from({length:count-1},(_,i)=>({
+       id:"link-"+i,source:"org-"+i,target:"org-"+(i+1),type:"connected to"
+     }))
+   };
+   await new Promise<void>((resolve,reject)=>{
+     const request=indexedDB.open("mossline-general-maps-v1",1);
+     request.onupgradeneeded=()=>{
+       request.result.createObjectStore("graphs",{keyPath:"id"});
+     };
+     request.onerror=()=>reject(request.error);
+     request.onsuccess=()=>{
+       const db=request.result,transaction=db.transaction("graphs","readwrite");
+       transaction.objectStore("graphs").put({id:datasetId,graph,updatedAt:Date.now()});
+       transaction.oncomplete=()=>{db.close();resolve();};
+       transaction.onerror=()=>reject(transaction.error);
+     };
+   });
+   const entry={
+     id:"fixture-map",createdAt:Date.now(),title:graph.title,
+     graph:{version:1,title:graph.title,description:graph.description,nodes:[],edges:[]},
+     generalDatasetId:datasetId,sourceCounts:{nodes:graph.nodes.length,edges:graph.edges.length}
+   };
+   localStorage.setItem("mossline-local-maps-v1",
+     JSON.stringify({activeId:entry.id,maps:[entry]}));
+ });
+ await sourcePage.reload();
+ const general=sourcePage.getByRole("region",{name:"Complete general network recovery"});
+ await expect(general.getByText(/Large recovery fixture/)).toBeVisible();
+ const generalDownload=sourcePage.waitForEvent("download");
+ await general.getByRole("button",{name:/Download all complete general networks/i}).click();
+ const generalFile=await generalDownload;
+ const generalBytes=await readFile(await generalFile.path());
+ const libraryDownload=sourcePage.waitForEvent("download");
+ await sourcePage.getByRole("button",{name:/Download map-library backup/i}).click();
+ const libraryFile=await libraryDownload;
+ const libraryBytes=await readFile(await libraryFile.path());
+ await source.close();
+
+ const target=await browser.newContext({acceptDownloads:true});
+ const targetPage=await target.newPage();
+ targetPage.on("dialog",dialog=>{void dialog.accept();});
+ await targetPage.goto("/recover");
+ await targetPage.locator('input[aria-label="Choose full general network backup"]').setInputFiles({
+   name:"general.json",mimeType:"application/json",buffer:generalBytes
+ });
+ await expect(targetPage.getByText(/Restored 1 complete networks/i)).toBeVisible();
+ await targetPage.locator('input[aria-label="Choose map-library backup JSON"]').setInputFiles({
+   name:"library.json",mimeType:"application/json",buffer:libraryBytes
+ });
+ await expect(targetPage.getByText(/Map backup restored in this browser/i)).toBeVisible();
+ await targetPage.goto("/");
+ await expect(targetPage.getByText("Large recovery fixture")).toBeVisible();
+ await target.close();
 });
 
 test("share screen is accessible to open without a saved map",async({page})=>{
