@@ -25,13 +25,15 @@ self.onmessage=(event:MessageEvent<Command>)=>{
      const initial:MappedPreview|null=discovery?.kind==="csv-table"?
        buildMappedGraph(current[0],discovery.mapping):null;
      notify({kind:"analysed",id:job.id,discovery,preview,initial,
+       needsIndexedDb:JSON.stringify(preview?.graph??initial?.graph??null).length>300_000,
        fileName:current.length===1?current[0].name:"Imported network"});
    }else{
      if(current.length!==1||!current[0].name.toLowerCase().endsWith(".csv"))
        throw Error("Select one general-purpose CSV to review its mapping.");
      notify({kind:"stage",id:job.id,message:"Building the complete mapped graph in the background…"});
      const proposal=buildMappedGraph(current[0],job.mapping);
-     notify({kind:"mapped",id:job.id,proposal});
+     notify({kind:"mapped",id:job.id,proposal,
+       needsIndexedDb:JSON.stringify(proposal.graph??null).length>300_000});
    }
   }catch(error){
    notify({kind:"failed",id:job.id,

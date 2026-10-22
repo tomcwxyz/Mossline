@@ -306,6 +306,7 @@ export function MapStudio() {
   const [discovery, setDiscovery] = useState<DataDiscovery | null>(null);
   const [mappingFile, setMappingFile] = useState<ImportFile | null>(null);
   const [initialMapped,setInitialMapped]=useState<MappedPreview|null>(null);
+  const [importNeedsIndexedDb,setImportNeedsIndexedDb]=useState(false);
   const [showImportCoverage,setShowImportCoverage]=useState(false);
   const [importBusy,setImportBusy]=useState(false);
   const [importStage,setImportStage]=useState("");
@@ -811,6 +812,7 @@ export function MapStudio() {
     importWorkerRef.current=null;
     const id=++importRequestRef.current;
     setImportBusy(true);setImportStage("Opening your files in a background worker…");
+    setImportNeedsIndexedDb(false);
     setShowImportCoverage(false);
     setNotice("");setImportPreview(null);setDiscovery(null);
     setMappingFile(null);setInitialMapped(null);
@@ -822,6 +824,7 @@ export function MapStudio() {
         kind:"stage"|"analysed"|"mapped"|"failed";id:number;message?:string;
         preview?:ImportPreview|null;discovery?:DataDiscovery|null;
         initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
+        needsIndexedDb?:boolean;
       }>)=>{
         const result=event.data;
         if(result.id!==importRequestRef.current)return;
@@ -831,6 +834,7 @@ export function MapStudio() {
           setNotice(result.message??"Unable to import these source files.");return;
         }
         if(result.kind==="mapped"&&result.proposal){
+          setImportNeedsIndexedDb(result.needsIndexedDb===true);
           previewMappedGraph(result.proposal);
           return;
         }
@@ -842,6 +846,7 @@ export function MapStudio() {
         setMappingFile(analysis?.kind==="csv-table"?
           {name:result.fileName??files[0].name,text:""}:null);
         setInitialMapped(result.initial??null);
+        setImportNeedsIndexedDb(result.needsIndexedDb===true);
         setMappingSession(v=>v+1);
         setAcknowledgeRemovals(false);
         setImportMode("new");
@@ -880,6 +885,7 @@ export function MapStudio() {
 
   function closeImport() {
     setShowImportCoverage(false);
+    setImportNeedsIndexedDb(false);
     importWorkerRef.current?.terminate();importWorkerRef.current=null;
     importRequestRef.current++;
     setImportBusy(false);setImportStage("");setInitialMapped(null);
@@ -888,6 +894,8 @@ export function MapStudio() {
   }
 
   function tryExampleDiscovery() {
+    importWorkerRef.current?.terminate();importWorkerRef.current=null;
+    importRequestRef.current++;setImportNeedsIndexedDb(false);
     const analysis=discoverData(DISCOVERY_EXAMPLE);
     setDiscovery(analysis);
     setMappingFile(DISCOVERY_EXAMPLE);
@@ -908,8 +916,9 @@ export function MapStudio() {
     const proposed={...preview.graph,title:importMapName.trim().slice(0,100)||preview.graph.title};
     setImportBusy(true);setImportStage("Saving the complete network in this browser…");
     let storageId:string|undefined;
+    const generation=importRequestRef.current;
     try{
-      if(shouldStoreGeneralGraph(proposed)){
+      if(importNeedsIndexedDb||shouldStoreGeneralGraph(proposed)){
         // Use a stable map ID as the IndexedDB key when replacing. Complete
         // writes finish before changing the active map or dismissing the import.
         storageId=importMode==="replace"?
@@ -917,6 +926,8 @@ export function MapStudio() {
           crypto.randomUUID();
         await saveGeneralGraph(storageId,proposed);
       }
+      // A user may have navigated away while an IndexedDB write was pending.
+      if(generation!==importRequestRef.current)return;
       const success=importMode==="new"?
         createNewMap(proposed,undefined,undefined,storageId):
         updateGraph(proposed,storageId);
