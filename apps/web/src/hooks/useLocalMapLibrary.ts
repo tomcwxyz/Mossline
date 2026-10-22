@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect,useRef,useState,type Dispatch,type SetStateAction} from "react";
-import {graphFingerprint,parseGraphDocument,type GraphDocument,type FundingFullAnalysis}
+import {parseGraphDocument,type GraphDocument,type FundingFullAnalysis}
   from "@mossline/graph-core";
 import {MAP_LIBRARY_STORAGE_KEY,LEGACY_GRAPH_STORAGE_KEY}
   from "../lib/browser-storage-keys";
@@ -84,7 +84,6 @@ export function useLocalMapLibrary({
     const initial:LocalMap={id:crypto.randomUUID(),title:loaded.title,
       graph:loaded,createdAt:Date.now()};
     setGraph(loaded);setLocalMaps([initial]);setActiveMapId(initial.id);
-    return ()=>{hydrationRef.current++;};
     // Mount hydration intentionally mirrors the existing v1 lifecycle.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
