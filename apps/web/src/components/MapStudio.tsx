@@ -257,6 +257,7 @@ export function MapStudio() {
   const [activeMapId,setActiveMapId] = useState<string|null>(null);
   const [importMode,setImportMode]=useState<"new"|"replace">("new");
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
+  const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
   const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
   const [importMapName,setImportMapName]=useState("");
@@ -830,6 +831,8 @@ export function MapStudio() {
       setNotice("Select CSV or JSON files totalling at most 60 MB for local import. "+
         "Larger files will need streamed parsing.");return;
     }
+    setShowFundingWorkbench(false);
+    setFundingInitialFile(null);
     importWorkerRef.current?.terminate();
     importWorkerRef.current=null;
     const id=++importRequestRef.current;
@@ -843,7 +846,7 @@ export function MapStudio() {
         {type:"module"});
       importWorkerRef.current=worker;
       worker.onmessage=(event:MessageEvent<{
-        kind:"stage"|"analysed"|"mapped"|"failed";id:number;message?:string;
+        kind:"stage"|"analysed"|"mapped"|"funding-detected"|"failed";id:number;message?:string;
         preview?:ImportPreview|null;discovery?:DataDiscovery|null;
         initial?:MappedPreview|null;proposal?:MappedPreview;fileName?:string;
         needsIndexedDb?:boolean;
@@ -852,6 +855,13 @@ export function MapStudio() {
         if(result.id!==importRequestRef.current)return;
         if(result.kind==="stage"){setImportStage(result.message??"Working…");return;}
         setImportBusy(false);setImportStage("");
+        if(result.kind==="funding-detected"){
+          closeImport();
+          setFundingInitialFile(files[0]);
+          setShowFundingWorkbench(true);
+          setNotice("This looks like grant awards data. Review the detected columns in the funding importer before creating your map.");
+          return;
+        }
         if(result.kind==="failed"){
           setNotice(result.message??"Unable to import these source files.");return;
         }
@@ -1012,7 +1022,7 @@ export function MapStudio() {
         " grants in complete dataset":undefined}))}
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
-      onFunding={()=>{setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onFunding={()=>{setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
@@ -1059,7 +1069,7 @@ export function MapStudio() {
         <details className="studio-action-menu">
           <summary>More actions</summary>
           <div className="studio-action-popover">
-            <button type="button" onClick={()=>setShowFundingWorkbench(v=>!v)}>
+            <button type="button" onClick={()=>{setFundingInitialFile(null);setShowFundingWorkbench(v=>!v);}}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
             {fullFundingView?<a href="/recover">↓ Back up full funding dataset</a>:
@@ -1101,8 +1111,8 @@ export function MapStudio() {
       </div>
     </div>}
 
-    {showFundingWorkbench&&<FundingWorkbench
-      onClose={()=>setShowFundingWorkbench(false)}
+    {showFundingWorkbench&&<FundingWorkbench initialFile={fundingInitialFile}
+      onClose={()=>{setShowFundingWorkbench(false);setFundingInitialFile(null);}}
       onCreate={(next,fullAnalysis,datasetId)=>{
         if(!createNewMap(next,fullAnalysis,datasetId))return false;
         setNotice("Funding landscape created. The Network view opens all eligible grants and recorded relationships; optional detailed analysis is available below.");
