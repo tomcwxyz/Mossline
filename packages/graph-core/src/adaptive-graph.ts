@@ -82,9 +82,12 @@ export function buildAdaptiveGraphIndex(source:GraphDocument):AdaptiveGraphIndex
     // than dropping any funder, region or entity from the visible hierarchy.
     const categories=[...byMeaning.entries()].sort(([a],[b])=>a.localeCompare(b));
     const children:AdaptiveItem[]=[];
-    const categoryItems=categories.map(([label,members])=>
-      members.length===1?leaf(members[0]):
-      makeGroup(label,members,chunks(members)));
+    // A single category (often "Region not recorded") adds a click but no
+    // information. Go straight to manageable alphabetic groups instead.
+    const categoryItems=categories.length===1?chunks(nodes):
+      categories.map(([label,members])=>
+        members.length===1?leaf(members[0]):
+        makeGroup(label,members,chunks(members)));
     if(categoryItems.length<=FANOUT)children.push(...categoryItems);
     else{
       const per=Math.ceil(categoryItems.length/FANOUT);
