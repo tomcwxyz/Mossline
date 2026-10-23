@@ -21,11 +21,11 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 </head><body>
 <header><h1>Mossline · Graph Lab</h1><p>Compare two interactive graph renderers using identical entities, relationships, positions and colour encoding. Experimental, separate from the Mossline studio.</p></header>
 <div class="controls">
-<label>Network <select id="size"><option value="300">300 nodes</option><option value="1500">1,500 nodes</option><option value="3000">3,000 nodes</option></select></label>
+<label>Network <select id="size"><option value="300">300 nodes</option><option value="1500">1,500 nodes</option><option value="3000">3,000 nodes</option><option value="10000">10,000 nodes</option><option value="20000">20,000 nodes</option></select></label>
 <button id="generate">Load same sample</button>
 <label class="file">Import Mossline JSON<input id="import" type="file" accept=".json,application/json"></label>
 <button id="gexf">Export Gephi GEXF</button><button id="csv">Export Cosmograph CSVs</button>
-<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button>
+<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button><button id="benchmark">Run comparison</button>
 </div>
 <div id="message" role="status"></div>
 <div class="panels"><section class="panel"><h2>Mossline baseline · Canvas 2D</h2><div class="surface"><canvas id="baseline" aria-label="Canvas 2D network"></canvas></div><div class="stats" id="baseStats"></div></section>
@@ -37,7 +37,7 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/4.0.3/sigma.min.js"></script>
 <script>
 const $=id=>document.getElementById(id),COLOURS=['#8fc4a1','#e7bd78','#83b8e4','#dfa5bb','#adcca8','#d1ce90'];
-let nodes=[],edges=[],sigmaInstance=null,camera={x:0,y:0,zoom:1},drag=null,selection=null;
+let nodes=[],edges=[],sigmaInstance=null,camera={x:0,y:0,zoom:1},drag=null,selection=null,buildTime=0,canvasTime=0;
 const TYPE_LABELS=["Organisation","Project","Funder","Person","Place","Topic"];
 function hash(a){let v=(a*1664525+1013904223)>>>0;return v/4294967296}
 function sample(count){
@@ -64,7 +64,7 @@ function setSelected(id){selection=id;const n=nodes.find(n=>n.id===id),count=id?
 function assignGraph(data){
  nodes=data.nodes.map(n=>({...n}));edges=data.edges;selection=null;camera={x:0,y:0,zoom:1};layoutNodes($("layout").value);
  $('message').textContent=nodes.length.toLocaleString('en-GB')+' entities · '+edges.length.toLocaleString('en-GB')+' relationships';
- buildSigma();paint();$('baseStats').textContent='Canvas 2D · drag to pan · scroll to zoom';
+ buildSigma();paint();$('baseStats').textContent='Canvas 2D · last draw '+canvasTime.toFixed(1)+' ms · drag to pan · scroll to zoom';
 }
 function buildSigma(){
  const holder=$('sigma');if(sigmaInstance){sigmaInstance.kill();sigmaInstance=null;}holder.replaceChildren();
@@ -72,17 +72,20 @@ function buildSigma(){
  const Sigma=window.Sigma?.default||window.Sigma;
  if(typeof Graph!=='function'||typeof Sigma!=='function'){$('sigmaStats').textContent='Sigma.js unavailable: check CDN access';return;}
  try{
+ const started=performance.now();
  const g=new Graph({multi:true,allowSelfLoops:false});
  const degree=new Map(nodes.map(n=>[n.id,0]));for(const e of edges){degree.set(e.source,(degree.get(e.source)||0)+1);degree.set(e.target,(degree.get(e.target)||0)+1);}
  for(const n of nodes){const degreeSize=Math.min(15,4+Math.sqrt(degree.get(n.id)||0)*1.6);g.addNode(n.id,{label:n.label,x:n.x,y:n.y,size:degreeSize,degreeSize,nodeType:n.type,color:COLOURS[n.type%6]});}
  edges.forEach((e,i)=>{if(g.hasNode(e.source)&&g.hasNode(e.target)&&e.source!==e.target)g.addEdgeWithKey('e'+i,e.source,e.target,{size:.5,color:'#6e9882'});});
  sigmaInstance=new Sigma(g,holder,{renderEdgeLabels:false,labelDensity:.7,labelGridCellSize:125,defaultEdgeColor:'#6e9882',minCameraRatio:.03,maxCameraRatio:25});
+ buildTime=performance.now()-started;
  sigmaInstance.on('clickNode',({node})=>setSelected(node));
  sigmaInstance.on('clickStage',()=>setSelected(null));
- $('sigmaStats').textContent='Sigma.js · '+g.order.toLocaleString('en-GB')+' nodes · '+g.size.toLocaleString('en-GB')+' edges';
+ $('sigmaStats').textContent='Sigma.js · '+g.order.toLocaleString('en-GB')+' nodes · '+g.size.toLocaleString('en-GB')+' edges · initialisation '+buildTime.toFixed(1)+' ms';
  }catch(err){$('sigmaStats').textContent='Sigma.js could not start: '+err.message;}
 }
 function paint(){
+ const started=performance.now();
  const canvas=$('baseline'),rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=rect.width,h=rect.height;
  canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));
  const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#0d2924';c.fillRect(0,0,w,h);
@@ -93,6 +96,7 @@ function paint(){
  const visible=[];for(const n of nodes){const p=pt(n);if(p.x<0||p.x>w||p.y<0||p.y>h)continue;
  c.beginPath();c.arc(p.x,p.y,n.id===selection?7:Math.min(7,3.5+Math.sqrt(edges.length/Math.max(1,nodes.length))),0,Math.PI*2);c.fillStyle=nearby&&!nearby.has(n.id)?'#35534a':COLOURS[n.type%6];c.fill();if(n.id===selection||n.id==='n0'||(camera.zoom>1.5&&n.id.endsWith('0')))visible.push({n,p});}
  c.font='12px system-ui';c.fillStyle='#f3ecd5';for(const {n,p} of visible.slice(0,25))c.fillText(n.label,p.x+7,p.y-6);
+ canvasTime=performance.now()-started;
 }
 const canvas=$('baseline');
 canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y};canvas.setPointerCapture(e.pointerId)});
@@ -101,6 +105,7 @@ canvas.addEventListener('pointerup',e=>{if(drag&&Math.hypot(e.clientX-drag.x,e.c
 canvas.addEventListener('wheel',e=>{e.preventDefault();camera.zoom=Math.max(.1,Math.min(30,camera.zoom*Math.exp(-e.deltaY*.001)));paint()},{passive:false});
 new ResizeObserver(paint).observe(canvas);
 $('generate').onclick=()=>assignGraph(sample(Number($('size').value)));
+$('benchmark').onclick=()=>{const count=Number($('size').value);const before=performance.now();const data=sample(count);const generated=performance.now()-before;assignGraph(data);$('message').textContent=count.toLocaleString('en-GB')+' nodes · '+edges.length.toLocaleString('en-GB')+' edges · data generation '+generated.toFixed(1)+' ms · Sigma initialisation '+buildTime.toFixed(1)+' ms · Canvas 2D draw '+canvasTime.toFixed(1)+' ms. These are local browser timings, not FPS.';};
 $('reset').onclick=()=>assignGraph({nodes,edges});
 $('layout').onchange=()=>assignGraph({nodes,edges});
 $('focus').onchange=()=>setSelected(selection);
