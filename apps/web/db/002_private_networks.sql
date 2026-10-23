@@ -34,13 +34,18 @@ CREATE TABLE IF NOT EXISTS mossline_private_network_versions (
 CREATE INDEX IF NOT EXISTS mossline_private_network_versions_network_idx
   ON mossline_private_network_versions (network_id, created_at DESC);
 
-ALTER TABLE mossline_private_networks
-  DROP CONSTRAINT IF EXISTS mossline_private_networks_current_version_fk;
-ALTER TABLE mossline_private_networks
-  ADD CONSTRAINT mossline_private_networks_current_version_fk
-  FOREIGN KEY (current_version_id, id, owner_user_id)
-  REFERENCES mossline_private_network_versions (id, network_id, owner_user_id)
-  DEFERRABLE INITIALLY DEFERRED;
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'mossline_private_networks_current_version_fk'
+  ) THEN
+    ALTER TABLE mossline_private_networks
+      ADD CONSTRAINT mossline_private_networks_current_version_fk
+      FOREIGN KEY (current_version_id, id, owner_user_id)
+      REFERENCES mossline_private_network_versions (id, network_id, owner_user_id);
+  END IF;
+END $;
 
 -- Defence in depth. App server uses direct SQL with explicit owner predicates.
 -- RLS remains enabled even if a future Data API integration is introduced.
