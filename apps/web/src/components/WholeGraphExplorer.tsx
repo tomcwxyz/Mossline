@@ -5,6 +5,7 @@ import type {AdaptiveGraphProjection,GraphDocument,GraphEdge,NetworkInspection,
   NetworkSearch} from "@mossline/graph-core";
 import {WholeGraphCanvas} from "./WholeGraphCanvas";
 import {FullNetworkCanvas} from "./FullNetworkCanvas";
+import {FullNetworkCanvas2D} from "./FullNetworkCanvas2D";
 import {NetworkAI} from "./NetworkAI";
 import {focusFullNetwork,type FullNetworkGeometry} from "@mossline/graph-core";
 
@@ -29,6 +30,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
   const resetOnOverview=useRef(false);
   const [expanded,setExpanded]=useState<string[]>([]);
   const [viewMode,setViewMode]=useState<"overview"|"full">("overview");
+  const [fullRenderer,setFullRenderer]=useState<"webgl"|"canvas2d">("webgl");
   const [nodeSizeMode,setNodeSizeMode]=useState<"connections"|"amount">("connections");
   const [arrangement,setArrangement]=useState<"areas"|"types"|"themes">("areas");
   const [focusAreaId,setFocusAreaId]=useState<string|null>(null);
@@ -61,7 +63,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       const id=++request.current;
       setBusy(true);setStatus("Preparing the complete network…");
       setProjection(null);setExpanded([]);setInspection(null);
-      setFullGeometry(null);setViewMode(initialMode);
+      setFullGeometry(null);setViewMode(initialMode);setFullRenderer("webgl");
       setNodeSizeMode("connections");setArrangement("areas");setLineMode("focus");setFocusAreaId(null);
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
       pendingExpanded.current=[];pendingHistory.current=[];
@@ -275,7 +277,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           </div>
         </div>}
       {viewMode==="full"&&fullGeometry?
-        <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
+        fullRenderer==="canvas2d"?
+        <FullNetworkCanvas2D geometry={fullGeometry} selectedId={inspection?.node.id}
           sizeMode={nodeSizeMode} lineMode={lineMode}
           focusAreaId={focusAreaId}
           selectedPreview={inspection?.node}
@@ -292,8 +295,28 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           }}
           onUnavailable={()=>{
             setViewMode("overview");
-            setError("Full-graph WebGL rendering is unavailable in this browser. "+
-              "The grouped overview and complete source search remain available.");
+            setError("Neither WebGL nor Canvas 2D is available in this browser. "+
+              "All source records remain accessible via grouped navigation and search.");
+          }}/>:
+        <FullNetworkCanvas geometry={fullGeometry} selectedId={inspection?.node.id}
+          sizeMode={nodeSizeMode} lineMode={lineMode}
+          focusAreaId={focusAreaId}
+          selectedPreview={inspection?.node}
+          selectedRelationships={inspection?.totalRelationships??0}
+          onDetails={()=>inspectorRef.current?.scrollIntoView({
+            behavior:"smooth",block:"start"})}
+          onAreaSelect={id=>{
+            setFocusAreaId(id);setInspection(null);setSelectedEdge(null);
+            setNotice("");
+          }}
+          onSelect={id=>{
+            if(id){setFocusAreaId(null);navigate(id);}
+            else clearSelection();
+          }}
+          onUnavailable={()=>{
+            setFullRenderer("canvas2d");
+            setNotice("Your browser could not start WebGL. "+
+              "The complete original network is now displayed in Canvas 2D mode.");
           }}/>:
         <WholeGraphCanvas projection={projection}
           selectedId={selectedEdge?null:(inspection?.node.id??null)}
