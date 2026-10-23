@@ -1,6 +1,8 @@
 "use client";
 import {useEffect,useRef,useState,type FormEvent} from "react";
 import type {GraphDocument,SemanticHit,NetworkEvidenceRelation,NetworkInsight} from "@mossline/graph-core";
+import {insightReviewKey,parseInsightReviewLedger,setInsightReviewDecision,
+ type InsightReviewLedger} from "../lib/insight-review";
 
 type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number;accessCodeRequired?:boolean};
 type Plan={total:number;eligible:number;excludedPrivate:number;batches:number;cached:boolean;model:string};
@@ -22,7 +24,7 @@ export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
  const [question,setQuestion]=useState("");
  const [sourceSignals,setSourceSignals]=useState<NetworkInsight[]>([]);
  const [reviewKey,setReviewKey]=useState("");
- const [reviewDecisions,setReviewDecisions]=useState<Record<string,"saved"|"dismissed">>({});
+ const [reviewDecisions,setReviewDecisions]=useState<InsightReviewLedger>({});
  const [reviewMessage,setReviewMessage]=useState("");
  const [semanticSignals,setSemanticSignals]=useState<NetworkInsight[]>([]);
  const [busy,setBusy]=useState(false),[progress,setProgress]=useState("");
@@ -55,7 +57,7 @@ export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
         cached:msg.cached===true,model:msg.model??""});
       setSourceSignals(msg.insights??[]);setSemanticSignals([]);
       setReviewKey(msg.signature&&msg.model?
-        "mossline-insight-decisions-v1:"+msg.signature+":"+msg.model:"");
+        insightReviewKey(msg.signature,msg.model):"");
       setReady(msg.cached===true);setBusy(false);setProgress("");
     }else if(msg.kind==="waiting"){
       setProgress(msg.message??"Waiting for the model provider…");
@@ -89,16 +91,8 @@ export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
  useEffect(()=>{
   if(!reviewKey){setReviewDecisions({});return;}
   try{
-    const raw=window.localStorage.getItem(reviewKey);
-    const parsed:unknown=raw?JSON.parse(raw):{};
-    if(!parsed||typeof parsed!=="object"||Array.isArray(parsed)){
-      setReviewDecisions({});return;
-    }
-    const decisions:Record<string,"saved"|"dismissed">={};
-    for(const [id,value] of Object.entries(parsed)){
-      if(id.length<=350&&(value==="saved"||value==="dismissed"))decisions[id]=value;
-    }
-    setReviewDecisions(decisions);
+    setReviewDecisions(parseInsightReviewLedger(
+      window.localStorage.getItem(reviewKey)));
   }catch{
     setReviewDecisions({});
     setReviewMessage("Local review history is unavailable in this browser.");
@@ -106,12 +100,10 @@ export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
  },[reviewKey]);
  function updateReview(id:string,decision:"saved"|"dismissed"|null){
    if(!reviewKey)return;
-   const updated={...reviewDecisions};
-   if(decision)updated[id]=decision;else delete updated[id];
-   // Avoid unlimited localStorage growth and never store source text.
-   if(Object.keys(updated).length>100){
-     setReviewMessage("You can keep up to 100 review decisions per network version.");
-     return;
+   let updated:InsightReviewLedger;
+   try{updated=setInsightReviewDecision(reviewDecisions,id,decision);}
+   catch(error){
+     setReviewMessage(error instanceof Error?error.message:"Invalid review decision.");return;
    }
    setReviewDecisions(updated);
    try{
