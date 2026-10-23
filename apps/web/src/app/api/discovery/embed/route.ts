@@ -19,7 +19,7 @@ export async function POST(request:Request){
   try{
     const model=embeddingModel();
     const result=await providerPost("/embeddings",{
-      model,input:data.documents.map(d=>d.text)
+      model,input:data.documents.map(d=>d.text),encoding_format:"float"
     },10_000_000);
     const vectors=parseEmbeddingReply(result,data.documents.length);
     return NextResponse.json({model,ids:data.documents.map(d=>d.id),vectors},
