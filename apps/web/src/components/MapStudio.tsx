@@ -524,11 +524,6 @@ export function MapStudio() {
           importPreview||discovery?
           "Review what was found, check the proposed relationships and choose whether to create a new map.":
           graph.description}</p>
-        {!showFundingWorkbench&&!importPreview&&!discovery&&
-          <details className="mobile-map-description">
-            <summary>About this map</summary>
-            <p>{graph.description||"Explore the recorded entities and relationships in this map."}</p>
-          </details>}
       </div>
       <div className="actions">
         <label className="map-library-chooser">Current map
@@ -1094,6 +1089,10 @@ export function MapStudio() {
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
           <span>{view==="atlas"?"Approximate geographic projection":"Recorded relationships, with evidence"}</span></div>
+        <details className="mobile-map-description">
+          <summary>About this map</summary>
+          <p>{graph.description||"Explore the recorded entities and relationships in this map."}</p>
+        </details>
       </div>
       <aside className="inspector">
         {usingSourceExplorer?<div className="empty-inspector">
