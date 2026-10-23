@@ -8,7 +8,7 @@ type Answer={hits:SemanticHit[];relations:NetworkEvidenceRelation[];answer:strin
 type Reply={
  kind:"plan"|"progress"|"waiting"|"indexed"|"semantic"|"answer"|"failed";
  id:number;message?:string;total?:number;eligible?:number;excludedPrivate?:number;
- batches?:number;completed?:number;cached?:boolean;model?:string;
+ batches?:number;completed?:number;cached?:boolean;model?:string;signature?:string;
  hits?:SemanticHit[];relations?:NetworkEvidenceRelation[];answer?:string;
  insights?:NetworkInsight[];
 };
@@ -20,6 +20,9 @@ export function NetworkAI({graph,datasetId,onExplore}:{
  const [permission,setPermission]=useState(false),[key,setKey]=useState("");
  const [question,setQuestion]=useState("");
  const [sourceSignals,setSourceSignals]=useState<NetworkInsight[]>([]);
+ const [reviewKey,setReviewKey]=useState("");
+ const [reviewDecisions,setReviewDecisions]=useState<Record<string,"saved"|"dismissed">>({});
+ const [reviewMessage,setReviewMessage]=useState("");
  const [semanticSignals,setSemanticSignals]=useState<NetworkInsight[]>([]);
  const [busy,setBusy]=useState(false),[progress,setProgress]=useState("");
  const [error,setError]=useState(""),[answer,setAnswer]=useState<Answer|null>(null);
@@ -50,6 +53,8 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         excludedPrivate:msg.excludedPrivate??0,batches:msg.batches??0,
         cached:msg.cached===true,model:msg.model??""});
       setSourceSignals(msg.insights??[]);setSemanticSignals([]);
+      setReviewKey(msg.signature&&msg.model?
+        "mossline-insight-decisions-v1:"+msg.signature+":"+msg.model:"");
       setReady(msg.cached===true);setBusy(false);setProgress("");
     }else if(msg.kind==="waiting"){
       setProgress(msg.message??"Waiting for the model provider…");
@@ -80,6 +85,44 @@ export function NetworkAI({graph,datasetId,onExplore}:{
   }
   return ()=>{instance.terminate();if(worker.current===instance)worker.current=null;};
  },[datasetId,graph,caps.embeddingModel]);
+ useEffect(()=>{
+  if(!reviewKey){setReviewDecisions({});return;}
+  try{
+    const raw=window.localStorage.getItem(reviewKey);
+    const parsed:unknown=raw?JSON.parse(raw):{};
+    if(!parsed||typeof parsed!=="object"||Array.isArray(parsed)){
+      setReviewDecisions({});return;
+    }
+    const decisions:Record<string,"saved"|"dismissed">={};
+    for(const [id,value] of Object.entries(parsed)){
+      if(id.length<=350&&(value==="saved"||value==="dismissed"))decisions[id]=value;
+    }
+    setReviewDecisions(decisions);
+  }catch{
+    setReviewDecisions({});
+    setReviewMessage("Local review history is unavailable in this browser.");
+  }
+ },[reviewKey]);
+ function updateReview(id:string,decision:"saved"|"dismissed"|null){
+   if(!reviewKey)return;
+   const updated={...reviewDecisions};
+   if(decision)updated[id]=decision;else delete updated[id];
+   // Avoid unlimited localStorage growth and never store source text.
+   if(Object.keys(updated).length>100){
+     setReviewMessage("You can keep up to 100 review decisions per network version.");
+     return;
+   }
+   setReviewDecisions(updated);
+   try{
+     window.localStorage.setItem(reviewKey,JSON.stringify(updated));
+     setReviewMessage(decision==="saved"?"Saved for investigation in this browser.":
+       decision==="dismissed"?"Suggestion dismissed. You can restore it below.":
+       "Suggestion returned to the review list.");
+   }catch{
+     setReviewMessage("Review decision kept only until you close this view.");
+   }
+ }
+ const savedCount=Object.values(reviewDecisions).filter(v=>v==="saved").length;
  function send(kind:"index"|"ask",questionText?:string){
   if(!permission||(caps.accessCodeRequired!==false&&key.length<32)||!worker.current){setError("Approve remote processing and enter the configured discovery access code before indexing.");return;}
   setBusy(true);setError("");setAnswer(null);
@@ -124,8 +167,10 @@ export function NetworkAI({graph,datasetId,onExplore}:{
     <p>Suggested from similar descriptions, not existing relationship edges. Review
       the source records before treating these as meaningful connections.</p>
     <div className="network-insight-grid">
-      {semanticSignals.map(signal=><article className="network-insight" key={signal.id}>
-        <small>Possible association · unverified</small>
+      {semanticSignals.filter(signal=>reviewDecisions[signal.id]!=="dismissed")
+        .map(signal=><article className="network-insight" key={signal.id}>
+        <small>Possible association · unverified{reviewDecisions[signal.id]==="saved"?
+          " · saved for investigation":""}</small>
         <strong>{signal.title}</strong>
         <p>{signal.summary}</p>
         <div className="network-insight-actions">
@@ -134,8 +179,29 @@ export function NetworkAI({graph,datasetId,onExplore}:{
             Inspect {signal.sourceLabels?.[i]??"source "+(i+1)} →
           </button>)}
         </div>
+        <div className="network-insight-actions">
+          <button type="button" onClick={()=>updateReview(signal.id,
+            reviewDecisions[signal.id]==="saved"?null:"saved")}>
+            {reviewDecisions[signal.id]==="saved"?"Remove from review":"Save for investigation"}
+          </button>
+          <button type="button" onClick={()=>updateReview(signal.id,"dismissed")}>
+            Dismiss suggestion
+          </button>
+        </div>
       </article>)}
     </div>
+    {savedCount>0&&<p role="status">{savedCount} candidate
+      {savedCount===1?"":"s"} saved locally for investigation. No graph edges were added.</p>}
+    {semanticSignals.some(signal=>reviewDecisions[signal.id]==="dismissed")&&
+      <details className="network-insights-dismissed">
+        <summary>Dismissed suggestions</summary>
+        {semanticSignals.filter(signal=>reviewDecisions[signal.id]==="dismissed")
+          .map(signal=><div key={signal.id}>
+            <span>{signal.sourceLabels?.join(" · ")??signal.title}</span>
+            <button type="button" onClick={()=>updateReview(signal.id,null)}>Restore</button>
+          </div>)}
+      </details>}
+    {reviewMessage&&<p role="status">{reviewMessage}</p>}
   </section>}
   {plan&&<p>{plan.eligible.toLocaleString("en-GB")} eligible source entities of{" "}
     {plan.total.toLocaleString("en-GB")} total; {plan.excludedPrivate} explicitly
