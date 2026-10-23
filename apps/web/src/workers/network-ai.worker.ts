@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 import {prepareNetworkSemanticDocuments,rankNetworkSemanticHits,sourceRelationsAmong,
+  sourceNetworkInsights,semanticNetworkInsights,
   type NetworkSemanticDocument,type GraphDocument}
   from "@mossline/graph-core";
 import {loadFundingDataset} from "../lib/funding-dataset-store";
@@ -137,10 +138,12 @@ async function initialise(job:Incoming){
  const db=await openDB();
  try{
   const complete=await getRow(db,META,cachePrefix);
+  const insights=sourceNetworkInsights(graph,new Set(docs.map(d=>d.id)));
   respond({kind:"plan",id:job.id,total:prepared.totalNodes,
     eligible:docs.length,excludedPrivate:prepared.excludedPrivate,
     batches:Math.ceil(docs.length/BATCH),cached:!!complete?.complete,
-    model:currentModel});
+    model:currentModel,insights});
+  if(complete?.complete)void emitSemanticInsights(job.id);
  }finally{db.close();}
 }
 async function indexAll(job:Incoming){
@@ -174,6 +177,7 @@ async function indexAll(job:Incoming){
   await putRow(db,META,{key:cachePrefix,complete:true,model:currentModel,
     count:docs.length,updatedAt:Date.now()});
   respond({kind:"indexed",id:job.id,completed:embedded,total:docs.length});
+  void emitSemanticInsights(job.id);
  }finally{activeController=null;running=false;db.close();}
 }
 async function loadVectors():Promise<number[][]>{
@@ -192,6 +196,19 @@ async function loadVectors():Promise<number[][]>{
   }
   return inMemory=vectors;
  }finally{db.close();}
+}
+async function emitSemanticInsights(id:number){
+ if(!graph||!docs.length)return;
+ try{
+   const vectors=await loadVectors();
+   if(cancel)return;
+   const insights=semanticNetworkInsights(graph,docs,vectors,6);
+   respond({kind:"semantic",id,insights});
+ }catch{
+   // A slow or unavailable optional suggestion pass must never invalidate
+   // an otherwise complete and usable searchable semantic index.
+   respond({kind:"semantic",id,insights:[]});
+ }
 }
 async function ask(job:Incoming){
  const question=job.question?.trim()??"";
