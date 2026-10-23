@@ -143,7 +143,7 @@ async function initialise(job:Incoming){
   respond({kind:"plan",id:job.id,total:prepared.totalNodes,
     eligible:docs.length,excludedPrivate:prepared.excludedPrivate,
     batches:Math.ceil(docs.length/BATCH),cached:!!complete?.complete,
-    model:currentModel,insights});
+    model:currentModel,signature,insights});
   if(complete?.complete)void emitSemanticInsights(job.id);
  }finally{db.close();}
 }
