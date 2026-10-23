@@ -74,7 +74,7 @@ async function sendEmbed(items:{id:string;text:string}[],key:string,controller:A
  const result=await response.json() as {model?:string;ids?:string[];
    vectors?:number[][];error?:string};
  if(!response.ok||!result.model||!result.vectors)
-   throw Error(result.error??"Could not embed these records.");
+   throw Error(typeof result.error==="string"?result.error:"Embedding request failed. Check the model service configuration and usage limits.");
  if(JSON.stringify(result.ids)!==JSON.stringify(items.map(d=>d.id)))
    throw Error("Embedding reply did not match source identifiers.");
  if(result.vectors.length!==items.length||result.vectors.some(v=>!v.length||
@@ -107,7 +107,7 @@ async function indexAll(job:Incoming){
  if(running)throw Error("Indexing is already running.");
  if(!graph||!currentModel)throw Error("Embedding provider is not configured.");
  const key=job.accessKey??"";
- if(key.length<32)throw Error("A valid discovery access code is required.");
+ if(key.length>0&&key.length<32)throw Error("Invalid discovery access code.");
  running=true;cancel=false;inMemory=null;
  const db=await openDB();
  try{
@@ -157,7 +157,7 @@ async function ask(job:Incoming){
  const question=job.question?.trim()??"";
  const key=job.accessKey??"";
  if(question.length<4||question.length>450)throw Error("Enter a short question.");
- if(key.length<32)throw Error("Discovery access code is required.");
+ if(key.length>0&&key.length<32)throw Error("Invalid discovery access code.");
  if(!graph)throw Error("Complete graph not loaded.");
  const vectors=await loadVectors();
  const controller=new AbortController();activeController=controller;
@@ -180,7 +180,7 @@ async function ask(job:Incoming){
      body:JSON.stringify(request)
    });
    const result=await response.json() as {answer?:string;model?:string;error?:string};
-   if(!response.ok||!result.answer)throw Error(result.error??"No grounded answer available.");
+   if(!response.ok||!result.answer)throw Error(typeof result.error==="string"?result.error:"Grounded answer unavailable.");
    answer=result.answer;model=result.model??"";
   }
   respond({kind:"answer",id:job.id,hits,relations,answer,model});
@@ -199,7 +199,7 @@ self.onmessage=(event:MessageEvent<Incoming>)=>{
    else if(job.kind==="ask")await ask(job);
   }catch(error){
    respond({kind:"failed",id:job.id,message:
-     error instanceof Error?error.message:"Network AI unavailable."});
+     error instanceof Error?error.message:typeof error==="string"?error:"Network AI unavailable."});
   }
  })();
 };
