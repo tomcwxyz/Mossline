@@ -29,7 +29,11 @@ export const discoveryEnabled=()=>Boolean(urlConfig()&&
   embeddingModel().length &&
   (process.env.MOSSLINE_DISCOVERY_ACCESS_KEY?.length??0)>=32);
 export const explanationEnabled=()=>discoveryEnabled()&& Boolean(chatModel().length);
+export const previewDiscoveryAccess=()=>process.env.VERCEL_ENV==="preview";
 export function authoriseDiscovery(request:Request):boolean{
+  // Preview deployments are protected by Vercel Authentication. Production
+  // always requires the separate discovery code.
+  if(previewDiscoveryAccess())return discoveryEnabled();
   const given=request.headers.get("authorization")??"";
   const expected=process.env.MOSSLINE_DISCOVERY_ACCESS_KEY??"";
   if(!discoveryEnabled()||!/^Bearer [A-Za-z0-9_-]{32,256}$/.test(given))return false;
