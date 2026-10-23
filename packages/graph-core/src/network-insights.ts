@@ -10,6 +10,7 @@ export type NetworkInsight={
  summary:string;
  count:number;
  sourceIds:string[];
+ sourceLabels?:string[];
  edgeIds:string[];
  similarity?:number;
 };
@@ -84,7 +85,8 @@ export function sourceNetworkInsights(graph:GraphDocument,
      title:"Entities without recorded connections",
      summary:unlinked.length+" entities have no original relationship edges in this import. That may reflect source coverage, not real-world isolation.",
      count:unlinked.length,sourceIds:unlinked.slice(0,8),edgeIds:[]});
- return insights.slice(0,5);
+ return insights.slice(0,5).map(item=>({...item,
+   sourceLabels:item.sourceIds.map(id=>lookup.get(id)?.label??id)}));
 }
 
 const STOP=new Set(["entity","category","description","source","topics","organisation",
@@ -142,7 +144,7 @@ export function semanticNetworkInsights(graph:GraphDocument,
      title:"Possibly related descriptions",
      summary:a.label+" and "+b.label+" use similar language in their source descriptions (similarity "+score+
        "). No recorded link between them was found; this is a lead to investigate, not evidence of collaboration.",
-     sourceIds:[a.id,b.id],edgeIds:[],count:2,similarity:score});
+     sourceIds:[a.id,b.id],sourceLabels:[a.label,b.label],edgeIds:[],count:2,similarity:score});
    if(results.length>=Math.max(1,Math.min(10,max)))break;
  }
  return results;
