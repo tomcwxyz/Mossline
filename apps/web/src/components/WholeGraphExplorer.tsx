@@ -388,7 +388,15 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       <details className="network-ai-disclosure"
         onToggle={event=>setAiOpen(event.currentTarget.open)}>
         <summary>Explore signals · Insights &amp; questions</summary>
-        {aiOpen&&<NetworkAI datasetId={datasetId} graph={graph} onExplore={id=>navigate(id)}/>}
+        {aiOpen&&<NetworkAI datasetId={datasetId} graph={graph}
+          onExplore={id=>navigate(id)}
+          onViewThemes={()=>{
+            if(busy)return;
+            setArrangement("themes");setFocusAreaId(null);
+            setViewMode("full");
+            submit({kind:fullGeometry?"layout":"full",arrangement:"themes"},
+              "Arranging the recorded network by source themes…");
+          }}/>} 
       </details>
       <div className="whole-graph-bottom">
         <section className="whole-graph-groups">
