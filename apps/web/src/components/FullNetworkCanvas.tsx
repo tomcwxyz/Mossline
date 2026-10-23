@@ -453,7 +453,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        if(!selection){
          const labels=visibleAtlasNodeLabels(geometry,c.zoom,
            c.offsetX,c.offsetY,w,h,w<650?8:26);
-         drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h);
+         drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h,c.zoom);
        }
        if(!selection)return;
        const i=selection.nodeIndex;
