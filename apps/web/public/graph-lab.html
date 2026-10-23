@@ -25,7 +25,7 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 <button id="generate">Load same sample</button>
 <label class="file">Import Mossline JSON<input id="import" type="file" accept=".json,application/json"></label>
 <button id="gexf">Export Gephi GEXF</button><button id="csv">Export Cosmograph CSVs</button>
-<button id="reset">Reset views</button>
+<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button>
 </div>
 <div id="message" role="status"></div>
 <div class="panels"><section class="panel"><h2>Mossline baseline · Canvas 2D</h2><div class="surface"><canvas id="baseline" aria-label="Canvas 2D network"></canvas></div><div class="stats" id="baseStats"></div></section>
@@ -38,6 +38,7 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 <script>
 const $=id=>document.getElementById(id),COLOURS=['#8fc4a1','#e7bd78','#83b8e4','#dfa5bb','#adcca8','#d1ce90'];
 let nodes=[],edges=[],sigmaInstance=null,camera={x:0,y:0,zoom:1},drag=null,selection=null;
+const TYPE_LABELS=["Organisation","Project","Funder","Person","Place","Topic"];
 function hash(a){let v=(a*1664525+1013904223)>>>0;return v/4294967296}
 function sample(count){
  const list=[],links=[];for(let i=0;i<count;i++){const group=i%8,angle=hash(i*23)*Math.PI*2,r=30+Math.sqrt(hash(i*19+3))*130;
@@ -45,8 +46,23 @@ function sample(count){
  for(let i=1;i<count;i++){links.push({source:'n'+i,target:'n'+Math.floor(hash(i*11)*i)});if(i%3===0)links.push({source:'n'+i,target:'n'+((i+8)%count)});}
  return {nodes:list,edges:links};
 }
+function layoutNodes(mode){
+ const total=Math.max(1,nodes.length);
+ for(let i=0;i<nodes.length;i++){const n=nodes[i],angle=2*Math.PI*i/total;
+ if(mode==="radial"){n.x=Math.cos(angle)*(140+100*(n.group%3));n.y=Math.sin(angle)*(140+100*(n.group%3));}
+ else if(mode==="grid"){const cols=Math.ceil(Math.sqrt(total));n.x=(i%cols-cols/2)*25;n.y=(Math.floor(i/cols)-cols/2)*25;}
+ else{const group=n.group%8,a=hash(i*23)*Math.PI*2,r=30+Math.sqrt(hash(i*19+3))*130;n.x=Math.cos(group*Math.PI/4)*240+Math.cos(a)*r;n.y=Math.sin(group*Math.PI/4)*240+Math.sin(a)*r;}
+ }
+}
+function neighbourIds(id){const ids=new Set([id]);for(const e of edges){if(e.source===id)ids.add(e.target);else if(e.target===id)ids.add(e.source);}return ids;}
+function setSelected(id){selection=id;const n=nodes.find(n=>n.id===id),count=id?neighbourIds(id).size-1:0;
+ $("message").textContent=n?"Selected "+n.label+" · "+count.toLocaleString("en-GB")+" direct connections · "+TYPE_LABELS[n.type%6]:"Click a node to explore its immediate connections";
+ if(sigmaInstance){const graph=sigmaInstance.getGraph();const nearby=id&&$("focus").checked?neighbourIds(id):null;
+ graph.forEachNode((key)=>{graph.setNodeAttribute(key,"color",nearby&&!nearby.has(key)?"#35534a":COLOURS[(graph.getNodeAttribute(key,"nodeType")||0)%6]);graph.setNodeAttribute(key,"size",key===id?11:graph.getNodeAttribute(key,"degreeSize"));});
+ graph.forEachEdge((key,attrs,source,target)=>{graph.setEdgeAttribute(key,"color",nearby&&!(source===id||target===id)?"#29463d":source===id||target===id?"#f0cf87":"#6e9882");graph.setEdgeAttribute(key,"size",source===id||target===id?2:.5);});sigmaInstance.refresh();}
+ paint();}
 function assignGraph(data){
- nodes=data.nodes;edges=data.edges;selection=null;camera={x:0,y:0,zoom:1};
+ nodes=data.nodes.map(n=>({...n}));edges=data.edges;selection=null;camera={x:0,y:0,zoom:1};layoutNodes($("layout").value);
  $('message').textContent=nodes.length.toLocaleString('en-GB')+' entities · '+edges.length.toLocaleString('en-GB')+' relationships';
  buildSigma();paint();$('baseStats').textContent='Canvas 2D · drag to pan · scroll to zoom';
 }
@@ -57,10 +73,12 @@ function buildSigma(){
  if(typeof Graph!=='function'||typeof Sigma!=='function'){$('sigmaStats').textContent='Sigma.js unavailable: check CDN access';return;}
  try{
  const g=new Graph({multi:true,allowSelfLoops:false});
- for(const n of nodes)g.addNode(n.id,{label:n.label,x:n.x,y:n.y,size:5.5,color:COLOURS[n.type%6]});
+ const degree=new Map(nodes.map(n=>[n.id,0]));for(const e of edges){degree.set(e.source,(degree.get(e.source)||0)+1);degree.set(e.target,(degree.get(e.target)||0)+1);}
+ for(const n of nodes){const degreeSize=Math.min(15,4+Math.sqrt(degree.get(n.id)||0)*1.6);g.addNode(n.id,{label:n.label,x:n.x,y:n.y,size:degreeSize,degreeSize,nodeType:n.type,color:COLOURS[n.type%6]});}
  edges.forEach((e,i)=>{if(g.hasNode(e.source)&&g.hasNode(e.target)&&e.source!==e.target)g.addEdgeWithKey('e'+i,e.source,e.target,{size:.5,color:'#6e9882'});});
  sigmaInstance=new Sigma(g,holder,{renderEdgeLabels:false,labelDensity:.7,labelGridCellSize:125,defaultEdgeColor:'#6e9882',minCameraRatio:.03,maxCameraRatio:25});
- sigmaInstance.on('clickNode',({node})=>{selection=node;$('sigmaStats').textContent='Selected: '+g.getNodeAttribute(node,'label');paint()});
+ sigmaInstance.on('clickNode',({node})=>setSelected(node));
+ sigmaInstance.on('clickStage',()=>setSelected(null));
  $('sigmaStats').textContent='Sigma.js · '+g.order.toLocaleString('en-GB')+' nodes · '+g.size.toLocaleString('en-GB')+' edges';
  }catch(err){$('sigmaStats').textContent='Sigma.js could not start: '+err.message;}
 }
@@ -71,18 +89,21 @@ function paint(){
  const k=Math.min(w,h)/850*camera.zoom,pt=n=>({x:w/2+(n.x+camera.x)*k,y:h/2+(n.y+camera.y)*k}),dict=new Map(nodes.map(n=>[n.id,n]));
  c.strokeStyle='rgba(147,180,151,.18)';c.lineWidth=.7;c.beginPath();
  for(const e of edges){const a=dict.get(e.source),b=dict.get(e.target);if(!a||!b)continue;const p=pt(a),q=pt(b);c.moveTo(p.x,p.y);c.lineTo(q.x,q.y);}c.stroke();
+ const nearby=selection&&$("focus").checked?neighbourIds(selection):null;
  const visible=[];for(const n of nodes){const p=pt(n);if(p.x<0||p.x>w||p.y<0||p.y>h)continue;
- c.beginPath();c.arc(p.x,p.y,n.id===selection?6:3,0,Math.PI*2);c.fillStyle=COLOURS[n.type%6];c.fill();if(n.id===selection||n.id==='n0'||(camera.zoom>1.5&&n.id.endsWith('0')))visible.push({n,p});}
+ c.beginPath();c.arc(p.x,p.y,n.id===selection?7:Math.min(7,3.5+Math.sqrt(edges.length/Math.max(1,nodes.length))),0,Math.PI*2);c.fillStyle=nearby&&!nearby.has(n.id)?'#35534a':COLOURS[n.type%6];c.fill();if(n.id===selection||n.id==='n0'||(camera.zoom>1.5&&n.id.endsWith('0')))visible.push({n,p});}
  c.font='12px system-ui';c.fillStyle='#f3ecd5';for(const {n,p} of visible.slice(0,25))c.fillText(n.label,p.x+7,p.y-6);
 }
 const canvas=$('baseline');
 canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y};canvas.setPointerCapture(e.pointerId)});
 canvas.addEventListener('pointermove',e=>{if(!drag)return;const r=canvas.getBoundingClientRect(),k=Math.min(r.width,r.height)/850*camera.zoom;camera.x=drag.cx+(e.clientX-drag.x)/k;camera.y=drag.cy+(e.clientY-drag.y)/k;paint()});
-canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+canvas.addEventListener('pointerup',e=>{if(drag&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<5){const rect=canvas.getBoundingClientRect(),k=Math.min(rect.width,rect.height)/850*camera.zoom,x=e.clientX-rect.left,y=e.clientY-rect.top;let closest=null,dist=16;for(const n of nodes){const px=rect.width/2+(n.x+camera.x)*k,py=rect.height/2+(n.y+camera.y)*k,d=Math.hypot(x-px,y-py);if(d<dist){dist=d;closest=n.id;}}setSelected(closest);}drag=null;});canvas.addEventListener('pointercancel',()=>drag=null);
 canvas.addEventListener('wheel',e=>{e.preventDefault();camera.zoom=Math.max(.1,Math.min(30,camera.zoom*Math.exp(-e.deltaY*.001)));paint()},{passive:false});
 new ResizeObserver(paint).observe(canvas);
 $('generate').onclick=()=>assignGraph(sample(Number($('size').value)));
 $('reset').onclick=()=>assignGraph({nodes,edges});
+$('layout').onchange=()=>assignGraph({nodes,edges});
+$('focus').onchange=()=>setSelected(selection);
 $('import').onchange=async e=>{
  try{const file=e.target.files?.[0];if(!file)return;const raw=JSON.parse(await file.text());
  if(!Array.isArray(raw.nodes)||!Array.isArray(raw.edges))throw Error('Expected Mossline JSON with nodes and edges arrays');
