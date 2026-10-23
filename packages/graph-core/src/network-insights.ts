@@ -110,7 +110,7 @@ export function semanticNetworkInsights(graph:GraphDocument,
  for(let i=0;i<wordSets.length;i++)for(const word of wordSets[i]){
    const values=postings.get(word)??[];values.push(i);postings.set(word,values);
  }
- const connected=new Set(graph.edges.map(e=>
+ const connected=new Set(graph.edges.filter(e=>!e.inferred).map(e=>
    [e.source,e.target].sort().join("\u0000")));
  const candidates:{a:number;b:number;score:number}[]=[];
  for(let i=0;i<docs.length;i++){
