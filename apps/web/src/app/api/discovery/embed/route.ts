@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {authoriseDiscovery,discoveryEnabled,parseEmbeddingReply,providerPost,
+import {authoriseDiscovery,discoveryEnabled,embeddingModel,parseEmbeddingReply,providerPost,
   readDiscoveryJson} from "../../../../lib/discovery-provider";
 import {noStoreHeaders} from "../../../../lib/hosted-response";
 export const dynamic="force-dynamic";export const runtime="nodejs";
@@ -17,7 +17,7 @@ export async function POST(request:Request){
   catch{return NextResponse.json({error:"Invalid or oversized network text batch"},
     {status:400,headers:noStoreHeaders});}
   try{
-    const model=process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL!;
+    const model=embeddingModel();
     const result=await providerPost("/embeddings",{
       model,input:data.documents.map(d=>d.text)
     },10_000_000);
