@@ -25,7 +25,7 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 <button id="generate">Load same sample</button>
 <label class="file">Import Mossline JSON<input id="import" type="file" accept=".json,application/json"></label>
 <button id="gexf">Export Gephi GEXF</button><button id="csv">Export Cosmograph CSVs</button>
-<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option><option value="forces">Network forces (≤ 1,000)</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button><button id="benchmark">Run comparison</button>
+<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option><option value="forces">Network forces (≤ 350)</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button><button id="benchmark">Run comparison</button>
 </div>
 <div id="message" role="status"></div>
 <div class="panels"><section class="panel"><h2>Mossline baseline · Canvas 2D</h2><div class="surface"><canvas id="baseline" aria-label="Canvas 2D network"></canvas></div><div class="stats" id="baseStats"></div></section>
@@ -57,7 +57,7 @@ function layoutNodes(mode){
 // Bounded force-directed layout used only for small exploratory networks.
 // Preserves the same coordinates in both panes for an honest comparison.
 function forceLayout(){
- if(nodes.length>1000){$("message").textContent="Network forces are limited to 1,000 nodes in this browser experiment; showing communities layout.";return;}
+ if(nodes.length>350){$("message").textContent="Network forces are limited to 350 nodes in this browser experiment; showing communities layout.";return;}
  const count=nodes.length,byId=new Map(nodes.map((n,i)=>[n.id,i]));
  const velocities=nodes.map(()=>({x:0,y:0}));
  const adjacency=nodes.map(()=>[]);
