@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/ai-gateway-smoke.mjs && next build",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
