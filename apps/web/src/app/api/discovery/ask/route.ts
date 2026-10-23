@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {authoriseDiscovery,explanationEnabled,providerPost,readDiscoveryJson}
+import {authoriseDiscovery,explanationEnabled,chatModel,providerPost,readDiscoveryJson}
   from "../../../../lib/discovery-provider";
 import {noStoreHeaders} from "../../../../lib/hosted-response";
 export const dynamic="force-dynamic";export const runtime="nodejs";
@@ -32,7 +32,7 @@ export async function POST(request:Request){
    return NextResponse.json({error:"Relationship evidence references unknown nodes"},
      {status:400,headers:noStoreHeaders});
  try{
-   const model=process.env.MOSSLINE_DISCOVERY_CHAT_MODEL!;
+   const model=chatModel();
    const result=await providerPost("/chat/completions",{
      model,max_tokens:450,temperature:0,
      messages:[
