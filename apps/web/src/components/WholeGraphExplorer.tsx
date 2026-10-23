@@ -387,7 +387,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         </p>}
       <details className="network-ai-disclosure"
         onToggle={event=>setAiOpen(event.currentTarget.open)}>
-        <summary>Ask this network · Semantic discovery &amp; AI</summary>
+        <summary>Explore signals · Insights &amp; questions</summary>
         {aiOpen&&<NetworkAI datasetId={datasetId} graph={graph} onExplore={id=>navigate(id)}/>}
       </details>
       <div className="whole-graph-bottom">
