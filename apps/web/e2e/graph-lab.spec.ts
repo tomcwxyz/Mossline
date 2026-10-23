@@ -18,3 +18,10 @@ test("Graph Lab keeps its experimental tools isolated from the studio",async({pa
   await page.getByRole("button",{name:"Reset views"}).click();
   await expect(page.locator("#baseline")).toBeVisible();
 });
+
+test("Sigma graph labels use the light-on-dark configuration",async({page})=>{
+  await page.goto("/graph-lab.html");
+  await expect(page.locator("#sigmaStats")).toContainText("Sigma.js", {timeout:20000});
+  await expect.poll(()=>page.locator("#sigma").getAttribute("data-label-config"))
+    .toContain("#e9f1e7");
+});
