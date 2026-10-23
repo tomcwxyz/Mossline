@@ -1894,3 +1894,36 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
  flex-wrap:wrap;padding:9px 0;border-top:1px solid #dbe5d7;font-size:12px}
 .network-insights-dismissed button{border:1px solid #96b39a;border-radius:6px;
  background:#fff;color:#285137;padding:6px 9px;cursor:pointer}
+
+
+/* Personal private-network alpha, intentionally separate from public publishing. */
+.private-network-save{margin:14px 0;border:1px solid #aec5ad;border-radius:10px;
+ padding:12px 15px;background:#f1f7ee;color:#2b5138}
+.private-network-save summary{font-size:13px;font-weight:700;cursor:pointer}
+.private-network-save p,.private-network-save label{font-size:12px;line-height:1.55}
+.private-network-save label{display:flex;gap:9px;align-items:flex-start;margin:12px 0}
+.private-network-save label input{flex:none;margin-top:3px}
+.private-network-save a{font-size:12px;font-weight:700;color:#2b5d3b}
+.private-network-save button,.private-workspace-login button,.workspace-networks button,
+.workspace-account button{border-radius:7px;padding:9px 12px;border:1px solid #456c4e;
+ background:#2e6040;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.private-network-save button:disabled,.workspace-networks button:disabled{opacity:.5}
+.workspace-main{max-width:940px;margin:0 auto;padding:40px 20px 80px;
+ color:#234831;font-size:14px;line-height:1.6}
+.workspace-main h1{font:normal clamp(32px,5vw,46px) Georgia,serif;margin:8px 0}
+.workspace-main h2{font:normal 25px Georgia,serif}
+.workspace-main a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.private-workspace-login{max-width:480px;padding:20px;border:1px solid #b3c9ae;
+ border-radius:12px;background:#f2f8f0}
+.private-workspace-login form{display:grid;gap:13px;margin:16px 0}
+.private-workspace-login label{display:grid;gap:5px;font-weight:650}
+.private-workspace-login input{border:1px solid #a9bea8;border-radius:7px;
+ padding:11px;font-size:14px;background:white;color:#213b2a}
+.workspace-account{display:flex;align-items:center;gap:18px;justify-content:space-between}
+.workspace-networks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.workspace-networks article{display:grid;gap:7px;border:1px solid #bbcebc;
+ background:#f3f8f1;padding:16px;border-radius:10px}
+.workspace-networks h3{font-size:18px;margin:0}
+.workspace-networks p{margin:0}
+.workspace-networks button{justify-self:start}
+@media(max-width:640px){.workspace-main{padding:22px 14px 50px}}
