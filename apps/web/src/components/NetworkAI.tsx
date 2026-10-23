@@ -2,7 +2,7 @@
 import {useEffect,useRef,useState,type FormEvent} from "react";
 import type {GraphDocument,SemanticHit,NetworkEvidenceRelation} from "@mossline/graph-core";
 
-type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number};
+type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number;accessCodeRequired?:boolean};
 type Plan={total:number;eligible:number;excludedPrivate:number;batches:number;cached:boolean;model:string};
 type Answer={hits:SemanticHit[];relations:NetworkEvidenceRelation[];answer:string;model:string};
 type Reply={
@@ -32,7 +32,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
       setCaps({embeddings:data.embeddings===true,
         explanations:data.explanations===true,
         embeddingModel:typeof data.embeddingModel==="string"?data.embeddingModel:null,
-        maxBatch:48});
+        maxBatch:48,accessCodeRequired:data.accessCodeRequired!==false});
     }).catch(()=>setError("Could not check the model service configuration."));
   return ()=>{alive=false;};
  },[]);
@@ -73,7 +73,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
   return ()=>{instance.terminate();if(worker.current===instance)worker.current=null;};
  },[datasetId,graph,caps.embeddingModel]);
  function send(kind:"index"|"ask",questionText?:string){
-  if(!permission||key.length<32||!worker.current){setError("Approve remote processing and enter the configured discovery access code before indexing.");return;}
+  if(!permission||(caps.accessCodeRequired!==false&&key.length<32)||!worker.current){setError("Approve remote processing and enter the configured discovery access code before indexing.");return;}
   setBusy(true);setError("");setAnswer(null);
   setProgress(kind==="index"?"Checking cached batches and indexing the remaining records…":
     "Retrieving relevant source records…");
@@ -103,13 +103,13 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         to the configured model provider. I understand this may incur usage charges,
         and text can contain sensitive details even when records are public.</span>
     </label>
-    <label className="network-ai-key">Discovery access code
+    {caps.accessCodeRequired!==false&&<label className="network-ai-key">Discovery access code
       <input type="password" autoComplete="off" value={key}
         onChange={e=>setKey(e.target.value)}
         placeholder="Alpha access code (not saved in this browser)"/>
-    </label>
+    </label>}
     {!ready&&<div className="network-ai-index-actions">
-      <button type="button" disabled={busy||!permission||key.length<32||!plan.eligible}
+      <button type="button" disabled={busy||!permission||(caps.accessCodeRequired!==false&&key.length<32)||!plan.eligible}
         onClick={()=>send("index")}>Index all eligible entities</button>
       {busy&&<button type="button" onClick={()=>{
         worker.current?.postMessage({kind:"cancel",id:++seq.current});
@@ -122,7 +122,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         <input id="network-ai-question" maxLength={450} value={question}
           onChange={e=>setQuestion(e.target.value)}
           placeholder="Which projects address food insecurity in different ways?"/>
-        <button type="submit" disabled={!permission||key.length<32||busy||
+        <button type="submit" disabled={!permission||(caps.accessCodeRequired!==false&&key.length<32)||busy||
           question.trim().length<4}>Explore question →</button>
       </div>
     </form>}
