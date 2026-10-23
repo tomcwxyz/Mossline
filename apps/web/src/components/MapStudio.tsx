@@ -63,6 +63,7 @@ export function MapStudio() {
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
+  const [mobileMapOptionsOpen,setMobileMapOptionsOpen]=useState(false);
   const mobileFiltersRef=useRef<HTMLElement|null>(null);
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
@@ -497,7 +498,8 @@ export function MapStudio() {
       onRecovery={()=>{window.location.href="/recover";}}/>
   </main>;
 
-  return <main className="shell mossline-studio">
+  return <main className={"shell mossline-studio"+
+    (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-explore":"")}>
     <header className="topbar">
       <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right">
@@ -507,7 +509,8 @@ export function MapStudio() {
         <span className="local-tag"><span className="signal" /> Saved in this browser</span>
       </div>
     </header>
-    <section className="heading">
+    <section className={"heading"+
+      (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-exploring":"")}>
       <div>
         <p className="eyebrow">{showFundingWorkbench||importPreview||discovery?
           "Create a network · your existing maps are preserved":
@@ -537,6 +540,7 @@ export function MapStudio() {
         <details className="studio-action-menu">
           <summary>More actions</summary>
           <div className="studio-action-popover">
+            <button type="button" onClick={()=>fileRef.current?.click()}>Import spreadsheet or Kumu network</button>
             <button type="button" onClick={()=>{setFundingInitialFile(null);setShowFundingWorkbench(v=>!v);}}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
@@ -1006,7 +1010,13 @@ export function MapStudio() {
             activeFundingMap?.fundingDatasetId?
               "Focused detail only · choose Network for the full dataset":
               filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
-          <div className="map-options">
+          <button type="button" className="mobile-map-options-toggle"
+            aria-controls="studio-map-options" aria-expanded={mobileMapOptionsOpen}
+            onClick={()=>setMobileMapOptionsOpen(v=>!v)}>
+            {mobileMapOptionsOpen?"Hide map settings":"Map settings"}
+          </button>
+          <div id="studio-map-options" className={"map-options"+
+            (mobileMapOptionsOpen?" mobile-open":"")}>
             {view==="landscape"&&!fullFundingView&&
               (graph.nodes.length>260||graph.edges.length>650)&&
               <button type="button" className="whole-network-entry"
@@ -1079,6 +1089,10 @@ export function MapStudio() {
           "Source-provided locations only · Choose a marker to see its recorded relationships" :
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
           <span>{view==="atlas"?"Approximate geographic projection":"Recorded relationships, with evidence"}</span></div>
+        <details className="mobile-map-description">
+          <summary>About this map</summary>
+          <p>{graph.description||"Explore the recorded entities and relationships in this map."}</p>
+        </details>
       </div>
       <aside className="inspector">
         {usingSourceExplorer?<div className="empty-inspector">
