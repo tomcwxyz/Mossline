@@ -68,7 +68,7 @@ async function hashDocuments(items:NetworkSemanticDocument[]):Promise<string>{
 async function sendEmbed(items:{id:string;text:string}[],key:string,controller:AbortController){
  const response=await fetch("/api/discovery/embed",{
    method:"POST",cache:"no-store",credentials:"same-origin",signal:controller.signal,
-   headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+   headers:{"Content-Type":"application/json",...(key?{Authorization:"Bearer "+key}:{})},
    body:JSON.stringify({documents:items})
  });
  const contentType=response.headers.get("content-type")??"";
@@ -179,7 +179,7 @@ async function ask(job:Incoming){
    };
    const response=await fetch("/api/discovery/ask",{
      method:"POST",credentials:"same-origin",cache:"no-store",signal:controller.signal,
-     headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+     headers:{"Content-Type":"application/json",...(key?{Authorization:"Bearer "+key}:{})},
      body:JSON.stringify(request)
    });
    if(!(response.headers.get("content-type")??"").includes("application/json"))
