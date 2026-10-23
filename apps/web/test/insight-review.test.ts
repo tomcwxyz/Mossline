@@ -25,7 +25,7 @@ test("malformed and oversized review history is safely rejected",()=>{
  assert.deepEqual(parseInsightReviewLedger(JSON.stringify({
    a:"saved",b:"dismissed",c:"confirmed",d:0
  })),{a:"saved",b:"dismissed"});
- const all=Object.fromEntries(Array.from({length:100},(_,i)=>["s"+i,"saved"]));
+ const all=Object.fromEntries(Array.from({length:100},(_,i)=>["s"+i,"saved"])) as Record<string,"saved">;
  assert.throws(()=>setInsightReviewDecision(all,"extra","saved"),/100/);
  assert.throws(()=>setInsightReviewDecision({},"","saved"),/Invalid/);
 });
