@@ -1094,7 +1094,7 @@ export function MapStudio() {
         {view==="landscape"&&!usingSourceExplorer&&
           <details className="network-ai-disclosure"
             onToggle={event=>setStandardAiOpen(event.currentTarget.open)}>
-            <summary>Ask this network · Semantic discovery &amp; AI</summary>
+            <summary>Explore signals · Insights &amp; questions</summary>
             {standardAiOpen&&<NetworkAI graph={graph} onExplore={id=>{
               setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
               setFocusId(null);pickNode(id);
