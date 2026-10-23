@@ -24,8 +24,9 @@ export async function POST(request:Request){
     const vectors=parseEmbeddingReply(result,data.documents.length);
     return NextResponse.json({model,ids:data.documents.map(d=>d.id),vectors},
       {headers:noStoreHeaders});
-  }catch{
-    return NextResponse.json({error:"Embedding provider unavailable or incompatible"},
+  }catch(error){
+    const reason=error instanceof Error?error.message:"Embedding provider unavailable";
+    return NextResponse.json({error:reason},
       {status:502,headers:noStoreHeaders});
   }
 }
