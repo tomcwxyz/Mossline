@@ -1,5 +1,6 @@
-import {drawNetworkLabels} from "../lib/network-labels";
 "use client";
+
+import {drawNetworkLabels} from "../lib/network-labels";
 
 import {useEffect,useMemo,useRef,useState,
   type PointerEvent as ReactPointerEvent} from "react";
