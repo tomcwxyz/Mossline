@@ -67,10 +67,13 @@ async function hashDocuments(items:NetworkSemanticDocument[]):Promise<string>{
 }
 async function sendEmbed(items:{id:string;text:string}[],key:string,controller:AbortController){
  const response=await fetch("/api/discovery/embed",{
-   method:"POST",cache:"no-store",credentials:"omit",signal:controller.signal,
+   method:"POST",cache:"no-store",credentials:"same-origin",signal:controller.signal,
    headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
    body:JSON.stringify({documents:items})
  });
+ const contentType=response.headers.get("content-type")??"";
+ if(!contentType.includes("application/json"))throw Error(
+   "Embedding endpoint returned HTTP "+response.status+" rather than JSON. Check preview authentication and redeploy.");
  const result=await response.json() as {model?:string;ids?:string[];
    vectors?:number[][];error?:string};
  if(!response.ok||!result.model||!result.vectors)
@@ -175,10 +178,12 @@ async function ask(job:Incoming){
        ({id,source,target,type,inferred}))
    };
    const response=await fetch("/api/discovery/ask",{
-     method:"POST",credentials:"omit",cache:"no-store",signal:controller.signal,
+     method:"POST",credentials:"same-origin",cache:"no-store",signal:controller.signal,
      headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
      body:JSON.stringify(request)
    });
+   if(!(response.headers.get("content-type")??"").includes("application/json"))
+     throw Error("Answer endpoint returned HTTP "+response.status+" rather than JSON.");
    const result=await response.json() as {answer?:string;model?:string;error?:string};
    if(!response.ok||!result.answer)throw Error(typeof result.error==="string"?result.error:"Grounded answer unavailable.");
    answer=result.answer;model=result.model??"";
