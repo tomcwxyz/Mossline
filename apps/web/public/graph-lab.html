@@ -114,7 +114,7 @@ function buildSigma(){
  sigmaInstance.on('clickNode',({node})=>setSelected(node));
  sigmaInstance.on('clickStage',()=>setSelected(null));
  // Expose effective settings to browser acceptance tests, never graph data.
- holder.dataset.labelConfig='light-on-dark';
+ holder.dataset.labelConfig=JSON.stringify(sigmaInstance.getSettings?.().labelColor??null);
  $('sigmaStats').textContent='Sigma.js · '+g.order.toLocaleString('en-GB')+' nodes · '+g.size.toLocaleString('en-GB')+' edges · initialisation '+buildTime.toFixed(1)+' ms';
  }catch(err){$('sigmaStats').textContent='Sigma.js could not start: '+err.message;}
 }
