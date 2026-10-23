@@ -35,3 +35,5 @@ if (process.env.VERCEL_ENV==="preview" &&
     error:typeof data.error==="string"?data.error.slice(0,170):null}));
   if(!passed)process.exitCode=1;
 }
+
+export {};
