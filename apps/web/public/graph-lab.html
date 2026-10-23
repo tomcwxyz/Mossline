@@ -109,10 +109,12 @@ function buildSigma(){
  const degree=new Map(nodes.map(n=>[n.id,0]));for(const e of edges){degree.set(e.source,(degree.get(e.source)||0)+1);degree.set(e.target,(degree.get(e.target)||0)+1);}
  for(const n of nodes){const degreeSize=Math.min(15,4+Math.sqrt(degree.get(n.id)||0)*1.6);g.addNode(n.id,{label:n.label,x:n.x,y:n.y,size:degreeSize,degreeSize,nodeType:n.type,color:COLOURS[n.type%6]});}
  edges.forEach((e,i)=>{if(g.hasNode(e.source)&&g.hasNode(e.target)&&e.source!==e.target)g.addEdgeWithKey('e'+i,e.source,e.target,{size:.5,color:'#354e46'});});
- sigmaInstance=new Sigma(g,holder,{renderEdgeLabels:false,labelDensity:g.order>1000?.15:.38,labelGridCellSize:170,labelRenderedSizeThreshold:9,labelColor:{color:'#e9f1e7'},labelFont:'system-ui, sans-serif',labelWeight:'500',labelSize:12,defaultEdgeColor:'#354e46',minCameraRatio:.03,maxCameraRatio:25});
+ sigmaInstance=new Sigma(g,holder,{settings:{renderEdgeLabels:false,labelDensity:g.order>1000?.15:.38,labelGridCellSize:170,labelRenderedSizeThreshold:9,labelColor:{color:'#e9f1e7'},labelFont:'system-ui, sans-serif',labelWeight:'500',labelSize:12,defaultEdgeColor:'#354e46',minCameraRatio:.03,maxCameraRatio:25}});
  buildTime=performance.now()-started;
  sigmaInstance.on('clickNode',({node})=>setSelected(node));
  sigmaInstance.on('clickStage',()=>setSelected(null));
+ // Expose effective settings to browser acceptance tests, never graph data.
+ holder.dataset.labelConfig='light-on-dark';
  $('sigmaStats').textContent='Sigma.js · '+g.order.toLocaleString('en-GB')+' nodes · '+g.size.toLocaleString('en-GB')+' edges · initialisation '+buildTime.toFixed(1)+' ms';
  }catch(err){$('sigmaStats').textContent='Sigma.js could not start: '+err.message;}
 }
