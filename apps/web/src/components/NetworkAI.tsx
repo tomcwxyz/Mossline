@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useRef,useState,type FormEvent} from "react";
-import type {GraphDocument,SemanticHit,NetworkEvidenceRelation} from "@mossline/graph-core";
+import type {GraphDocument,SemanticHit,NetworkEvidenceRelation,NetworkInsight} from "@mossline/graph-core";
 
 type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number;accessCodeRequired?:boolean};
 type Plan={total:number;eligible:number;excludedPrivate:number;batches:number;cached:boolean;model:string};
