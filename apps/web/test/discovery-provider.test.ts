@@ -40,3 +40,10 @@ test("requests exceeding the limit are rejected before JSON parsing",async()=>{
  const large=new Request("https://example.org/api",{method:"POST",body:"a".repeat(120)});
  await assert.rejects(readDiscoveryJson(large,40),/Too much data/);
 });
+
+test("full-size network batch accepts 48 consistent Qwen embedding vectors",()=>{
+ const data={data:Array.from({length:48},(_,index)=>({index,embedding:Array(1024).fill(0.25)}))};
+ const vectors=parseEmbeddingReply(data,48);
+ assert.equal(vectors.length,48);
+ assert.equal(vectors[47].length,1024);
+});
