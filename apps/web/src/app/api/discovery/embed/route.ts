@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {authoriseDiscovery,discoveryEnabled,parseEmbeddingReply,providerPost,
+import {authoriseDiscovery,discoveryEnabled,embeddingModel,parseEmbeddingReply,providerPost,ModelUnavailable,
   readDiscoveryJson} from "../../../../lib/discovery-provider";
 import {noStoreHeaders} from "../../../../lib/hosted-response";
 export const dynamic="force-dynamic";export const runtime="nodejs";
@@ -17,15 +17,18 @@ export async function POST(request:Request){
   catch{return NextResponse.json({error:"Invalid or oversized network text batch"},
     {status:400,headers:noStoreHeaders});}
   try{
-    const model=process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL!;
+    const model=embeddingModel();
     const result=await providerPost("/embeddings",{
-      model,input:data.documents.map(d=>d.text)
+      model,input:data.documents.map(d=>d.text),encoding_format:"float"
     },10_000_000);
     const vectors=parseEmbeddingReply(result,data.documents.length);
     return NextResponse.json({model,ids:data.documents.map(d=>d.id),vectors},
       {headers:noStoreHeaders});
-  }catch{
-    return NextResponse.json({error:"Embedding provider unavailable or incompatible"},
-      {status:502,headers:noStoreHeaders});
+  }catch(error){
+    const reason=error instanceof Error?error.message:"Embedding provider unavailable";
+    const status=error instanceof ModelUnavailable?error.status:502;
+    const retryAfter=error instanceof ModelUnavailable?error.retryAfterSeconds:undefined;
+    return NextResponse.json({error:reason,...(retryAfter?{retryAfterSeconds:retryAfter}:{})},
+      {status,headers:{...noStoreHeaders,...(retryAfter?{"Retry-After":String(retryAfter)}:{})}});
   }
 }

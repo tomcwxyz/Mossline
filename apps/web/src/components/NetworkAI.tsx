@@ -1,23 +1,32 @@
 "use client";
 import {useEffect,useRef,useState,type FormEvent} from "react";
-import type {GraphDocument,SemanticHit,NetworkEvidenceRelation} from "@mossline/graph-core";
+import type {GraphDocument,SemanticHit,NetworkEvidenceRelation,NetworkInsight} from "@mossline/graph-core";
+import {insightReviewKey,parseInsightReviewLedger,setInsightReviewDecision,
+ type InsightReviewLedger} from "../lib/insight-review";
 
-type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number};
+type Caps={embeddings:boolean;explanations:boolean;embeddingModel?:string|null;maxBatch?:number;accessCodeRequired?:boolean};
 type Plan={total:number;eligible:number;excludedPrivate:number;batches:number;cached:boolean;model:string};
 type Answer={hits:SemanticHit[];relations:NetworkEvidenceRelation[];answer:string;model:string};
 type Reply={
- kind:"plan"|"progress"|"indexed"|"answer"|"failed";
+ kind:"plan"|"progress"|"waiting"|"indexed"|"semantic"|"answer"|"failed";
  id:number;message?:string;total?:number;eligible?:number;excludedPrivate?:number;
- batches?:number;completed?:number;cached?:boolean;model?:string;
+ batches?:number;completed?:number;cached?:boolean;model?:string;signature?:string;
  hits?:SemanticHit[];relations?:NetworkEvidenceRelation[];answer?:string;
+ insights?:NetworkInsight[];
 };
-export function NetworkAI({graph,datasetId,onExplore}:{
+export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
  graph?:GraphDocument;datasetId?:string;onExplore:(id:string)=>void;
+ onViewThemes?:()=>void;
 }){
  const [caps,setCaps]=useState<Caps>({embeddings:false,explanations:false});
  const [plan,setPlan]=useState<Plan|null>(null);
  const [permission,setPermission]=useState(false),[key,setKey]=useState("");
  const [question,setQuestion]=useState("");
+ const [sourceSignals,setSourceSignals]=useState<NetworkInsight[]>([]);
+ const [reviewKey,setReviewKey]=useState("");
+ const [reviewDecisions,setReviewDecisions]=useState<InsightReviewLedger>({});
+ const [reviewMessage,setReviewMessage]=useState("");
+ const [semanticSignals,setSemanticSignals]=useState<NetworkInsight[]>([]);
  const [busy,setBusy]=useState(false),[progress,setProgress]=useState("");
  const [error,setError]=useState(""),[answer,setAnswer]=useState<Answer|null>(null);
  const worker=useRef<Worker|null>(null),seq=useRef(0);
@@ -32,7 +41,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
       setCaps({embeddings:data.embeddings===true,
         explanations:data.explanations===true,
         embeddingModel:typeof data.embeddingModel==="string"?data.embeddingModel:null,
-        maxBatch:48});
+        maxBatch:48,accessCodeRequired:data.accessCodeRequired!==false});
     }).catch(()=>setError("Could not check the model service configuration."));
   return ()=>{alive=false;};
  },[]);
@@ -46,7 +55,14 @@ export function NetworkAI({graph,datasetId,onExplore}:{
       setPlan({total:msg.total??0,eligible:msg.eligible??0,
         excludedPrivate:msg.excludedPrivate??0,batches:msg.batches??0,
         cached:msg.cached===true,model:msg.model??""});
+      setSourceSignals(msg.insights??[]);setSemanticSignals([]);
+      setReviewKey(msg.signature&&msg.model?
+        insightReviewKey(msg.signature,msg.model):"");
       setReady(msg.cached===true);setBusy(false);setProgress("");
+    }else if(msg.kind==="waiting"){
+      setProgress(msg.message??"Waiting for the model provider…");
+    }else if(msg.kind==="semantic"){
+      setSemanticSignals(msg.insights??[]);
     }else if(msg.kind==="progress"){
       setProgress((msg.completed??0).toLocaleString("en-GB")+" of "+
         (msg.total??0).toLocaleString("en-GB")+" descriptions indexed");
@@ -62,18 +78,46 @@ export function NetworkAI({graph,datasetId,onExplore}:{
       setBusy(false);setProgress("");
     }
   };
-  instance.onerror=()=>{
-    setBusy(false);setError("Network AI worker failed; the source graph was not changed.");
+  instance.onerror=(event)=>{
+    setBusy(false);setError("Network AI worker could not start: "+(event.message||"unknown browser error")+". The source graph was not changed.");
   };
-  if(!start.current||worker.current===instance){
+  if(worker.current===instance){
     const id=++seq.current;
     instance.postMessage({kind:"init",id,datasetId,graph,
       model:caps.embeddingModel??""});
   }
   return ()=>{instance.terminate();if(worker.current===instance)worker.current=null;};
  },[datasetId,graph,caps.embeddingModel]);
+ useEffect(()=>{
+  if(!reviewKey){setReviewDecisions({});return;}
+  try{
+    setReviewDecisions(parseInsightReviewLedger(
+      window.localStorage.getItem(reviewKey)));
+  }catch{
+    setReviewDecisions({});
+    setReviewMessage("Local review history is unavailable in this browser.");
+  }
+ },[reviewKey]);
+ function updateReview(id:string,decision:"saved"|"dismissed"|null){
+   if(!reviewKey)return;
+   let updated:InsightReviewLedger;
+   try{updated=setInsightReviewDecision(reviewDecisions,id,decision);}
+   catch(error){
+     setReviewMessage(error instanceof Error?error.message:"Invalid review decision.");return;
+   }
+   setReviewDecisions(updated);
+   try{
+     window.localStorage.setItem(reviewKey,JSON.stringify(updated));
+     setReviewMessage(decision==="saved"?"Saved for investigation in this browser.":
+       decision==="dismissed"?"Suggestion dismissed. You can restore it below.":
+       "Suggestion returned to the review list.");
+   }catch{
+     setReviewMessage("Review decision kept only until you close this view.");
+   }
+ }
+ const savedCount=Object.values(reviewDecisions).filter(v=>v==="saved").length;
  function send(kind:"index"|"ask",questionText?:string){
-  if(!permission||key.length<32||!worker.current)return;
+  if(!permission||(caps.accessCodeRequired!==false&&key.length<32)||!worker.current){setError("Approve remote processing and enter the configured discovery access code before indexing.");return;}
   setBusy(true);setError("");setAnswer(null);
   setProgress(kind==="index"?"Checking cached batches and indexing the remaining records…":
     "Retrieving relevant source records…");
@@ -83,18 +127,81 @@ export function NetworkAI({graph,datasetId,onExplore}:{
  function ask(e:FormEvent){e.preventDefault();if(!question.trim()||busy||!ready)return;
    send("ask",question.trim());}
  return <section className="network-ai-panel" aria-label="Ask and discover with network models">
-  <h4>Ask this network</h4>
-  <p>Explore themes and questions using source-backed semantic retrieval.
-    The AI may suggest possibilities, but it cannot alter the network or establish a
-    partnership from text similarity.</p>
+  <h4>Discover this network</h4>
+  <p>See promising signals already present in the source records, then explore
+    possible thematic connections with AI. Suggested similarities are leads to
+    investigate, not new relationships or evidence of partnership.</p>
   <p className="network-ai-capability">{!caps.embeddings?
     "AI connection is not configured. Recorded network exploration works without it.":
     "Embedding provider configured"+(caps.explanations?" · LLM explanations available":
       " · semantic retrieval only")}</p>
+  {sourceSignals.length>0&&<section className="network-insights" aria-label="Signals worth exploring">
+    <h5>Signals worth exploring</h5>
+    <p>Calculated locally from recorded links, topics and regions. These are starting
+      points for investigation, not conclusions generated by AI.</p>
+    <div className="network-insight-grid">
+      {sourceSignals.map(signal=><article className="network-insight" key={signal.id}>
+        <small>{signal.kind==="recorded"?"Recorded relationships":
+          signal.kind==="theme"?"Source tags":
+          signal.kind==="geography"?"Recorded places":"Data coverage"}</small>
+        <strong>{signal.title}</strong>
+        <p>{signal.summary}</p>
+        <div className="network-insight-actions">
+          {signal.kind==="theme"&&onViewThemes&&<button type="button"
+            onClick={onViewThemes}>Arrange the graph by themes →</button>}
+          {signal.sourceIds.slice(0,2).map((id,i)=><button type="button" key={id}
+            onClick={()=>explore.current(id)}>
+            Explore {signal.sourceLabels?.[i]??"source "+(i+1)} →
+          </button>)}
+        </div>
+      </article>)}
+    </div>
+  </section>}
+  {semanticSignals.length>0&&<section className="network-insights" aria-label="AI-suggested signals">
+    <h5>Possible thematic connections</h5>
+    <p>Suggested from similar descriptions, not existing relationship edges. Review
+      the source records before treating these as meaningful connections.</p>
+    <div className="network-insight-grid">
+      {semanticSignals.filter(signal=>reviewDecisions[signal.id]!=="dismissed")
+        .map(signal=><article className="network-insight" key={signal.id}>
+        <small>Possible association · unverified{reviewDecisions[signal.id]==="saved"?
+          " · saved for investigation":""}</small>
+        <strong>{signal.title}</strong>
+        <p>{signal.summary}</p>
+        <div className="network-insight-actions">
+          {signal.sourceIds.map((id,i)=><button type="button" key={id}
+            onClick={()=>explore.current(id)}>
+            Inspect {signal.sourceLabels?.[i]??"source "+(i+1)} →
+          </button>)}
+        </div>
+        <div className="network-insight-actions">
+          <button type="button" onClick={()=>updateReview(signal.id,
+            reviewDecisions[signal.id]==="saved"?null:"saved")}>
+            {reviewDecisions[signal.id]==="saved"?"Remove from review":"Save for investigation"}
+          </button>
+          <button type="button" onClick={()=>updateReview(signal.id,"dismissed")}>
+            Dismiss suggestion
+          </button>
+        </div>
+      </article>)}
+    </div>
+    {savedCount>0&&<p role="status">{savedCount} candidate
+      {savedCount===1?"":"s"} saved locally for investigation. No graph edges were added.</p>}
+    {semanticSignals.some(signal=>reviewDecisions[signal.id]==="dismissed")&&
+      <details className="network-insights-dismissed">
+        <summary>Dismissed suggestions</summary>
+        {semanticSignals.filter(signal=>reviewDecisions[signal.id]==="dismissed")
+          .map(signal=><div key={signal.id}>
+            <span>{signal.sourceLabels?.join(" · ")??signal.title}</span>
+            <button type="button" onClick={()=>updateReview(signal.id,null)}>Restore</button>
+          </div>)}
+      </details>}
+    {reviewMessage&&<p role="status">{reviewMessage}</p>}
+  </section>}
   {plan&&<p>{plan.eligible.toLocaleString("en-GB")} eligible source entities of{" "}
     {plan.total.toLocaleString("en-GB")} total; {plan.excludedPrivate} explicitly
-    private records excluded. Indexing requires up to {plan.batches} batches
-    of 48 texts. {plan.cached?"An index for this version of the data and model is saved in this browser.":
+    private records excluded. Indexing uses up to {plan.batches} batches of 48 texts. Large networks may
+    take tens of minutes on a limited provider; successful batches resume from your browser cache. {plan.cached?"An index for this version of the data and model is saved in this browser.":
       "No complete cached semantic index yet."}</p>}
   {caps.embeddings&&plan&&<>
     <label className="network-ai-consent"><input type="checkbox"
@@ -103,14 +210,14 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         to the configured model provider. I understand this may incur usage charges,
         and text can contain sensitive details even when records are public.</span>
     </label>
-    <label className="network-ai-key">Discovery access code
+    {caps.accessCodeRequired!==false&&<label className="network-ai-key">Discovery access code
       <input type="password" autoComplete="off" value={key}
         onChange={e=>setKey(e.target.value)}
         placeholder="Alpha access code (not saved in this browser)"/>
-    </label>
+    </label>}
     {!ready&&<div className="network-ai-index-actions">
-      <button type="button" disabled={busy||!permission||key.length<32||!plan.eligible}
-        onClick={()=>send("index")}>Index all eligible entities</button>
+      <button type="button" disabled={busy||!permission||(caps.accessCodeRequired!==false&&key.length<32)||!plan.eligible}
+        onClick={()=>send("index")}>Build insights index</button>
       {busy&&<button type="button" onClick={()=>{
         worker.current?.postMessage({kind:"cancel",id:++seq.current});
         setBusy(false);setProgress("Indexing cancelled. Finished batches remain cached.");
@@ -122,7 +229,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         <input id="network-ai-question" maxLength={450} value={question}
           onChange={e=>setQuestion(e.target.value)}
           placeholder="Which projects address food insecurity in different ways?"/>
-        <button type="submit" disabled={!permission||key.length<32||busy||
+        <button type="submit" disabled={!permission||(caps.accessCodeRequired!==false&&key.length<32)||busy||
           question.trim().length<4}>Explore question →</button>
       </div>
     </form>}

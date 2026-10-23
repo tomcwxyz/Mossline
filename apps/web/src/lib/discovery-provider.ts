@@ -12,7 +12,7 @@ export const explanationRequestSchema=z.object({
 }).strict();
 function trimSlashes(value:string){return value.replace(/\/+$/,"");}
 function urlConfig():string|null{
-  const raw=process.env.MOSSLINE_DISCOVERY_BASE_URL;
+  const raw=process.env.MOSSLINE_DISCOVERY_BASE_URL??(process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_AI_GATEWAY_API_KEY?"https://ai-gateway.vercel.sh/v1":undefined);
   if(!raw)return null;
   try{
     const parsed=new URL(raw);
@@ -21,13 +21,19 @@ function urlConfig():string|null{
     return trimSlashes(parsed.toString());
   }catch{return null;}
 }
+export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "alibaba/qwen3-embedding-0.6b";
+export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "google/gemini-2.5-flash-lite";
+const providerKey=()=>process.env.MOSSLINE_DISCOVERY_API_KEY || process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY;
 export const discoveryEnabled=()=>Boolean(urlConfig()&&
-  process.env.MOSSLINE_DISCOVERY_API_KEY?.length &&
-  process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL?.length &&
+  providerKey()?.length &&
+  embeddingModel().length &&
   (process.env.MOSSLINE_DISCOVERY_ACCESS_KEY?.length??0)>=32);
-export const explanationEnabled=()=>discoveryEnabled()&&
-  Boolean(process.env.MOSSLINE_DISCOVERY_CHAT_MODEL?.length);
+export const explanationEnabled=()=>discoveryEnabled()&& Boolean(chatModel().length);
+export const previewDiscoveryAccess=()=>process.env.VERCEL_ENV==="preview";
 export function authoriseDiscovery(request:Request):boolean{
+  // Preview deployments are protected by Vercel Authentication. Production
+  // always requires the separate discovery code.
+  if(previewDiscoveryAccess())return discoveryEnabled();
   const given=request.headers.get("authorization")??"";
   const expected=process.env.MOSSLINE_DISCOVERY_ACCESS_KEY??"";
   if(!discoveryEnabled()||!/^Bearer [A-Za-z0-9_-]{32,256}$/.test(given))return false;
@@ -54,10 +60,20 @@ export async function readDiscoveryJson(request:Request,maxBytes=53_000):Promise
   for(const c of chunks){bytes.set(c,position);position+=c.length;}
   return JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes));
 }
-export class ModelUnavailable extends Error{}
+export class ModelUnavailable extends Error {
+  constructor(message:string, public readonly status=502,
+    public readonly retryAfterSeconds?:number){super(message);}
+}
+export function safeRetryAfter(value:string|null):number|undefined{
+  if(!value)return undefined;
+  const numeric=Number(value);
+  const seconds=Number.isFinite(numeric)?numeric:(Date.parse(value)-Date.now())/1000;
+  if(!Number.isFinite(seconds))return undefined;
+  return Math.max(1,Math.min(120,Math.ceil(seconds)));
+}
 export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown,
   maxReplyChars=1_600_000){
-  const base=urlConfig(),key=process.env.MOSSLINE_DISCOVERY_API_KEY;
+  const base=urlConfig(),key=providerKey();
   if(!base||!key)throw new ModelUnavailable("Remote model not configured");
   // The destination is fixed by the deployer's server-only settings, never by user input.
   let response:Response;
@@ -66,7 +82,19 @@ export async function providerPost(path:"/embeddings"|"/chat/completions",payloa
     body:JSON.stringify(payload),signal:AbortSignal.timeout(25_000),
     cache:"no-store",redirect:"error"
   });}catch{throw new ModelUnavailable("Model service could not be reached");}
-  if(!response.ok)throw new ModelUnavailable("Model service returned an error");
+  if(!response.ok){
+    const detail=(await response.text()).slice(0,2500);
+    let code="unknown";
+    try {const err=JSON.parse(detail) as {error?:{code?:string;message?:string}};
+      code=err.error?.code||err.error?.message?.slice(0,140)||"unknown";}catch{}
+    console.error("Mossline AI Gateway request failed",{path,status:response.status,code});
+    const status=response.status;
+    const pause=status===429?(safeRetryAfter(response.headers.get("retry-after"))??60):undefined;
+    throw new ModelUnavailable(status===429?
+      "The model provider is handling too many requests. Indexing can resume automatically.":
+      "Gateway request failed (HTTP "+status+", "+code+").",
+      status===429?429:status===402?402:502,pause);
+  }
   const raw=await response.text();
   if(raw.length>maxReplyChars)throw new ModelUnavailable("Model reply too large");
   try{return JSON.parse(raw) as unknown;}

@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 import {prepareNetworkSemanticDocuments,rankNetworkSemanticHits,sourceRelationsAmong,
+  sourceNetworkInsights,semanticNetworkInsights,
   type NetworkSemanticDocument,type GraphDocument}
   from "@mossline/graph-core";
 import {loadFundingDataset} from "../lib/funding-dataset-store";
@@ -12,6 +13,10 @@ type Incoming={
 type CacheRow={key:string;model:string;signature:string;start:number;vectors:number[][]};
 const DB="mossline-network-semantic-v1",STORE="batches",META="complete";
 const BATCH=48;
+// Below the observed five requests/minute free-tier allowance; one request
+// every 15s leaves headroom for questions or other work sharing the account.
+const EMBEDDING_GAP_MS=15_000;
+let nextEmbeddingAt=0;
 let graph:GraphDocument|null=null;
 let docs:NetworkSemanticDocument[]=[];
 let signature="",currentModel="",cachePrefix="",running=false;
@@ -65,26 +70,63 @@ async function hashDocuments(items:NetworkSemanticDocument[]):Promise<string>{
  const buf=await crypto.subtle.digest("SHA-256",data);
  return [...new Uint8Array(buf)].map(n=>n.toString(16).padStart(2,"0")).join("");
 }
-async function sendEmbed(items:{id:string;text:string}[],key:string,controller:AbortController){
- const response=await fetch("/api/discovery/embed",{
-   method:"POST",cache:"no-store",credentials:"omit",signal:controller.signal,
-   headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
-   body:JSON.stringify({documents:items})
+async function waitForEmbedding(ms:number,controller:AbortController,id:number,
+  reason:string):Promise<void>{
+ if(ms<=0)return;
+ respond({kind:"waiting",id,message:reason+" ("+Math.ceil(ms/1000)+"s). "+
+   "Finished batches remain saved in this browser."});
+ await new Promise<void>((resolve,reject)=>{
+   if(controller.signal.aborted){reject(Error("Indexing cancelled."));return;}
+   const done=()=>{clearTimeout(timer);controller.signal.removeEventListener("abort",abort);};
+   const abort=()=>{done();reject(Error("Indexing cancelled."));};
+   const timer=setTimeout(()=>{done();resolve();},ms);
+   controller.signal.addEventListener("abort",abort,{once:true});
  });
- const result=await response.json() as {model?:string;ids?:string[];
-   vectors?:number[][];error?:string};
- if(!response.ok||!result.model||!result.vectors)
-   throw Error(result.error??"Could not embed these records.");
- if(JSON.stringify(result.ids)!==JSON.stringify(items.map(d=>d.id)))
-   throw Error("Embedding reply did not match source identifiers.");
- if(result.vectors.length!==items.length||result.vectors.some(v=>!v.length||
-   v.length!==result.vectors?.[0].length||!v.every(Number.isFinite)))
-   throw Error("Embedding dimensions are missing or inconsistent.");
- if(currentModel&&currentModel!==result.model)throw Error(
-   "Configured embedding model changed. Re-open the network and rebuild its index.");
- return result.vectors;
+}
+async function sendEmbed(items:{id:string;text:string}[],key:string,
+  controller:AbortController,jobId:number):Promise<number[][]>{
+ for(let attempt=0;attempt<8;attempt++){
+   await waitForEmbedding(Math.max(0,nextEmbeddingAt-Date.now()),controller,jobId,
+     "Respecting the provider request limit");
+   if(controller.signal.aborted)throw Error("Embedding request cancelled.");
+   nextEmbeddingAt=Date.now()+EMBEDDING_GAP_MS;
+   const response=await fetch("/api/discovery/embed",{
+     method:"POST",cache:"no-store",credentials:"same-origin",signal:controller.signal,
+     headers:{"Content-Type":"application/json",...(key?{Authorization:"Bearer "+key}:{})},
+     body:JSON.stringify({documents:items})
+   });
+   const contentType=response.headers.get("content-type")??"";
+   if(!contentType.includes("application/json"))throw Error(
+     "Embedding endpoint returned HTTP "+response.status+
+     " rather than JSON. Check preview authentication.");
+   const result=await response.json() as {model?:string;ids?:string[];
+     vectors?:number[][];error?:string;retryAfterSeconds?:number};
+   if(response.status===429){
+     const safe=Number(result.retryAfterSeconds);
+     const delay=Number.isFinite(safe)&&safe>0?
+       Math.max(60,Math.min(120,Math.ceil(safe))):60;
+     nextEmbeddingAt=Math.max(nextEmbeddingAt,Date.now()+delay*1000);
+     if(attempt===7)throw Error(
+       "The embedding provider is still rate-limiting this network. "+
+       "Completed batches are saved; try resuming later.");
+     continue;
+   }
+   if(!response.ok||!result.model||!result.vectors)
+     throw Error(typeof result.error==="string"?result.error:
+       "Embedding request failed (HTTP "+response.status+").");
+   if(JSON.stringify(result.ids)!==JSON.stringify(items.map(d=>d.id)))
+     throw Error("Embedding reply did not match source identifiers.");
+   if(result.vectors.length!==items.length||result.vectors.some(v=>!v.length||
+     v.length!==result.vectors?.[0].length||!v.every(Number.isFinite)))
+     throw Error("Embedding dimensions are missing or inconsistent.");
+   if(currentModel&&currentModel!==result.model)throw Error(
+     "Configured embedding model changed. Re-open the network and rebuild its index.");
+   return result.vectors;
+ }
+ throw Error("Embedding provider rate limit did not recover.");
 }
 async function initialise(job:Incoming){
+ cancel=false;nextEmbeddingAt=0;
  if(job.graph)graph=job.graph;
  else if(job.datasetId)graph=(await loadFundingDataset(job.datasetId)).graph;
  if(!graph)throw Error("The complete source graph is unavailable.");
@@ -97,17 +139,19 @@ async function initialise(job:Incoming){
  const db=await openDB();
  try{
   const complete=await getRow(db,META,cachePrefix);
+  const insights=sourceNetworkInsights(graph,new Set(docs.map(d=>d.id)));
   respond({kind:"plan",id:job.id,total:prepared.totalNodes,
     eligible:docs.length,excludedPrivate:prepared.excludedPrivate,
     batches:Math.ceil(docs.length/BATCH),cached:!!complete?.complete,
-    model:currentModel});
+    model:currentModel,signature,insights});
+  if(complete?.complete)void emitSemanticInsights(job.id);
  }finally{db.close();}
 }
 async function indexAll(job:Incoming){
  if(running)throw Error("Indexing is already running.");
  if(!graph||!currentModel)throw Error("Embedding provider is not configured.");
  const key=job.accessKey??"";
- if(key.length<32)throw Error("A valid discovery access code is required.");
+ if(key.length>0&&key.length<32)throw Error("Invalid discovery access code.");
  running=true;cancel=false;inMemory=null;
  const db=await openDB();
  try{
@@ -121,7 +165,7 @@ async function indexAll(job:Incoming){
       cached.model!==currentModel||cached.signature!==signature){
       const inputs=batch.map((d,i)=>({id:"d"+(start+i),text:d.text}));
       const controller=new AbortController();activeController=controller;
-      const vectors=await sendEmbed(inputs,key,controller);
+      const vectors=await sendEmbed(inputs,key,controller,job.id);
       activeController=null;
       if(cancel)throw Error("Indexing cancelled. Completed batches were saved locally.");
       cached={key:batchKey,model:currentModel,signature,start,vectors};
@@ -134,6 +178,7 @@ async function indexAll(job:Incoming){
   await putRow(db,META,{key:cachePrefix,complete:true,model:currentModel,
     count:docs.length,updatedAt:Date.now()});
   respond({kind:"indexed",id:job.id,completed:embedded,total:docs.length});
+  void emitSemanticInsights(job.id);
  }finally{activeController=null;running=false;db.close();}
 }
 async function loadVectors():Promise<number[][]>{
@@ -153,16 +198,29 @@ async function loadVectors():Promise<number[][]>{
   return inMemory=vectors;
  }finally{db.close();}
 }
+async function emitSemanticInsights(id:number){
+ if(!graph||!docs.length)return;
+ try{
+   const vectors=await loadVectors();
+   if(cancel)return;
+   const insights=semanticNetworkInsights(graph,docs,vectors,6);
+   respond({kind:"semantic",id,insights});
+ }catch{
+   // A slow or unavailable optional suggestion pass must never invalidate
+   // an otherwise complete and usable searchable semantic index.
+   respond({kind:"semantic",id,insights:[]});
+ }
+}
 async function ask(job:Incoming){
  const question=job.question?.trim()??"";
  const key=job.accessKey??"";
  if(question.length<4||question.length>450)throw Error("Enter a short question.");
- if(key.length<32)throw Error("Discovery access code is required.");
+ if(key.length>0&&key.length<32)throw Error("Invalid discovery access code.");
  if(!graph)throw Error("Complete graph not loaded.");
  const vectors=await loadVectors();
  const controller=new AbortController();activeController=controller;
  try{
-  const query=await sendEmbed([{id:"q",text:question}],key,controller);
+  const query=await sendEmbed([{id:"q",text:question}],key,controller,job.id);
   const hits=rankNetworkSemanticHits(docs,vectors,query[0],8);
   const relations=sourceRelationsAmong(graph,hits.map(x=>x.id),24);
   let answer="",model="";
@@ -175,12 +233,14 @@ async function ask(job:Incoming){
        ({id,source,target,type,inferred}))
    };
    const response=await fetch("/api/discovery/ask",{
-     method:"POST",credentials:"omit",cache:"no-store",signal:controller.signal,
-     headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+     method:"POST",credentials:"same-origin",cache:"no-store",signal:controller.signal,
+     headers:{"Content-Type":"application/json",...(key?{Authorization:"Bearer "+key}:{})},
      body:JSON.stringify(request)
    });
+   if(!(response.headers.get("content-type")??"").includes("application/json"))
+     throw Error("Answer endpoint returned HTTP "+response.status+" rather than JSON.");
    const result=await response.json() as {answer?:string;model?:string;error?:string};
-   if(!response.ok||!result.answer)throw Error(result.error??"No grounded answer available.");
+   if(!response.ok||!result.answer)throw Error(typeof result.error==="string"?result.error:"Grounded answer unavailable.");
    answer=result.answer;model=result.model??"";
   }
   respond({kind:"answer",id:job.id,hits,relations,answer,model});
@@ -199,7 +259,7 @@ self.onmessage=(event:MessageEvent<Incoming>)=>{
    else if(job.kind==="ask")await ask(job);
   }catch(error){
    respond({kind:"failed",id:job.id,message:
-     error instanceof Error?error.message:"Network AI unavailable."});
+     error instanceof Error?error.message:typeof error==="string"?error:"Network AI unavailable."});
   }
  })();
 };

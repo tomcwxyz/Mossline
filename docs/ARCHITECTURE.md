@@ -214,3 +214,41 @@ does not replace proper cartographic projection or survey boundaries.
 Saved perspective `presentation` optionally includes `atlasMode`
 (stories/places) and `atlasKind` (all/project/organisation/funder/place).
 Existing saved views without these optional fields remain valid.
+
+
+## Network intelligence: notice, inspect, decide (experimental)
+
+Mossline should offer discovery prompts before asking people to compose a question.
+The first implementation computes local, source-backed signals (recorded
+connectors, repeated source tags, region labels, and disconnected entities)
+and, after optional semantic indexing, presents bounded similar-description
+pairs as **unverified leads**. People can inspect original records from
+each insight. Insights do not modify `GraphDocument`.
+
+A durable visual model has four strictly separated evidence layers:
+
+1. **Original source**: imported entities, attributes and recorded relationships.
+2. **Source-derived**: calculated summaries and groupings, with their original IDs
+   and counting method; not assertions about external reality.
+3. **AI-suggested**: candidate themes and possible similarities, explicitly
+   labelled as hypotheses and kept outside the canonical graph.
+4. **User-confirmed** (future): reviewed and attributed annotations, only saved
+   following an explicit authoring action with provenance.
+
+Future visual interaction should let a person toggle thematic arrangements,
+inspect highlighted evidence for a suggestion, and compare possible links
+as visually *distinct dashed overlays*, never as ordinary source edges. Neither
+similarity nor an LLM answer is sufficient to create a partnership edge.
+Geographical suggestions must never silently manufacture coordinates.
+
+Indexing is opt-in and browser-local. The network worker sends bounded text
+batches, spaces requests to leave capacity under the observed free-tier
+provider cap, retries 429s with a provider cooldown, and stores each completed
+batch in IndexedDB so interrupted work can resume. It must not treat a
+provider limit as a data or model validity error. The web API must preserve
+a safe 429 status and retry delay. Multiple simultaneous browsers still
+share provider quotas, so backoff remains necessary even with pacing.
+
+The bounded lexical shortlist used for semantic candidate pairs is a
+**discovery heuristic**, not exhaustive nearest-neighbour search, and must
+not be presented as comprehensive evidence of missing connections.
