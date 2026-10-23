@@ -1,63 +1,56 @@
-/** Shared full-network labelling for WebGL-overlay and Canvas 2D renderers.
- * Labels are presentation-only; source names and graph records are untouched.
+/** Low-noise labels shared by WebGL overlay and Canvas 2D.
+ * Labels remain presentation-only and never alter network records.
  */
-export interface NetworkLabel {
-  x:number;y:number;label:string;index:number;
-}
+export interface NetworkLabel {x:number;y:number;label:string;index:number}
 export function drawNetworkLabels(
-  context:CanvasRenderingContext2D,
+  ctx:CanvasRenderingContext2D,
   labels:readonly NetworkLabel[],
   isHub:(index:number)=>boolean,
-  width:number,height:number
+  width:number,height:number,
+  zoom=1
 ):void {
-  if(width<20||height<20)return;
-  const occupied:{x:number;y:number;width:number;height:number}[]=[];
-  context.save();
-  context.textAlign="left";
-  context.textBaseline="middle";
-  // Prominent hubs win collision priority; other labels remain available
-  // on zoom, selection and through the accessible entity explorer.
-  for(const item of [...labels].sort((a,b)=>Number(isHub(b.index))-Number(isHub(a.index)))){
+  if(width<40||height<40)return;
+  ctx.save();
+  ctx.textBaseline="middle";
+  ctx.textAlign="left";
+  const occupied:{x:number;y:number;w:number;h:number}[]=[];
+  const hubs=labels.filter(item=>isHub(item.index));
+  const ordinary=labels.filter(item=>!isHub(item.index));
+  // At landscape scale show the structure, not a screenful of text.
+  // Zooming reveals progressively more names; hub labels take precedence.
+  const limit=zoom<.3?0:zoom<.75?Math.min(3,ordinary.length):
+    zoom<1.5?Math.min(width<650?5:10,ordinary.length):
+    Math.min(width<650?12:25,ordinary.length);
+  const candidates=[...hubs.slice(0,width<650?6:12),...ordinary.slice(0,limit)];
+  for(const item of candidates){
     const hub=isHub(item.index);
-    const font=hub?"600 12px system-ui, sans-serif":"500 11px system-ui, sans-serif";
-    context.font=font;
-    const maxWidth=Math.min(hub?210:158,width-24);
-    if(maxWidth<24)continue;
-    let text=item.label.trim();
-    while(text.length>1&&context.measureText(text).width>maxWidth-18)
-      text=text.slice(0,-1);
-    if(text!==item.label.trim())text=text.trimEnd()+"…";
-    const w=Math.min(maxWidth,context.measureText(text).width+16);
-    const h=hub?25:21;
-    // Try nearby readable positions before discarding a label. This is
-    // especially useful for dense hubs, where a fixed right-hand label
-    // would hide most neighbouring entities.
-    const offsets:[[number,number],...[number,number][]]=[
-      [10,-h/2],[-w-10,-h/2],[10,-h-8],[-w-10,-h-8],
-      [10,8],[-w-10,8]
+    ctx.font=hub?"600 13px system-ui, sans-serif":"500 11px system-ui, sans-serif";
+    const maxWidth=Math.min(hub?195:155,width-24);
+    let label=item.label.trim().replace(/\\s+/g," ");
+    if(!label)continue;
+    while(label.length>1&&ctx.measureText(label).width>maxWidth)
+      label=label.slice(0,-1);
+    if(label!==item.label.trim().replace(/\\s+/g," "))label=label.trimEnd()+"…";
+    const w=Math.min(maxWidth,ctx.measureText(label).width),h=hub?21:18;
+    const positions=[
+      {x:item.x+11,y:item.y-h/2},
+      {x:item.x-w-11,y:item.y-h/2},
+      {x:item.x-w/2,y:item.y-h-13},
+      {x:item.x-w/2,y:item.y+12}
     ];
-    let placement:{x:number;y:number}|null=null;
-    for(const [dx,dy] of offsets){
-      const x=item.x+dx,y=item.y+dy;
-      if(x<6||y<6||x+w>width-6||y+h>height-6)continue;
-      if(occupied.some(r=>x<r.x+r.width+5&&x+w+5>r.x&&
-        y<r.y+r.height+4&&y+h+4>r.y))continue;
-      placement={x,y};
-      break;
-    }
-    if(!placement)continue;
-    const {x,y}=placement;
-    occupied.push({x,y,width:w,height:h});
-    context.fillStyle=hub?"rgba(16,54,43,.96)":"rgba(16,44,38,.86)";
-    context.beginPath();
-    context.roundRect(x,y,w,h,hub?7:5);
-    context.fill();
-    if(hub){
-      context.fillStyle="#dfbd76";
-      context.fillRect(x+1,y+5,3,h-10);
-    }
-    context.fillStyle=hub?"#fff1cb":"#e6f0e3";
-    context.fillText(text,x+9,y+h/2);
+    const at=positions.find(p=>p.x>=8&&p.y>=8&&p.x+w<=width-8&&p.y+h<=height-8&&
+      !occupied.some(o=>p.x<o.x+o.w+9&&p.x+w+9>o.x&&
+        p.y<o.y+o.h+6&&p.y+h+6>o.y));
+    if(!at)continue;
+    occupied.push({...at,w,h});
+    // A fine dark halo keeps lettering legible over thousands of edges
+    // without turning the network into a pile of opaque rectangles.
+    ctx.lineJoin="round";
+    ctx.lineWidth=hub?3.5:3;
+    ctx.strokeStyle="rgba(9,31,28,.96)";
+    ctx.strokeText(label,at.x,at.y+h/2);
+    ctx.fillStyle=hub?"#fff0ce":"#dce7df";
+    ctx.fillText(label,at.x,at.y+h/2);
   }
-  context.restore();
+  ctx.restore();
 }
