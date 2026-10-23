@@ -1830,3 +1830,42 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
     padding:7px 10px;
   }
 }
+
+
+/* Follow-up from measurable first-fold checks: title/chooser must share ONE
+ * mobile row. The longer map description is readable after the canvas. */
+@media(max-width:680px){
+  .mossline-studio .heading.mobile-exploring{
+    display:flex;flex-direction:row;align-items:center;
+    justify-content:space-between;gap:7px;padding:5px 0;
+  }
+  .mossline-studio .heading.mobile-exploring>div:first-child{
+    flex:1;min-width:0;
+  }
+  .mossline-studio .heading.mobile-exploring h1{
+    font-size:clamp(17px,4.7vw,20px);
+    overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  }
+  .mossline-studio .heading.mobile-exploring .heading-period{display:none}
+  .mossline-studio .heading.mobile-exploring .actions{
+    flex:0 1 auto;max-width:55%;min-width:0;margin:0;
+    gap:5px;align-items:center;
+  }
+  .mossline-studio .heading.mobile-exploring .map-library-chooser{
+    flex:0 1 auto;min-width:0;max-width:115px;width:min(30vw,115px);
+  }
+  .mossline-studio .heading.mobile-exploring .studio-action-menu>summary{
+    padding:7px 8px;font-size:11px;
+  }
+  .mossline-studio.mobile-explore .map-panel>.mobile-map-description{
+    display:block;margin:0;padding:11px 13px;
+    background:#17382d;border-top:1px solid #486650;
+    color:#d2e2ce;
+  }
+  .mossline-studio.mobile-explore .map-panel>.mobile-map-description summary{
+    font-size:12px;font-weight:700;cursor:pointer;
+  }
+  .mossline-studio.mobile-explore .map-panel>.mobile-map-description p{
+    font-size:12px;line-height:1.55;margin:8px 0 0;
+  }
+}
