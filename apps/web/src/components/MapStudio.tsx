@@ -69,6 +69,7 @@ export function MapStudio() {
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
   const [wholeNetworkOpen,setWholeNetworkOpen]=useState(false);
+  const [standardAiOpen,setStandardAiOpen]=useState(false);
   const [detailedToolsOpen,setDetailedToolsOpen]=useState(false);
   const [query, setQuery] = useState("");
   const [types, setTypes] = useState<NodeType[]>(TYPE_KEYS);
@@ -1091,12 +1092,13 @@ export function MapStudio() {
           "Drag nodes to arrange · Save a perspective to keep the layout · Source records stay unchanged"}</span>
           <span>{view==="atlas"?"Approximate geographic projection":"Recorded relationships, with evidence"}</span></div>
         {view==="landscape"&&!usingSourceExplorer&&
-          <details className="network-ai-disclosure">
+          <details className="network-ai-disclosure"
+            onToggle={event=>setStandardAiOpen(event.currentTarget.open)}>
             <summary>Ask this network · Semantic discovery &amp; AI</summary>
-            <NetworkAI graph={graph} onExplore={id=>{
+            {standardAiOpen&&<NetworkAI graph={graph} onExplore={id=>{
               setView("landscape");setQuery("");setRegion("");setTypes(TYPE_KEYS);
               setFocusId(null);pickNode(id);
-            }}/>
+            }}/>} 
           </details>}
         <details className="mobile-map-description">
           <summary>About this map</summary>
