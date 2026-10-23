@@ -88,7 +88,7 @@ async function sendEmbed(items:{id:string;text:string}[],key:string,
  for(let attempt=0;attempt<8;attempt++){
    await waitForEmbedding(Math.max(0,nextEmbeddingAt-Date.now()),controller,jobId,
      "Respecting the provider request limit");
-   if(cancel||controller.signal.aborted)throw Error("Indexing cancelled.");
+   if(controller.signal.aborted)throw Error("Embedding request cancelled.");
    nextEmbeddingAt=Date.now()+EMBEDDING_GAP_MS;
    const response=await fetch("/api/discovery/embed",{
      method:"POST",cache:"no-store",credentials:"same-origin",signal:controller.signal,
@@ -126,6 +126,7 @@ async function sendEmbed(items:{id:string;text:string}[],key:string,
  throw Error("Embedding provider rate limit did not recover.");
 }
 async function initialise(job:Incoming){
+ cancel=false;nextEmbeddingAt=0;
  if(job.graph)graph=job.graph;
  else if(job.datasetId)graph=(await loadFundingDataset(job.datasetId)).graph;
  if(!graph)throw Error("The complete source graph is unavailable.");
