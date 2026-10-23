@@ -43,7 +43,7 @@ test("mobile without WebGL still displays every source node and edge",async({pag
   const rendered=await canvas.evaluate((node:HTMLCanvasElement)=>{
     const ctx=node.getContext("2d");
     if(!ctx)return false;
-    const {data}=ctx.getImageData(Math.round(element.width/2),Math.round(element.height/2),1,1);
+    const {data}=ctx.getImageData(Math.round(node.width/2),Math.round(node.height/2),1,1);
     return data[3]>0;
   });
   expect(rendered).toBe(true);
