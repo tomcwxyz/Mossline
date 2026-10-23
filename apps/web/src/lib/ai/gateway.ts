@@ -10,13 +10,13 @@ export class GatewayError extends Error {
 const ENDPOINT = "https://ai-gateway.vercel.sh/v1/chat/completions";
 export type SuggestedGroup = { label: string; reason: string; field?: string };
 export function gatewayConfigured(): boolean {
-  return Boolean(process.env.VERCEL_AI_GATEWAY_API_KEY || process.env.AI_GATEWAY_API_KEY);
+  return Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY);
 }
 export async function suggestDatasetGroups(
   fields: {name: string; examples: string[]}[],
   options: { model: string; fetchImpl?: typeof fetch; signal?: AbortSignal },
 ): Promise<SuggestedGroup[]> {
-  const key = process.env.VERCEL_AI_GATEWAY_API_KEY || process.env.AI_GATEWAY_API_KEY;
+  const key = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY;
   if (!key) throw new GatewayError(503, "AI Gateway is not configured");
   if (!/^[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._:-]*$/i.test(options.model))
     throw new GatewayError(503, "A valid Gateway model must be configured");
