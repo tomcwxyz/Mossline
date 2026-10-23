@@ -1886,3 +1886,11 @@ padding:10px 13px;border-radius:7px;text-align:left;font-size:12px;min-width:180
  max-width:100%;overflow-wrap:anywhere;cursor:pointer}
 .network-insight-actions button:hover,.network-insight-actions button:focus-visible{
  border-color:#345f43;background:#e0eddf}
+
+
+.network-insights-dismissed{margin-top:11px;padding:10px 12px;border:1px solid #cad8c7;border-radius:8px}
+.network-insights-dismissed summary{font-size:12px;font-weight:700;cursor:pointer}
+.network-insights-dismissed>div{display:flex;gap:10px;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;padding:9px 0;border-top:1px solid #dbe5d7;font-size:12px}
+.network-insights-dismissed button{border:1px solid #96b39a;border-radius:6px;
+ background:#fff;color:#285137;padding:6px 9px;cursor:pointer}
