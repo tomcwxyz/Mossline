@@ -166,7 +166,7 @@ export function FullNetworkCanvas2D({geometry,selectedId,onSelect,sizeMode="conn
       }
       context.globalAlpha=1;
       const labels=visibleAtlasNodeLabels(geometry,c.zoom,c.x,c.y,w,h,18);
-      drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h);
+      drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h,c.zoom);
       const next=atlasDetailLevel(geometry,c.zoom);
       setLevel(previous=>{
         const name=next==="area"?"Area":next==="entity"?"Entity":"Landscape";
