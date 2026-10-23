@@ -29,10 +29,24 @@ export function drawNetworkLabels(
     if(text!==item.label.trim())text=text.trimEnd()+"…";
     const w=Math.min(maxWidth,context.measureText(text).width+16);
     const h=hub?25:21;
-    const x=Math.max(6,Math.min(width-w-6,item.x+8));
-    const y=Math.max(6,Math.min(height-h-6,item.y-h/2));
-    if(occupied.some(r=>x<r.x+r.width+5&&x+w+5>r.x&&
-      y<r.y+r.height+4&&y+h+4>r.y))continue;
+    // Try nearby readable positions before discarding a label. This is
+    // especially useful for dense hubs, where a fixed right-hand label
+    // would hide most neighbouring entities.
+    const offsets:[[number,number],...[number,number][]]=[
+      [10,-h/2],[-w-10,-h/2],[10,-h-8],[-w-10,-h-8],
+      [10,8],[-w-10,8]
+    ];
+    let placement:{x:number;y:number}|null=null;
+    for(const [dx,dy] of offsets){
+      const x=item.x+dx,y=item.y+dy;
+      if(x<6||y<6||x+w>width-6||y+h>height-6)continue;
+      if(occupied.some(r=>x<r.x+r.width+5&&x+w+5>r.x&&
+        y<r.y+r.height+4&&y+h+4>r.y))continue;
+      placement={x,y};
+      break;
+    }
+    if(!placement)continue;
+    const {x,y}=placement;
     occupied.push({x,y,width:w,height:h});
     context.fillStyle=hub?"rgba(16,54,43,.96)":"rgba(16,44,38,.86)";
     context.beginPath();
