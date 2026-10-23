@@ -25,7 +25,7 @@ a{color:#c8eac2}@media(max-width:900px){.panels{grid-template-columns:1fr}.surfa
 <button id="generate">Load same sample</button>
 <label class="file">Import Mossline JSON<input id="import" type="file" accept=".json,application/json"></label>
 <button id="gexf">Export Gephi GEXF</button><button id="csv">Export Cosmograph CSVs</button>
-<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button><button id="benchmark">Run comparison</button>
+<label>Layout <select id="layout"><option value="clusters">Communities</option><option value="radial">Radial</option><option value="grid">Grid</option><option value="forces">Network forces (≤ 1,000)</option></select></label><label><input type="checkbox" id="focus" checked> Focus neighbours on selection</label><button id="reset">Reset views</button><button id="benchmark">Run comparison</button>
 </div>
 <div id="message" role="status"></div>
 <div class="panels"><section class="panel"><h2>Mossline baseline · Canvas 2D</h2><div class="surface"><canvas id="baseline" aria-label="Canvas 2D network"></canvas></div><div class="stats" id="baseStats"></div></section>
@@ -54,15 +54,47 @@ function layoutNodes(mode){
  else{const group=n.group%8,a=hash(i*23)*Math.PI*2,r=30+Math.sqrt(hash(i*19+3))*130;n.x=Math.cos(group*Math.PI/4)*240+Math.cos(a)*r;n.y=Math.sin(group*Math.PI/4)*240+Math.sin(a)*r;}
  }
 }
+// Bounded force-directed layout used only for small exploratory networks.
+// Preserves the same coordinates in both panes for an honest comparison.
+function forceLayout(){
+ if(nodes.length>1000){$("message").textContent="Network forces are limited to 1,000 nodes in this browser experiment; showing communities layout.";return;}
+ const count=nodes.length,byId=new Map(nodes.map((n,i)=>[n.id,i]));
+ const velocities=nodes.map(()=>({x:0,y:0}));
+ const adjacency=nodes.map(()=>[]);
+ for(const e of edges){const a=byId.get(e.source),b=byId.get(e.target);if(a===undefined||b===undefined||a===b)continue;adjacency[a].push(b);}
+ for(let step=0;step<110;step++){
+  const cooling=.6*(1-step/130);
+  for(let i=0;i<count;i++){
+   const a=nodes[i];let fx=0,fy=0;
+   for(let j=0;j<count;j++){if(i===j)continue;
+    const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d2=Math.max(36,dx*dx+dy*dy);
+    const repulsion=18000/d2;const inv=1/Math.sqrt(d2);
+    fx+=dx*inv*repulsion;fy+=dy*inv*repulsion;
+   }
+   // Small central gravity prevents disconnected pieces drifting away.
+   fx-=a.x*.001;fy-=a.y*.001;
+   velocities[i].x=(velocities[i].x*.75+fx*.05)*cooling;
+   velocities[i].y=(velocities[i].y*.75+fy*.05)*cooling;
+  }
+  for(let i=0;i<count;i++)for(const j of adjacency[i]){
+   const a=nodes[i],b=nodes[j],dx=b.x-a.x,dy=b.y-a.y;
+   const d=Math.max(1,Math.hypot(dx,dy)),attract=(d-65)*.017*cooling;
+   const x=dx/d*attract,y=dy/d*attract;
+   velocities[i].x+=x;velocities[i].y+=y;
+   velocities[j].x-=x;velocities[j].y-=y;
+  }
+  for(let i=0;i<count;i++){nodes[i].x+=Math.max(-12,Math.min(12,velocities[i].x));nodes[i].y+=Math.max(-12,Math.min(12,velocities[i].y));}
+ }
+}
 function neighbourIds(id){const ids=new Set([id]);for(const e of edges){if(e.source===id)ids.add(e.target);else if(e.target===id)ids.add(e.source);}return ids;}
 function setSelected(id){selection=id;const n=nodes.find(n=>n.id===id),count=id?neighbourIds(id).size-1:0;
  $("message").textContent=n?"Selected "+n.label+" · "+count.toLocaleString("en-GB")+" direct connections · "+TYPE_LABELS[n.type%6]:"Click a node to explore its immediate connections";
  if(sigmaInstance){const graph=sigmaInstance.getGraph();const nearby=id&&$("focus").checked?neighbourIds(id):null;
- graph.forEachNode((key)=>{graph.setNodeAttribute(key,"color",nearby&&!nearby.has(key)?"#35534a":COLOURS[(graph.getNodeAttribute(key,"nodeType")||0)%6]);graph.setNodeAttribute(key,"size",key===id?11:graph.getNodeAttribute(key,"degreeSize"));});
- graph.forEachEdge((key,attrs,source,target)=>{graph.setEdgeAttribute(key,"color",nearby&&!(source===id||target===id)?"#29463d":source===id||target===id?"#f0cf87":"#6e9882");graph.setEdgeAttribute(key,"size",source===id||target===id?2:.5);});sigmaInstance.refresh();}
+ graph.forEachNode((key)=>{graph.setNodeAttribute(key,"color",nearby&&!nearby.has(key)?"#264039":COLOURS[(graph.getNodeAttribute(key,"nodeType")||0)%6]);graph.setNodeAttribute(key,"size",key===id?15:graph.getNodeAttribute(key,"degreeSize"));graph.setNodeAttribute(key,"forceLabel",key===id||Boolean(nearby&&nearby.has(key)&&nearby.size<24));});
+ graph.forEachEdge((key,attrs,source,target)=>{graph.setEdgeAttribute(key,"color",nearby&&!(source===id||target===id)?"#20372f":source===id||target===id?"#ffdc89":"#354e46");graph.setEdgeAttribute(key,"size",source===id||target===id?2:.5);});sigmaInstance.refresh();}
  paint();}
 function assignGraph(data){
- nodes=data.nodes.map(n=>({...n}));edges=data.edges;selection=null;camera={x:0,y:0,zoom:1};layoutNodes($("layout").value);
+ nodes=data.nodes.map(n=>({...n}));edges=data.edges;selection=null;camera={x:0,y:0,zoom:1};layoutNodes($("layout").value==="forces"?"clusters":$("layout").value);if($("layout").value==="forces")forceLayout();
  $('message').textContent=nodes.length.toLocaleString('en-GB')+' entities · '+edges.length.toLocaleString('en-GB')+' relationships';
  buildSigma();paint();$('baseStats').textContent='Canvas 2D · last draw '+canvasTime.toFixed(1)+' ms · drag to pan · scroll to zoom';
 }
@@ -76,8 +108,8 @@ function buildSigma(){
  const g=new Graph({multi:true,allowSelfLoops:false});
  const degree=new Map(nodes.map(n=>[n.id,0]));for(const e of edges){degree.set(e.source,(degree.get(e.source)||0)+1);degree.set(e.target,(degree.get(e.target)||0)+1);}
  for(const n of nodes){const degreeSize=Math.min(15,4+Math.sqrt(degree.get(n.id)||0)*1.6);g.addNode(n.id,{label:n.label,x:n.x,y:n.y,size:degreeSize,degreeSize,nodeType:n.type,color:COLOURS[n.type%6]});}
- edges.forEach((e,i)=>{if(g.hasNode(e.source)&&g.hasNode(e.target)&&e.source!==e.target)g.addEdgeWithKey('e'+i,e.source,e.target,{size:.5,color:'#6e9882'});});
- sigmaInstance=new Sigma(g,holder,{renderEdgeLabels:false,labelDensity:.7,labelGridCellSize:125,defaultEdgeColor:'#6e9882',minCameraRatio:.03,maxCameraRatio:25});
+ edges.forEach((e,i)=>{if(g.hasNode(e.source)&&g.hasNode(e.target)&&e.source!==e.target)g.addEdgeWithKey('e'+i,e.source,e.target,{size:.5,color:'#354e46'});});
+ sigmaInstance=new Sigma(g,holder,{renderEdgeLabels:false,labelDensity:g.order>1000?.15:.38,labelGridCellSize:170,labelRenderedSizeThreshold:9,labelColor:{color:'#e9f1e7'},labelFont:'system-ui, sans-serif',labelWeight:'500',labelSize:12,defaultEdgeColor:'#354e46',minCameraRatio:.03,maxCameraRatio:25});
  buildTime=performance.now()-started;
  sigmaInstance.on('clickNode',({node})=>setSelected(node));
  sigmaInstance.on('clickStage',()=>setSelected(null));
