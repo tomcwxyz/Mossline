@@ -14,7 +14,8 @@
     "react-dom": "^19.3.0",
     "cytoscape": "^3.33.1",
     "@neondatabase/serverless": "^1.2.0",
-    "zod": "^4.0.0"
+    "zod": "^4.0.0",
+    "@neondatabase/auth": "0.7.0-beta"
   },
   "devDependencies": {
     "@types/cytoscape": "^3.21.9",
