@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
-import {authoriseDiscovery,discoveryEnabled,embeddingModel,parseEmbeddingReply,providerPost,
+import {authoriseDiscovery,discoveryEnabled,embeddingModel,parseEmbeddingReply,providerPost,ModelUnavailable,
   readDiscoveryJson} from "../../../../lib/discovery-provider";
 import {noStoreHeaders} from "../../../../lib/hosted-response";
 export const dynamic="force-dynamic";export const runtime="nodejs";
@@ -26,7 +26,9 @@ export async function POST(request:Request){
       {headers:noStoreHeaders});
   }catch(error){
     const reason=error instanceof Error?error.message:"Embedding provider unavailable";
-    return NextResponse.json({error:reason},
-      {status:502,headers:noStoreHeaders});
+    const status=error instanceof ModelUnavailable?error.status:502;
+    const retryAfter=error instanceof ModelUnavailable?error.retryAfterSeconds:undefined;
+    return NextResponse.json({error:reason,...(retryAfter?{retryAfterSeconds:retryAfter}:{})},
+      {status,headers:{...noStoreHeaders,...(retryAfter?{"Retry-After":String(retryAfter)}:{})}});
   }
 }
