@@ -1,5 +1,7 @@
 "use client";
 
+import {drawNetworkLabels} from "../lib/network-labels";
+
 import {useEffect,useMemo,useRef,useState,
   type PointerEvent as ReactPointerEvent} from "react";
 import {focusFullNetwork,visibleAtlasNodeLabels,atlasDetailLevel,
@@ -164,9 +166,7 @@ export function FullNetworkCanvas2D({geometry,selectedId,onSelect,sizeMode="conn
       }
       context.globalAlpha=1;
       const labels=visibleAtlasNodeLabels(geometry,c.zoom,c.x,c.y,w,h,18);
-      context.fillStyle="#f0f3dc";context.textAlign="left";
-      context.font="11px system-ui, sans-serif";
-      for(const label of labels)context.fillText(label.label,label.x,label.y,160);
+      drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h,c.zoom);
       const next=atlasDetailLevel(geometry,c.zoom);
       setLevel(previous=>{
         const name=next==="area"?"Area":next==="entity"?"Entity":"Landscape";
