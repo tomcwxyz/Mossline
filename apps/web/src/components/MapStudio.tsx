@@ -545,6 +545,7 @@ export function MapStudio() {
         <details className="studio-action-menu">
           <summary>More actions</summary>
           <div className="studio-action-popover">
+            <button type="button" onClick={()=>fileRef.current?.click()}>Import spreadsheet or Kumu network</button>
             <button type="button" onClick={()=>{setFundingInitialFile(null);setShowFundingWorkbench(v=>!v);}}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>
