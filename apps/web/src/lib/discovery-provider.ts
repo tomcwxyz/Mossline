@@ -12,7 +12,7 @@ export const explanationRequestSchema=z.object({
 }).strict();
 function trimSlashes(value:string){return value.replace(/\/+$/,"");}
 function urlConfig():string|null{
-  const raw=process.env.MOSSLINE_DISCOVERY_BASE_URL;
+  const raw=process.env.MOSSLINE_DISCOVERY_BASE_URL??(process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_AI_GATEWAY_API_KEY?"https://ai-gateway.vercel.sh/v1":undefined);
   if(!raw)return null;
   try{
     const parsed=new URL(raw);
@@ -21,12 +21,14 @@ function urlConfig():string|null{
     return trimSlashes(parsed.toString());
   }catch{return null;}
 }
+export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "alibaba/qwen3-embedding-0.6b";
+export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "alibaba/qwen-3-14b";
+const providerKey=()=>process.env.MOSSLINE_DISCOVERY_API_KEY || process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY;
 export const discoveryEnabled=()=>Boolean(urlConfig()&&
-  process.env.MOSSLINE_DISCOVERY_API_KEY?.length &&
-  process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL?.length &&
+  providerKey()?.length &&
+  embeddingModel().length &&
   (process.env.MOSSLINE_DISCOVERY_ACCESS_KEY?.length??0)>=32);
-export const explanationEnabled=()=>discoveryEnabled()&&
-  Boolean(process.env.MOSSLINE_DISCOVERY_CHAT_MODEL?.length);
+export const explanationEnabled=()=>discoveryEnabled()&& Boolean(chatModel().length);
 export function authoriseDiscovery(request:Request):boolean{
   const given=request.headers.get("authorization")??"";
   const expected=process.env.MOSSLINE_DISCOVERY_ACCESS_KEY??"";
@@ -57,7 +59,7 @@ export async function readDiscoveryJson(request:Request,maxBytes=53_000):Promise
 export class ModelUnavailable extends Error{}
 export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown,
   maxReplyChars=1_600_000){
-  const base=urlConfig(),key=process.env.MOSSLINE_DISCOVERY_API_KEY;
+  const base=urlConfig(),key=providerKey();
   if(!base||!key)throw new ModelUnavailable("Remote model not configured");
   // The destination is fixed by the deployer's server-only settings, never by user input.
   let response:Response;
