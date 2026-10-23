@@ -60,7 +60,17 @@ export async function readDiscoveryJson(request:Request,maxBytes=53_000):Promise
   for(const c of chunks){bytes.set(c,position);position+=c.length;}
   return JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(bytes));
 }
-export class ModelUnavailable extends Error{}
+export class ModelUnavailable extends Error {
+  constructor(message:string, public readonly status=502,
+    public readonly retryAfterSeconds?:number){super(message);}
+}
+export function safeRetryAfter(value:string|null):number|undefined{
+  if(!value)return undefined;
+  const numeric=Number(value);
+  const seconds=Number.isFinite(numeric)?numeric:(Date.parse(value)-Date.now())/1000;
+  if(!Number.isFinite(seconds))return undefined;
+  return Math.max(1,Math.min(120,Math.ceil(seconds)));
+}
 export async function providerPost(path:"/embeddings"|"/chat/completions",payload:unknown,
   maxReplyChars=1_600_000){
   const base=urlConfig(),key=providerKey();
@@ -78,7 +88,12 @@ export async function providerPost(path:"/embeddings"|"/chat/completions",payloa
     try {const err=JSON.parse(detail) as {error?:{code?:string;message?:string}};
       code=err.error?.code||err.error?.message?.slice(0,140)||"unknown";}catch{}
     console.error("Mossline AI Gateway request failed",{path,status:response.status,code});
-    throw new ModelUnavailable("Gateway request failed (HTTP "+response.status+", "+code+").");
+    const status=response.status;
+    const pause=status===429?(safeRetryAfter(response.headers.get("retry-after"))??60):undefined;
+    throw new ModelUnavailable(status===429?
+      "The model provider is handling too many requests. Indexing can resume automatically.":
+      "Gateway request failed (HTTP "+status+", "+code+").",
+      status===429?429:status===402?402:502,pause);
   }
   const raw=await response.text();
   if(raw.length>maxReplyChars)throw new ModelUnavailable("Model reply too large");
