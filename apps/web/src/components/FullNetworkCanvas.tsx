@@ -75,7 +75,8 @@ void main(){
 // GPU-expanded quadratic strokes use screen-space triangles instead of
 // platform-dependent WebGL1 line widths. Every triangle corresponds to an
 // original recorded or inferred edge, never to a new relationship.
-const strokeVertex=`attribute vec2 a_first;
+const strokeVertex=`precision highp float;
+attribute vec2 a_first;
 attribute vec2 a_second;
 attribute vec3 a_curve;
 uniform vec2 u_offset;
@@ -101,7 +102,7 @@ void main(){
  gl_Position=vec4(p.x/(u_viewport.x*.5),
    -p.y/(u_viewport.y*.5),0.0,1.0);
 }`;
-const strokeFragment=`precision mediump float;
+const strokeFragment=`precision highp float;
 uniform vec4 u_strokeColour;
 uniform float u_width;
 uniform float u_soft;
