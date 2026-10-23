@@ -12,8 +12,9 @@ type Reply={
  hits?:SemanticHit[];relations?:NetworkEvidenceRelation[];answer?:string;
  insights?:NetworkInsight[];
 };
-export function NetworkAI({graph,datasetId,onExplore}:{
+export function NetworkAI({graph,datasetId,onExplore,onViewThemes}:{
  graph?:GraphDocument;datasetId?:string;onExplore:(id:string)=>void;
+ onViewThemes?:()=>void;
 }){
  const [caps,setCaps]=useState<Caps>({embeddings:false,explanations:false});
  const [plan,setPlan]=useState<Plan|null>(null);
@@ -154,6 +155,8 @@ export function NetworkAI({graph,datasetId,onExplore}:{
         <strong>{signal.title}</strong>
         <p>{signal.summary}</p>
         <div className="network-insight-actions">
+          {signal.kind==="theme"&&onViewThemes&&<button type="button"
+            onClick={onViewThemes}>Arrange the graph by themes →</button>}
           {signal.sourceIds.slice(0,2).map((id,i)=><button type="button" key={id}
             onClick={()=>explore.current(id)}>
             Explore {signal.sourceLabels?.[i]??"source "+(i+1)} →
