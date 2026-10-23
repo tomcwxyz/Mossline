@@ -12,6 +12,9 @@ test("Graph Lab keeps its experimental tools isolated from the studio",async({pa
   await expect(page.locator("#message")).toContainText("1,500 entities");
   await page.locator("#layout").selectOption("radial");
   await expect(page.locator("#message")).toContainText("1,500 entities");
+  await page.locator("#size").selectOption("3000");
+  await page.getByRole("button",{name:"Run comparison"}).click();
+  await expect(page.locator("#message")).toContainText("Sigma initialisation");
   await page.getByRole("button",{name:"Reset views"}).click();
   await expect(page.locator("#baseline")).toBeVisible();
 });
