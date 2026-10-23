@@ -27,7 +27,9 @@ if (process.env.VERCEL_ENV === "preview" &&
           format:rows?.[0]&&typeof rows[0].embedding,
           length:rows?.[0]?.embedding?.length,
           errorCode:typeof err?.code==="string"?err.code:null,
-          errorType:typeof err?.type==="string"?err.type:null}));
+          errorType:typeof err?.type==="string"?err.type:null,
+          errorName:typeof err?.param?.name==="string"?err.param.name:null,
+          errorMessage:typeof err?.message==="string"?err.message.slice(0,300):null}));
       }catch(error){
         console.log("[Gateway smoke]",JSON.stringify({size,ok:false,
           errorType:error?.name||"UnknownError"}));
