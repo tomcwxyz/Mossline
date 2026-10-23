@@ -62,10 +62,10 @@ export function NetworkAI({graph,datasetId,onExplore}:{
       setBusy(false);setProgress("");
     }
   };
-  instance.onerror=()=>{
-    setBusy(false);setError("Network AI worker failed; the source graph was not changed.");
+  instance.onerror=(event)=>{
+    setBusy(false);setError("Network AI worker could not start: "+(event.message||"unknown browser error")+". The source graph was not changed.");
   };
-  if(!start.current||worker.current===instance){
+  if(worker.current===instance){
     const id=++seq.current;
     instance.postMessage({kind:"init",id,datasetId,graph,
       model:caps.embeddingModel??""});
@@ -73,7 +73,7 @@ export function NetworkAI({graph,datasetId,onExplore}:{
   return ()=>{instance.terminate();if(worker.current===instance)worker.current=null;};
  },[datasetId,graph,caps.embeddingModel]);
  function send(kind:"index"|"ask",questionText?:string){
-  if(!permission||key.length<32||!worker.current)return;
+  if(!permission||key.length<32||!worker.current){setError("Approve remote processing and enter the configured discovery access code before indexing.");return;}
   setBusy(true);setError("");setAnswer(null);
   setProgress(kind==="index"?"Checking cached batches and indexing the remaining records…":
     "Retrieving relevant source records…");
