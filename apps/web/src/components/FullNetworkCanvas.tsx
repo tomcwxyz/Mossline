@@ -75,7 +75,8 @@ void main(){
 // GPU-expanded quadratic strokes use screen-space triangles instead of
 // platform-dependent WebGL1 line widths. Every triangle corresponds to an
 // original recorded or inferred edge, never to a new relationship.
-const strokeVertex=`attribute vec2 a_first;
+const strokeVertex=`precision highp float;
+attribute vec2 a_first;
 attribute vec2 a_second;
 attribute vec3 a_curve;
 uniform vec2 u_offset;
@@ -101,7 +102,7 @@ void main(){
  gl_Position=vec4(p.x/(u_viewport.x*.5),
    -p.y/(u_viewport.y*.5),0.0,1.0);
 }`;
-const strokeFragment=`precision mediump float;
+const strokeFragment=`precision highp float;
 uniform vec4 u_strokeColour;
 uniform float u_width;
 uniform float u_soft;
@@ -116,7 +117,7 @@ function compile(gl:WebGLRenderingContext,type:number,source:string){
  const shader=gl.createShader(type);
  if(!shader)throw Error("No WebGL shader");
  gl.shaderSource(shader,source);gl.compileShader(shader);
- if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw Error("WebGL shader compilation failed");
+ if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) { const log=gl.getShaderInfoLog(shader)??"No shader log"; gl.deleteShader(shader); throw Error("WebGL shader compilation failed: "+log); }
  return shader;
 }
 function midpoint(points:Point[]):Point{
@@ -176,7 +177,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      preserveDrawingBuffer:false,depth:false,stencil:false}) ??
      surface.getContext("webgl",{alpha:false,antialias:false,
        preserveDrawingBuffer:false,depth:false,stencil:false});
-   if(!gl){unavailable.current?.();return;}
+   if(!gl){console.warn("[Mossline WebGL] Browser returned no WebGL context; switching to Canvas 2D", {nodeCount:geometry.nodeCount,edgeCount:geometry.edgeCount});unavailable.current?.();return;}
    const buffers:WebGLBuffer[]=[];
    let program:WebGLProgram|null=null;
    let strokeProgram:WebGLProgram|null=null;
@@ -188,7 +189,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      const v=compile(gl,gl.VERTEX_SHADER,vertex),f=compile(gl,gl.FRAGMENT_SHADER,fragment);
      gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);
      gl.deleteShader(v);gl.deleteShader(f);
-     if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error("Cannot link graph renderer");
+     if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error("Cannot link graph renderer: "+(gl.getProgramInfoLog(program)??"No program log"));
      strokeProgram=gl.createProgram();
      if(!strokeProgram)throw Error("Cannot create smooth stroke renderer");
      const sv=compile(gl,gl.VERTEX_SHADER,strokeVertex);
@@ -196,7 +197,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      gl.attachShader(strokeProgram,sv);gl.attachShader(strokeProgram,sf);
      gl.linkProgram(strokeProgram);gl.deleteShader(sv);gl.deleteShader(sf);
      if(!gl.getProgramParameter(strokeProgram,gl.LINK_STATUS))
-       throw Error("Cannot link smooth stroke renderer");
+       throw Error("Cannot link smooth stroke renderer: "+(gl.getProgramInfoLog(strokeProgram)??"No program log"));
      const makeBuffer=(data:Float32Array|Uint8Array,usage:number)=>{
        const buffer=gl.createBuffer();
        if(!buffer)throw Error("Browser GPU memory unavailable");
@@ -483,7 +484,13 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
      };
      draw.current=schedule;
      render();observer=new ResizeObserver(schedule);observer.observe(surface);
-   }catch{
+   }catch(error){
+     console.error("[Mossline WebGL] Initialisation or drawing failed; switching to Canvas 2D",error,{
+       nodeCount:geometry.nodeCount,edgeCount:geometry.edgeCount,
+       maxTextureSize:gl.getParameter(gl.MAX_TEXTURE_SIZE),
+       maxRenderbufferSize:gl.getParameter(gl.MAX_RENDERBUFFER_SIZE),
+       contextLost:gl.isContextLost()
+     });
      draw.current=null;unavailable.current?.();
    }
    return ()=>{
