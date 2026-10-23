@@ -21,8 +21,8 @@ function urlConfig():string|null{
     return trimSlashes(parsed.toString());
   }catch{return null;}
 }
-export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "alibaba/qwen3-embedding-0.6b";
-export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "alibaba/qwen-3-14b";
+export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "openai/text-embedding-3-small";
+export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "openai/gpt-4.1-mini";
 const providerKey=()=>process.env.MOSSLINE_DISCOVERY_API_KEY || process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY;
 export const discoveryEnabled=()=>Boolean(urlConfig()&&
   providerKey()?.length &&
@@ -72,7 +72,14 @@ export async function providerPost(path:"/embeddings"|"/chat/completions",payloa
     body:JSON.stringify(payload),signal:AbortSignal.timeout(25_000),
     cache:"no-store",redirect:"error"
   });}catch{throw new ModelUnavailable("Model service could not be reached");}
-  if(!response.ok)throw new ModelUnavailable("Model service returned an error");
+  if(!response.ok){
+    const detail=(await response.text()).slice(0,2500);
+    let code="unknown";
+    try {const err=JSON.parse(detail) as {error?:{code?:string;message?:string}};
+      code=err.error?.code||err.error?.message?.slice(0,140)||"unknown";}catch{}
+    console.error("Mossline AI Gateway request failed",{path,status:response.status,code});
+    throw new ModelUnavailable("Gateway request failed (HTTP "+response.status+", "+code+").");
+  }
   const raw=await response.text();
   if(raw.length>maxReplyChars)throw new ModelUnavailable("Model reply too large");
   try{return JSON.parse(raw) as unknown;}
