@@ -6,14 +6,15 @@ if (process.env.VERCEL_ENV === "preview" &&
   if (!key) {
     console.log("[Gateway smoke] FAIL: API key absent in build environment");
   } else {
-    for (const size of [1,48]) {
+    for (const model of ["openai/text-embedding-3-small","alibaba/qwen3-embedding-0.6b","google/gemini-embedding-001","voyage/voyage-3.5-lite"]) {
+      const size=1;
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),20000);
       try {
         const response=await fetch("https://ai-gateway.vercel.sh/v1/embeddings",{
           method:"POST",signal:controller.signal,
           headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
-          body:JSON.stringify({model:"openai/text-embedding-3-small",
+          body:JSON.stringify({model,
             input:Array.from({length:size},(_,i)=>"Synthetic network record "+i),
             encoding_format:"float"}),
         });
@@ -22,7 +23,7 @@ if (process.env.VERCEL_ENV === "preview" &&
         const good=response.ok&&Array.isArray(rows)&&rows.length===size &&
           rows.every(row=>Array.isArray(row.embedding)&&row.embedding.length===1536);
         const err=body?.error;
-        console.log("[Gateway smoke]",JSON.stringify({size,status:response.status,ok:good,
+        console.log("[Gateway smoke]",JSON.stringify({model,size,status:response.status,ok:good,
           count:Array.isArray(rows)?rows.length:null,
           format:rows?.[0]&&typeof rows[0].embedding,
           length:rows?.[0]?.embedding?.length,
@@ -31,7 +32,7 @@ if (process.env.VERCEL_ENV === "preview" &&
           errorName:typeof err?.param?.name==="string"?err.param.name:null,
           errorMessage:typeof err?.message==="string"?err.message.slice(0,300):null}));
       }catch(error){
-        console.log("[Gateway smoke]",JSON.stringify({size,ok:false,
+        console.log("[Gateway smoke]",JSON.stringify({model,size,ok:false,
           errorType:error?.name||"UnknownError"}));
       }finally{clearTimeout(timer);}
     }
