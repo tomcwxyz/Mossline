@@ -21,8 +21,8 @@ function urlConfig():string|null{
     return trimSlashes(parsed.toString());
   }catch{return null;}
 }
-export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "openai/text-embedding-3-small";
-export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "openai/gpt-4.1-mini";
+export const embeddingModel=()=>process.env.MOSSLINE_DISCOVERY_EMBEDDING_MODEL || "alibaba/qwen3-embedding-0.6b";
+export const chatModel=()=>process.env.MOSSLINE_DISCOVERY_CHAT_MODEL || "google/gemini-2.5-flash-lite";
 const providerKey=()=>process.env.MOSSLINE_DISCOVERY_API_KEY || process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY;
 export const discoveryEnabled=()=>Boolean(urlConfig()&&
   providerKey()?.length &&
