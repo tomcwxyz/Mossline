@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {discoveryRequestSchema,explanationRequestSchema,parseEmbeddingReply,
-  readDiscoveryJson,authoriseDiscovery} from "../src/lib/discovery-provider";
+  readDiscoveryJson,authoriseDiscovery,safeRetryAfter} from "../src/lib/discovery-provider";
 
 test("only bounded grant excerpts are allowed; no unreviewed properties",()=>{
  const okay={documents:[
@@ -46,4 +46,11 @@ test("full-size network batch accepts 48 consistent Qwen embedding vectors",()=>
  const vectors=parseEmbeddingReply(data,48);
  assert.equal(vectors.length,48);
  assert.equal(vectors[47].length,1024);
+});
+
+test("Gateway retry delays accept seconds and clamp extreme values",()=>{
+ assert.equal(safeRetryAfter("38"),38);
+ assert.equal(safeRetryAfter("9999"),120);
+ assert.equal(safeRetryAfter(""),undefined);
+ assert.equal(safeRetryAfter("not-a-date"),undefined);
 });
