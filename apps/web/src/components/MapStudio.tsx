@@ -63,6 +63,7 @@ export function MapStudio() {
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
+  const [mobileMapOptionsOpen,setMobileMapOptionsOpen]=useState(false);
   const mobileFiltersRef=useRef<HTMLElement|null>(null);
   const [showFundingWorkbench,setShowFundingWorkbench]=useState(false);
   const [fundingInitialFile,setFundingInitialFile]=useState<File|null>(null);
@@ -497,7 +498,8 @@ export function MapStudio() {
       onRecovery={()=>{window.location.href="/recover";}}/>
   </main>;
 
-  return <main className="shell mossline-studio">
+  return <main className={"shell mossline-studio"+
+    (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-explore":"")}>
     <header className="topbar">
       <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.18</small></div>
       <div className="topbar-right">
@@ -507,7 +509,8 @@ export function MapStudio() {
         <span className="local-tag"><span className="signal" /> Saved in this browser</span>
       </div>
     </header>
-    <section className="heading">
+    <section className={"heading"+
+      (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-exploring":"")}>
       <div>
         <p className="eyebrow">{showFundingWorkbench||importPreview||discovery?
           "Create a network · your existing maps are preserved":
@@ -521,6 +524,11 @@ export function MapStudio() {
           importPreview||discovery?
           "Review what was found, check the proposed relationships and choose whether to create a new map.":
           graph.description}</p>
+        {!showFundingWorkbench&&!importPreview&&!discovery&&
+          <details className="mobile-map-description">
+            <summary>About this map</summary>
+            <p>{graph.description||"Explore the recorded entities and relationships in this map."}</p>
+          </details>}
       </div>
       <div className="actions">
         <label className="map-library-chooser">Current map
@@ -1006,7 +1014,13 @@ export function MapStudio() {
             activeFundingMap?.fundingDatasetId?
               "Focused detail only · choose Network for the full dataset":
               filtered.graph.nodes.length+" entities · "+filtered.graph.edges.length+" relationships"}</span>
-          <div className="map-options">
+          <button type="button" className="mobile-map-options-toggle"
+            aria-controls="studio-map-options" aria-expanded={mobileMapOptionsOpen}
+            onClick={()=>setMobileMapOptionsOpen(v=>!v)}>
+            {mobileMapOptionsOpen?"Hide map settings":"Map settings"}
+          </button>
+          <div id="studio-map-options" className={"map-options"+
+            (mobileMapOptionsOpen?" mobile-open":"")}>
             {view==="landscape"&&!fullFundingView&&
               (graph.nodes.length>260||graph.edges.length>650)&&
               <button type="button" className="whole-network-entry"
