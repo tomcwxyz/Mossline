@@ -31,4 +31,6 @@ test("desktop full network renders with WebGL when GPU context is available",asy
     return Boolean(gl&&!gl.isContextLost()&&node.width>0&&node.height>0);
   });
   expect(ok).toBe(true);
+  // GPU-backed full graph must not emit the shader programme linking error.
+  await expect(explorer.getByText(/could not start WebGL/i)).toHaveCount(0);
 });
