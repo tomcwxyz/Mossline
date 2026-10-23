@@ -19,6 +19,7 @@ import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
 import {useNetworkImport} from "../hooks/useNetworkImport";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {NetworkAI} from "./NetworkAI";
+import {PrivateNetworkSave} from "./PrivateNetworkSave";
 import {ConnectionsExplorer} from "./ConnectionsExplorer";
 import { AtlasCanvas, type AtlasMode, type KindFilter } from "./AtlasCanvas";
 import { GuidedDiscovery } from "./GuidedDiscovery";
@@ -1100,6 +1101,9 @@ export function MapStudio() {
               setFocusId(null);pickNode(id);
             }}/>} 
           </details>}
+        <PrivateNetworkSave graph={graph}
+          generalDatasetId={activeFundingMap?.generalDatasetId}
+          fundingDatasetId={activeFundingMap?.fundingDatasetId}/>
         <details className="mobile-map-description">
           <summary>About this map</summary>
           <p>{graph.description||"Explore the recorded entities and relationships in this map."}</p>
