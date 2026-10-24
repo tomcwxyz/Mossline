@@ -39,12 +39,12 @@ test("the Field Atlas uses mobile-first filters and retains advanced tools",asyn
   await page.getByRole("button",{name:/Or try an example network/i}).click();
   await expect(page.locator(".ml-atlas")).toBeVisible();
   await expect(page.locator(".ml-search input")).toBeVisible();
-  const filter=page.getByRole("button",{name:"Filters"});
+  const filter=page.getByRole("button",{name:"Refine results"});
   await expect(filter).toBeVisible();
   await expect(page.getByRole("combobox",{name:"Type"})).toBeHidden();
   await filter.click();
   await expect(page.getByRole("combobox",{name:"Type"})).toBeVisible();
-  await page.getByRole("button",{name:/Detailed tools & full network/}).click();
+  await page.getByRole("button",{name:/Advanced tools/}).click();
   await expect(page.locator(".mossline-studio .workspace")).toBeVisible();
   await page.getByRole("button",{name:/Field atlas/}).click();
   await expect(page.locator(".ml-atlas")).toBeVisible();
