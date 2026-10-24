@@ -30,7 +30,7 @@ test("Map never geocodes records from names and keeps the unplaced margin",async
   await page.getByRole("navigation",{name:"Atlas lenses"})
     .getByRole("button",{name:/^Map/}).click();
   await expect(page.locator(".ml-unplaced")).toContainText(/Not placed/);
-  await expect(page.locator(".ml-drawing-caption")).toContainText("Coordinate plot");
+  await expect(page.locator(".ml-drawing-caption")).toContainText(/Natural Earth coastline|Fitted coordinates/);
 });
 
 test("the Field Atlas uses mobile-first filters and retains advanced tools",async({page})=>{
