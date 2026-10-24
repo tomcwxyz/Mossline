@@ -478,7 +478,8 @@ export function MapStudio() {
     return <div className="mossline-field-atlas-entry">
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
-      <FieldAtlasWorkspace key={graphKey} graph={graph} example={graphKey===DEMO_KEY}
+      <FieldAtlasWorkspace key={graphKey} graph={graph}
+        datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY}
         onBack={()=>setExperienceSpace("home")}
         onImport={()=>fileRef.current?.click()}
         onAdvanced={()=>{

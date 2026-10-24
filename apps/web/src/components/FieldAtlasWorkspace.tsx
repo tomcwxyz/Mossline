@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import {FieldAtlasSigma} from "./FieldAtlasSigma";
 import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
+import { loadFundingDataset } from "../lib/funding-dataset-store";
 import {FollowConnection} from "./FollowConnection";
 import {
   atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
@@ -284,10 +285,28 @@ function Bars({items,onClick}:{
    <span className="ml-bar-track"><span style={{width:(item.value/max*100)+"%"}}/></span>
  </button>)}</div>;
 }
-export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,example}:{
-  graph:GraphDocument;onBack:()=>void;onImport:()=>void;onAdvanced:()=>void;example?:boolean;
+export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,onAdvanced,example}:{
+  graph:GraphDocument;datasetId?:string;onBack:()=>void;onImport:()=>void;onAdvanced:()=>void;example?:boolean;
 }){
-  const graphKey=useMemo(()=>graphFingerprint(imported),[imported]);
+  const [fullSource,setFullSource]=useState<GraphDocument|null>(null);
+  const [datasetStatus,setDatasetStatus]=useState<"loading"|"ready"|"error">(datasetId?"loading":"ready");
+  const [datasetError,setDatasetError]=useState("");
+  useEffect(()=>{
+    let cancelled=false;
+    if(!datasetId){setFullSource(null);setDatasetStatus("ready");return;}
+    setDatasetStatus("loading");
+    loadFundingDataset(datasetId).then(dataset=>{
+      if(cancelled)return;
+      setFullSource(dataset.graph);setDatasetStatus("ready");
+    }).catch(error=>{
+      if(cancelled)return;
+      setDatasetStatus("error");
+      setDatasetError(error instanceof Error?error.message:"Cannot restore full dataset");
+    });
+    return ()=>{cancelled=true;};
+  },[datasetId]);
+  const sourceGraph=fullSource??imported;
+  const graphKey=useMemo(()=>graphFingerprint(sourceGraph),[sourceGraph]);
   const [annotations,setAnnotations]=useState<AtlasAnnotationLayer>(()=>emptyAnnotationLayer(graphKey));
   const storageKey="mossline:atlas-annotations:v1:"+graphKey;
   const [annotationsReady,setAnnotationsReady]=useState(false);
@@ -301,8 +320,8 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
     if(!annotationsReady||annotations.graphKey!==graphKey)return;
     try{window.localStorage.setItem(storageKey,JSON.stringify(annotations));}catch{}
   },[annotations,annotationsReady,graphKey,storageKey]);
-  const graph=useMemo(()=>graphWithAnnotations(imported,annotations.graphKey===graphKey?
-    annotations:emptyAnnotationLayer(graphKey)),[imported,annotations,graphKey]);
+  const graph=useMemo(()=>graphWithAnnotations(sourceGraph,annotations.graphKey===graphKey?
+    annotations:emptyAnnotationLayer(graphKey)),[sourceGraph,annotations,graphKey]);
   const [lens,setLens]=useState<AtlasLens>("network");
   const [selectedId,setSelectedId]=useState<string|null>(null);
   const [search,setSearch]=useState("");
@@ -374,7 +393,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const unplaced=useMemo(()=>result.graph.nodes.filter(n=>!recordedCoordinates(n)),[result.graph]);
   function confirm(edge:GraphEdge,input:{relationship:string;reviewer:string;reason:string}){
     try{
-      setAnnotations(layer=>confirmInferredRelationship(imported,layer,edge.id,{
+      setAnnotations(layer=>confirmInferredRelationship(sourceGraph,layer,edge.id,{
         ...input,now:new Date().toISOString()
       }));
       setNotice("Confirmed in a separate local annotation, with reviewer and reason. Source data unchanged.");
@@ -435,6 +454,14 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
         setSearch("");setType(null);setTheme("");setRegion("");setFunderId("");setYear(null);
       }}>Clear filters ×</button>}
     </div>
+    {datasetId&&datasetStatus!=="ready"&&<div className="ml-notice" role="status">
+      {datasetStatus==="loading"?"Loading the complete funding dataset from this device…":
+        "Full funding dataset unavailable. The compact overview remains visible, but is not the whole network. "+datasetError}
+      {datasetStatus==="error"&&<button type="button" onClick={onAdvanced}>Open recovery tools</button>}
+    </div>}
+    {datasetId&&datasetStatus==="ready"&&<div className="ml-dataset-confirmation" role="status">
+      Complete funding source loaded · {sourceGraph.nodes.length.toLocaleString("en-GB")} records.
+    </div>}
     {notice&&<div className="ml-notice" role="status">{notice}<button type="button" onClick={()=>setNotice("")}>Dismiss</button></div>}
     <section className="ml-body">
       <div className="ml-main">
@@ -537,7 +564,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
         </div>}
       </div>
       <aside className="ml-inspector" aria-label="Selected record">
-        <RecordPanel source={imported} graph={result.graph} node={selected}
+        <RecordPanel source={sourceGraph} graph={result.graph} node={selected}
           onPick={setSelectedId} onFollow={setRouteFromId} onConfirm={confirm}/>
       </aside>
     </section>
