@@ -36,8 +36,9 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
     let worker:Worker|null=null;
     (async()=>{
       try{
-        const [{default:Sigma},{default:Graph}] = await Promise.all([
-          import("sigma"),import("graphology")
+        const [{default:Sigma,DEFAULT_STYLES},{default:Graph},
+          {layerDashed,sdfCircle,sdfSquare,sdfDiamond,sdfTriangle}] = await Promise.all([
+          import("sigma"),import("graphology"),import("sigma/rendering")
         ]);
         if(cancelled||!container.current)return;
         const data=new Graph({type:"mixed",multi:true,allowSelfLoops:true});
@@ -60,7 +61,9 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
           data.addNode(n.id,{x,y,label:n.label,
             size:Math.min(15,3.5+1.2*Math.sqrt(degree.get(n.id)??0)),
             color:COLORS[n.type]??COLORS.other,
-            nodeType:n.type});
+            nodeType:n.type,
+            nodeShape:n.type==="funder"?"diamond":
+              n.type==="project"?"square":n.type==="place"?"triangle":"circle"});
         });
         graph.edges.forEach(e=>{
           if(!data.hasNode(e.source)||!data.hasNode(e.target))return;
@@ -70,7 +73,9 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
             // The pencil type is intentionally different even in greyscale.
             // Sigma 4 requires a registered edge program; do not use a fictitious dashed type.
             type:"line",
-            inferred:e.inferred===true
+            inferred:e.inferred===true,
+            dashSize:e.inferred?2.2:100000,
+            gapSize:e.inferred?5:1
           });
         });
         const connected=graph.nodes.filter(n=>(degree.get(n.id)??0)>0).length;
@@ -81,6 +86,12 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
         if(cancelled)return;
         graphRef.current=data;
         renderer=new Sigma(data,container.current,{
+          primitives:{
+            nodes:{shapes:[sdfCircle(),sdfSquare(),sdfDiamond(),sdfTriangle()]},
+            edges:{layers:[layerDashed({dashSize:{attribute:"dashSize"},
+              gapSize:{attribute:"gapSize"},cap:"round"})]}
+          },
+          styles:{nodes:[DEFAULT_STYLES.nodes,{shape:{attribute:"nodeShape"}}]},
           nodeReducer:(id,display)=>{
             const pick=selected.current;
             if(!pick)return display;
