@@ -23,16 +23,15 @@ test("Sigma experiment preserves recorded totals and full browser dataset",async
   });
   await page.goto("/");
   await page.getByRole("button",{name:/Sigma test source graph/}).click();
-  await expect(page.getByRole("group",{name:"Network rendering engine"})).toBeVisible();
-  await expect(page.getByRole("button",{name:"Proven fallback"})).toHaveAttribute("aria-pressed","true");
-  await page.getByRole("button",{name:"Sigma.js experimental"}).click();
   const stage=page.getByRole("region",{name:"Complete Sigma network"});
   await expect(stage).toBeVisible();
   await expect(stage).toContainText("2,799 recorded links");
   await expect(stage).toContainText("1 suggestions");
-  // GPU is optional: the complete source list and fallback remain accessible.
-  await page.getByRole("button",{name:"Proven fallback"}).click();
-  await expect(page.getByRole("region",{name:"Explore the complete network"})).toBeVisible();
+  // Sigma is the sole Network view, without an embedded legacy explorer.
+  await expect(page.getByRole("group",{name:"Network rendering engine"})).toHaveCount(0);
+  await expect(page.locator(".whole-graph-explorer")).toHaveCount(0);
+  await expect(page.locator(".ml-sigma-viewport")).toBeVisible();
+  // The original complete data remains in local storage.
   const source=await page.evaluate(()=>{
     const maps=JSON.parse(localStorage.getItem("mossline-local-maps-v1")||"{}");
     return {nodes:maps.maps[0].graph.nodes.length,edges:maps.maps[0].graph.edges.length};
