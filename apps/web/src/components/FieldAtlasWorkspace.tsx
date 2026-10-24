@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
+import {FollowConnection} from "./FollowConnection";
 import {
   atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
   evidenceReceipt, graphFingerprint, graphWithAnnotations, isRecorded,
@@ -177,9 +178,10 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
     </div>
   </div>;
 }
-function RecordPanel({source,graph,node,onPick,onConfirm}:{
+function RecordPanel({source,graph,node,onPick,onFollow,onConfirm}:{
   source:GraphDocument;graph:GraphDocument;node:GraphNode|null;
-  onPick:(id:string)=>void;onConfirm:(edge:GraphEdge,input:{reviewer:string;reason:string;relationship:string})=>void;
+  onPick:(id:string)=>void;onFollow:(id:string)=>void;
+  onConfirm:(edge:GraphEdge,input:{reviewer:string;reason:string;relationship:string})=>void;
 }){
   const [candidate,setCandidate]=useState<string|null>(null);
   const [reviewer,setReviewer]=useState("");
@@ -199,6 +201,9 @@ function RecordPanel({source,graph,node,onPick,onConfirm}:{
     {node.region&&<p className="ml-region">{node.region}</p>}
     <p className="ml-description">{node.description||"No description recorded in the source."}</p>
     {node.tags.length>0&&<div className="ml-tag-list">{node.tags.map(t=><span key={t}>{t}</span>)}</div>}
+    <button type="button" className="ml-follow-trigger" onClick={()=>onFollow(node.id)}>
+      Follow a recorded connection →
+    </button>
     <div className="ml-stat-row">
       <div><strong>{recorded.length}</strong><span>Recorded links</span></div>
       <div className="ml-pencilled"><strong>{inferred.length}</strong><span>Associations</span></div>
@@ -290,6 +295,8 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const [year,setYear]=useState<number|null>(null);
   const [type,setType]=useState<NodeType|null>(null);
   const [browse,setBrowse]=useState(false);
+  const [routeFromId,setRouteFromId]=useState<string|null>(null);
+  const [browseLimit,setBrowseLimit]=useState(100);
   const [filtersExpanded,setFiltersExpanded]=useState(false);
   const [notice,setNotice]=useState("");
   const [urlReady,setUrlReady]=useState(false);
@@ -345,6 +352,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const fullTimeline=useMemo(()=>recordedTimeline(graph),[graph]);
   const overlap=useMemo(()=>atlasFundingOverlap(result.graph),[result.graph]);
   const recordList=useMemo(()=>[...result.graph.nodes].sort((a,b)=>a.label.localeCompare(b.label)),[result.graph]);
+  useEffect(()=>setBrowseLimit(100),[filters]);
   const unplaced=useMemo(()=>result.graph.nodes.filter(n=>!recordedCoordinates(n)),[result.graph]);
   function confirm(edge:GraphEdge,input:{relationship:string;reviewer:string;reason:string}){
     try{
@@ -407,6 +415,8 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
             {browse?"Hide list":"Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}
           </button>
         </div>
+        {routeFromId&&<FollowConnection graph={graph} fromId={routeFromId}
+          onChoose={setSelectedId} onClose={()=>setRouteFromId(null)}/>}
         <div className="ml-canvas-stage">
           {lens==="network"&&result.graph.nodes.length>MAX_DRAWN?
             <WholeGraphExplorer graph={result.graph} initialMode="full"
@@ -442,10 +452,14 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
         {browse&&<section className="ml-browse" aria-label="Keyboard-accessible record list">
           <h2>Browse records · {recordList.length.toLocaleString("en-GB")}</h2>
           <p>All matching records are available here, including those not drawn on a dense network.</p>
-          <div className="ml-browse-list">{recordList.map(n=><button type="button" key={n.id}
+          <div className="ml-browse-list">{recordList.slice(0,browseLimit).map(n=><button type="button" key={n.id}
             aria-pressed={selectedId===n.id} onClick={()=>setSelectedId(n.id)}>
             <span className={`ml-type-symbol ml-${n.type}`}/><strong>{n.label}</strong><small>{n.type}</small>
           </button>)}</div>
+          {recordList.length>browseLimit&&<button className="ml-browse-next"
+            type="button" onClick={()=>setBrowseLimit(n=>n+100)}>
+            Show 100 more · {recordList.length-browseLimit} not listed yet
+          </button>}
         </section>}
         <div className="ml-grammar" aria-label="How to read this atlas">
           <span><i className="ml-key-ink"/> Ink · recorded in a source</span>
@@ -465,7 +479,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
       </div>
       <aside className="ml-inspector" aria-label="Selected record">
         <RecordPanel source={imported} graph={result.graph} node={selected}
-          onPick={setSelectedId} onConfirm={confirm}/>
+          onPick={setSelectedId} onFollow={setRouteFromId} onConfirm={confirm}/>
       </aside>
     </section>
     <footer className="ml-footer">

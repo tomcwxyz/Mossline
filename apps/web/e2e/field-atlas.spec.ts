@@ -49,3 +49,20 @@ test("the Field Atlas uses mobile-first filters and retains advanced tools",asyn
   await page.getByRole("button",{name:/Field atlas/}).click();
   await expect(page.locator(".ml-atlas")).toBeVisible();
 });
+
+test("Follow a connection uses recorded steps with source receipts, not inferred shortcuts",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  await page.getByRole("button",{name:/Browse records/}).click();
+  await page.locator(".ml-browse-list").getByRole("button",{name:/Neighbourhood Hub/}).click();
+  await page.getByRole("button",{name:/Follow a recorded connection/}).click();
+  const follow=page.getByRole("region",{name:"Follow a recorded connection"});
+  await expect(follow).toBeVisible();
+  await follow.getByRole("textbox",{name:"To"}).fill("Food Partnership");
+  await follow.getByRole("button",{name:/Food Partnership/}).click();
+  await follow.getByRole("button",{name:/Find recorded route/}).click();
+  await expect(follow.getByRole("region",{name:"Documented route"}))
+    .toContainText("2 source-recorded steps");
+  await expect(follow).toContainText("Recorded link · source reference unavailable");
+  await expect(follow).toContainText("not proof of a partnership");
+});
