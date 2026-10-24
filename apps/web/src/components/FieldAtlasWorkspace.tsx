@@ -310,6 +310,7 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
   const [annotations,setAnnotations]=useState<AtlasAnnotationLayer>(()=>emptyAnnotationLayer(graphKey));
   const storageKey="mossline:atlas-annotations:v1:"+graphKey;
   const [annotationsReady,setAnnotationsReady]=useState(false);
+  const annotationFileRef=useRef<HTMLInputElement>(null);
   useEffect(()=>{
     try{const stored=window.localStorage.getItem(storageKey);
       setAnnotations(stored?parseAnnotationLayer(JSON.parse(stored),graphKey):emptyAnnotationLayer(graphKey));
@@ -330,6 +331,37 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
   },[sourceGraph]);
   const graph=useMemo(()=>graphWithAnnotations(proposedGraph,annotations.graphKey===graphKey?
     annotations:emptyAnnotationLayer(graphKey)),[proposedGraph,annotations,graphKey]);
+  function exportAnnotations(){
+    const payload={kind:"mossline-atlas-annotation-backup",version:1,exportedAt:new Date().toISOString(),layer:annotations};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));
+    const a=document.createElement("a");a.href=url;
+    a.download="mossline-review-"+graphKey.slice(0,12)+".json";
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    setNotice("Review backup exported. Keep this file somewhere safe; it is separate from the source dataset.");
+  }
+  async function importAnnotations(file:File){
+    try{
+      if(file.size>2_000_000)throw Error("Review backup is too large.");
+      const parsed:unknown=JSON.parse(await file.text());
+      if(!parsed||typeof parsed!=="object"||!('kind' in parsed)||
+        parsed.kind!=="mossline-atlas-annotation-backup"||!('layer' in parsed))
+        throw Error("Not a Mossline review backup.");
+      const layer=parseAnnotationLayer(parsed.layer,graphKey);
+      if(!parsed.layer||typeof parsed.layer!=="object"||!('graphKey' in parsed.layer)||
+        parsed.layer.graphKey!==graphKey)throw Error("This backup belongs to another version of the dataset.");
+      if(!('entries' in parsed.layer)||!Array.isArray(parsed.layer.entries)||
+        layer.entries.length!==parsed.layer.entries.length)
+        throw Error("Review backup contains invalid entries.");
+      const valid=layer.entries.every(entry=>proposedGraph.edges.some(e=>
+        e.id===entry.proposedEdgeId&&e.inferred&&e.source===entry.source&&e.target===entry.target));
+      if(!valid)throw Error("One or more proposed relationships are not present in this dataset.");
+      const existing=new Set(annotations.entries.map(x=>x.id));
+      const incoming=layer.entries.filter(x=>!existing.has(x.id));
+      setAnnotations(old=>({...old,entries:[...old.entries,...incoming]}));
+      setNotice("Restored "+incoming.length+" reviewer confirmations. Existing confirmations were preserved.");
+    }catch(error){setNotice(error instanceof Error?error.message:"Could not import review backup.");}
+  }
+
   const [lens,setLens]=useState<AtlasLens>("network");
   const [selectedId,setSelectedId]=useState<string|null>(null);
   const [search,setSearch]=useState("");
@@ -624,7 +656,16 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
     <footer className="ml-footer">
       <span>Source records stay on this device · Annotations are reviewed and stored separately ·
         No automatic location or partnership claims</span>
-      <div><button type="button" onClick={onImport}>Import data</button>
+      <div><input ref={annotationFileRef} hidden type="file" accept=".json,application/json"
+        aria-label="Restore review backup" onChange={event=>{
+          const file=event.currentTarget.files?.[0];
+          if(file)void importAnnotations(file);
+          event.currentTarget.value="";
+        }}/>
+        <button type="button" onClick={exportAnnotations} disabled={!annotations.entries.length}>
+          Export reviews ({annotations.entries.length})</button>
+        <button type="button" onClick={()=>annotationFileRef.current?.click()}>Restore reviews</button>
+        <button type="button" onClick={onImport}>Import data</button>
         <button type="button" onClick={onAdvanced}>Advanced tools ↗</button>
         <button type="button" onClick={onBack}>All maps</button></div>
     </footer>
