@@ -80,7 +80,14 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
   graph:GraphDocument;lens:"network"|"map"|"themes";
   selectedId:string|null;onPick:(id:string)=>void;
 }){
-  const degrees=useMemo(()=>new Map(graph.nodes.map(n=>[n.id,recordedDegree(graph,n.id)])),[graph]);
+  const degrees=useMemo(()=>{
+    const counts=new Map(graph.nodes.map(n=>[n.id,0]));
+    for(const edge of graph.edges)if(isRecorded(edge)){
+      if(counts.has(edge.source))counts.set(edge.source,counts.get(edge.source)!+1);
+      if(counts.has(edge.target))counts.set(edge.target,counts.get(edge.target)!+1);
+    }
+    return counts;
+  },[graph]);
   const displayed=useMemo(()=>{
     const sorted=[...graph.nodes].sort((a,b)=>
       Number(b.id===selectedId)-Number(a.id===selectedId) ||
@@ -282,6 +289,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const [year,setYear]=useState<number|null>(null);
   const [type,setType]=useState<NodeType|null>(null);
   const [browse,setBrowse]=useState(false);
+  const [filtersExpanded,setFiltersExpanded]=useState(false);
   const [notice,setNotice]=useState("");
   const [urlReady,setUrlReady]=useState(false);
   const searchRef=useRef<HTMLInputElement>(null);
@@ -367,7 +375,10 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
           .catch(()=>setNotice("Copy the address from your browser."))}>Share view</button>
       </div>
     </header>
-    <div className="ml-tools">
+    <div className={"ml-tools"+(filtersExpanded?" ml-tools--expanded":"")}>
+      <button type="button" className="ml-mobile-filters"
+        aria-expanded={filtersExpanded} onClick={()=>setFiltersExpanded(open=>!open)}>
+        {filtersExpanded?"Close filters":"Filters"} </button>
       <label className="ml-search"><span>Ask or find</span><input ref={searchRef} value={search}
         onChange={e=>setSearch(e.target.value)} placeholder="Search names, descriptions and tags… (/)" /></label>
       <label>Type<select value={type??""} onChange={e=>setType((e.target.value||null) as NodeType|null)}>
@@ -410,7 +421,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
             No grant amount is inferred when the source does not provide one.</p>
             {overlap.length?<Bars items={overlap.slice(0,80).map(f=>({
               id:f.funderId,name:graph.nodes.find(n=>n.id===f.funderId)?.label??f.funderId,
-              value:f.grantLinks,secondary:f.recipientCount+" direct recipients"
+              value:f.grantLinks,secondary:f.recipientCount+" linked records"
             }))} onClick={id=>setSelectedId(id)}/>:<p>No funder links in these source records.</p>}
             {overlap.length>80&&<p>{overlap.length-80} additional funders available via the funder filter.</p>}
           </div>}

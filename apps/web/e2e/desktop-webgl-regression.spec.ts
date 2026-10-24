@@ -1,5 +1,14 @@
 import {test,expect} from "@playwright/test";
 
+// Preserve regression coverage of the existing full-network/advanced tools
+// while the new Field Atlas becomes the default experience.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.setItem("mossline-workspace-v1","advanced");
+  });
+});
+
+
 /** Exercise the complete-network GPU path on desktop rather than only Canvas 2D. */
 test("desktop full-network WebGL initialisation reports a real failure and recovers",async({page})=>{
   await page.setViewportSize({width:1440,height:900});
