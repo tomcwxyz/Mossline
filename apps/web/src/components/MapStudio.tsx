@@ -14,6 +14,7 @@ import {
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
+import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
 import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
 import {useNetworkImport} from "../hooks/useNetworkImport";
@@ -60,6 +61,8 @@ function saveJson(graph: GraphDocument) {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
+  // New evidence-led workspace; existing specialised workflows remain available.
+  const [fieldAtlasOpen,setFieldAtlasOpen]=useState(true);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
@@ -467,6 +470,16 @@ export function MapStudio() {
       filtered.graph.edges.length>650));
   const usingSourceExplorer=sourceExplorerCandidate;
 
+  if(experienceSpace==="studio"&&fieldAtlasOpen&&!showFundingWorkbench&&!importPreview&&!discovery)
+    return <div className="mossline-field-atlas-entry">
+      <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
+        aria-label="Import source records" onChange={onImport}/>
+      <FieldAtlasWorkspace key={graphKey} graph={graph} example={graphKey===DEMO_KEY}
+        onBack={()=>setExperienceSpace("home")}
+        onImport={()=>fileRef.current?.click()}
+        onAdvanced={()=>setFieldAtlasOpen(false)}/>
+    </div>;
+
   if(experienceSpace==="home")return <main className="shell mossline-home">
     <header className="topbar">
       <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
@@ -503,6 +516,8 @@ export function MapStudio() {
     <header className="topbar">
       <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
       <div className="topbar-right">
+        <button className="studio-home-link" type="button"
+          onClick={()=>setFieldAtlasOpen(true)}>← Field atlas</button>
         <button className="studio-home-link" type="button"
           onClick={()=>{closeImport();setShowFundingWorkbench(false);setExperienceSpace("home");}}>
           ← All maps</button>

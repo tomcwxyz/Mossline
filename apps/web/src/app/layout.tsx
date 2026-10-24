@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./field-atlas.css";
 
 export const metadata: Metadata = {
   title: "Mossline — Make sense of connected worlds",

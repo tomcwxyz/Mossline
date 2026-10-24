@@ -37,3 +37,6 @@ export * from "./atlas-detail";
 export * from "./render-resolution";
 
 export * from "./graph-render-geometry";
+
+export * from "./field-atlas";
+export * from "./field-atlas-annotations";
