@@ -6,7 +6,7 @@ import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import {FollowConnection} from "./FollowConnection";
 import {
-  atlasFundingOverlap, collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer,
+  atlasFundingOverlap, collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer, fundingAwards,
   evidenceReceipt, graphFingerprint, graphWithAnnotations, isRecorded,
   parseAnnotationLayer, projectAtlas, recordedCoordinates, recordedDegree,
   recordedTimeline, type AtlasAnnotationLayer, type AtlasFilters,
@@ -396,6 +396,23 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
   const timeline=useMemo(()=>recordedTimeline(result.graph),[result.graph]);
   const fullTimeline=useMemo(()=>recordedTimeline(graph),[graph]);
   const overlap=useMemo(()=>atlasFundingOverlap(result.graph),[result.graph]);
+  const themeCounts=useMemo(()=>{
+    const counts=new Map<string,number>();
+    for(const node of result.graph.nodes)
+      for(const tag of new Set(node.tags))counts.set(tag,(counts.get(tag)??0)+1);
+    return [...counts].map(([name,value])=>({id:name,name,value}))
+      .sort((a,b)=>b.value-a.value||a.name.localeCompare(b.name));
+  },[result.graph]);
+  const fundingAmounts=useMemo(()=>{
+    const totals=new Map<string,{funderId:string;currency:string;total:number;count:number}>();
+    for(const award of fundingAwards(result.graph)){
+      if(award.amount===null||!Number.isFinite(award.amount)||!award.currency)continue;
+      const key=award.funderId+"|"+award.currency;
+      const existing=totals.get(key)??{funderId:award.funderId,currency:award.currency,total:0,count:0};
+      existing.total+=award.amount;existing.count++;totals.set(key,existing);
+    }
+    return [...totals.values()].sort((a,b)=>b.total-a.total);
+  },[result.graph]);
   const recordList=useMemo(()=>[...result.graph.nodes].sort((a,b)=>a.label.localeCompare(b.label)),[result.graph]);
   useEffect(()=>setBrowseLimit(100),[filters]);
   const unplaced=useMemo(()=>result.graph.nodes.filter(n=>!recordedCoordinates(n)),[result.graph]);
@@ -519,8 +536,19 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
         <div className="ml-canvas-stage">
           {lens==="network"&&<FieldAtlasSigma graph={result.graph} selectedId={selectedId}
               onPick={setSelectedId} onUnavailable={()=>setNotice("The network renderer is unavailable on this device. Browse records remains available; Detailed tools provides the previous explorer.")}/>}
-          {(lens==="map"||lens==="themes")&&
+          {lens==="map"&&
             <GraphDrawing graph={result.graph} lens={lens} selectedId={selectedId} onPick={setSelectedId}/>}
+          {lens==="themes"&&<div className="ml-chart-content">
+            <h2>Source themes · {themeCounts.length.toLocaleString("en-GB")}</h2>
+            <p>Every record is counted against each of its recorded tags, not just its first one.
+              Groups are source labels, not inferred themes. Choose one to filter every lens.</p>
+            {themeCounts.length?
+              <Bars items={themeCounts.slice(0,200)} onClick={id=>setTheme(id)}/>:
+              <p>No source tags are recorded for the current selection.</p>}
+            {themeCounts.length>200&&<p>{themeCounts.length-200} further tags.
+              Search or filter to narrow the list.</p>}
+            {theme&&<button type="button" onClick={()=>setTheme("")}>Clear theme filter</button>}
+          </div>}
           {lens==="map"&&<aside className="ml-unplaced">
             <strong>Not placed · {unplaced.length}</strong>
             <p>No source coordinates. Mossline will not guess a location.</p>
@@ -528,7 +556,20 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
             {unplaced.length>5&&<span>+ {unplaced.length-5} more in Browse</span>}
           </aside>}
           {lens==="funding"&&<div className="ml-chart-content">
-            <h2>Recorded links to funders</h2>
+            <h2>Funding in the source records</h2>
+            {fundingAmounts.length>0&&<>
+              <h3>Recorded award amounts</h3>
+              <p>Only grants with a recorded numeric amount, currency, funder and source
+                relationships are included. Currencies are shown separately; missing amounts
+                are not counted as zero.</p>
+              <Bars items={fundingAmounts.slice(0,80).map(f=>({
+                id:f.funderId,name:(graph.nodes.find(n=>n.id===f.funderId)?.label??f.funderId)
+                  +" · "+f.currency,value:f.total,
+                secondary:f.count+" valued grants · "+new Intl.NumberFormat("en-GB",{
+                  maximumFractionDigits:0}).format(f.total)+" "+f.currency
+              }))} onClick={id=>setSelectedId(id)}/>
+            </>}
+            <h3>Recorded links to funders</h3>
             <p>Counts below are source relationships, not grant values or evidence that organisations worked together.
             No grant amount is inferred when the source does not provide one.</p>
             {overlap.length?<Bars items={overlap.slice(0,80).map(f=>({
