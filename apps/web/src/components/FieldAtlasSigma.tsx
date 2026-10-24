@@ -54,9 +54,9 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
           const type=group<0?5:group;
           const j=groups.get(n.type)??0;groups.set(n.type,j+1);
           const angle=j*2.3999632297;
-          const r=Math.sqrt(j)*3.5;
-          const x=Math.cos(type*Math.PI/3)*120+Math.cos(angle)*r;
-          const y=Math.sin(type*Math.PI/3)*120+Math.sin(angle)*r;
+          const r=Math.sqrt(j)*1.65;
+          const x=Math.cos(type*Math.PI/3)*48+Math.cos(angle)*r;
+          const y=Math.sin(type*Math.PI/3)*48+Math.sin(angle)*r;
           data.addNode(n.id,{x,y,label:n.label,
             size:Math.min(15,3.5+1.2*Math.sqrt(degree.get(n.id)??0)),
             color:COLORS[n.type]??COLORS.other,
@@ -65,13 +65,18 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
         graph.edges.forEach(e=>{
           if(!data.hasNode(e.source)||!data.hasNode(e.target))return;
           data.addEdgeWithKey(e.id,e.source,e.target,{
-            size:e.inferred?0.65:0.45,
+            size:e.inferred?0.35:1.15,
             color:e.inferred?"#806849":"#6F746C",
             // The pencil type is intentionally different even in greyscale.
             // Sigma 4 requires a registered edge program; do not use a fictitious dashed type.
             type:"line",
             inferred:e.inferred===true
           });
+        });
+        const connected=graph.nodes.filter(n=>(degree.get(n.id)??0)>0).length;
+        graph.nodes.filter(n=>(degree.get(n.id)??0)===0).forEach((n,i)=>{
+          const cols=Math.max(1,Math.ceil(Math.sqrt(graph.nodes.length-connected)));
+          data.mergeNodeAttributes(n.id,{x:225+(i%cols)*5,y:-110+Math.floor(i/cols)*5});
         });
         if(cancelled)return;
         graphRef.current=data;
@@ -81,13 +86,13 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
             if(!pick)return display;
             const linked=id===pick || data.edges(id,pick).some(edge=>!data.getEdgeAttribute(edge,"inferred"));
             return {...display,color:linked?display.color:"#ADB3A9",
-              highlighted:id===pick,forceLabel:id===pick};
+              highlighted:id===pick,labelVisibility:id===pick?"visible":"auto"};
           },
           edgeReducer:(id,display)=>{
             const pick=selected.current;
             if(!pick)return display;
             const [source,target]=data.extremities(id);
-            return {...display,hidden:(source!==pick&&target!==pick) || data.getEdgeAttribute(id,"inferred")===true};
+            return {...display,visibility:source===pick||target===pick?"visible":"hidden"};
           },
           settings:{renderEdgeLabels:false,
           labelDensity:0.35,

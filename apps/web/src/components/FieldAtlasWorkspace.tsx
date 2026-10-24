@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {FieldAtlasSigma} from "./FieldAtlasSigma";
+import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
 import {FollowConnection} from "./FollowConnection";
 import {
   atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
@@ -92,18 +92,30 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
     return counts;
   },[graph]);
   const displayed=useMemo(()=>{
+    if(lens==="map")return graph.nodes;
     const sorted=[...graph.nodes].sort((a,b)=>
       Number(b.id===selectedId)-Number(a.id===selectedId) ||
       (degrees.get(b.id)??0)-(degrees.get(a.id)??0) || a.label.localeCompare(b.label));
     return sorted.slice(0,MAX_DRAWN);
-  },[graph,selectedId,degrees]);
+  },[graph,selectedId,degrees,lens]);
   const drawnIds=useMemo(()=>new Set(displayed.map(n=>n.id)),[displayed]);
   const located=useMemo(()=>displayed.filter(n=>recordedCoordinates(n)!==null),[displayed]);
   const unplacedCount=graph.nodes.filter(n=>recordedCoordinates(n)===null).length;
+  const mapExtent=useMemo(()=>{
+    const coords=located.map(n=>recordedCoordinates(n)!);
+    const uk=coords.length>0&&coords.every(p=>p.lat>=49&&p.lat<=60.5&&p.lon>=-11.5&&p.lon<=4);
+    const lats=coords.map(p=>p.lat),lons=coords.map(p=>p.lon);
+    const west=uk?-11.5:Math.max(-180,Math.min(...lons)-2);
+    const east=uk?4:Math.min(180,Math.max(...lons)+2);
+    const south=uk?49:Math.max(-85,Math.min(...lats)-2);
+    const north=uk?60.5:Math.min(85,Math.max(...lats)+2);
+    return {uk,west,east,south,north};
+  },[located]);
   const positions=useMemo(()=>{
     if(lens==="network")return networkPositions(displayed,graph.edges);
     if(lens==="map")return new Map(located.map(n=>{const p=recordedCoordinates(n)!;
-      return [n.id,mapPosition(p.lat,p.lon)] as const;}));
+      return [n.id,{x:(p.lon-mapExtent.west)/(mapExtent.east-mapExtent.west)*(W-60)+30,
+        y:(mapExtent.north-p.lat)/(mapExtent.north-mapExtent.south)*(H-60)+30}] as const;}));
     const result=new Map<string,Point>();
     // Themes without embeddings are displayed honestly as source-tag groups.
     const groups=new Map<string,GraphNode[]>();
@@ -119,7 +131,7 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
           y:Math.max(23,Math.min(H-23,gy+Math.sin(a)*r))});});
     });
     return result;
-  },[graph.edges,displayed,located,lens]);
+  },[graph.edges,displayed,located,lens,mapExtent]);
   const visibleEdges=graph.edges.filter(e=>drawnIds.has(e.source)&&drawnIds.has(e.target)
     &&positions.has(e.source)&&positions.has(e.target));
   const neighbours=new Set<string>(selectedId?[selectedId]:[]);
@@ -136,16 +148,20 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
       aria-label={lens==="map"?"World coordinate plot of records with source locations":
         lens==="themes"?"Records grouped by their source tags":"Network of recorded and inferred relationships"}>
       {lens==="map" && <>
-        {[0,1,2,3,4,5,6].map(i=><line key={"v"+i} className="ml-graticule"
-          x1={36+i*(W-72)/6} x2={36+i*(W-72)/6} y1={22} y2={H-22}/>)}
-        {[0,1,2,3,4].map(i=><line key={"h"+i} className="ml-graticule"
-          x1={36} x2={W-36} y1={22+i*(H-44)/4} y2={22+i*(H-44)/4}/>)}
-        <text x="50" y="46" className="ml-survey-label">SOURCE COORDINATES · WORLD</text>
+        <rect x="0" y="0" width={W} height={H} fill="var(--ml-sea)"/>
+        {mapExtent.uk&&<g transform={`translate(30,30) scale(${(W-60)/960},${(H-60)/720})`}
+          fill="var(--ml-wash)" stroke="var(--ml-moss)" strokeWidth="2">
+          <path d={UK_LAND_OUTLINES.ireland}/>
+          <path d={UK_LAND_OUTLINES.britain}/>
+        </g>}
+        <text x="50" y="46" className="ml-survey-label">
+          {mapExtent.uk?"NATURAL EARTH COASTLINE · UK / IRELAND":"SOURCE COORDINATES · FIT TO DATA EXTENT"}
+        </text>
       </>}
       {lens==="themes"&&taggedGroups.length>0&&<text x="32" y="42" className="ml-survey-label">
         GROUPED BY RECORDED TAGS · NOT MODEL-INFERRED THEMES
       </text>}
-      {lens!=="themes"&&visibleEdges.map(e=>{
+      {lens==="network"&&visibleEdges.map(e=>{
         const a=positions.get(e.source)!,b=positions.get(e.target)!;
         const selected=e.source===selectedId||e.target===selectedId;
         return <path key={e.id} className={`ml-edge ${e.inferred?"ml-pencil":"ml-ink"}`+
@@ -172,10 +188,10 @@ function GraphDrawing({graph,lens,selectedId,onPick}:{
       })}
     </svg>
     <div className="ml-drawing-caption">
-      {lens==="map"?`${graph.nodes.length-unplacedCount} placed · ${unplacedCount} without coordinates`:
+      {lens==="map"?`${positions.size.toLocaleString("en-GB")} plotted · ${unplacedCount} without coordinates`:
         `${displayed.length.toLocaleString("en-GB")} of ${graph.nodes.length.toLocaleString("en-GB")} records drawn`}
       {displayed.length<graph.nodes.length&&" · Remaining records available in Browse"}
-      {lens==="map"&&" · Coordinate plot; basemap upgrade in progress"}
+      {lens==="map"&& (mapExtent.uk?" · Natural Earth coastline":" · Fitted coordinates; broader basemap pending")}
     </div>
   </div>;
 }
@@ -297,8 +313,6 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const [type,setType]=useState<NodeType|null>(null);
   const [browse,setBrowse]=useState(false);
   const [overviewOpen,setOverviewOpen]=useState(true);
-  const [sigmaEnabled,setSigmaEnabled]=useState(false);
-  const [sigmaUnavailable,setSigmaUnavailable]=useState(false);
   const [routeFromId,setRouteFromId]=useState<string|null>(null);
   const [browseLimit,setBrowseLimit]=useState(100);
   const [filtersExpanded,setFiltersExpanded]=useState(false);
@@ -463,24 +477,10 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
         </div>}
         {routeFromId&&<FollowConnection graph={graph} fromId={routeFromId}
           onChoose={setSelectedId} onClose={()=>setRouteFromId(null)}/>}
-        {lens==="network"&&result.graph.nodes.length>MAX_DRAWN&&
-          <div className="ml-engine-switch" role="group" aria-label="Network rendering engine">
-            <span>Complete network renderer</span>
-            <button type="button" aria-pressed={!sigmaEnabled}
-              onClick={()=>setSigmaEnabled(false)}>Proven fallback</button>
-            <button type="button" aria-pressed={sigmaEnabled}
-              onClick={()=>{setSigmaEnabled(true);setSigmaUnavailable(false);}}>
-              Sigma.js experimental</button>
-            <small>Compare the same filtered source graph. No records are changed.</small>
-          </div>}
         <div className="ml-canvas-stage">
-          {lens==="network"&&result.graph.nodes.length>MAX_DRAWN&&sigmaEnabled&&!sigmaUnavailable?
-            <FieldAtlasSigma graph={result.graph} selectedId={selectedId}
-              onPick={setSelectedId} onUnavailable={()=>setSigmaUnavailable(true)}/>:
-          lens==="network"&&result.graph.nodes.length>MAX_DRAWN?
-            <WholeGraphExplorer graph={result.graph} initialMode="full"
-              selectedRecordId={selectedId} onPickRecord={setSelectedId}/>:
-            (lens==="network"||lens==="map"||lens==="themes")&&
+          {lens==="network"&&<FieldAtlasSigma graph={result.graph} selectedId={selectedId}
+              onPick={setSelectedId} onUnavailable={()=>setNotice("The network renderer is unavailable on this device. Browse records remains available; Detailed tools provides the previous explorer.")}/>}
+          {(lens==="map"||lens==="themes")&&
             <GraphDrawing graph={result.graph} lens={lens} selectedId={selectedId} onPick={setSelectedId}/>}
           {lens==="map"&&<aside className="ml-unplaced">
             <strong>Not placed · {unplaced.length}</strong>

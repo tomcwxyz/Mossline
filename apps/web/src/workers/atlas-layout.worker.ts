@@ -8,7 +8,8 @@ self.onmessage=(event:MessageEvent<Message>)=>{
   if(msg.kind!=="layout")return;
   try{
     const graph=new Graph({type:"undirected",multi:true});
-    for(const [id,x,y] of msg.initial)graph.addNode(id,{x,y});
+    const connected=new Set(msg.edges.flat());
+    for(const [id,x,y] of msg.initial)if(connected.has(id))graph.addNode(id,{x,y});
     for(const [source,target] of msg.edges)
       if(source!==target&&graph.hasNode(source)&&graph.hasNode(target))
         graph.addEdge(source,target);
