@@ -347,3 +347,14 @@
   .ml-atlas .ml-dataset {max-width:48%}
   .ml-atlas .ml-local-status {display:none}
 }
+
+/* Contrast overrides: the generic button inherited text colour previously
+ * trumped the primary action's intended light lettering. */
+.ml-atlas .ml-follow-trigger,
+.ml-atlas .ml-follow-route-form>button,
+.ml-atlas .ml-no-results button {color:#fff;background:#315629;border-color:#315629}
+.ml-atlas[data-theme="night"] .ml-follow-trigger,
+.ml-atlas[data-theme="night"] .ml-follow-route-form>button,
+.ml-atlas[data-theme="night"] .ml-no-results button {color:#101914;background:#B9E2A4;border-color:#B9E2A4}
+/* Funding is distinct from recorded network connections. */
+.ml-atlas .ml-chart-content .ml-bar-track>span {background:var(--ml-funder)}
