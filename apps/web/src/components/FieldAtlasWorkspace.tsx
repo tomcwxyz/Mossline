@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import {WholeGraphExplorer} from "./WholeGraphExplorer";
 import {
   atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
   evidenceReceipt, graphFingerprint, graphWithAnnotations, isRecorded,
@@ -407,7 +408,10 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
           </button>
         </div>
         <div className="ml-canvas-stage">
-          {(lens==="network"||lens==="map"||lens==="themes")&&
+          {lens==="network"&&result.graph.nodes.length>MAX_DRAWN?
+            <WholeGraphExplorer graph={result.graph} initialMode="full"
+              selectedRecordId={selectedId} onPickRecord={setSelectedId}/>:
+            (lens==="network"||lens==="map"||lens==="themes")&&
             <GraphDrawing graph={result.graph} lens={lens} selectedId={selectedId} onPick={setSelectedId}/>}
           {lens==="map"&&<aside className="ml-unplaced">
             <strong>Not placed · {unplaced.length}</strong>

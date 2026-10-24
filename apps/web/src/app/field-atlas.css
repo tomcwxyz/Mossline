@@ -228,3 +228,9 @@
   .ml-atlas {--ml-paper:#fff;--ml-raised:#fff;--ml-ink:#111;--ml-muted:#333}
   .ml-tools,.ml-footer,.ml-header-actions {display:none!important}
 }
+
+/* Worker-backed complete network continues to draw all source records until
+ * the dedicated sigma renderer passes its performance and evidence tests. */
+.ml-atlas .whole-graph-explorer {margin:0;border:0;background:var(--ml-paper);color:var(--ml-ink)}
+.ml-atlas .whole-graph-heading {padding:15px 22px}
+.ml-atlas .whole-graph-full-caption,.ml-atlas .funding-method-note {color:var(--ml-muted)}

@@ -20,10 +20,17 @@ type Reply={
 /** All navigation, search and relationship detail use the canonical source
  * graph in one worker. Only the visual representation is grouped.
  */
-export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
+export function WholeGraphExplorer({datasetId,graph,initialMode="overview",onPickRecord,selectedRecordId}:{
+  onPickRecord?:(id:string|null)=>void;
+  selectedRecordId?:string|null;
   datasetId?:string;graph?:GraphDocument;initialMode?:"overview"|"full";
 }){
   const worker=useRef<Worker|null>(null);
+  const onPickRecordRef=useRef(onPickRecord);
+  onPickRecordRef.current=onPickRecord;
+  const selectedRecordRef=useRef(selectedRecordId);
+  const lastSynchronisedSelection=useRef<string|null|undefined>(undefined);
+  selectedRecordRef.current=selectedRecordId;
   const request=useRef(0);
   const pendingExpanded=useRef<string[]>([]);
   const pendingHistory=useRef<string[]>([]);
@@ -66,6 +73,7 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
       setFullGeometry(null);setViewMode(initialMode);setFullRenderer("webgl");
       setNodeSizeMode("connections");setArrangement("areas");setLineMode("focus");setFocusAreaId(null);
       setSelectedEdge(null);setHistory([]);setMatches(null);setError("");
+      lastSynchronisedSelection.current=undefined;
       pendingExpanded.current=[];pendingHistory.current=[];
       instance.onmessage=(event:MessageEvent<Reply>)=>{
         const msg=event.data;
@@ -81,6 +89,12 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
           if(msg.projection)setProjection(msg.projection);
           setFullGeometry(msg.geometry);
           setViewMode("full");
+          if(selectedRecordRef.current){
+            lastSynchronisedSelection.current=selectedRecordRef.current;
+            const selectionId=++request.current;
+            instance?.postMessage({kind:"select",id:selectionId,
+              nodeId:selectedRecordRef.current,expandedIds:[],mode:"full",datasetId});
+          }
           return;
         }
         if(msg.action==="search"&&msg.matches){
@@ -104,6 +118,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
         if(msg.action==="select"&&msg.inspection){
           setExpanded(msg.expandedIds??[]);
           setInspection(msg.inspection);
+          lastSynchronisedSelection.current=msg.inspection.node.id;
+          onPickRecordRef.current?.(msg.inspection.node.id);
           setHistory(pendingHistory.current);
           setSelectedEdge(null);setMatches(null);
           setConnectionQuery("");setAppliedConnectionQuery("");
@@ -124,6 +140,17 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
     }
     return ()=>{request.current++;instance?.terminate();worker.current=null;};
   },[datasetId,graph,initialMode]);
+
+  useEffect(()=>{
+    if(selectedRecordId===undefined||busy||!projection ||
+       selectedRecordId===lastSynchronisedSelection.current)return;
+    lastSynchronisedSelection.current=selectedRecordId;
+    if(selectedRecordId===null){setInspection(null);return;}
+    if(!graph?.nodes.some(n=>n.id===selectedRecordId))return;
+    worker.current?.postMessage({kind:"select",id:++request.current,datasetId,
+      nodeId:selectedRecordId,expandedIds:expanded,mode:viewMode});
+    setBusy(true);setStatus("Following the selected source record…");
+  },[selectedRecordId,projection,busy,graph,datasetId,expanded,viewMode]);
 
   function submit(job:Record<string,unknown>,message:string){
     if(!worker.current||busy)return;
@@ -156,6 +183,8 @@ export function WholeGraphExplorer({datasetId,graph,initialMode="overview"}:{
     if(item)setSelectedEdge(item);
   }
   function clearSelection(){
+    lastSynchronisedSelection.current=null;
+    onPickRecordRef.current?.(null);
     setInspection(null);setSelectedEdge(null);setHistory([]);
     setMatches(null);setNotice("");
   }
