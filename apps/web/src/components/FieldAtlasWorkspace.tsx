@@ -6,7 +6,7 @@ import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import {FollowConnection} from "./FollowConnection";
 import {
-  atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
+  atlasFundingOverlap, collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer,
   evidenceReceipt, graphFingerprint, graphWithAnnotations, isRecorded,
   parseAnnotationLayer, projectAtlas, recordedCoordinates, recordedDegree,
   recordedTimeline, type AtlasAnnotationLayer, type AtlasFilters,
@@ -320,8 +320,16 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
     if(!annotationsReady||annotations.graphKey!==graphKey)return;
     try{window.localStorage.setItem(storageKey,JSON.stringify(annotations));}catch{}
   },[annotations,annotationsReady,graphKey,storageKey]);
-  const graph=useMemo(()=>graphWithAnnotations(sourceGraph,annotations.graphKey===graphKey?
-    annotations:emptyAnnotationLayer(graphKey)),[sourceGraph,annotations,graphKey]);
+  const proposedGraph=useMemo(()=>{
+    // Derived associations are ephemeral pencil, not imported facts.
+    // Avoid expanding high-degree funding datasets into millions of pairs.
+    if(sourceGraph.nodes.length>5000||sourceGraph.edges.length>10000)return sourceGraph;
+    const existing=new Set(sourceGraph.edges.map(e=>e.id));
+    const suggestions=collaborationGraph(sourceGraph,"all").edges.filter(e=>e.inferred&&!existing.has(e.id));
+    return suggestions.length?{...sourceGraph,edges:[...sourceGraph.edges,...suggestions]}:sourceGraph;
+  },[sourceGraph]);
+  const graph=useMemo(()=>graphWithAnnotations(proposedGraph,annotations.graphKey===graphKey?
+    annotations:emptyAnnotationLayer(graphKey)),[proposedGraph,annotations,graphKey]);
   const [lens,setLens]=useState<AtlasLens>("network");
   const [selectedId,setSelectedId]=useState<string|null>(null);
   const [search,setSearch]=useState("");
@@ -393,7 +401,7 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
   const unplaced=useMemo(()=>result.graph.nodes.filter(n=>!recordedCoordinates(n)),[result.graph]);
   function confirm(edge:GraphEdge,input:{relationship:string;reviewer:string;reason:string}){
     try{
-      setAnnotations(layer=>confirmInferredRelationship(sourceGraph,layer,edge.id,{
+      setAnnotations(layer=>confirmInferredRelationship(proposedGraph,layer,edge.id,{
         ...input,now:new Date().toISOString()
       }));
       setNotice("Confirmed in a separate local annotation, with reviewer and reason. Source data unchanged.");
@@ -459,6 +467,10 @@ export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,on
         "Full funding dataset unavailable. The compact overview remains visible, but is not the whole network. "+datasetError}
       {datasetStatus==="error"&&<button type="button" onClick={onAdvanced}>Open recovery tools</button>}
     </div>}
+    {(sourceGraph.nodes.length>5000||sourceGraph.edges.length>10000)&&
+      <div className="ml-dataset-confirmation" role="note">
+        Large dataset: pairwise suggestions are deferred. Recorded relationships and the full source remain available.
+      </div>}
     {datasetId&&datasetStatus==="ready"&&<div className="ml-dataset-confirmation" role="status">
       Complete funding source loaded · {sourceGraph.nodes.length.toLocaleString("en-GB")} records.
     </div>}
