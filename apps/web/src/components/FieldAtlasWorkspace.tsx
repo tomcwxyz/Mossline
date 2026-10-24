@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import {WholeGraphExplorer} from "./WholeGraphExplorer";
+import {FieldAtlasSigma} from "./FieldAtlasSigma";
 import {FollowConnection} from "./FollowConnection";
 import {
   atlasFundingOverlap, confirmInferredRelationship, emptyAnnotationLayer,
@@ -295,6 +296,8 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const [year,setYear]=useState<number|null>(null);
   const [type,setType]=useState<NodeType|null>(null);
   const [browse,setBrowse]=useState(false);
+  const [sigmaEnabled,setSigmaEnabled]=useState(false);
+  const [sigmaUnavailable,setSigmaUnavailable]=useState(false);
   const [routeFromId,setRouteFromId]=useState<string|null>(null);
   const [browseLimit,setBrowseLimit]=useState(100);
   const [filtersExpanded,setFiltersExpanded]=useState(false);
@@ -417,8 +420,21 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
         </div>
         {routeFromId&&<FollowConnection graph={graph} fromId={routeFromId}
           onChoose={setSelectedId} onClose={()=>setRouteFromId(null)}/>}
+        {lens==="network"&&result.graph.nodes.length>MAX_DRAWN&&
+          <div className="ml-engine-switch" role="group" aria-label="Network rendering engine">
+            <span>Complete network renderer</span>
+            <button type="button" aria-pressed={!sigmaEnabled}
+              onClick={()=>setSigmaEnabled(false)}>Proven fallback</button>
+            <button type="button" aria-pressed={sigmaEnabled}
+              onClick={()=>{setSigmaEnabled(true);setSigmaUnavailable(false);}}>
+              Sigma.js experimental</button>
+            <small>Compare the same filtered source graph. No records are changed.</small>
+          </div>}
         <div className="ml-canvas-stage">
-          {lens==="network"&&result.graph.nodes.length>MAX_DRAWN?
+          {lens==="network"&&result.graph.nodes.length>MAX_DRAWN&&sigmaEnabled&&!sigmaUnavailable?
+            <FieldAtlasSigma graph={result.graph} selectedId={selectedId}
+              onPick={setSelectedId} onUnavailable={()=>setSigmaUnavailable(true)}/>:
+          lens==="network"&&result.graph.nodes.length>MAX_DRAWN?
             <WholeGraphExplorer graph={result.graph} initialMode="full"
               selectedRecordId={selectedId} onPickRecord={setSelectedId}/>:
             (lens==="network"||lens==="map"||lens==="themes")&&
