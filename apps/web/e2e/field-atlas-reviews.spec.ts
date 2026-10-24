@@ -3,6 +3,8 @@ import {test,expect} from "@playwright/test";
 test("Field Atlas exposes independent review backup controls",async({page})=>{
   await page.goto("/");
   await page.getByRole("button",{name:/Or try an example network/i}).click();
+  // Review backups live in the dataset menu beside the map title.
+  await page.locator(".ml-dataset summary").click();
   await expect(page.getByRole("button",{name:"Restore reviews"})).toBeVisible();
   await expect(page.getByRole("button",{name:/Export reviews/})).toBeDisabled();
   // A mismatched dataset backup is rejected instead of silently inserted.

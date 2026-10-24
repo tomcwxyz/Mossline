@@ -6,3 +6,6 @@ node_modules/
 dist/
 .DS_Store
 coverage/
+
+# Copied from node_modules by apps/web/scripts/copy-maplibre-worker.mjs
+apps/web/public/vendor/

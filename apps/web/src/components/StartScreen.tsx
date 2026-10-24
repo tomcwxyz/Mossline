@@ -2,10 +2,10 @@
 
 export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean;summary?:string};
 
-export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSampleSheet,
+export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunity,onSampleSheet,
   onPft,onRecovery}:{
   maps:StartMap[];onOpen:(id:string)=>void;onImport:()=>void;
-  onFunding:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
+  onFunding:()=>void;onExample:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
   onPft:()=>void;onRecovery:()=>void;
 }){
   return <div className="studio-start">
@@ -34,7 +34,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
             <span aria-hidden="true">→</span>
           </button>
         </div>
-        <button type="button" className="studio-start-try" onClick={onCommunity}>
+        <button type="button" className="studio-start-try" onClick={onExample}>
           Or try an example network →
         </button>
         <p className="studio-start-privacy">No account needed · Your working data stays in this browser</p>
@@ -68,7 +68,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
           <button type="button" className="studio-start-quiet" onClick={onRecovery}>
             Manage, back up or restore saved maps ↗</button>
         </>:<><p>Nothing saved here yet. Start with your own data or try a fictional network.</p>
-          <button type="button" className="studio-start-quiet" onClick={onCommunity}>
+          <button type="button" className="studio-start-quiet" onClick={onExample}>
             Open an example →</button></>}
       </section>
 
@@ -76,6 +76,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onCommunity,onSample
     <details className="studio-start-more">
       <summary>More ways to get started</summary>
       <div className="studio-start-more-actions">
+        <button type="button" onClick={onCommunity}>Try the small community example</button>
         <button type="button" onClick={onSampleSheet}>Try a fictional spreadsheet</button>
         <button type="button" onClick={onPft}>Explore the illustration showcase</button>
         <button type="button" onClick={onRecovery}>Recover browser data</button>

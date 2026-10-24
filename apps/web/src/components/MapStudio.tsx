@@ -461,6 +461,18 @@ export function MapStudio() {
       closeImport();
     }
   }
+  async function openFieldAtlasExample() {
+    try {
+      // Loaded on demand: the worked example is larger than the bundled demos.
+      const example = parseGraphDocument((await import("../../../../data/northern-food-example.json")).default);
+      if (createNewMap(example)) {
+        setNotice("Opened a fictional food and farming network. Every record is invented; your other maps are preserved.");
+        closeImport();
+      }
+    } catch {
+      setNotice("Could not open the example network.");
+    }
+  }
   function openPftVisualExample() {
     if(createNewMap(PFT_VISUAL_EXAMPLE)) {
       setIllustrated(true);
@@ -479,7 +491,7 @@ export function MapStudio() {
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
       <FieldAtlasWorkspace key={graphKey} graph={graph}
-        datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY}
+        datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
         onBack={()=>setExperienceSpace("home")}
         onImport={()=>fileRef.current?.click()}
         onAdvanced={()=>{
@@ -513,6 +525,12 @@ export function MapStudio() {
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
       onFunding={()=>{setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onExample={()=>{
+        // The atlas gets the worked food and farming example; the advanced
+        // tools keep the small community network they were built around.
+        if(fieldAtlasOpen)void openFieldAtlasExample().then(()=>setExperienceSpace("studio"));
+        else{openCommunityExample();setExperienceSpace("studio");}
+      }}
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}

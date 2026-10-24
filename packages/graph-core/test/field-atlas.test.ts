@@ -68,3 +68,28 @@ test("a pencil item becomes ink only through a reviewer annotation",()=>{
   }));
   assert.equal(parseAnnotationLayer(confirmed,"another-graph").entries.length,0);
 });
+
+test("funding flows read recorded amounts without double counting or inferred links",async()=>{
+  const {fundingFlows,fundingTotals}=await import("../src/index");
+  const graph:GraphDocument={version:1,title:"Flows",description:"",
+    nodes:[
+      {id:"f",type:"funder",label:"Fund",tags:[]},
+      {id:"p",type:"project",label:"Garden",tags:["Growing"],region:"North East"},
+      {id:"q",type:"project",label:"Kitchen",tags:[]},
+      {id:"o",type:"organisation",label:"Org",tags:[]}
+    ],
+    edges:[
+      {id:"a",source:"f",target:"p",type:"funds",properties:{"Amount Awarded":48000,"Currency":"GBP","Award Date":"2022-04-01"}},
+      {id:"b",source:"f",target:"q",type:"funds",properties:{amount:"£1,250"}},
+      {id:"c",source:"f",target:"o",type:"funds"},
+      {id:"d",source:"f",target:"o",type:"shared funder",inferred:true,properties:{amount:999999}}
+    ]};
+  const flows=fundingFlows(graph);
+  assert.equal(flows.length,3);
+  const a=flows.find(f=>f.edgeIds[0]==="a")!;
+  assert.deepEqual([a.amount,a.currency,a.year,a.themes],[48000,"GBP",2022,["Growing"]]);
+  const b=flows.find(f=>f.edgeIds[0]==="b")!;
+  assert.deepEqual([b.amount,b.currency],[1250,"GBP"]);
+  assert.equal(flows.find(f=>f.edgeIds[0]==="c")!.amount,null);
+  assert.deepEqual(fundingTotals(flows),[{currency:"GBP",total:49250,valued:2}]);
+});

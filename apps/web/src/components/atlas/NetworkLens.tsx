@@ -1,0 +1,379 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { isRecorded, type GraphDocument, type GraphNode } from "@mossline/graph-core";
+import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
+import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
+
+export interface AtlasRoute { nodeIds: string[]; edgeIds: string[] }
+type Props = {
+  graph: GraphDocument;
+  mode: "network" | "themes";
+  theme: AtlasTheme;
+  selectedId: string | null;
+  route: AtlasRoute | null;
+  onPick: (id: string | null) => void;
+  onUnavailable: () => void;
+};
+type SigmaType = import("sigma").default;
+/** Home framing: a little zoomed out so chips, key and caption do not cover
+ *  records. Themes also leaves room for the tag list on the left. */
+const FRAMES = { network: { x: 0.5, y: 0.495, ratio: 1.22, angle: 0 }, themes: { x: 0.43, y: 0.5, ratio: 1.34, angle: 0 } };
+type GraphType = import("graphology").default;
+
+/** The Network and Themes lenses. Sigma draws the records; an SVG wash and
+ *  HTML area names sit underneath and above it, following the camera. */
+export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onUnavailable }: Props) {
+  const stage = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null);
+  const washGroup = useRef<SVGGElement>(null);
+  const areaLayer = useRef<HTMLDivElement>(null);
+  const sigmaRef = useRef<SigmaType | null>(null);
+  const graphRef = useRef<GraphType | null>(null);
+  const pick = useRef(onPick); pick.current = onPick;
+  const unavailable = useRef(onUnavailable); unavailable.current = onUnavailable;
+  const focus = useRef<{ selected: string | null; neighbours: Set<string>; pencil: Set<string>;
+    route: AtlasRoute | null; routeNodes: Set<string>; routeEdges: Set<string>; labelled: Set<string> }>({
+    selected: null, neighbours: new Set(), pencil: new Set(), route: null, routeNodes: new Set(), routeEdges: new Set(),
+    labelled: new Set() });
+  const [status, setStatus] = useState<"preparing" | "laying-out" | "ready" | "error">("preparing");
+  const [wash, setWash] = useState<{ d: string; level: number }[]>([]);
+  const [areas, setAreas] = useState<AtlasArea[]>([]);
+  const palette = PALETTES[theme];
+  const recorded = useMemo(() => graph.edges.filter(isRecorded).length, [graph]);
+  const degree = useMemo(() => {
+    const d = new Map(graph.nodes.map(n => [n.id, 0]));
+    for (const e of graph.edges) if (isRecorded(e)) {
+      if (d.has(e.source)) d.set(e.source, d.get(e.source)! + 1);
+      if (d.has(e.target)) d.set(e.target, d.get(e.target)! + 1);
+    }
+    return d;
+  }, [graph]);
+
+  // Keep the overlay (wash and area names) registered to Sigma's camera.
+  const syncOverlay = () => {
+    const renderer = sigmaRef.current;
+    if (!renderer) return;
+    const o = renderer.graphToViewport({ x: 0, y: 0 });
+    const ax = renderer.graphToViewport({ x: 1, y: 0 });
+    const ay = renderer.graphToViewport({ x: 0, y: 1 });
+    washGroup.current?.setAttribute("transform",
+      `matrix(${ax.x - o.x} ${ax.y - o.y} ${ay.x - o.x} ${ay.y - o.y} ${o.x} ${o.y})`);
+    const layer = areaLayer.current;
+    if (!layer) return;
+    const ratio = renderer.getCamera().ratio;
+    // Area names fade when zoomed in, and step back while a record or route is in focus.
+    const quiet = focus.current.selected || focus.current.route ? 0.3 : 1;
+    layer.style.opacity = String((ratio < 0.28 ? 0 : ratio < 0.5 ? 0.55 : 1) * quiet);
+    const placed: [number, number, number, number][] = [];
+    for (const el of Array.from(layer.children) as HTMLElement[]) {
+      const x = Number(el.dataset.x), y = Number(el.dataset.y), r = Number(el.dataset.r || 0);
+      const centre = renderer.graphToViewport({ x, y });
+      const rim = renderer.graphToViewport({ x, y: y + r });
+      const lift = Math.hypot(rim.x - centre.x, rim.y - centre.y);
+      const w = el.offsetWidth || 120, h = el.offsetHeight || 30;
+      const p = { x: centre.x, y: centre.y - lift - (r ? h * 0.2 : 0) };
+      const box: [number, number, number, number] = [p.x - w / 2, p.y - h / 2, p.x + w / 2, p.y + h / 2];
+      const clash = placed.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]));
+      el.style.transform = `translate(${Math.round(p.x - w / 2)}px, ${Math.round(p.y - h / 2)}px)`;
+      el.style.visibility = clash ? "hidden" : "visible";
+      if (!clash) placed.push(box);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    let renderer: SigmaType | null = null;
+    let worker: Worker | null = null;
+    setStatus("preparing"); setWash([]); setAreas([]);
+    (async () => {
+      try {
+        const [{ default: Sigma, DEFAULT_STYLES }, { default: Graph },
+          { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved }] = await Promise.all([
+          import("sigma"), import("graphology"), import("sigma/rendering")]);
+        try { await document.fonts.load('500 12px "IBM Plex Sans"'); } catch { /* fall back to system font */ }
+        if (cancelled || !container.current) return;
+        const data = new Graph({ type: "mixed", multi: true, allowSelfLoops: true });
+        // Marks are sized in screen pixels; a phone-width canvas gets smaller ones.
+        const narrow = container.current.clientWidth < 600;
+        const tall = container.current.clientHeight > container.current.clientWidth;
+        const scale = narrow ? 0.7 : 1;
+        // Seed: a stable sunflower so records are visible before layout finishes.
+        graph.nodes.forEach((n, i) => {
+          const a = i * 2.399963, r = Math.sqrt(i) * 4;
+          data.addNode(n.id, {
+            x: Math.cos(a) * r, y: Math.sin(a) * r, label: n.label,
+            size: markSize(degree.get(n.id) ?? 0, n.type) * scale, color: palette.types[n.type] ?? palette.types.other,
+            baseColor: palette.types[n.type] ?? palette.types.other, nodeShape: SHAPE[n.type], nodeType: n.type
+          });
+        });
+        for (const e of graph.edges) {
+          if (!data.hasNode(e.source) || !data.hasNode(e.target)) continue;
+          const pencil = e.inferred === true;
+          data.addEdgeWithKey(e.id, e.source, e.target, {
+            // Sigma's dashed layer draws nothing when the gap is zero, so a
+            // recorded line is one very long dash with a token gap.
+            size: pencil ? 1.2 : 0.8, color: pencil ? palette.pencil : palette.inkSoft, inferred: pencil,
+            dashSize: pencil ? 2 : 1e6, gapSize: pencil ? 4 : 0.5
+          });
+        }
+        graphRef.current = data;
+        const isDark = theme === "night";
+        renderer = new Sigma(data, container.current, {
+          primitives: {
+            nodes: {
+              shapes: [sdfCircle(), sdfSquare({ cornerRadius: 0.18 }), sdfDiamond(), sdfTriangle()],
+              label: { font: { family: "IBM Plex Sans", weight: "500" }, color: palette.label, margin: 4 }
+            },
+            edges: {
+              paths: [pathCurved({ curvature: 0.12 })],
+              layers: [layerDashed({ dashSize: { attribute: "dashSize" }, gapSize: { attribute: "gapSize" }, cap: "round", align: 0 })]
+            }
+          },
+          styles: {
+            nodes: [DEFAULT_STYLES.nodes, {
+              shape: { attribute: "nodeShape" }, labelColor: palette.label, labelSize: 12,
+              labelBackgroundColor: palette.labelPlate, labelBackgroundPadding: 2,
+              backdropColor: isDark ? "#1A2822" : "#FFFFFF", backdropShadowColor: "rgba(0,0,0,0.25)"
+            }]
+          },
+          nodeReducer: (id, display) => {
+            const f = focus.current;
+            const base = data.getNodeAttribute(id, "baseColor") as string;
+            if (f.route) {
+              if (f.routeNodes.has(id)) return { ...display, color: base, highlighted: true, zIndex: 2,
+                labelVisibility: f.labelled.has(id) ? "visible" : "hidden" };
+              return { ...display, color: mix(base, palette.paper, 0.72), labelVisibility: "hidden" };
+            }
+            if (f.selected) {
+              if (id === f.selected) return { ...display, color: base, highlighted: true, labelVisibility: "visible",
+                size: display.size + 2, zIndex: 3 };
+              if (f.neighbours.has(id)) return { ...display, color: base, zIndex: 2,
+                labelVisibility: f.labelled.has(id) ? "visible" : "hidden" };
+              // Suggestions stay quiet and unlabelled: they are not facts.
+              if (f.pencil.has(id)) return { ...display, color: mix(base, palette.paper, 0.5), zIndex: 1, labelVisibility: "hidden" };
+              return { ...display, color: mix(base, palette.paper, 0.72), labelVisibility: "hidden" };
+            }
+            return display;
+          },
+          edgeReducer: (id, display) => {
+            const f = focus.current;
+            const attrs = data.getEdgeAttributes(id);
+            const inferred = attrs.inferred === true;
+            // Dash sizes are read from display data, so they travel with every result.
+            const out = { ...display, dashSize: attrs.dashSize, gapSize: attrs.gapSize };
+            if (f.route) {
+              return f.routeEdges.has(id)
+                ? { ...out, color: palette.moss, size: 3.2, visibility: "visible", zIndex: 3 }
+                : { ...out, visibility: "hidden" };
+            }
+            if (f.selected) {
+              const [s, t] = data.extremities(id);
+              if (s !== f.selected && t !== f.selected) return { ...out, visibility: "hidden" };
+              return inferred
+                ? { ...out, color: palette.pencilSoft, size: 1, visibility: "visible" }
+                : { ...out, color: palette.ink, size: 1.6, visibility: "visible", zIndex: 2 };
+            }
+            return inferred || mode === "themes" ? { ...out, visibility: "hidden" } : out;
+          },
+          settings: {
+            itemSizesReference: "screen", renderEdgeLabels: false, labelDensity: 0.4, labelGridCellSize: 130, labelRenderedSizeThreshold: narrow ? 8 : 6,
+            hideEdgesOnMove: graph.edges.length > 4000, hideLabelsOnMove: false,
+            minCameraRatio: 0.02, maxCameraRatio: 6, stagePadding: 40, zoomDuration: 220
+          }
+        });
+        sigmaRef.current = renderer;
+        renderer.on("clickNode", ({ node }) => pick.current(node));
+        renderer.on("clickStage", () => pick.current(null));
+        renderer.on("enterNode", () => { if (container.current) container.current.style.cursor = "pointer"; });
+        renderer.on("leaveNode", () => { if (container.current) container.current.style.cursor = ""; });
+        renderer.on("afterRender", syncOverlay);
+        let replan: number | undefined;
+        renderer.getCamera().on("updated", () => {
+          window.clearTimeout(replan);
+          replan = window.setTimeout(() => { if (focus.current.selected || focus.current.route) planLabels(); }, 140);
+        });
+        applyFocus();
+
+        const finish = (positions: Positions, nextAreas: AtlasArea[], washed: Positions = positions) => {
+          if (cancelled || !graphRef.current) return;
+          graphRef.current.updateEachNodeAttributes((id, attrs) => {
+            const p = positions.get(id);
+            return p ? { ...attrs, x: p.x, y: p.y } : attrs;
+          }, { attributes: ["x", "y"] });
+          setWash(terrain(washed));
+          setAreas(nextAreas);
+          setStatus("ready");
+          renderer?.refresh();
+          renderer?.getCamera().setState(home());
+        };
+
+        if (mode === "themes") { const t = themeLayout(graph.nodes); finish(t.positions, t.areas); return; }
+        setStatus("laying-out");
+        const linked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) > 0);
+        const unlinked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) === 0).map(n => n.id);
+        const complete = (positions: Positions, community: Map<string, number>) => {
+          const nextAreas = areasFromCommunities(linked, positions, community, degree);
+          // Links between areas are still ink, drawn quieter so each area stays legible.
+          graphRef.current?.updateEachEdgeAttributes((_edge, attrs, source, target) => {
+            if (attrs.inferred) return attrs;
+            const same = community.has(source) && community.get(source) === community.get(target);
+            return { ...attrs, color: same ? palette.inkSoft : palette.inkFaint };
+          }, { attributes: ["color"] });
+          // The wash follows linked records only; the unlinked block is not an area of activity.
+          const washed = new Map(positions);
+          const block = placeUnlinked(unlinked, positions, tall);
+          // A phone has room for the larger areas' names only.
+          const named = narrow ? nextAreas.slice(0, 6) : nextAreas;
+          finish(positions, block ? [...named, block] : named, washed);
+        };
+        try {
+          worker = new Worker(new URL("../../workers/atlas-layout.worker.ts", import.meta.url), { type: "module" });
+          worker.onmessage = (event: MessageEvent<{ kind: string; positions?: [string, number, number, number][] }>) => {
+            if (event.data.kind !== "positions") { complete(new Map(), new Map()); return; }
+            const positions: Positions = new Map(), community = new Map<string, number>();
+            for (const [id, x, y, c] of event.data.positions ?? []) {
+              if (Number.isFinite(x) && Number.isFinite(y)) { positions.set(id, { x, y }); community.set(id, c); }
+            }
+            complete(positions, community);
+          };
+          worker.postMessage({ kind: "layout", nodes: linked.map(n => n.id),
+            edges: graph.edges.filter(isRecorded).map(e => [e.source, e.target]) });
+        } catch {
+          complete(new Map(), new Map());
+        }
+      } catch {
+        if (cancelled) return;
+        setStatus("error");
+        unavailable.current();
+      }
+    })();
+    return () => {
+      cancelled = true; worker?.terminate(); renderer?.kill();
+      sigmaRef.current = null; graphRef.current = null;
+    };
+    // The renderer is rebuilt when the records, lens mode or palette change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [graph, mode, theme]);
+
+  /** Selection and route labels are always shown, but never on top of each
+   *  other: the selected record first, then the best-connected neighbours. */
+  function planLabels() {
+    const renderer = sigmaRef.current, f = focus.current;
+    if (!renderer) return;
+    const candidates = f.route ? [...f.routeNodes]
+      : f.selected ? [f.selected, ...[...f.neighbours].sort((a, b) => (degree.get(b) ?? 0) - (degree.get(a) ?? 0))] : [];
+    const kept: [number, number, number, number][] = [];
+    const labelled = new Set<string>();
+    for (const id of candidates) {
+      const d = renderer.getNodeDisplayData(id);
+      if (!d) continue;
+      const p = renderer.framedGraphToViewport(d);
+      const label = String(renderer.getGraph().getNodeAttribute(id, "label") ?? "");
+      const box: [number, number, number, number] = [p.x - 6, p.y - 10, p.x + 14 + label.length * 6.6, p.y + 10];
+      if (id !== f.selected && !f.route && kept.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue;
+      kept.push(box);
+      labelled.add(id);
+      if (labelled.size >= 32) break;
+    }
+    f.labelled = labelled;
+    renderer.refresh();
+  }
+  function applyFocus() {
+    const data = graphRef.current;
+    const neighbours = new Set<string>(), pencil = new Set<string>();
+    if (selectedId && data?.hasNode(selectedId)) {
+      for (const e of graph.edges) {
+        if (e.source !== selectedId && e.target !== selectedId) continue;
+        const other = e.source === selectedId ? e.target : e.source;
+        (e.inferred ? pencil : neighbours).add(other);
+      }
+    }
+    focus.current = {
+      selected: selectedId && data?.hasNode(selectedId) ? selectedId : null, neighbours, pencil,
+      route: route && route.nodeIds.length ? route : null,
+      routeNodes: new Set(route?.nodeIds ?? []), routeEdges: new Set(route?.edgeIds ?? []), labelled: new Set()
+    };
+    planLabels(); // refreshes the renderer once with the new focus
+  }
+  /** Home view; a phone-width canvas has no side cards, so it can sit closer. */
+  const home = () => {
+    const f = FRAMES[mode];
+    return (container.current?.clientWidth ?? 1000) < 600 ? { ...f, x: 0.5, ratio: f.ratio * 0.9 } : f;
+  };
+  const hadRoute = useRef(false);
+  useEffect(() => {
+    applyFocus();
+    const renderer = sigmaRef.current, data = graphRef.current;
+    // Closing a route returns to the home view it was framed from.
+    const routed = Boolean(route?.nodeIds.length);
+    if (hadRoute.current && !routed && !selectedId && renderer) void renderer.getCamera().animate(home(), { duration: 350 });
+    hadRoute.current = routed;
+    const target = route?.nodeIds.length ? route.nodeIds : selectedId ? [selectedId] : [];
+    if (!renderer || !data || !target.length || status !== "ready") return;
+    const rect = container.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Free area: clear of the chips, key and caption, and of the route panel
+    // on wide screens, where it sits over the left of the canvas.
+    const dock = route?.nodeIds.length && rect.width > 860 ? 480 : 0;
+    const free = { left: dock + 40, right: rect.width - 70, top: 70, bottom: rect.height - (rect.width > 860 ? 100 : 40) };
+    const points = target.map(id => renderer.getNodeDisplayData(id)).filter(Boolean)
+      .map(d => renderer.framedGraphToViewport(d as { x: number; y: number }));
+    if (!points.length) return;
+    const minX = Math.min(...points.map(p => p.x)), maxX = Math.max(...points.map(p => p.x));
+    const minY = Math.min(...points.map(p => p.y)), maxY = Math.max(...points.map(p => p.y));
+    const inside = minX >= free.left && maxX <= free.right && minY >= free.top && maxY <= free.bottom;
+    if (inside) return;
+    // Zoom out just enough to fit (never in), then centre the group in the free area.
+    const cam = renderer.getCamera(), state = cam.getState();
+    const fit = Math.max((maxX - minX) / Math.max(free.right - free.left, 1), (maxY - minY) / Math.max(free.bottom - free.top, 1));
+    const ratio = Math.min(state.ratio * Math.max(fit, 1), 4);
+    const centre = renderer.viewportToFramedGraph({ x: (minX + maxX) / 2, y: (minY + maxY) / 2 });
+    const middle = renderer.viewportToFramedGraph({ x: rect.width / 2, y: rect.height / 2 });
+    const aim = renderer.viewportToFramedGraph({ x: (free.left + free.right) / 2, y: (free.top + free.bottom) / 2 });
+    const k = ratio / state.ratio;
+    // Where the group's centre would sit after zooming about the current view centre.
+    const gx = middle.x + (centre.x - middle.x), gy = middle.y + (centre.y - middle.y);
+    void cam.animate({ x: gx - (aim.x - middle.x) * k, y: gy - (aim.y - middle.y) * k, ratio }, { duration: 450 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId, route, status]);
+
+  const camera = (action: "in" | "out" | "fit") => {
+    const c = sigmaRef.current?.getCamera();
+    if (!c) return;
+    if (action === "in") void c.zoomIn({ duration: 220 });
+    else if (action === "out") void c.zoomOut({ duration: 220 });
+    else void c.animate(home(), { duration: 350 });
+  };
+  const suggestions = graph.edges.length - recorded;
+  return <section ref={stage} className={"ml-network ml-network--" + mode}
+    aria-label={mode === "themes" ? "Records grouped by source tags" : "Complete Sigma network"}>
+    <svg className="ml-wash" aria-hidden="true">
+      <g ref={washGroup}>
+        {wash.map(c => <path key={c.level} d={c.d} vectorEffect="non-scaling-stroke"
+          style={{ fill: palette.wash, fillOpacity: theme === "night" ? 0.05 : 0.045,
+            stroke: palette.washLine, strokeOpacity: c.level === 1 ? 0.5 : 0.12 + 0.2 * c.level / Math.max(1, wash.length),
+            strokeWidth: c.level === 1 ? 1.1 : c.level % 4 === 0 ? 0.8 : 0.5 }}/>)}
+      </g>
+    </svg>
+    <div ref={container} className="ml-sigma-viewport" role="img"
+      aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
+    <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
+      {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
+        <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records</small>
+      </div>)}
+    </div>
+    <div className="ml-zoom" role="group" aria-label="Zoom">
+      <button type="button" aria-label="Zoom in" onClick={() => camera("in")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg></button>
+      <button type="button" aria-label="Zoom out" onClick={() => camera("out")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
+      <button type="button" aria-label="Fit everything" onClick={() => camera("fit")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5V1.5H5M9 1.5h3.5V5M12.5 9v3.5H9M5 12.5H1.5V9"/></svg></button>
+    </div>
+    <p className="ml-canvas-caption" data-status={status}>
+      {status === "laying-out" ? "Arranging by recorded links… · " : ""}
+      {graph.nodes.length.toLocaleString("en-GB")} records · {recorded.toLocaleString("en-GB")} recorded links
+      {mode === "network" && <> · {suggestions.toLocaleString("en-GB")} suggestions</>}
+      {status === "error" && " · This device cannot draw the network; Browse records lists everything."}
+    </p>
+  </section>;
+}
+export type { GraphNode };

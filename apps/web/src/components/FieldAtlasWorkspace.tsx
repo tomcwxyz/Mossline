@@ -1,676 +1,385 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import {FieldAtlasSigma} from "./FieldAtlasSigma";
-import { UK_LAND_OUTLINES } from "../data/uk-land-outline";
-import { loadFundingDataset } from "../lib/funding-dataset-store";
-import {FollowConnection} from "./FollowConnection";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  atlasFundingOverlap, collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer, fundingAwards,
-  evidenceReceipt, graphFingerprint, graphWithAnnotations, isRecorded,
-  parseAnnotationLayer, projectAtlas, recordedCoordinates, recordedDegree,
-  recordedTimeline, type AtlasAnnotationLayer, type AtlasFilters,
-  type AtlasLens, type GraphDocument, type GraphEdge, type GraphNode, type NodeType
+  collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer, fundingFlows, graphFingerprint,
+  graphWithAnnotations, isRecorded, parseAnnotationLayer, projectAtlas, recordedCoordinates,
+  type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
+  type GraphDocument, type GraphEdge, type NodeType
 } from "@mossline/graph-core";
+import { loadFundingDataset } from "../lib/funding-dataset-store";
+import { FollowConnection } from "./FollowConnection";
+import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
+import { MapLens } from "./atlas/MapLens";
+import { FundingLens } from "./atlas/FundingLens";
+import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
+import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
+import { TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 
-const LENSES: {id:AtlasLens;label:string;help:string}[] = [
-  {id:"network",label:"Network",help:"Position follows recorded relationships"},
-  {id:"map",label:"Map",help:"Position follows source coordinates"},
-  {id:"themes",label:"Themes",help:"Groups follow source tags, not inferred meanings"},
-  {id:"funding",label:"Funding",help:"Recorded funding links, not implied collaboration"},
-  {id:"timeline",label:"Timeline",help:"Dates on recorded source relationships"}
+const LENSES: { id: AtlasLens; label: string; help: string }[] = [
+  { id: "network", label: "Network", help: "Position follows recorded relationships" },
+  { id: "map", label: "Map", help: "Position follows source coordinates" },
+  { id: "themes", label: "Themes", help: "Areas follow source tags, not inferred meanings" },
+  { id: "funding", label: "Funding", help: "Recorded funding, not implied collaboration" },
+  { id: "timeline", label: "Timeline", help: "Dates on recorded relationships" }
 ];
-const TYPE_NAMES: Record<NodeType,string> = {
-  organisation:"Organisations",project:"Projects",funder:"Funders",person:"People",
-  place:"Places",topic:"Topics",methodology:"Methods",outcome:"Outcomes",other:"Other"
-};
-const MAX_DRAWN=350;
-const W=1000,H=630;
-type Point={x:number;y:number};
-const radius=(degree:number,type:NodeType)=>Math.min(15,3.5+1.2*Math.sqrt(degree)+(type==="funder"?1.5:0));
-function marker(node:GraphNode,x:number,y:number,r:number,selected:boolean){
-  const stroke=selected?"var(--ml-moss)":"var(--ml-paper)";
-  const cls="ml-marker ml-"+node.type;
-  const props={className:cls,stroke,strokeWidth:selected?3:1.3};
-  if(node.type==="funder") return <path {...props} d={`M ${x} ${y-r*1.22} L ${x+r*1.22} ${y} L ${x} ${y+r*1.22} L ${x-r*1.22} ${y} Z`}/>;
-  if(node.type==="project") return <rect {...props} x={x-r} y={y-r} width={r*2} height={r*2} rx={Math.max(2,r*.27)}/>;
-  if(node.type==="place") return <path {...props} d={`M ${x} ${y-r*1.25} L ${x+r*1.13} ${y+r} L ${x-r*1.13} ${y+r} Z`}/>;
-  if(node.type==="person") return <circle {...props} fill="var(--ml-paper)" cx={x} cy={y} r={r} strokeWidth={3.4}/>;
-  return <circle {...props} cx={x} cy={y} r={r}/>;
-}
-function networkPositions(nodes:GraphNode[],edges:GraphEdge[]):Map<string,Point>{
-  // Deterministic spring relaxation. Positions are determined by the recorded
-  // topology, never hashes pretending to be data coordinates.
-  const positions=new Map<string,Point>();
-  const ordered=[...nodes].sort((a,b)=>a.id.localeCompare(b.id));
-  ordered.forEach((n,i)=>{const angle=2*Math.PI*i/Math.max(1,ordered.length);
-    const r=80+Math.sqrt(i/Math.max(1,ordered.length))*200;
-    positions.set(n.id,{x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r});});
-  const lines=edges.filter(isRecorded).filter(e=>positions.has(e.source)&&positions.has(e.target));
-  // A modest cap avoids blocking mobile devices while the worker renderer is migrated.
-  for(let step=0;step<58 && ordered.length>1;step++){
-    const dx=new Float64Array(ordered.length),dy=new Float64Array(ordered.length);
-    for(let i=0;i<ordered.length;i++)for(let j=i+1;j<ordered.length;j++){
-      const a=positions.get(ordered[i].id)!,b=positions.get(ordered[j].id)!;
-      let vx=a.x-b.x,vy=a.y-b.y;
-      const dist2=Math.max(18,vx*vx+vy*vy);
-      const rep=3500/dist2;
-      const inv=1/Math.sqrt(dist2);
-      dx[i]+=vx*inv*rep;dy[i]+=vy*inv*rep;
-      dx[j]-=vx*inv*rep;dy[j]-=vy*inv*rep;
-    }
-    const index=new Map(ordered.map((n,i)=>[n.id,i]));
-    for(const edge of lines){
-      const i=index.get(edge.source)!,j=index.get(edge.target)!;
-      const a=positions.get(edge.source)!,b=positions.get(edge.target)!;
-      const vx=b.x-a.x,vy=b.y-a.y,dist=Math.max(1,Math.hypot(vx,vy));
-      const pull=(dist-75)*.006;
-      dx[i]+=vx/dist*pull;dy[i]+=vy/dist*pull;
-      dx[j]-=vx/dist*pull;dy[j]-=vy/dist*pull;
-    }
-    ordered.forEach((n,i)=>{const p=positions.get(n.id)!;
-      p.x=Math.min(W-36,Math.max(36,p.x+Math.max(-7,Math.min(7,dx[i]))+(W/2-p.x)*.004));
-      p.y=Math.min(H-36,Math.max(36,p.y+Math.max(-7,Math.min(7,dy[i]))+(H/2-p.y)*.004));
-    });
-  }
-  return positions;
-}
-function mapPosition(lat:number,lon:number):Point {
-  const safe=Math.max(-85,Math.min(85,lat))*Math.PI/180;
-  const merc=(1-Math.log(Math.tan(safe)+1/Math.cos(safe))/Math.PI)/2;
-  return {x:36+(lon+180)/360*(W-72),y:22+merc*(H-44)};
-}
-function GraphDrawing({graph,lens,selectedId,onPick}:{
-  graph:GraphDocument;lens:"network"|"map"|"themes";
-  selectedId:string|null;onPick:(id:string)=>void;
-}){
-  const degrees=useMemo(()=>{
-    const counts=new Map(graph.nodes.map(n=>[n.id,0]));
-    for(const edge of graph.edges)if(isRecorded(edge)){
-      if(counts.has(edge.source))counts.set(edge.source,counts.get(edge.source)!+1);
-      if(counts.has(edge.target))counts.set(edge.target,counts.get(edge.target)!+1);
-    }
-    return counts;
-  },[graph]);
-  const displayed=useMemo(()=>{
-    if(lens==="map")return graph.nodes;
-    const sorted=[...graph.nodes].sort((a,b)=>
-      Number(b.id===selectedId)-Number(a.id===selectedId) ||
-      (degrees.get(b.id)??0)-(degrees.get(a.id)??0) || a.label.localeCompare(b.label));
-    return sorted.slice(0,MAX_DRAWN);
-  },[graph,selectedId,degrees,lens]);
-  const drawnIds=useMemo(()=>new Set(displayed.map(n=>n.id)),[displayed]);
-  const located=useMemo(()=>displayed.filter(n=>recordedCoordinates(n)!==null),[displayed]);
-  const unplacedCount=graph.nodes.filter(n=>recordedCoordinates(n)===null).length;
-  const mapExtent=useMemo(()=>{
-    const coords=located.map(n=>recordedCoordinates(n)!);
-    const uk=coords.length>0&&coords.every(p=>p.lat>=49&&p.lat<=60.5&&p.lon>=-11.5&&p.lon<=4);
-    const lats=coords.map(p=>p.lat),lons=coords.map(p=>p.lon);
-    const west=uk?-11.5:Math.max(-180,Math.min(...lons)-2);
-    const east=uk?4:Math.min(180,Math.max(...lons)+2);
-    const south=uk?49:Math.max(-85,Math.min(...lats)-2);
-    const north=uk?60.5:Math.min(85,Math.max(...lats)+2);
-    return {uk,west,east,south,north};
-  },[located]);
-  const positions=useMemo(()=>{
-    if(lens==="network")return networkPositions(displayed,graph.edges);
-    if(lens==="map")return new Map(located.map(n=>{const p=recordedCoordinates(n)!;
-      return [n.id,{x:(p.lon-mapExtent.west)/(mapExtent.east-mapExtent.west)*(W-60)+30,
-        y:(mapExtent.north-p.lat)/(mapExtent.north-mapExtent.south)*(H-60)+30}] as const;}));
-    const result=new Map<string,Point>();
-    // Themes without embeddings are displayed honestly as source-tag groups.
-    const groups=new Map<string,GraphNode[]>();
-    for(const node of displayed){
-      const key=node.tags[0]||"No source tag";
-      groups.set(key,[...(groups.get(key)??[]),node]);
-    }
-    [...groups].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([_,group],i)=>{
-      const cols=Math.max(1,Math.ceil(Math.sqrt(groups.size)));
-      const gx=(i%cols+.5)*W/cols,gy=(Math.floor(i/cols)+.5)*H/Math.ceil(groups.size/cols);
-      group.forEach((node,j)=>{const a=j*2.39996323;const r=12+13*Math.sqrt(j);
-        result.set(node.id,{x:Math.max(23,Math.min(W-23,gx+Math.cos(a)*r)),
-          y:Math.max(23,Math.min(H-23,gy+Math.sin(a)*r))});});
-    });
-    return result;
-  },[graph.edges,displayed,located,lens,mapExtent]);
-  const visibleEdges=graph.edges.filter(e=>drawnIds.has(e.source)&&drawnIds.has(e.target)
-    &&positions.has(e.source)&&positions.has(e.target));
-  const neighbours=new Set<string>(selectedId?[selectedId]:[]);
-  for(const e of graph.edges)if(isRecorded(e)){
-    if(e.source===selectedId)neighbours.add(e.target);
-    if(e.target===selectedId)neighbours.add(e.source);
-  }
-  const labels=new Set([...displayed].sort((a,b)=>(degrees.get(b.id)??0)-(degrees.get(a.id)??0))
-    .slice(0,11).map(n=>n.id));
-  if(selectedId) labels.add(selectedId);
-  const taggedGroups=lens==="themes"?[...new Set(displayed.map(n=>n.tags[0]||"No source tag"))]:[];
-  return <div className="ml-drawing-wrap">
-    <svg className="ml-drawing" viewBox={`0 0 ${W} ${H}`} role="img"
-      aria-label={lens==="map"?"World coordinate plot of records with source locations":
-        lens==="themes"?"Records grouped by their source tags":"Network of recorded and inferred relationships"}>
-      {lens==="map" && <>
-        <rect x="0" y="0" width={W} height={H} fill="var(--ml-sea)"/>
-        {mapExtent.uk&&<g transform={`translate(30,30) scale(${(W-60)/960},${(H-60)/720})`}
-          fill="var(--ml-wash)" stroke="var(--ml-moss)" strokeWidth="2">
-          <path d={UK_LAND_OUTLINES.ireland}/>
-          <path d={UK_LAND_OUTLINES.britain}/>
-        </g>}
-        <text x="50" y="46" className="ml-survey-label">
-          {mapExtent.uk?"NATURAL EARTH COASTLINE · UK / IRELAND":"SOURCE COORDINATES · FIT TO DATA EXTENT"}
-        </text>
-      </>}
-      {lens==="themes"&&taggedGroups.length>0&&<text x="32" y="42" className="ml-survey-label">
-        GROUPED BY RECORDED TAGS · NOT MODEL-INFERRED THEMES
-      </text>}
-      {lens==="network"&&visibleEdges.map(e=>{
-        const a=positions.get(e.source)!,b=positions.get(e.target)!;
-        const selected=e.source===selectedId||e.target===selectedId;
-        return <path key={e.id} className={`ml-edge ${e.inferred?"ml-pencil":"ml-ink"}`+
-          (selected?" ml-emphasis":selectedId?" ml-dim":"")}
-          d={`M ${a.x} ${a.y} Q ${(a.x+b.x)/2+(b.y-a.y)*.08} ${(a.y+b.y)/2-(b.x-a.x)*.08} ${b.x} ${b.y}`}>
-          <title>{e.type} · {e.inferred?"Inferred, not confirmed":evidenceReceipt(e)}</title>
-        </path>;
-      })}
-      {[...positions].map(([id,p])=>{
-        const n=displayed.find(node=>node.id===id)!;
-        const selected=id===selectedId,dim=!!selectedId&&!neighbours.has(id);
-        const name=labels.has(id) || (selectedId && neighbours.has(id) && displayed.length<90);
-        return <g key={id} className={"ml-point"+(dim?" ml-dim":"")}
-          role="button" tabIndex={0} aria-label={n.label+", "+n.type}
-          onClick={()=>onPick(id)} onKeyDown={(e:KeyboardEvent<SVGGElement>)=>{
-            if(e.key==="Enter"||e.key===" "){e.preventDefault();onPick(id);}
-          }}>
-          {selected&&<circle cx={p.x} cy={p.y} r={radius(degrees.get(id)??0,n.type)+8}
-            className="ml-selection-ring"/>}
-          {marker(n,p.x,p.y,radius(degrees.get(id)??0,n.type),selected)}
-          {name&&<text x={p.x+12} y={p.y-11} className="ml-node-label">{n.label.slice(0,34)}</text>}
-          <title>{n.label} · {degrees.get(id)??0} recorded links</title>
-        </g>;
-      })}
-    </svg>
-    <div className="ml-drawing-caption">
-      {lens==="map"?`${positions.size.toLocaleString("en-GB")} plotted · ${unplacedCount} without coordinates`:
-        `${displayed.length.toLocaleString("en-GB")} of ${graph.nodes.length.toLocaleString("en-GB")} records drawn`}
-      {displayed.length<graph.nodes.length&&" · Remaining records available in Browse"}
-      {lens==="map"&& (mapExtent.uk?" · Natural Earth coastline":" · Fitted coordinates; broader basemap pending")}
-    </div>
-  </div>;
-}
-function RecordPanel({source,graph,node,onPick,onFollow,onConfirm}:{
-  source:GraphDocument;graph:GraphDocument;node:GraphNode|null;
-  onPick:(id:string)=>void;onFollow:(id:string)=>void;
-  onConfirm:(edge:GraphEdge,input:{reviewer:string;reason:string;relationship:string})=>void;
-}){
-  const [candidate,setCandidate]=useState<string|null>(null);
-  const [reviewer,setReviewer]=useState("");
-  const [reason,setReason]=useState("");
-  const [relationship,setRelationship]=useState("partnership");
-  const links=useMemo(()=>node?graph.edges.filter(e=>e.source===node.id||e.target===node.id):[],[graph,node]);
-  if(!node)return <div className="ml-empty-panel">
-    <p className="ml-eyebrow">An atlas of relationships</p>
-    <h2>Follow a thread.</h2>
-    <p>Choose any record to see the relationships behind it, where they came from, and what is only a suggestion.</p>
-    <p>Every solid connection represents a recorded relationship. A dotted connection is a possibility, not a fact.</p>
-  </div>;
-  const inferred=links.filter(e=>!isRecorded(e)),recorded=links.filter(isRecorded);
-  return <div className="ml-record-panel">
-    <p className="ml-eyebrow"><span className={`ml-type-symbol ml-${node.type}`}/> {node.type}</p>
-    <h2>{node.label}</h2>
-    {node.region&&<p className="ml-region">{node.region}</p>}
-    <p className="ml-description">{node.description||"No description recorded in the source."}</p>
-    {node.tags.length>0&&<div className="ml-tag-list">{node.tags.map(t=><span key={t}>{t}</span>)}</div>}
-    <button type="button" className="ml-follow-trigger" onClick={()=>onFollow(node.id)}>
-      Follow a recorded connection →
-    </button>
-    <div className="ml-stat-row">
-      <div><strong>{recorded.length}</strong><span>Recorded links</span></div>
-      <div className="ml-pencilled"><strong>{inferred.length}</strong><span>Associations</span></div>
-    </div>
-    <h3>Recorded · {recorded.length}</h3>
-    {recorded.length===0&&<p className="ml-small">No direct source-recorded links in the current filter.</p>}
-    <div className="ml-record-links">{recorded.slice(0,70).map(e=>{
-      const other=source.nodes.find(n=>n.id===(e.source===node.id?e.target:e.source));
-      return <div className="ml-record-link" key={e.id}>
-        <button type="button" onClick={()=>onPick(other?.id??node.id)}>
-          <strong>{other?.label??"Unknown record"}</strong><span>{e.type}</span>
-        </button>
-        <small>{evidenceReceipt(e)}</small>
-        {e.sourceUrl&&<a target="_blank" rel="noreferrer" href={e.sourceUrl}>Source ↗</a>}
-      </div>;
-    })}</div>
-    {recorded.length>70&&<p className="ml-small">{recorded.length-70} more recorded links. Refine Browse to examine more records.</p>}
-    {inferred.length>0&&<section className="ml-associations">
-      <h3>Pencil · {inferred.length} unconfirmed</h3>
-      <p>Shared funders or other associations do not establish collaboration.</p>
-      {inferred.slice(0,12).map(e=><div key={e.id} className="ml-association-item">
-        <button type="button" onClick={()=>onPick(e.source===node.id?e.target:e.source)}>
-          {source.nodes.find(n=>n.id===(e.source===node.id?e.target:e.source))?.label??"Related record"} ↗
-        </button>
-        <p>{e.description??e.type}</p>
-        {candidate===e.id?<form onSubmit={(event:FormEvent)=>{
-          event.preventDefault();
-          onConfirm(e,{reviewer,reason,relationship});
-          setCandidate(null);setReason("");
-        }}>
-          <label>Relationship type<input required maxLength={120} value={relationship}
-            onChange={event=>setRelationship(event.target.value)}/></label>
-          <label>Reviewed by<input required minLength={2} value={reviewer}
-            onChange={event=>setReviewer(event.target.value)}/></label>
-          <label>Evidence and reason<textarea required minLength={10} value={reason}
-            onChange={event=>setReason(event.target.value)}/></label>
-          <p>This creates an auditable annotation; the imported source remains unchanged.</p>
-          <button type="submit">Confirm relationship</button>
-          <button type="button" onClick={()=>setCandidate(null)}>Cancel</button>
-        </form>:<button type="button" className="ml-inline-button" onClick={()=>setCandidate(e.id)}>
-          Confirm with evidence…
-        </button>}
-      </div>)}
-      {inferred.length>12&&<p className="ml-small">{inferred.length-12} additional associations not shown here.</p>}
-    </section>}
-    <details className="ml-source-detail"><summary>Open source record</summary>
-      <p>{node.origin? `${node.origin.system} · ${node.origin.recordId}`:
-        "No source row reference supplied"}</p>
-      {node.sourceUrl&&<a href={node.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a>}
-      {node.properties&&<pre>{JSON.stringify(node.properties,null,2)}</pre>}
-    </details>
-  </div>;
-}
-function Bars({items,onClick}:{
- items:{id:string;name:string;value:number;secondary?:string}[];onClick?:(id:string)=>void;
-}){
- const max=Math.max(1,...items.map(item=>item.value));
- return <div className="ml-bars">{items.map(item=><button key={item.id} type="button"
-   className="ml-bar-row" onClick={()=>onClick?.(item.id)} disabled={!onClick}>
-   <span className="ml-bar-heading"><strong>{item.name}</strong><span>{item.value.toLocaleString("en-GB")}{item.secondary&&" · "+item.secondary}</span></span>
-   <span className="ml-bar-track"><span style={{width:(item.value/max*100)+"%"}}/></span>
- </button>)}</div>;
-}
-export function FieldAtlasWorkspace({graph:imported,datasetId,onBack,onImport,onAdvanced,example}:{
-  graph:GraphDocument;datasetId?:string;onBack:()=>void;onImport:()=>void;onAdvanced:()=>void;example?:boolean;
-}){
-  const [fullSource,setFullSource]=useState<GraphDocument|null>(null);
-  const [datasetStatus,setDatasetStatus]=useState<"loading"|"ready"|"error">(datasetId?"loading":"ready");
-  const [datasetError,setDatasetError]=useState("");
-  useEffect(()=>{
-    let cancelled=false;
-    if(!datasetId){setFullSource(null);setDatasetStatus("ready");return;}
+const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
+
+export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImport, onAdvanced, example }: {
+  graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
+}) {
+  // ---- Complete source (funding datasets live in IndexedDB) -------------------
+  const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
+  const [datasetStatus, setDatasetStatus] = useState<"loading" | "ready" | "error">(datasetId ? "loading" : "ready");
+  const [datasetError, setDatasetError] = useState("");
+  useEffect(() => {
+    let cancelled = false;
+    if (!datasetId) { setFullSource(null); setDatasetStatus("ready"); return; }
     setDatasetStatus("loading");
-    loadFundingDataset(datasetId).then(dataset=>{
-      if(cancelled)return;
-      setFullSource(dataset.graph);setDatasetStatus("ready");
-    }).catch(error=>{
-      if(cancelled)return;
+    loadFundingDataset(datasetId).then(dataset => {
+      if (cancelled) return;
+      setFullSource(dataset.graph); setDatasetStatus("ready");
+    }).catch(error => {
+      if (cancelled) return;
       setDatasetStatus("error");
-      setDatasetError(error instanceof Error?error.message:"Cannot restore full dataset");
+      setDatasetError(error instanceof Error ? error.message : "Cannot restore full dataset");
     });
-    return ()=>{cancelled=true;};
-  },[datasetId]);
-  const sourceGraph=fullSource??imported;
-  const graphKey=useMemo(()=>graphFingerprint(sourceGraph),[sourceGraph]);
-  const [annotations,setAnnotations]=useState<AtlasAnnotationLayer>(()=>emptyAnnotationLayer(graphKey));
-  const storageKey="mossline:atlas-annotations:v1:"+graphKey;
-  const [annotationsReady,setAnnotationsReady]=useState(false);
-  const annotationFileRef=useRef<HTMLInputElement>(null);
-  useEffect(()=>{
-    try{const stored=window.localStorage.getItem(storageKey);
-      setAnnotations(stored?parseAnnotationLayer(JSON.parse(stored),graphKey):emptyAnnotationLayer(graphKey));
-    }catch{setAnnotations(emptyAnnotationLayer(graphKey));}
+    return () => { cancelled = true; };
+  }, [datasetId]);
+  const sourceGraph = fullSource ?? imported;
+  const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
+
+  // ---- Reviewer confirmations: a separate, dataset-bound annotation layer -----
+  const [annotations, setAnnotations] = useState<AtlasAnnotationLayer>(() => emptyAnnotationLayer(graphKey));
+  const storageKey = "mossline:atlas-annotations:v1:" + graphKey;
+  const [annotationsReady, setAnnotationsReady] = useState(false);
+  const annotationFileRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      setAnnotations(stored ? parseAnnotationLayer(JSON.parse(stored), graphKey) : emptyAnnotationLayer(graphKey));
+    } catch { setAnnotations(emptyAnnotationLayer(graphKey)); }
     setAnnotationsReady(true);
-  },[storageKey,graphKey]);
-  useEffect(()=>{
-    if(!annotationsReady||annotations.graphKey!==graphKey)return;
-    try{window.localStorage.setItem(storageKey,JSON.stringify(annotations));}catch{}
-  },[annotations,annotationsReady,graphKey,storageKey]);
-  const proposedGraph=useMemo(()=>{
-    // Derived associations are ephemeral pencil, not imported facts.
-    // Avoid expanding high-degree funding datasets into millions of pairs.
-    if(sourceGraph.nodes.length>5000||sourceGraph.edges.length>10000)return sourceGraph;
-    const existing=new Set(sourceGraph.edges.map(e=>e.id));
-    const suggestions=collaborationGraph(sourceGraph,"all").edges.filter(e=>e.inferred&&!existing.has(e.id));
-    return suggestions.length?{...sourceGraph,edges:[...sourceGraph.edges,...suggestions]}:sourceGraph;
-  },[sourceGraph]);
-  const graph=useMemo(()=>graphWithAnnotations(proposedGraph,annotations.graphKey===graphKey?
-    annotations:emptyAnnotationLayer(graphKey)),[proposedGraph,annotations,graphKey]);
-  function exportAnnotations(){
-    const payload={kind:"mossline-atlas-annotation-backup",version:1,exportedAt:new Date().toISOString(),layer:annotations};
-    const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}));
-    const a=document.createElement("a");a.href=url;
-    a.download="mossline-review-"+graphKey.slice(0,12)+".json";
-    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  }, [storageKey, graphKey]);
+  useEffect(() => {
+    if (!annotationsReady || annotations.graphKey !== graphKey) return;
+    try { window.localStorage.setItem(storageKey, JSON.stringify(annotations)); } catch { /* storage full or blocked */ }
+  }, [annotations, annotationsReady, graphKey, storageKey]);
+  const largeSource = sourceGraph.nodes.length > SUGGESTION_LIMIT.nodes || sourceGraph.edges.length > SUGGESTION_LIMIT.edges;
+  const proposedGraph = useMemo(() => {
+    // Shared-funder/project associations are pencil: derived, reversible, never counted.
+    if (largeSource) return sourceGraph;
+    const existing = new Set(sourceGraph.edges.map(e => e.id));
+    const suggestions = collaborationGraph(sourceGraph, "all").edges.filter(e => e.inferred && !existing.has(e.id));
+    return suggestions.length ? { ...sourceGraph, edges: [...sourceGraph.edges, ...suggestions] } : sourceGraph;
+  }, [sourceGraph, largeSource]);
+  const graph = useMemo(() => graphWithAnnotations(proposedGraph,
+    annotations.graphKey === graphKey ? annotations : emptyAnnotationLayer(graphKey)), [proposedGraph, annotations, graphKey]);
+
+  const [notice, setNotice] = useState("");
+  function exportAnnotations() {
+    const payload = { kind: "mossline-atlas-annotation-backup", version: 1, exportedAt: new Date().toISOString(), layer: annotations };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    const a = document.createElement("a"); a.href = url;
+    a.download = "mossline-review-" + graphKey.slice(0, 12) + ".json";
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     setNotice("Review backup exported. Keep this file somewhere safe; it is separate from the source dataset.");
   }
-  async function importAnnotations(file:File){
-    try{
-      if(file.size>2_000_000)throw Error("Review backup is too large.");
-      const parsed:unknown=JSON.parse(await file.text());
-      if(!parsed||typeof parsed!=="object"||!('kind' in parsed)||
-        parsed.kind!=="mossline-atlas-annotation-backup"||!('layer' in parsed))
-        throw Error("Not a Mossline review backup.");
-      const layer=parseAnnotationLayer(parsed.layer,graphKey);
-      if(!parsed.layer||typeof parsed.layer!=="object"||!('graphKey' in parsed.layer)||
-        parsed.layer.graphKey!==graphKey)throw Error("This backup belongs to another version of the dataset.");
-      if(!('entries' in parsed.layer)||!Array.isArray(parsed.layer.entries)||
-        layer.entries.length!==parsed.layer.entries.length)
-        throw Error("Review backup contains invalid entries.");
-      const valid=layer.entries.every(entry=>proposedGraph.edges.some(e=>
-        e.id===entry.proposedEdgeId&&e.inferred&&e.source===entry.source&&e.target===entry.target));
-      if(!valid)throw Error("One or more proposed relationships are not present in this dataset.");
-      const existing=new Set(annotations.entries.map(x=>x.id));
-      const incoming=layer.entries.filter(x=>!existing.has(x.id));
-      setAnnotations(old=>({...old,entries:[...old.entries,...incoming]}));
-      setNotice("Restored "+incoming.length+" reviewer confirmations. Existing confirmations were preserved.");
-    }catch(error){setNotice(error instanceof Error?error.message:"Could not import review backup.");}
+  async function importAnnotations(file: File) {
+    try {
+      if (file.size > 2_000_000) throw Error("Review backup is too large.");
+      const parsed: unknown = JSON.parse(await file.text());
+      if (!parsed || typeof parsed !== "object" || !("kind" in parsed) ||
+        parsed.kind !== "mossline-atlas-annotation-backup" || !("layer" in parsed)) throw Error("Not a Mossline review backup.");
+      const layer = parseAnnotationLayer(parsed.layer, graphKey);
+      if (!parsed.layer || typeof parsed.layer !== "object" || !("graphKey" in parsed.layer) ||
+        parsed.layer.graphKey !== graphKey) throw Error("This backup belongs to another version of the dataset.");
+      if (!("entries" in parsed.layer) || !Array.isArray(parsed.layer.entries) ||
+        layer.entries.length !== parsed.layer.entries.length) throw Error("Review backup contains invalid entries.");
+      const valid = layer.entries.every(entry => proposedGraph.edges.some(e =>
+        e.id === entry.proposedEdgeId && e.inferred && e.source === entry.source && e.target === entry.target));
+      if (!valid) throw Error("One or more proposed relationships are not present in this dataset.");
+      const existing = new Set(annotations.entries.map(x => x.id));
+      const incoming = layer.entries.filter(x => !existing.has(x.id));
+      setAnnotations(old => ({ ...old, entries: [...old.entries, ...incoming] }));
+      setNotice("Restored " + incoming.length + " reviewer confirmations. Existing confirmations were preserved.");
+    } catch (error) { setNotice(error instanceof Error ? error.message : "Could not import review backup."); }
+  }
+  function confirm(edge: GraphEdge, input: { relationship: string; reviewer: string; reason: string }) {
+    try {
+      setAnnotations(layer => confirmInferredRelationship(proposedGraph, layer, edge.id, { ...input, now: new Date().toISOString() }));
+      setNotice("Confirmed in a separate local annotation, with reviewer and reason. Source data unchanged.");
+    } catch (error) { setNotice(error instanceof Error ? error.message : "Could not confirm suggestion."); }
   }
 
-  const [lens,setLens]=useState<AtlasLens>("network");
-  const [selectedId,setSelectedId]=useState<string|null>(null);
-  const [search,setSearch]=useState("");
-  const [theme,setTheme]=useState("");
-  const [region,setRegion]=useState("");
-  const [funderId,setFunderId]=useState("");
-  const [year,setYear]=useState<number|null>(null);
-  const [type,setType]=useState<NodeType|null>(null);
-  const [browse,setBrowse]=useState(false);
-  const [overviewOpen,setOverviewOpen]=useState(true);
-  const [routeFromId,setRouteFromId]=useState<string|null>(null);
-  const [browseLimit,setBrowseLimit]=useState(100);
-  const [filtersExpanded,setFiltersExpanded]=useState(false);
-  const [notice,setNotice]=useState("");
-  const [urlReady,setUrlReady]=useState(false);
-  const searchRef=useRef<HTMLInputElement>(null);
-  const [night,setNight]=useState(false);
-  useEffect(()=>{
-    const params=new URLSearchParams(window.location.search);
-    const requested=params.get("lens");
-    if(LENSES.some(l=>l.id===requested))setLens(requested as AtlasLens);
-    setSelectedId(params.get("record"));setSearch(params.get("q")??"");
-    setTheme(params.get("theme")??"");setRegion(params.get("region")??"");
-    setFunderId(params.get("funder")??"");
-    const y=Number(params.get("year"));setYear(params.has("year")&&y>=1800&&y<=2200?y:null);
-    const t=params.get("type");if(t&&t in TYPE_NAMES)setType(t as NodeType);
+  // ---- View state, mirrored in the URL ----------------------------------------
+  const [lens, setLens] = useState<AtlasLens>("network");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [theme, setTheme] = useState("");
+  const [region, setRegion] = useState("");
+  const [funderId, setFunderId] = useState("");
+  const [range, setRange] = useState<YearRange>({ from: null, to: null });
+  const [type, setType] = useState<NodeType | null>(null);
+  const [browse, setBrowse] = useState(false);
+  const [browseLimit, setBrowseLimit] = useState(100);
+  const [routeFromId, setRouteFromId] = useState<string | null>(null);
+  const [trail, setTrail] = useState<ConnectionTrail | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(true);
+  const [nightPref, setNightPref] = useState<AtlasTheme | null>(null);
+  const [urlReady, setUrlReady] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("lens");
+    if (LENSES.some(l => l.id === requested)) setLens(requested as AtlasLens);
+    setSelectedId(params.get("record")); setSearch(params.get("q") ?? "");
+    setTheme(params.get("theme") ?? ""); setRegion(params.get("region") ?? "");
+    setFunderId(params.get("funder") ?? "");
+    const year = (key: string) => { const y = Number(params.get(key)); return params.has(key) && y >= 1800 && y <= 2200 ? y : null; };
+    const legacy = year("year");
+    setRange({ from: year("from") ?? legacy, to: year("to") ?? legacy });
+    const t = params.get("type"); if (t && t in TYPE_PLURAL) setType(t as NodeType);
     setUrlReady(true);
-  },[]);
-  useEffect(()=>{
-    if(!urlReady)return;
-    const url=new URL(window.location.href);
-    for(const key of ["lens","record","q","theme","region","funder","year","type"])url.searchParams.delete(key);
-    url.searchParams.set("lens",lens);
-    if(selectedId)url.searchParams.set("record",selectedId);
-    if(search)url.searchParams.set("q",search);
-    if(theme)url.searchParams.set("theme",theme);
-    if(region)url.searchParams.set("region",region);
-    if(funderId)url.searchParams.set("funder",funderId);
-    if(year!==null)url.searchParams.set("year",String(year));
-    if(type)url.searchParams.set("type",type);
-    window.history.replaceState(window.history.state,"",url.toString());
-  },[urlReady,lens,selectedId,search,theme,region,funderId,year,type]);
-  useEffect(()=>{
-    const listener=(e:globalThis.KeyboardEvent)=>{
-      if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
-      if(e.key==="/"){e.preventDefault();searchRef.current?.focus();}
-      if(e.key==="Escape")setSelectedId(null);
-      const index=Number(e.key)-1;
-      if(index>=0&&index<LENSES.length)setLens(LENSES[index].id);
+  }, []);
+  useEffect(() => {
+    if (!urlReady) return;
+    const url = new URL(window.location.href);
+    for (const key of ["lens", "record", "q", "theme", "region", "funder", "year", "from", "to", "type"]) url.searchParams.delete(key);
+    url.searchParams.set("lens", lens);
+    if (selectedId) url.searchParams.set("record", selectedId);
+    if (search) url.searchParams.set("q", search);
+    if (theme) url.searchParams.set("theme", theme);
+    if (region) url.searchParams.set("region", region);
+    if (funderId) url.searchParams.set("funder", funderId);
+    if (range.from !== null) url.searchParams.set("from", String(range.from));
+    if (range.to !== null) url.searchParams.set("to", String(range.to));
+    if (type) url.searchParams.set("type", type);
+    window.history.replaceState(window.history.state, "", url.toString());
+  }, [urlReady, lens, selectedId, search, theme, region, funderId, range, type]);
+  useEffect(() => {
+    const listener = (e: globalThis.KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "/") { e.preventDefault(); searchRef.current?.focus(); }
+      if (e.key === "Escape") { setSelectedId(null); setBrowse(false); }
+      const index = Number(e.key) - 1;
+      if (index >= 0 && index < LENSES.length) setLens(LENSES[index].id);
     };
-    document.addEventListener("keydown",listener);
-    return ()=>document.removeEventListener("keydown",listener);
-  },[]);
-  const filters:AtlasFilters=useMemo(()=>({query:search,theme,region,
-    funderId:funderId||undefined,
-    types:type?[type]:undefined,
-    fromYear:year??undefined,toYear:year??undefined
-  }),[search,theme,region,funderId,type,year]);
-  const result=useMemo(()=>projectAtlas(graph,filters),[graph,filters]);
-  const selected=useMemo(()=>graph.nodes.find(n=>n.id===selectedId)??null,[graph,selectedId]);
-  const themes=useMemo(()=>[...new Set(graph.nodes.flatMap(n=>n.tags))].sort(),[graph]);
-  const regions=useMemo(()=>[...new Set(graph.nodes.map(n=>n.region).filter((s):s is string=>!!s))].sort(),[graph]);
-  const funders=useMemo(()=>graph.nodes.filter(n=>n.type==="funder"),[graph]);
-  const timeline=useMemo(()=>recordedTimeline(result.graph),[result.graph]);
-  const fullTimeline=useMemo(()=>recordedTimeline(graph),[graph]);
-  const overlap=useMemo(()=>atlasFundingOverlap(result.graph),[result.graph]);
-  const themeCounts=useMemo(()=>{
-    const counts=new Map<string,number>();
-    for(const node of result.graph.nodes)
-      for(const tag of new Set(node.tags))counts.set(tag,(counts.get(tag)??0)+1);
-    return [...counts].map(([name,value])=>({id:name,name,value}))
-      .sort((a,b)=>b.value-a.value||a.name.localeCompare(b.name));
-  },[result.graph]);
-  const fundingAmounts=useMemo(()=>{
-    const totals=new Map<string,{funderId:string;currency:string;total:number;count:number}>();
-    for(const award of fundingAwards(result.graph)){
-      if(award.amount===null||!Number.isFinite(award.amount)||!award.currency)continue;
-      const key=award.funderId+"|"+award.currency;
-      const existing=totals.get(key)??{funderId:award.funderId,currency:award.currency,total:0,count:0};
-      existing.total+=award.amount;existing.count++;totals.set(key,existing);
-    }
-    return [...totals.values()].sort((a,b)=>b.total-a.total);
-  },[result.graph]);
-  const recordList=useMemo(()=>[...result.graph.nodes].sort((a,b)=>a.label.localeCompare(b.label)),[result.graph]);
-  useEffect(()=>setBrowseLimit(100),[filters]);
-  const unplaced=useMemo(()=>result.graph.nodes.filter(n=>!recordedCoordinates(n)),[result.graph]);
-  function confirm(edge:GraphEdge,input:{relationship:string;reviewer:string;reason:string}){
-    try{
-      setAnnotations(layer=>confirmInferredRelationship(proposedGraph,layer,edge.id,{
-        ...input,now:new Date().toISOString()
-      }));
-      setNotice("Confirmed in a separate local annotation, with reviewer and reason. Source data unchanged.");
-    }catch(error){setNotice(error instanceof Error?error.message:"Could not confirm suggestion.");}
-  }
-  const located=result.graph.nodes.length-unplaced.length;
-  const activeFilters=[search,type,theme,region,funderId,year===null?"":String(year)].filter(Boolean).length;
-  const leadRecords=useMemo(()=>[...graph.nodes].sort((a,b)=>recordedDegree(graph,b.id)-recordedDegree(graph,a.id)).slice(0,4),[graph]);
-  const lensIntro:Record<AtlasLens,string>={
-    network:"Start with a record. Solid links were recorded in your data; suggestions are not evidence of collaboration.",
-    map:"Only locations supplied with the data appear on the map. Records without coordinates remain available.",
-    themes:"Explore labels recorded in the original data. These are not AI-generated categories.",
-    funding:"Explore direct funder relationships recorded in the data. Link counts are not grant amounts.",
-    timeline:"See when source relationships were recorded, or explore records that do not have dates."
-  };
-  return <main className="ml-atlas" data-theme={night?"night":"day"}>
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
+  }, []);
+
+  // ---- Projections ------------------------------------------------------------
+  const baseFilters: AtlasFilters = useMemo(() => ({ query: search, theme, region, funderId: funderId || undefined,
+    types: type ? [type] : undefined }), [search, theme, region, funderId, type]);
+  const filters: AtlasFilters = useMemo(() => ({ ...baseFilters, fromYear: range.from ?? undefined, toYear: range.to ?? undefined }),
+    [baseFilters, range]);
+  const result = useMemo(() => projectAtlas(graph, filters), [graph, filters]);
+  const undated = useMemo(() => projectAtlas(graph, baseFilters), [graph, baseFilters]);
+  const selected = useMemo(() => graph.nodes.find(n => n.id === selectedId) ?? null, [graph, selectedId]);
+  const flowsAll = useMemo(() => fundingFlows(graph), [graph]);
+  const flowsView = useMemo(() => fundingFlows(result.graph), [result.graph]);
+  const flowsUndated = useMemo(() => fundingFlows(undated.graph), [undated.graph]);
+  const recordedTotal = useMemo(() => graph.edges.filter(isRecorded).length, [graph]);
+  const themes = useMemo(() => [...new Set(graph.nodes.flatMap(n => n.tags))].sort(), [graph]);
+  const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((s): s is string => !!s))].sort(), [graph]);
+  const funders = useMemo(() => graph.nodes.filter(n => n.type === "funder").sort((a, b) => a.label.localeCompare(b.label)), [graph]);
+  const typesPresent = useMemo(() => [...new Set(graph.nodes.map(n => n.type))], [graph]);
+  const degree = useMemo(() => {
+    const d = new Map<string, number>();
+    for (const e of graph.edges) if (isRecorded(e)) { d.set(e.source, (d.get(e.source) ?? 0) + 1); d.set(e.target, (d.get(e.target) ?? 0) + 1); }
+    return d;
+  }, [graph]);
+  const leads = useMemo(() => [...graph.nodes].sort((a, b) => (degree.get(b.id) ?? 0) - (degree.get(a.id) ?? 0))
+    .slice(0, 5).map(node => ({ node, degree: degree.get(node.id) ?? 0 })), [graph, degree]);
+  const recordList = useMemo(() => [...result.graph.nodes].sort((a, b) => a.label.localeCompare(b.label)), [result.graph]);
+  useEffect(() => setBrowseLimit(100), [filters]);
+  const unplaced = useMemo(() => result.graph.nodes.filter(n => !recordedCoordinates(n)), [result.graph]);
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const node of result.graph.nodes) for (const tag of new Set(node.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [result.graph]);
+  const route: AtlasRoute | null = useMemo(() => trail && trail.steps.length ? {
+    nodeIds: [trail.steps[0].fromId, ...trail.steps.map(s => s.toId)], edgeIds: trail.steps.map(s => s.edgeId)
+  } : null, [trail]);
+  const onRoute = useCallback((next: ConnectionTrail | null) => {
+    setTrail(next);
+    if (next) setLens(current => current === "network" || current === "map" ? current : "network");
+  }, []);
+  const pickRecord = useCallback((id: string | null) => { setSelectedId(id); }, []);
+  const onUnavailable = useCallback(() =>
+    setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
+
+  const activeTheme: AtlasTheme = nightPref ?? (lens === "themes" ? "night" : "day");
+  const activeFilters = [search, type, theme, region, funderId, range.from ?? range.to ?? ""].filter(v => v !== "" && v !== null).length;
+  const clearAll = () => { setSearch(""); setType(null); setTheme(""); setRegion(""); setFunderId(""); setRange({ from: null, to: null }); };
+  const canvasLens = lens === "network" || lens === "themes" || lens === "map";
+  const funderName = funderId ? graph.nodes.find(n => n.id === funderId)?.label : "";
+  const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
+
+  return <main className="ml-atlas" data-theme={activeTheme} data-lens={lens}>
     <header className="ml-header">
       <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossline — all maps">
-        <span className="ml-logo" aria-hidden="true">✳</span>mossline<span className="ml-period">.</span>
+        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
+          <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
+          <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
+        <span>Mossline</span>
       </button>
-      <div className="ml-dataset"><strong>{imported.title}</strong>
-        <small>{graph.nodes.length.toLocaleString("en-GB")} records · {graph.edges.filter(isRecorded).length.toLocaleString("en-GB")} recorded links
-          {example&&" · example data"}</small></div>
-
+      <details className="ml-dataset" ref={menuRef}>
+        <summary>
+          <strong>{imported.title}</strong>
+          <small>{graph.nodes.length.toLocaleString("en-GB")} records · {recordedTotal.toLocaleString("en-GB")} recorded links
+            {example ? " · example data" : ""}</small>
+        </summary>
+        <div className="ml-menu" role="group" aria-label="Map and data">
+          <button type="button" onClick={() => { closeMenu(); onBack(); }}>All maps</button>
+          <button type="button" onClick={() => { closeMenu(); onImport(); }}>Import data</button>
+          <hr/>
+          <p className="ml-menu-note">Reviewer confirmations are stored separately from your source records.</p>
+          <button type="button" onClick={() => { closeMenu(); exportAnnotations(); }} disabled={!annotations.entries.length}>
+            Export reviews ({annotations.entries.length})</button>
+          <button type="button" onClick={() => { closeMenu(); annotationFileRef.current?.click(); }}>Restore reviews</button>
+          <hr/>
+          <button type="button" onClick={() => { closeMenu(); onAdvanced(); }}>Advanced tools ↗</button>
+        </div>
+      </details>
+      <input ref={annotationFileRef} hidden type="file" accept=".json,application/json" aria-label="Restore review backup"
+        onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void importAnnotations(file); event.currentTarget.value = ""; }}/>
+      <nav className="ml-lenses" aria-label="Atlas lenses">
+        {LENSES.map((item, i) => <button key={item.id} type="button" title={item.help + " · key " + (i + 1)}
+          aria-current={lens === item.id ? "page" : undefined} onClick={() => setLens(item.id)}>{item.label}</button>)}
+      </nav>
+      <label className="ml-search">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+        <span className="ml-visually-hidden">Ask or find</span>
+        <input ref={searchRef} value={search} onChange={e => setSearch(e.target.value)} placeholder="Find a record, tag or place"/>
+        {search ? <button type="button" className="ml-search-clear" aria-label="Clear search" onClick={() => setSearch("")}>×</button>
+          : <kbd aria-hidden="true">/</kbd>}
+      </label>
       <div className="ml-header-actions">
-        <span className="ml-local-status">Local workspace</span>
-        <button type="button" onClick={()=>setNight(n=>!n)} aria-label={night?"Use day colours":"Use night colours"}>{night?"Day":"Night"}</button>
-        <button type="button" onClick={()=>navigator.clipboard?.writeText(window.location.href).then(()=>
+        <span className="ml-local"><i aria-hidden="true"/>On this device</span>
+        <button type="button" className="ml-quiet" onClick={() => setNightPref(activeTheme === "night" ? "day" : "night")}
+          aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
+        <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() =>
           setNotice("View link copied. The underlying local dataset does not travel with the link."))
-          .catch(()=>setNotice("Copy the address from your browser."))}>Share view</button>
+          .catch(() => setNotice("Copy the address from your browser."))}>Share view</button>
       </div>
     </header>
-    <nav className="ml-lenses" aria-label="Atlas lenses">
-      {LENSES.map((item,i)=><button key={item.id} type="button" title={item.help}
-        aria-current={lens===item.id?"page":undefined}
-        onClick={()=>{setLens(item.id);setOverviewOpen(false);}}>{item.label}<span className="ml-shortcut">{i+1}</span></button>)}
-    </nav>
-    <div className={"ml-tools"+(filtersExpanded?" ml-tools--expanded":"")}>
-      <button type="button" className="ml-mobile-filters"
-        aria-expanded={filtersExpanded} onClick={()=>setFiltersExpanded(open=>!open)}>
-        {filtersExpanded?"Hide filters":"Filters"+(activeFilters?" · "+activeFilters:"")} </button>
-      <label className="ml-search"><span>Ask or find</span><input ref={searchRef} value={search}
-        onChange={e=>setSearch(e.target.value)} placeholder="Search names, descriptions and tags… (/)" /></label>
-      <button type="button" className="ml-filter-toggle" aria-expanded={filtersExpanded}
-        onClick={()=>setFiltersExpanded(value=>!value)}>
-        {filtersExpanded?"Hide filters":"Refine results"+(activeFilters?" · "+activeFilters:"")} {filtersExpanded?"−":"+"}
-      </button>
-      <label className="ml-advanced-filter">Type<select value={type??""} onChange={e=>setType((e.target.value||null) as NodeType|null)}>
-        <option value="">All records</option>{Object.entries(TYPE_NAMES).map(([key,value])=>
-          <option key={key} value={key}>{value}</option>)}</select></label>
-      <label className="ml-advanced-filter">Theme<select value={theme} onChange={e=>setTheme(e.target.value)}>
-        <option value="">All source tags</option>{themes.map(t=><option key={t}>{t}</option>)}</select></label>
-      <label className="ml-advanced-filter">Place<select value={region} onChange={e=>setRegion(e.target.value)}>
-        <option value="">All regions</option>{regions.map(r=><option key={r}>{r}</option>)}</select></label>
-      <label className="ml-advanced-filter">Funder<select value={funderId} onChange={e=>setFunderId(e.target.value)}>
-        <option value="">All funders</option>{funders.map(f=><option key={f.id} value={f.id}>{f.label}</option>)}</select></label>
-      {(search||type||theme||region||funderId||year!==null)&&<button type="button" onClick={()=>{
-        setSearch("");setType(null);setTheme("");setRegion("");setFunderId("");setYear(null);
-      }}>Clear filters ×</button>}
-    </div>
-    {datasetId&&datasetStatus!=="ready"&&<div className="ml-notice" role="status">
-      {datasetStatus==="loading"?"Loading the complete funding dataset from this device…":
-        "Full funding dataset unavailable. The compact overview remains visible, but is not the whole network. "+datasetError}
-      {datasetStatus==="error"&&<button type="button" onClick={onAdvanced}>Open recovery tools</button>}
-    </div>}
-    {(sourceGraph.nodes.length>5000||sourceGraph.edges.length>10000)&&
-      <div className="ml-dataset-confirmation" role="note">
-        Large dataset: pairwise suggestions are deferred. Recorded relationships and the full source remain available.
-      </div>}
-    {datasetId&&datasetStatus==="ready"&&<div className="ml-dataset-confirmation" role="status">
-      Complete funding source loaded · {sourceGraph.nodes.length.toLocaleString("en-GB")} records.
-    </div>}
-    {notice&&<div className="ml-notice" role="status">{notice}<button type="button" onClick={()=>setNotice("")}>Dismiss</button></div>}
+
     <section className="ml-body">
-      <div className="ml-main">
-        <div className="ml-stage-heading"><div><p className="ml-eyebrow">{imported.title} / {lens}</p>
-          <h1>{lens==="network"?"Who connects with whom":
-            lens==="map"?"Where the work happens":lens==="themes"?"What the records are about":
-            lens==="funding"?"Where the support goes":"When things happened"}</h1>
-          <p>{lensIntro[lens]}</p></div>
-          <button type="button" onClick={()=>setBrowse(b=>!b)} aria-expanded={browse}>
-            {browse?"Hide list":"Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}
-          </button>
+      <div className="ml-stage">
+        <div className={"ml-tools" + (filtersOpen ? " ml-tools--open" : "")}>
+          <button type="button" className="ml-filter-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(v => !v)}>
+            {filtersOpen ? "Hide filters" : "Refine results" + (activeFilters ? " · " + activeFilters : "")}</button>
+          <div className="ml-chips">
+            <label className={"ml-chip" + (type ? " is-on" : "")}><span className="ml-visually-hidden">Type</span>
+              <select aria-label="Type" value={type ?? ""} onChange={e => setType((e.target.value || null) as NodeType | null)}>
+                <option value="">All types</option>{typesPresent.map(t => <option key={t} value={t}>{TYPE_PLURAL[t]}</option>)}</select></label>
+            <label className={"ml-chip" + (theme ? " is-on" : "")}><span className="ml-visually-hidden">Theme</span>
+              <select aria-label="Theme" value={theme} onChange={e => setTheme(e.target.value)}>
+                <option value="">Any theme</option>{themes.map(t => <option key={t}>{t}</option>)}</select></label>
+            <label className={"ml-chip" + (region ? " is-on" : "")}><span className="ml-visually-hidden">Place</span>
+              <select aria-label="Place" value={region} onChange={e => setRegion(e.target.value)}>
+                <option value="">Anywhere</option>{regions.map(r => <option key={r}>{r}</option>)}</select></label>
+            {funders.length > 0 && <label className={"ml-chip" + (funderId ? " is-on" : "")}><span className="ml-visually-hidden">Funder</span>
+              <select aria-label="Funder" value={funderId} onChange={e => setFunderId(e.target.value)}>
+                <option value="">Any funder</option>{funders.map(f => <option key={f.id} value={f.id}>{f.label}</option>)}</select></label>}
+            {(range.from !== null || range.to !== null) && <button type="button" className="ml-chip is-on"
+              onClick={() => setRange({ from: null, to: null })}>{range.from ?? "…"}–{range.to ?? "…"} <span aria-hidden="true">×</span>
+              <span className="ml-visually-hidden">Clear dates</span></button>}
+            {activeFilters > 0 && <button type="button" className="ml-chip ml-chip--clear" onClick={clearAll}>Clear filters</button>}
+          </div>
+          <button type="button" className="ml-chip ml-chip--browse" aria-expanded={browse} onClick={() => setBrowse(b => !b)}>
+            {browse ? "Hide list" : "Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}</button>
+          {funderName && <p className="ml-filter-note"><span>Showing records reached by {funderName}</span></p>}
         </div>
-        {overviewOpen&&!selectedId&&<section className="ml-introduction" aria-label="Getting started">
-          <div className="ml-introduction-head">
-            <div><p className="ml-eyebrow">Start exploring</p>
-              <h2>Find a starting point</h2>
-              <p>This atlas contains {graph.nodes.length.toLocaleString("en-GB")} records and
-                {" "}{graph.edges.filter(isRecorded).length.toLocaleString("en-GB")} recorded connections.
-                Choose something interesting, then follow its links and examine the evidence.</p>
-            </div>
-            <button type="button" onClick={()=>setOverviewOpen(false)}
-              aria-label="Close getting started guide">Dismiss ×</button>
-          </div>
-          <div className="ml-start-records">
-            {leadRecords.map(n=><button type="button" key={n.id}
-              onClick={()=>{setSelectedId(n.id);setOverviewOpen(false);}}>
-              <span className={`ml-type-symbol ml-${n.type}`}/><strong>{n.label}</strong>
-              <small>{recordedDegree(graph,n.id)} recorded links →</small>
-            </button>)}
-          </div>
-          <p className="ml-introduction-foot">Or search above to find an organisation, project, funder or place.</p>
-        </section>}
-        {selected&&<div className="ml-selected-ribbon" role="status">
-          <span>Exploring <strong>{selected.label}</strong> · {recordedDegree(graph,selected.id)} recorded links</span>
-          <button type="button" onClick={()=>setSelectedId(null)}>Clear selection ×</button>
+
+        {(datasetId && datasetStatus !== "ready") && <div className="ml-banner" role="status">
+          {datasetStatus === "loading" ? "Loading the complete funding dataset from this device…" :
+            "Full funding dataset unavailable. The compact overview remains visible, but is not the whole network. " + datasetError}
+          {datasetStatus === "error" && <button type="button" onClick={onAdvanced}>Open recovery tools</button>}
         </div>}
-        {result.graph.nodes.length===0&&<div className="ml-no-results">
-          <h2>No matching records</h2><p>Try clearing the filters to see the full network.</p>
-          <button type="button" onClick={()=>{setSearch("");setType(null);setTheme("");setRegion("");setFunderId("");setYear(null);}}>Clear all filters</button>
-        </div>}
-        {routeFromId&&<FollowConnection graph={graph} fromId={routeFromId}
-          onChoose={setSelectedId} onClose={()=>setRouteFromId(null)}/>}
-        <div className="ml-canvas-stage">
-          {lens==="network"&&<FieldAtlasSigma graph={result.graph} selectedId={selectedId}
-              onPick={setSelectedId} onUnavailable={()=>setNotice("The network renderer is unavailable on this device. Browse records remains available; Detailed tools provides the previous explorer.")}/>}
-          {lens==="map"&&
-            <GraphDrawing graph={result.graph} lens={lens} selectedId={selectedId} onPick={setSelectedId}/>}
-          {lens==="themes"&&<div className="ml-chart-content">
-            <h2>Source themes · {themeCounts.length.toLocaleString("en-GB")}</h2>
-            <p>Every record is counted against each of its recorded tags, not just its first one.
-              Groups are source labels, not inferred themes. Choose one to filter every lens.</p>
-            {themeCounts.length?
-              <Bars items={themeCounts.slice(0,200)} onClick={id=>setTheme(id)}/>:
-              <p>No source tags are recorded for the current selection.</p>}
-            {themeCounts.length>200&&<p>{themeCounts.length-200} further tags.
-              Search or filter to narrow the list.</p>}
-            {theme&&<button type="button" onClick={()=>setTheme("")}>Clear theme filter</button>}
-          </div>}
-          {lens==="map"&&<aside className="ml-unplaced">
-            <strong>Not placed · {unplaced.length}</strong>
-            <p>No source coordinates. Mossline will not guess a location.</p>
-            {unplaced.slice(0,5).map(n=><button key={n.id} type="button" onClick={()=>setSelectedId(n.id)}>{n.label}</button>)}
-            {unplaced.length>5&&<span>+ {unplaced.length-5} more in Browse</span>}
+        {largeSource && lens === "network" && <div className="ml-banner ml-banner--quiet" role="note">
+          Large dataset: shared-funder suggestions are not computed. Every recorded relationship is shown.</div>}
+
+        <div className={"ml-canvas" + (canvasLens ? "" : " ml-canvas--page")}>
+          {result.graph.nodes.length === 0 ? <div className="ml-no-results">
+            <h2>No matching records</h2><p>Nothing in this dataset matches the current filters.</p>
+            <button type="button" className="ml-solid" onClick={clearAll}>Clear all filters</button>
+          </div> : <>
+            {(lens === "network" || lens === "themes") && <NetworkLens graph={result.graph} mode={lens} theme={activeTheme}
+              selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}/>}
+            {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}/>}
+            {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}/>}
+            {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}/>}
+          </>}
+
+          {lens === "themes" && result.graph.nodes.length > 0 && <aside className="ml-overlay-card ml-tag-card" aria-label="Source tags">
+            <p className="ml-overlay-note">Grouped by source tags · not model-inferred themes</p>
+            <ol>{tagCounts.slice(0, 12).map(([tag, count]) => <li key={tag}>
+              <button type="button" aria-pressed={theme === tag} onClick={() => setTheme(theme === tag ? "" : tag)}>
+                <span>{tag}</span><b>{count}</b></button></li>)}</ol>
+            {tagCounts.length > 12 && <p className="ml-small">{tagCounts.length - 12} more tags in the Theme filter.</p>}
+            {tagCounts.length === 0 && <p className="ml-small">No source tags are recorded for these records.</p>}
           </aside>}
-          {lens==="funding"&&<div className="ml-chart-content">
-            <h2>Funding in the source records</h2>
-            {fundingAmounts.length>0&&<>
-              <h3>Recorded award amounts</h3>
-              <p>Only grants with a recorded numeric amount, currency, funder and source
-                relationships are included. Currencies are shown separately; missing amounts
-                are not counted as zero.</p>
-              <Bars items={fundingAmounts.slice(0,80).map(f=>({
-                id:f.funderId,name:(graph.nodes.find(n=>n.id===f.funderId)?.label??f.funderId)
-                  +" · "+f.currency,value:f.total,
-                secondary:f.count+" valued grants · "+new Intl.NumberFormat("en-GB",{
-                  maximumFractionDigits:0}).format(f.total)+" "+f.currency
-              }))} onClick={id=>setSelectedId(id)}/>
-            </>}
-            <h3>Recorded links to funders</h3>
-            <p>Counts below are source relationships, not grant values or evidence that organisations worked together.
-            No grant amount is inferred when the source does not provide one.</p>
-            {overlap.length?<Bars items={overlap.slice(0,80).map(f=>({
-              id:f.funderId,name:graph.nodes.find(n=>n.id===f.funderId)?.label??f.funderId,
-              value:f.grantLinks,secondary:f.recipientCount+" linked records"
-            }))} onClick={id=>setSelectedId(id)}/>:<p>No funder links in these source records.</p>}
-            {overlap.length>80&&<p>{overlap.length-80} additional funders available via the funder filter.</p>}
+          {lens === "map" && <aside className="ml-overlay-card ml-unplaced" aria-label="Records without coordinates">
+            <strong>Not placed · {unplaced.length.toLocaleString("en-GB")}</strong>
+            <p>No source coordinates. Mossline will not guess a location from a name or region.</p>
+            <ul>{unplaced.slice(0, 4).map(n => <li key={n.id}><button type="button" onClick={() => setSelectedId(n.id)}>{n.label}</button></li>)}</ul>
+            {unplaced.length > 4 && <button type="button" className="ml-link-button" onClick={() => setBrowse(true)}>
+              + {unplaced.length - 4} more in Browse</button>}
+          </aside>}
+          {canvasLens && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
+            <button type="button" className="ml-key-toggle" aria-expanded={keyOpen} onClick={() => setKeyOpen(v => !v)}>Key</button>
+            {keyOpen && <div className="ml-key-body" aria-label="How to read this atlas">
+              <ul className="ml-key-types">{typesPresent.filter(t => t !== "topic" && t !== "methodology" && t !== "outcome").map(t =>
+                <li key={t}><TypeMark type={t}/>{TYPE_PLURAL[t]}</li>)}</ul>
+              <ul className="ml-key-grammar">
+                {lens !== "themes" && <li><span className="ml-key-ink"/>Ink · recorded in a source</li>}
+                {lens === "network" && <li><span className="ml-key-pencil"/>Pencil · inferred, not confirmed</li>}
+                {lens === "map" && <li><span className="ml-key-arc"/>Arc · a recorded grant, wider for more money</li>}
+                {lens !== "map" && <li><span className="ml-key-wash"/>{lens === "themes"
+                  ? "Area · records sharing a source tag" : "Wash · drawn to help you navigate"}</li>}
+              </ul>
+            </div>}
           </div>}
-          {lens==="timeline"&&<div className="ml-chart-content">
-            <h2>Recorded relationships by year</h2>
-            <p>Undated relationships are listed separately, never assigned an invented year.
-              Choose a year to filter the other four lenses.</p>
-            <Bars items={fullTimeline.map(item=>({id:item.year===null?"undated":String(item.year),
-              name:item.year===null?"No date recorded":String(item.year),value:item.count}))}
-              onClick={id=>setYear(id==="undated"?null:Number(id))}/>
-            <button type="button" onClick={()=>setYear(null)}>Show all years</button>
+
+          {routeFromId && <div className="ml-follow-dock">
+            <FollowConnection graph={graph} fromId={routeFromId} onChoose={setSelectedId} onRoute={onRoute}
+              onClose={() => { setRouteFromId(null); setTrail(null); }}/>
           </div>}
+
+          {browse && <section className="ml-browse" aria-label="Keyboard-accessible record list">
+            <div className="ml-browse-head"><h2>Browse records · {recordList.length.toLocaleString("en-GB")}</h2>
+              <button type="button" className="ml-quiet" onClick={() => setBrowse(false)} aria-label="Close list">×</button></div>
+            <p className="ml-small">Every matching record, including any not drawn on a dense view.</p>
+            <div className="ml-browse-list">{recordList.slice(0, browseLimit).map(n => <button type="button" key={n.id}
+              aria-pressed={selectedId === n.id} onClick={() => setSelectedId(n.id)}>
+              <TypeMark type={n.type}/><strong>{n.label}</strong><small>{n.type}</small></button>)}</div>
+            {recordList.length > browseLimit && <button className="ml-browse-next" type="button" onClick={() => setBrowseLimit(n => n + 100)}>
+              Show 100 more · {recordList.length - browseLimit} not listed yet</button>}
+          </section>}
+
+          {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
-        {browse&&<section className="ml-browse" aria-label="Keyboard-accessible record list">
-          <h2>Browse records · {recordList.length.toLocaleString("en-GB")}</h2>
-          <p>All matching records are available here, including those not drawn on a dense network.</p>
-          <div className="ml-browse-list">{recordList.slice(0,browseLimit).map(n=><button type="button" key={n.id}
-            aria-pressed={selectedId===n.id} onClick={()=>setSelectedId(n.id)}>
-            <span className={`ml-type-symbol ml-${n.type}`}/><strong>{n.label}</strong><small>{n.type}</small>
-          </button>)}</div>
-          {recordList.length>browseLimit&&<button className="ml-browse-next"
-            type="button" onClick={()=>setBrowseLimit(n=>n+100)}>
-            Show 100 more · {recordList.length-browseLimit} not listed yet
-          </button>}
-        </section>}
-        <div className="ml-grammar" aria-label="How to read this atlas">
-          <span><i className="ml-key-ink"/> Ink · recorded in a source</span>
-          <span><i className="ml-key-pencil"/> Pencil · inferred, not confirmed</span>
-          <span><i className="ml-key-wash"/> Wash · grouping for navigation</span>
-        </div>
-        {lens==="timeline"&&<div className="ml-timeline-strip">
-          <div><strong>Time</strong><span>{year===null?"All recorded dates":year}</span>
-          {year!==null&&<button type="button" onClick={()=>setYear(null)}>Clear ×</button>}</div>
-          <div className="ml-time-buttons">{fullTimeline.filter(item=>item.year!==null).map(item=>
-            <button key={item.year} type="button" className={year===item.year?"active":""}
-              title={item.count+" recorded relationships"} onClick={()=>setYear(item.year)}>
-              {item.year}</button>)}</div>
-          <small>{result.recordedCount} of {graph.edges.filter(isRecorded).length} recorded links in view ·
-            {result.hiddenNodes} records excluded by filters</small>
-        </div>}
+        {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}
+          inView={result.recordedCount} theme={activeTheme}/>}
       </div>
+
       <aside className="ml-inspector" aria-label="Selected record">
-        <RecordPanel source={sourceGraph} graph={result.graph} node={selected}
-          onPick={setSelectedId} onFollow={setRouteFromId} onConfirm={confirm}/>
+        {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
+          aria-label="Clear selection">×</button>}
+        <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads}
+          totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
+          onPick={setSelectedId} onFollow={id => { setRouteFromId(id); }} onConfirm={confirm}/>
       </aside>
     </section>
-    <footer className="ml-footer">
-      <span>Source records stay on this device · Annotations are reviewed and stored separately ·
-        No automatic location or partnership claims</span>
-      <div><input ref={annotationFileRef} hidden type="file" accept=".json,application/json"
-        aria-label="Restore review backup" onChange={event=>{
-          const file=event.currentTarget.files?.[0];
-          if(file)void importAnnotations(file);
-          event.currentTarget.value="";
-        }}/>
-        <button type="button" onClick={exportAnnotations} disabled={!annotations.entries.length}>
-          Export reviews ({annotations.entries.length})</button>
-        <button type="button" onClick={()=>annotationFileRef.current?.click()}>Restore reviews</button>
-        <button type="button" onClick={onImport}>Import data</button>
-        <button type="button" onClick={onAdvanced}>Advanced tools ↗</button>
-        <button type="button" onClick={onBack}>All maps</button></div>
-    </footer>
     <div className="ml-announcer" role="status" aria-live="polite">
-      {selected?selected.label+", "+selected.type+", "+recordedDegree(graph,selected.id)+" recorded links":""}
+      {selected ? selected.label + ", " + selected.type + ", " + (degree.get(selected.id) ?? 0) + " recorded links" : ""}
     </div>
   </main>;
 }

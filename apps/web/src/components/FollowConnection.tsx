@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo,useState} from "react";
+import {useEffect,useMemo,useState} from "react";
 import {
   evidenceReceipt,findRecordedRoutes,isRecorded,
   type ConnectionTrail,type GraphDocument
@@ -9,12 +9,14 @@ import {
 type Props={
   graph:GraphDocument;fromId:string;
   onChoose:(nodeId:string)=>void;onClose:()=>void;
+  /** The route currently shown, so the Network lens can draw it. */
+  onRoute?:(route:ConnectionTrail|null)=>void;
 };
 
 /** A question-centred exploration tool; uses only recorded source edges.
  * No model, geocoder or inferred collaboration is ever involved.
  */
-export function FollowConnection({graph,fromId,onChoose,onClose}:Props){
+export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
   const [query,setQuery]=useState("");
   const [target,setTarget]=useState("");
   const [routes,setRoutes]=useState<ConnectionTrail[]>([]);
@@ -31,6 +33,8 @@ export function FollowConnection({graph,fromId,onChoose,onClose}:Props){
       .sort((a,b)=>a.label.localeCompare(b.label)).slice(0,12);
   },[graph.nodes,query,fromId]);
   const route=routes[routeIndex]??null;
+  useEffect(()=>{onRoute?.(route);},[route,onRoute]);
+  useEffect(()=>()=>onRoute?.(null),[onRoute]);
   function choose(id:string){
     setTarget(id);setQuery(byId.get(id)?.label??id);
     setRoutes([]);setSearched(false);setRouteIndex(0);
