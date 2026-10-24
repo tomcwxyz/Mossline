@@ -1,5 +1,14 @@
 import {test,expect} from "@playwright/test";
 
+// Preserve regression coverage of the existing full-network/advanced tools
+// while the new Field Atlas becomes the default experience.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.setItem("mossline-workspace-v1","advanced");
+  });
+});
+
+
 test("mobile without WebGL still displays every source node and edge",async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(()=>{

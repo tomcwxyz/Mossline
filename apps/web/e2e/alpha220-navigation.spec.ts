@@ -1,5 +1,14 @@
 import {test,expect} from "@playwright/test";
 
+// Preserve regression coverage of the existing full-network/advanced tools
+// while the new Field Atlas becomes the default experience.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.setItem("mossline-workspace-v1","advanced");
+  });
+});
+
+
 test("small and grouped Cytoscape networks share accessible zoom and fit controls",async({page})=>{
   await page.goto("/");
   await page.getByRole("button",{name:/Or try an example network/i}).click();

@@ -1,4 +1,13 @@
 import {test,expect} from "@playwright/test";
+
+// Preserve regression coverage of the existing full-network/advanced tools
+// while the new Field Atlas becomes the default experience.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.setItem("mossline-workspace-v1","advanced");
+  });
+});
+
 import AxeBuilder from "@axe-core/playwright";
 import {readFile} from "node:fs/promises";
 
@@ -119,6 +128,11 @@ test("large general maps can be backed up and recovered in a new browser profile
 
  const target=await browser.newContext({acceptDownloads:true});
  const targetPage=await target.newPage();
+ // This second context does not inherit test.beforeEach's init script.
+ // Exercise the unchanged advanced recovery journey explicitly.
+ await targetPage.addInitScript(()=>{
+   localStorage.setItem("mossline-workspace-v1","advanced");
+ });
  targetPage.on("dialog",dialog=>{void dialog.accept();});
  await targetPage.goto("/recover");
  // Restore controls become available only after the background worker has
