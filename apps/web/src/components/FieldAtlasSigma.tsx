@@ -24,6 +24,8 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
   chosen.current=onPick;
   const selected=useRef<string|null>(selectedId);
   selected.current=selectedId;
+  const [labelMode,setLabelMode]=useState<"quiet"|"standard"|"detailed">("standard");
+  const [layoutStatus,setLayoutStatus]=useState("Preparing recorded layout");
   const [ready,setReady]=useState(false);
   const [error,setError]=useState("");
   const numberOfRecorded=useMemo(()=>graph.edges.filter(isRecorded).length,[graph]);
@@ -66,7 +68,8 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
             size:e.inferred?0.65:0.45,
             color:e.inferred?"#806849":"#6F746C",
             // The pencil type is intentionally different even in greyscale.
-            type:e.inferred?"dashed":"line",
+            // Sigma 4 requires a registered edge program; do not use a fictitious dashed type.
+            type:"line",
             inferred:e.inferred===true
           });
         });
@@ -76,7 +79,7 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
           nodeReducer:(id,display)=>{
             const pick=selected.current;
             if(!pick)return display;
-            const linked=id===pick || data.hasEdge(id,pick) || data.hasEdge(pick,id);
+            const linked=id===pick || data.edges(id,pick).some(edge=>!data.getEdgeAttribute(edge,"inferred"));
             return {...display,color:linked?display.color:"#ADB3A9",
               highlighted:id===pick,forceLabel:id===pick};
           },
@@ -84,10 +87,10 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
             const pick=selected.current;
             if(!pick)return display;
             const [source,target]=data.extremities(id);
-            return {...display,hidden:source!==pick&&target!==pick};
+            return {...display,hidden:(source!==pick&&target!==pick) || data.getEdgeAttribute(id,"inferred")===true};
           },
           settings:{renderEdgeLabels:false,
-          labelDensity:0.12,
+          labelDensity:0.35,
           labelGridCellSize:135,
           labelRenderedSizeThreshold:9,
           hideEdgesOnMove:true,
@@ -103,11 +106,16 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
         try{
           worker=new Worker(new URL("../workers/atlas-layout.worker.ts",import.meta.url),{type:"module"});
           worker.onmessage=(event:MessageEvent<{kind:string;positions?:Array<[string,number,number]>}>)=>{
-            if(cancelled||!graphRef.current||event.data.kind!=="positions")return;
-            for(const [id,x,y] of event.data.positions??[]){
-              if(graphRef.current.hasNode(id)&&Number.isFinite(x)&&Number.isFinite(y))
-                graphRef.current.mergeNodeAttributes(id,{x,y});
-            }
+            if(cancelled||!graphRef.current)return;
+            if(event.data.kind==="error"){setLayoutStatus("Stable arrangement (layout unavailable)");return;}
+            if(event.data.kind!=="positions")return;
+            const positions=new Map((event.data.positions??[]).map(([id,x,y])=>[id,{x,y}]));
+            graphRef.current.updateEachNodeAttributes((id,attrs)=>{
+              const value=positions.get(id);
+              return value&&Number.isFinite(value.x)&&Number.isFinite(value.y)
+                ?{...attrs,...value}:attrs;
+            },{attributes:["x","y"]});
+            setLayoutStatus("Recorded layout ready");
             renderer?.refresh();
           };
           worker.postMessage({kind:"layout",
@@ -118,7 +126,7 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
               return [n.id,attrs.x,attrs.y];
             })
           });
-        }catch{/* usable stable layout already rendered */}
+        }catch{setLayoutStatus("Stable arrangement (worker unavailable)");}
       }catch(e){
         if(cancelled)return;
         setError(e instanceof Error?e.message:"Network renderer unavailable");
@@ -130,12 +138,30 @@ export function FieldAtlasSigma({graph,selectedId,onPick,onUnavailable}: Props) 
   },[graph,onUnavailable]);
 
   useEffect(()=>{
+    const renderer=sigmaRef.current;
+    if(!renderer)return;
+    renderer.setSetting("labelDensity",labelMode==="quiet"?0.08:labelMode==="detailed"?0.9:0.35);
+    renderer.setSetting("labelRenderedSizeThreshold",labelMode==="quiet"?11:labelMode==="detailed"?5:9);
+    renderer.refresh();
+  },[labelMode,ready]);
+
+  useEffect(()=>{
     const s=sigmaRef.current,g=graphRef.current;
     if(!s||!g)return;
     s.refresh();
   },[selectedId,ready]);
 
   return <section className="ml-sigma-surface" aria-label="Complete Sigma network">
+    <div className="ml-sigma-controls">
+      <label htmlFor="atlas-label-density">Labels</label>
+      <select id="atlas-label-density" value={labelMode}
+        onChange={e=>setLabelMode(e.target.value as "quiet"|"standard"|"detailed")}>
+        <option value="quiet">Quiet</option>
+        <option value="standard">Balanced</option>
+        <option value="detailed">Detailed</option>
+      </select>
+      <span role="status">{layoutStatus}</span>
+    </div>
     <div ref={container} className="ml-sigma-viewport" role="img"
       aria-label={`Complete network of ${graph.nodes.length} entities and ${graph.edges.length} source relationships`}/>
     <div className="ml-sigma-key">

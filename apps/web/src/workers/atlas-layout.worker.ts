@@ -13,7 +13,7 @@ self.onmessage=(event:MessageEvent<Message>)=>{
       if(source!==target&&graph.hasNode(source)&&graph.hasNode(target))
         graph.addEdge(source,target);
     const positions=forceAtlas2(graph,{
-      iterations:msg.nodes.length>10000?50:msg.nodes.length>3000?100:160,
+      iterations:msg.nodes.length>10000?35:msg.nodes.length>3000?65:120,
       settings:{gravity:0.6,scalingRatio:2.3,slowDown:3,barnesHutOptimize:msg.nodes.length>600,
         barnesHutTheta:0.6,strongGravityMode:false}
     });
