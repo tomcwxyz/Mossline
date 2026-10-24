@@ -296,6 +296,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
   const [year,setYear]=useState<number|null>(null);
   const [type,setType]=useState<NodeType|null>(null);
   const [browse,setBrowse]=useState(false);
+  const [overviewOpen,setOverviewOpen]=useState(true);
   const [sigmaEnabled,setSigmaEnabled]=useState(false);
   const [sigmaUnavailable,setSigmaUnavailable]=useState(false);
   const [routeFromId,setRouteFromId]=useState<string|null>(null);
@@ -366,6 +367,15 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
     }catch(error){setNotice(error instanceof Error?error.message:"Could not confirm suggestion.");}
   }
   const located=result.graph.nodes.length-unplaced.length;
+  const activeFilters=[search,type,theme,region,funderId,year===null?"":String(year)].filter(Boolean).length;
+  const leadRecords=useMemo(()=>[...graph.nodes].sort((a,b)=>recordedDegree(graph,b.id)-recordedDegree(graph,a.id)).slice(0,4),[graph]);
+  const lensIntro:Record<AtlasLens,string>={
+    network:"Start with a record. Solid links were recorded in your data; suggestions are not evidence of collaboration.",
+    map:"Only locations supplied with the data appear on the map. Records without coordinates remain available.",
+    themes:"Explore labels recorded in the original data. These are not AI-generated categories.",
+    funding:"Explore direct funder relationships recorded in the data. Link counts are not grant amounts.",
+    timeline:"See when source relationships were recorded, or explore records that do not have dates."
+  };
   return <main className="ml-atlas" data-theme={night?"night":"day"}>
     <header className="ml-header">
       <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossline — all maps">
@@ -374,33 +384,38 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
       <div className="ml-dataset"><strong>{imported.title}</strong>
         <small>{graph.nodes.length.toLocaleString("en-GB")} records · {graph.edges.filter(isRecorded).length.toLocaleString("en-GB")} recorded links
           {example&&" · example data"}</small></div>
-      <nav className="ml-lenses" aria-label="Atlas lenses">
-        {LENSES.map((item,i)=><button key={item.id} type="button" title={item.help}
-          aria-current={lens===item.id?"page":undefined}
-          onClick={()=>setLens(item.id)}>{item.label}<span className="ml-shortcut">{i+1}</span></button>)}
-      </nav>
+
       <div className="ml-header-actions">
-        <span className="ml-local-status">On this device</span>
+        <span className="ml-local-status">Local workspace</span>
         <button type="button" onClick={()=>setNight(n=>!n)} aria-label={night?"Use day colours":"Use night colours"}>{night?"Day":"Night"}</button>
         <button type="button" onClick={()=>navigator.clipboard?.writeText(window.location.href).then(()=>
           setNotice("View link copied. The underlying local dataset does not travel with the link."))
           .catch(()=>setNotice("Copy the address from your browser."))}>Share view</button>
       </div>
     </header>
+    <nav className="ml-lenses" aria-label="Atlas lenses">
+      {LENSES.map((item,i)=><button key={item.id} type="button" title={item.help}
+        aria-current={lens===item.id?"page":undefined}
+        onClick={()=>{setLens(item.id);setOverviewOpen(false);}}>{item.label}<span className="ml-shortcut">{i+1}</span></button>)}
+    </nav>
     <div className={"ml-tools"+(filtersExpanded?" ml-tools--expanded":"")}>
       <button type="button" className="ml-mobile-filters"
         aria-expanded={filtersExpanded} onClick={()=>setFiltersExpanded(open=>!open)}>
-        {filtersExpanded?"Close filters":"Filters"} </button>
+        {filtersExpanded?"Hide filters":"Filters"+(activeFilters?" · "+activeFilters:"")} </button>
       <label className="ml-search"><span>Ask or find</span><input ref={searchRef} value={search}
         onChange={e=>setSearch(e.target.value)} placeholder="Search names, descriptions and tags… (/)" /></label>
-      <label>Type<select value={type??""} onChange={e=>setType((e.target.value||null) as NodeType|null)}>
+      <button type="button" className="ml-filter-toggle" aria-expanded={filtersExpanded}
+        onClick={()=>setFiltersExpanded(value=>!value)}>
+        {filtersExpanded?"Hide filters":"Refine results"+(activeFilters?" · "+activeFilters:"")} {filtersExpanded?"−":"+"}
+      </button>
+      <label className="ml-advanced-filter">Type<select value={type??""} onChange={e=>setType((e.target.value||null) as NodeType|null)}>
         <option value="">All records</option>{Object.entries(TYPE_NAMES).map(([key,value])=>
           <option key={key} value={key}>{value}</option>)}</select></label>
-      <label>Theme<select value={theme} onChange={e=>setTheme(e.target.value)}>
+      <label className="ml-advanced-filter">Theme<select value={theme} onChange={e=>setTheme(e.target.value)}>
         <option value="">All source tags</option>{themes.map(t=><option key={t}>{t}</option>)}</select></label>
-      <label>Place<select value={region} onChange={e=>setRegion(e.target.value)}>
+      <label className="ml-advanced-filter">Place<select value={region} onChange={e=>setRegion(e.target.value)}>
         <option value="">All regions</option>{regions.map(r=><option key={r}>{r}</option>)}</select></label>
-      <label>Funder<select value={funderId} onChange={e=>setFunderId(e.target.value)}>
+      <label className="ml-advanced-filter">Funder<select value={funderId} onChange={e=>setFunderId(e.target.value)}>
         <option value="">All funders</option>{funders.map(f=><option key={f.id} value={f.id}>{f.label}</option>)}</select></label>
       {(search||type||theme||region||funderId||year!==null)&&<button type="button" onClick={()=>{
         setSearch("");setType(null);setTheme("");setRegion("");setFunderId("");setYear(null);
@@ -409,15 +424,43 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
     {notice&&<div className="ml-notice" role="status">{notice}<button type="button" onClick={()=>setNotice("")}>Dismiss</button></div>}
     <section className="ml-body">
       <div className="ml-main">
-        <div className="ml-stage-heading"><div><p className="ml-eyebrow">{lens} lens</p>
+        <div className="ml-stage-heading"><div><p className="ml-eyebrow">{imported.title} / {lens}</p>
           <h1>{lens==="network"?"Who connects with whom":
             lens==="map"?"Where the work happens":lens==="themes"?"What the records are about":
             lens==="funding"?"Where the support goes":"When things happened"}</h1>
-          <p>{LENSES.find(l=>l.id===lens)?.help}</p></div>
+          <p>{lensIntro[lens]}</p></div>
           <button type="button" onClick={()=>setBrowse(b=>!b)} aria-expanded={browse}>
             {browse?"Hide list":"Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}
           </button>
         </div>
+        {overviewOpen&&!selectedId&&<section className="ml-introduction" aria-label="Getting started">
+          <div className="ml-introduction-head">
+            <div><p className="ml-eyebrow">Start exploring</p>
+              <h2>Find a starting point</h2>
+              <p>This atlas contains {graph.nodes.length.toLocaleString("en-GB")} records and
+                {" "}{graph.edges.filter(isRecorded).length.toLocaleString("en-GB")} recorded connections.
+                Choose something interesting, then follow its links and examine the evidence.</p>
+            </div>
+            <button type="button" onClick={()=>setOverviewOpen(false)}
+              aria-label="Close getting started guide">Dismiss ×</button>
+          </div>
+          <div className="ml-start-records">
+            {leadRecords.map(n=><button type="button" key={n.id}
+              onClick={()=>{setSelectedId(n.id);setOverviewOpen(false);}}>
+              <span className={`ml-type-symbol ml-${n.type}`}/><strong>{n.label}</strong>
+              <small>{recordedDegree(graph,n.id)} recorded links →</small>
+            </button>)}
+          </div>
+          <p className="ml-introduction-foot">Or search above to find an organisation, project, funder or place.</p>
+        </section>}
+        {selected&&<div className="ml-selected-ribbon" role="status">
+          <span>Exploring <strong>{selected.label}</strong> · {recordedDegree(graph,selected.id)} recorded links</span>
+          <button type="button" onClick={()=>setSelectedId(null)}>Clear selection ×</button>
+        </div>}
+        {result.graph.nodes.length===0&&<div className="ml-no-results">
+          <h2>No matching records</h2><p>Try clearing the filters to see the full network.</p>
+          <button type="button" onClick={()=>{setSearch("");setType(null);setTheme("");setRegion("");setFunderId("");setYear(null);}}>Clear all filters</button>
+        </div>}
         {routeFromId&&<FollowConnection graph={graph} fromId={routeFromId}
           onChoose={setSelectedId} onClose={()=>setRouteFromId(null)}/>}
         {lens==="network"&&result.graph.nodes.length>MAX_DRAWN&&
@@ -482,7 +525,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
           <span><i className="ml-key-pencil"/> Pencil · inferred, not confirmed</span>
           <span><i className="ml-key-wash"/> Wash · grouping for navigation</span>
         </div>
-        <div className="ml-timeline-strip">
+        {lens==="timeline"&&<div className="ml-timeline-strip">
           <div><strong>Time</strong><span>{year===null?"All recorded dates":year}</span>
           {year!==null&&<button type="button" onClick={()=>setYear(null)}>Clear ×</button>}</div>
           <div className="ml-time-buttons">{fullTimeline.filter(item=>item.year!==null).map(item=>
@@ -491,7 +534,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
               {item.year}</button>)}</div>
           <small>{result.recordedCount} of {graph.edges.filter(isRecorded).length} recorded links in view ·
             {result.hiddenNodes} records excluded by filters</small>
-        </div>
+        </div>}
       </div>
       <aside className="ml-inspector" aria-label="Selected record">
         <RecordPanel source={imported} graph={result.graph} node={selected}
@@ -502,7 +545,7 @@ export function FieldAtlasWorkspace({graph:imported,onBack,onImport,onAdvanced,e
       <span>Source records stay on this device · Annotations are reviewed and stored separately ·
         No automatic location or partnership claims</span>
       <div><button type="button" onClick={onImport}>Import data</button>
-        <button type="button" onClick={onAdvanced}>Detailed tools & full network ↗</button>
+        <button type="button" onClick={onAdvanced}>Advanced tools ↗</button>
         <button type="button" onClick={onBack}>All maps</button></div>
     </footer>
     <div className="ml-announcer" role="status" aria-live="polite">
