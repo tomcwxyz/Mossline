@@ -7,7 +7,7 @@ export interface AtlasArea {
   id: string; label: string; count: number; x: number; y: number;
   /** Spread of the area in graph units; its name sits on the upper edge. */
   r?: number;
-  kind: "tag" | "hub" | "unlinked";
+  kind: "tag" | "hub" | "unlinked" | "suggested";
 }
 export type Positions = Map<string, { x: number; y: number }>;
 
@@ -75,37 +75,47 @@ export function areasFromCommunities(nodes: GraphNode[], positions: Positions,
   return areas.slice(0, 10);
 }
 
-/** Themes lens: one area per source tag (each record placed in its most
- *  widely shared tag), packed by size. Tags are source labels, not inference. */
-export function themeLayout(nodes: GraphNode[]): { positions: Positions; areas: AtlasArea[] } {
-  const tagCounts = new Map<string, number>();
-  for (const n of nodes) for (const t of new Set(n.tags)) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
-  const NONE = "No source tag";
-  const primary = (n: GraphNode) => n.tags.length
-    ? [...new Set(n.tags)].sort((a, b) => (tagCounts.get(b) ?? 0) - (tagCounts.get(a) ?? 0) || a.localeCompare(b))[0]
-    : NONE;
+/** Themes lens: one packed area per group (source tag, programme, place or
+ *  suggested topic). Records with no group sit in a compact block beside the
+ *  areas, so they stay visible without drowning the groups. */
+export function themeLayout(nodes: GraphNode[], groupOf?: Map<string, string>, suggested = false): { positions: Positions; areas: AtlasArea[] } {
+  const of = groupOf ?? (() => {
+    const tagCounts = new Map<string, number>();
+    for (const n of nodes) for (const t of new Set(n.tags)) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+    const m = new Map<string, string>();
+    for (const n of nodes) if (n.tags.length)
+      m.set(n.id, [...new Set(n.tags)].sort((a, b) => (tagCounts.get(b) ?? 0) - (tagCounts.get(a) ?? 0) || a.localeCompare(b))[0]);
+    return m;
+  })();
   const groups = new Map<string, GraphNode[]>();
-  for (const n of nodes) { const key = primary(n); groups.set(key, [...(groups.get(key) ?? []), n]); }
+  const loose: string[] = [];
+  for (const n of nodes) {
+    const key = of.get(n.id);
+    if (key) groups.set(key, [...(groups.get(key) ?? []), n]); else loose.push(n.id);
+  }
   const spacing = 6;
-  const root = hierarchy<{ name: string; value?: number; children?: { name: string; value: number }[] }>({
-    name: "root",
-    children: [...groups].map(([name, members]) => ({ name, value: members.length }))
-  }).sum(d => d.value ?? 0);
-  // Radius per group follows its sunflower; pack leaves enough room between groups.
-  const size = Math.sqrt(nodes.length) * spacing * 3.4 + 200;
-  const packed = pack<typeof root.data>().size([size, size]).padding(spacing * 6)
-    .radius(d => Math.sqrt(d.value ?? 1) * spacing * 1.25 + spacing * 2)(root);
   const positions: Positions = new Map();
   const areas: AtlasArea[] = [];
-  for (const leaf of packed.leaves()) {
-    const members = [...(groups.get(leaf.data.name) ?? [])].sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label));
-    members.forEach((n, j) => {
-      const a = j * 2.399963, r = Math.sqrt(j + 0.5) * spacing;
-      positions.set(n.id, { x: leaf.x + Math.cos(a) * r, y: leaf.y + Math.sin(a) * r });
-    });
-    areas.push({ id: "tag:" + leaf.data.name, label: leaf.data.name, count: members.length,
-      x: leaf.x, y: leaf.y - leaf.r - spacing * 1.2, kind: leaf.data.name === NONE ? "unlinked" : "tag" });
+  if (groups.size) {
+    const root = hierarchy<{ name: string; value?: number; children?: { name: string; value: number }[] }>({
+      name: "root", children: [...groups].map(([name, members]) => ({ name, value: members.length }))
+    }).sum(d => d.value ?? 0);
+    const grouped = nodes.length - loose.length;
+    const size = Math.sqrt(grouped) * spacing * 3.4 + 200;
+    const packed = pack<typeof root.data>().size([size, size]).padding(spacing * 6)
+      .radius(d => Math.sqrt(d.value ?? 1) * spacing * 1.25 + spacing * 2)(root);
+    for (const leaf of packed.leaves()) {
+      const members = [...(groups.get(leaf.data.name) ?? [])].sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label));
+      members.forEach((n, j) => {
+        const a = j * 2.399963, r = Math.sqrt(j + 0.5) * spacing;
+        positions.set(n.id, { x: leaf.x + Math.cos(a) * r, y: leaf.y + Math.sin(a) * r });
+      });
+      areas.push({ id: "group:" + leaf.data.name, label: leaf.data.name, count: members.length,
+        x: leaf.x, y: leaf.y, r: leaf.r * 0.92, kind: suggested ? "suggested" : "tag" });
+    }
   }
+  const block = placeUnlinked(loose, positions, false);
+  if (block) areas.push({ ...block, id: "ungrouped", label: suggested ? "No topic found" : "Not grouped" });
   return { positions, areas: areas.sort((a, b) => b.count - a.count) };
 }
 

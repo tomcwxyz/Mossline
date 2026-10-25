@@ -62,7 +62,7 @@ test("Map never geocodes records from names and keeps the unplaced margin",async
   await lens(page,"Map").click();
   await expect(page.locator(".ml-unplaced")).toContainText(/\d+ records have no location/);
   await expect(page.locator(".ml-unplaced")).toContainText("rather than guessed from a name or region");
-  await expect(page.locator(".ml-drawing-caption")).toContainText(/\d+ plotted · \d+ without coordinates/);
+  await expect(page.locator(".ml-drawing-caption")).toContainText(/\d+ plotted · \d+ without a place/);
   await expect(page.locator(".maplibregl-canvas")).toBeVisible();
   await expect(page.locator(".maplibregl-ctrl-attrib")).toContainText("Natural Earth");
   // Place names come from place records in the source, drawn as a map would.

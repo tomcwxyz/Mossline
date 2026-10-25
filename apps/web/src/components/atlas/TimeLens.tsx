@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { evidenceReceipt, isRecorded, recordedYear, type FundingFlow, type GraphDocument, type GraphNode } from "@mossline/graph-core";
+import { evidenceReceipt, isRecorded, recordedYear, type FundingFlow, type GraphDocument, type GraphNode, type Grouping } from "@mossline/graph-core";
 import { PALETTES, SHAPE, formatMoney, mix, type AtlasTheme } from "./palette";
 
 export interface YearRange { from: number | null; to: number | null }
@@ -31,6 +31,36 @@ function yearRows(graph: GraphDocument, splitByType: boolean) {
     rows.push({ year: y, total: segments.reduce((s, x) => s + x.count, 0), segments });
   }
   return { rows, undated, keys };
+}
+
+/** Recorded relationships per month, for maps whose dates fall within a few years. */
+type MonthRow = { key: string; year: number; month: number; total: number };
+const MONTHS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function monthRows(graph: GraphDocument, years: number[]): { rows: MonthRow[]; yearOnly: number } {
+  const counts = new Map<string, number>();
+  let yearOnly = 0;
+  for (const e of graph.edges) {
+    if (!isRecorded(e)) continue;
+    const when = recordedWhen(e.properties);
+    if (!when) continue;
+    if (!when.precise) { yearOnly++; continue; }
+    const y = Math.floor(when.t), m = Math.min(11, Math.floor((when.t - y) * 12 + 1e-6));
+    counts.set(y + "-" + m, (counts.get(y + "-" + m) ?? 0) + 1);
+  }
+  const rows: MonthRow[] = [];
+  for (const y of years) for (let m = 0; m < 12; m++) rows.push({ key: y + "-" + m, year: y, month: m, total: counts.get(y + "-" + m) ?? 0 });
+  return { rows, yearOnly };
+}
+function MonthBars({ rows, height, colour }: { rows: MonthRow[]; height: number; colour: string }) {
+  const max = Math.max(1, ...rows.map(r => r.total));
+  return <div className="ml-yearbars ml-monthbars" style={{ height }} role="img"
+    aria-label={"Recorded relationships per month: " + rows.filter(r => r.total).map(r => MONTH_NAMES[r.month] + " " + r.year + " " + r.total).join(", ")}>
+    {rows.map(r => <div key={r.key} className="ml-yearbar" title={MONTH_NAMES[r.month] + " " + r.year + ": " + r.total + " recorded"}>
+      <div className="ml-yearbar-stack"><i style={{ height: (r.total / max * 100) + "%", background: colour }}/></div>
+      <span className="ml-yearbar-tick">{r.month === 0 ? r.year : rows.length <= 24 ? MONTHS[r.month] : ""}</span>
+    </div>)}
+  </div>;
 }
 
 /** Bars of recorded relationships per year, with a brush to choose a range. */
@@ -85,18 +115,20 @@ export function TimeStrip({ graph, range, onRange, inView, theme }: {
   graph: GraphDocument; range: YearRange; onRange: (r: YearRange) => void; inView: number; theme: AtlasTheme;
 }) {
   const { rows, undated } = useMemo(() => yearRows(graph, false), [graph]);
+  const months = useMemo(() => rows.length && rows.length <= 2 ? monthRows(graph, rows.map(r => r.year)) : null, [graph, rows]);
   const total = graph.edges.filter(isRecorded).length;
   const palette = PALETTES[theme];
   const filtered = range.from !== null || range.to !== null;
   return <section className="ml-timestrip" aria-label="Time">
     <div className="ml-timestrip-head">
-      <strong>Relationships recorded per year</strong>
+      <strong>Relationships recorded per {months ? "month" : "year"}</strong>
       <span className="ml-mono">{filtered ? `${range.from ?? "…"}–${range.to ?? "…"} · ` : ""}showing {inView.toLocaleString("en-GB")} of {total.toLocaleString("en-GB")}
         {undated ? ` · ${undated.toLocaleString("en-GB")} undated` : ""}</span>
       {filtered && <button type="button" className="ml-link-button" onClick={() => onRange({ from: null, to: null })}>Clear dates</button>}
       <RangeSelectors rows={rows} range={range} onRange={onRange}/>
     </div>
-    {rows.length ? <YearBars rows={rows} colours={{ all: palette.moss }} range={range} onRange={onRange}
+    {months ? <MonthBars rows={months.rows} height={52} colour={palette.moss}/> :
+      rows.length ? <YearBars rows={rows} colours={{ all: palette.moss }} range={range} onRange={onRange}
       height={52} labelEvery={rows.length > 16 ? 4 : rows.length > 8 ? 2 : 1}/> :
       <p className="ml-timestrip-empty">No dates are recorded on these relationships.</p>}
   </section>;
@@ -131,12 +163,14 @@ const SUBJECT_ORDER: Record<string, number> = { project: 0, organisation: 1, per
 
 /** The Timeline lens: swimlanes of dated, recorded relationships. Rows by
  *  funder, theme or relationship; marks are what the source dates. */
-export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, onPick }: {
+export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, onPick, grouping, groupLabel = "Themes" }: {
   graph: GraphDocument; flows: FundingFlow[]; range: YearRange; onRange: (r: YearRange) => void; theme: AtlasTheme;
-  selectedId: string | null; onPick: (id: string | null) => void;
+  selectedId: string | null; onPick: (id: string | null) => void; grouping?: Grouping | null; groupLabel?: string;
 }) {
   const palette = PALETTES[theme];
   const { rows, undated } = useMemo(() => yearRows(graph, false), [graph]);
+  // A year or two of dates reads by month; longer spans by year.
+  const months = useMemo(() => rows.length && rows.length <= 2 ? monthRows(graph, rows.map(r => r.year)) : null, [graph, rows]);
   const [mode, setMode] = useState<LaneMode>(flows.length ? "funder" : "theme");
   const [showAll, setShowAll] = useState(false);
   const plot = useRef<HTMLDivElement>(null);
@@ -185,12 +219,16 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
       return l;
     };
     if (mode === "funder") {
-      const funded = new Set(flows.flatMap(f => f.edgeIds));
+      // A grant is recorded by two links (funder → grant → recipient): count it once.
+      const flowOf = new Map<string, FundingFlow>();
+      for (const f of flows) for (const id of f.edgeIds) flowOf.set(id, f);
+      const counted = new Set<string>();
       for (const ev of events) {
-        if (!funded.has(ev.id)) continue;
+        const fl = flowOf.get(ev.id);
+        if (!fl || counted.has(fl.id)) continue;
+        counted.add(fl.id);
         const funder = [ev.subject, ev.other].find(n => n?.type === "funder") ?? null;
-        const flow = flows.find(f => f.edgeIds.includes(ev.id));
-        const funderNode = funder ?? (flow ? byId.get(flow.funderId) ?? null : null);
+        const funderNode = funder ?? byId.get(fl.funderId) ?? null;
         if (!funderNode) continue;
         const l = lane(funderNode.id, funderNode.label, funderNode);
         l.events.push(ev);
@@ -200,14 +238,17 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
         }
       }
     } else if (mode === "theme") {
-      for (const ev of events) { const tag = primaryTag(ev.subject); lane(tag, tag, null).events.push(ev); }
+      for (const ev of events) {
+        const g = grouping ? grouping.of.get(ev.subject.id) ?? (ev.other ? grouping.of.get(ev.other.id) : undefined) ?? "Not grouped" : primaryTag(ev.subject);
+        lane(g, g, null).events.push(ev);
+      }
     } else {
       for (const ev of events) lane(ev.type, ev.type, null).events.push(ev);
     }
     return [...map.values()].sort((a, b) => (b.total ?? 0) - (a.total ?? 0) || b.events.length - a.events.length
-      || (a.key === "No source tag" ? 1 : 0) - (b.key === "No source tag" ? 1 : 0));
+      || (a.key === "No source tag" || a.key === "Not grouped" ? 1 : 0) - (b.key === "No source tag" || b.key === "Not grouped" ? 1 : 0));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, flows, mode, byId, tagCounts]);
+  }, [events, flows, mode, byId, tagCounts, grouping]);
   const shownLanes = showAll ? lanes : lanes.slice(0, 12);
   const inLanes = mode === "funder" ? lanes.reduce((s, l) => s + l.events.length, 0) : events.length;
 
@@ -240,6 +281,22 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
       return { ev, x, y: 23 + (tier === 0 ? 0 : tier === 1 ? -10 : 10), r };
     });
   }
+  /** A busy row is drawn as bars per month (or year): one mark per grant would be a solid smear. */
+  const BUSY = 40;
+  function laneBars(l: Lane) {
+    const perYear = months ? 12 : 1;
+    const slots = rows.length * perYear, w = width / slots;
+    const sums = new Array<number>(slots).fill(0), counts = new Array<number>(slots).fill(0);
+    const useMoney = l.currency !== null;
+    for (const ev of l.events) {
+      const i = Math.min(slots - 1, Math.max(0, Math.floor((ev.t - first) * perYear)));
+      counts[i]++; if (useMoney && ev.currency === l.currency && ev.amount !== null) sums[i] += ev.amount;
+    }
+    const values = useMoney ? sums : counts;
+    const max = Math.max(1, ...values);
+    return values.map((v, i) => ({ i, x: i * w + w * 0.14, w: Math.max(1, w * 0.72), h: v ? Math.max(2, v / max * 38) : 0, v, n: counts[i],
+      when: months ? MONTH_NAMES[i % 12] + " " + (first + Math.floor(i / 12)) : String(first + i), money: useMoney }));
+  }
   const markColour = (node: GraphNode) => palette.types[node.type] ?? palette.types.other;
   const markShape = (ev: Event, x: number, y: number, r: number) => {
     const fill = focus(ev) ? markColour(ev.subject) : mix(markColour(ev.subject), palette.paper, 0.7);
@@ -257,13 +314,14 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
     <div className="ml-chart-head">
       <div>
         <h2 className="ml-chart-title">When things happened</h2>
-        <p className="ml-chart-sub">Each row is a {mode === "funder" ? "funder, with its grants" : mode === "theme" ? "theme from your source tags" : "kind of relationship"},
-          and each mark is something your source dates. Drag across the bars to filter every lens to a range.</p>
+        <p className="ml-chart-sub">Each row is a {mode === "funder" ? "funder, with its grants" : mode === "theme" ? (grouping?.suggested ? "suggested topic (not in your source)" : groupLabel.toLowerCase()) : "kind of relationship"}.
+          Busy rows show {months ? "each month" : "each year"} as a bar{flows.length ? ", sized by money where amounts are recorded" : ""}; quieter rows show each dated record.
+          {months ? " Use the year selectors to filter every lens." : " Drag across the bars to filter every lens to a range."}</p>
       </div>
       <div className="ml-timeline-controls">
         <div className="ml-segmented" role="group" aria-label="Rows by">
           {flows.length > 0 && <button type="button" aria-pressed={mode === "funder"} onClick={() => setMode("funder")}>Funders</button>}
-          <button type="button" aria-pressed={mode === "theme"} onClick={() => setMode("theme")}>Themes</button>
+          <button type="button" aria-pressed={mode === "theme"} onClick={() => setMode("theme")}>{grouping && grouping.kind !== "tags" ? groupLabel : "Themes"}</button>
           <button type="button" aria-pressed={mode === "relationship"} onClick={() => setMode("relationship")}>Relationships</button>
         </div>
         <RangeSelectors rows={rows} range={range} onRange={onRange}/>
@@ -271,14 +329,17 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
     </div>
     {rows.length ? <div className="ml-lanes">
       <div className="ml-lane ml-lane--brush">
-        <div className="ml-lane-label"><span className="ml-mono">Recorded per year</span></div>
+        <div className="ml-lane-label"><span className="ml-mono">Recorded per {months ? "month" : "year"}</span></div>
         <div ref={plot} className="ml-lane-plot">
-          <YearBars rows={rows} colours={{ all: palette.moss }} range={range} onRange={onRange} height={64}
-            labelEvery={rows.length > 24 ? 4 : rows.length > 12 ? 2 : 1}/>
+          {months ? <MonthBars rows={months.rows} height={64} colour={palette.moss}/>
+            : <YearBars rows={rows} colours={{ all: palette.moss }} range={range} onRange={onRange} height={64}
+            labelEvery={rows.length > 24 ? 4 : rows.length > 12 ? 2 : 1}/>}
         </div>
       </div>
       {shownLanes.map(l => {
-        const marks = laneMarks(l);
+        const busy = l.events.length > BUSY;
+        const marks = busy ? [] : laneMarks(l);
+        const bars = busy ? laneBars(l) : [];
         const isSel = selectedLane === l.key;
         return <div key={l.key} className={"ml-lane" + (isSel ? " is-selected" : "")}>
           <div className="ml-lane-label">
@@ -291,7 +352,14 @@ export function TimelineLens({ graph, flows, range, onRange, theme, selectedId, 
             aria-label={`${l.label}: ${l.events.length} dated ${mode === "funder" ? "grants" : "relationships"}`}>
             {rows.map((r, i) => <rect key={r.year} x={i * band} y={0} width={band} height={46}
               className={"ml-lane-band" + (i % 2 ? " is-odd" : "") + (filtered && !inRange(r.year) ? " is-out" : "")}/>)}
-            <line x1={0} x2={width} y1={23} y2={23} className="ml-lane-rule"/>
+            {months && rows.map((_, yi) => Array.from({ length: 11 }, (__, m) =>
+              <line key={yi + "-" + m} x1={(yi * 12 + m + 1) * width / (rows.length * 12)} x2={(yi * 12 + m + 1) * width / (rows.length * 12)} y1={4} y2={42} className="ml-lane-month"/>))}
+            {!busy && <line x1={0} x2={width} y1={23} y2={23} className="ml-lane-rule"/>}
+            {busy && <line x1={0} x2={width} y1={42} y2={42} className="ml-lane-rule"/>}
+            {bars.map(b => b.h > 0 && <rect key={b.i} x={b.x} y={42 - b.h} width={b.w} height={b.h} rx={1.5}
+              fill={mode === "funder" ? palette.types.funder : palette.moss} fillOpacity={selectedLane && !isSel ? 0.35 : 0.85}>
+              <title>{b.when + ": " + b.n.toLocaleString("en-GB") + (b.n === 1 ? " record" : " records") + (b.money && l.currency ? " · " + formatMoney(b.v, l.currency) : "")}</title>
+            </rect>)}
             {marks.map(({ ev, x, y, r }) => <g key={ev.id} className="ml-lane-mark" opacity={filtered && !inRange(ev.year) ? 0.25 : 1}
               onClick={() => onPick(ev.subject.id)}>
               {markShape(ev, x, y, r)}

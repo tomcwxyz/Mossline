@@ -3,7 +3,7 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  isRecorded, recordedCoordinates, type FundingFlow, type GraphDocument, type GraphNode
+  isRecorded, placedCoordinates, type FundingFlow, type GraphDocument, type GraphNode
 } from "@mossline/graph-core";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
@@ -36,19 +36,21 @@ async function loadLand(): Promise<Land> {
   });
   return landCache;
 }
-/** SDF marks so the Map lens uses the same shapes as the Network lens. */
-function shapeImage(shape: MarkShape) {
+/** SDF marks so the Map lens uses the same shapes as the Network lens. Hollow
+ *  marks are approximate places (from a postcode), never source coordinates. */
+function shapeImage(shape: MarkShape, hollow = false) {
   const size = 48, c = document.createElement("canvas");
   c.width = c.height = size;
   const g = c.getContext("2d")!;
-  g.fillStyle = "#fff";
+  g.fillStyle = "#fff"; g.strokeStyle = "#fff"; g.lineWidth = 7; g.lineJoin = "round";
   g.beginPath();
   const m = 6, s = size - m * 2;
   if (shape === "circle") g.arc(size / 2, size / 2, s / 2, 0, Math.PI * 2);
   else if (shape === "square") g.roundRect(m + 2, m + 2, s - 4, s - 4, 5);
   else if (shape === "diamond") { g.moveTo(size / 2, m - 1); g.lineTo(size - m + 1, size / 2); g.lineTo(size / 2, size - m + 1); g.lineTo(m - 1, size / 2); }
   else { g.moveTo(size / 2, m); g.lineTo(size - m, size - m - 2); g.lineTo(m, size - m - 2); }
-  g.closePath(); g.fill();
+  g.closePath();
+  if (hollow) g.stroke(); else g.fill();
   return g.getImageData(0, 0, size, size);
 }
 /** A gentle curved arc for funder → grantee, as a line string. */
@@ -101,9 +103,10 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const palette = PALETTES[theme];
   const byId = useMemo(() => new Map(graph.nodes.map(n => [n.id, n])), [graph]);
   const located = useMemo(() => graph.nodes.flatMap(n => {
-    const c = recordedCoordinates(n);
-    return c ? [{ node: n, lon: c.lon, lat: c.lat }] : [];
+    const c = placedCoordinates(n);
+    return c ? [{ node: n, lon: c.lon, lat: c.lat, approximate: c.approximate }] : [];
   }), [graph]);
+  const approximate = useMemo(() => located.filter(p => p.approximate).length, [located]);
   const degree = useMemo(() => {
     const d = new Map<string, number>();
     for (const e of graph.edges) if (isRecorded(e)) {
@@ -137,21 +140,24 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
 
   const data = useMemo(() => {
     const coordsOf = (id: string) => {
-      const n = byId.get(id); const c = n ? recordedCoordinates(n) : null;
+      const n = byId.get(id); const c = n ? placedCoordinates(n) : null;
       return c ? [c.lon, c.lat] as [number, number] : null;
     };
     const focusSet = selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
-    const records = collection(located.map(({ node, lon, lat }) => {
+    const records = collection(located.map(({ node, lon, lat, approximate: approx }) => {
       const focus = !!focusSet?.has(node.id);
       const base = palette.types[node.type] ?? palette.types.other;
       const d = Math.sqrt(degree.get(node.id) ?? 0);
       // Resting marks are small and pale, like pencil on survey paper; the
       // selection and what it touches come forward in full colour.
-      const px = node.id === selectedId ? 17 : focus ? Math.min(15, 8 + d * 1.1) : focusSet ? Math.min(8, 5 + d * 0.5) : Math.min(11, 5.5 + d * 0.9);
-      const color = node.id === selectedId || focus ? base : mix(base, palette.paper, focusSet ? 0.66 : 0.42);
+      const px = (node.id === selectedId ? 17 : focus ? Math.min(15, 8 + d * 1.1) : focusSet ? Math.min(8, 5 + d * 0.5) : Math.min(11, 5.5 + d * 0.9)) +
+        (approx ? 2 : 0);
+      // Hollow marks carry little ink, so they stay a step stronger at rest.
+      const color = node.id === selectedId || focus ? base : mix(base, palette.paper, focusSet ? (approx ? 0.45 : 0.66) : (approx ? 0.12 : 0.42));
       return { type: "Feature" as const, geometry: { type: "Point" as const, coordinates: [lon, lat] },
         properties: { id: node.id, kind: node.type === "place" ? "place" : "record", focus: focus || node.id === selectedId,
-          shape: "mark-" + SHAPE[node.type], color, iconSize: px / 18, sort: (focus ? 1000 : 0) + (degree.get(node.id) ?? 0) } };
+          shape: "mark-" + SHAPE[node.type] + (approx ? "-hollow" : ""), color, iconSize: px / 18, approx,
+          sort: (focus ? 1000 : 0) + (degree.get(node.id) ?? 0) } };
     }));
     const arcs: Feature[] = [], ego: Feature[] = [];
     let hiddenArcs = 0;
@@ -235,10 +241,13 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           }
         });
         mapRef.current = map;
-        for (const shape of ["circle", "square", "diamond", "triangle"] as MarkShape[])
+        for (const shape of ["circle", "square", "diamond", "triangle"] as MarkShape[]) {
           map.addImage("mark-" + shape, shapeImage(shape), { sdf: true, pixelRatio: 2 });
+          map.addImage("mark-" + shape + "-hollow", shapeImage(shape, true), { sdf: true, pixelRatio: 2 });
+        }
         map.addControl(new ml.AttributionControl({ compact: true,
-          customAttribution: "Coastline: Natural Earth (public domain)" }), "bottom-right");
+          customAttribution: "Coastline: Natural Earth (public domain)" + (approximateRef.current
+            ? " · Approximate places: ONS Postcode Directory (OGL v3); contains OS data © Crown copyright and database right 2026; contains Royal Mail data © Royal Mail copyright and database right 2026" : "") }), "bottom-right");
         map.addControl(new ml.ScaleControl({ unit: "metric", maxWidth: 110 }), "bottom-right");
         map.on("error", event => {
           const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? "");
@@ -299,6 +308,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const selectedRef = useRef(selectedId); selectedRef.current = selectedId;
   const modeRef = useRef(mode); modeRef.current = mode;
   const locatedRef = useRef(located); locatedRef.current = located;
+  const approximateRef = useRef(approximate); approximateRef.current = approximate;
   const grantsRef = useRef(myGrants); grantsRef.current = myGrants;
 
   function fit(animate: boolean) {
@@ -359,7 +369,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     if (mode === "hexagons") drawHexes();
     // MapLibre's canvas is focusable for keyboard panning; describe it there.
     map.getCanvas().setAttribute("aria-label",
-      `Map: ${located.length.toLocaleString("en-GB")} records plotted from their source coordinates. Use Browse records for a list.`);
+      `Map: ${(located.length - approximate).toLocaleString("en-GB")} records plotted from their source coordinates` +
+      (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") + ". Use Browse records for a list.");
     // The selected record gets a name card, as a map would label a feature.
     focusMarkers.current.forEach(m => m.remove()); focusMarkers.current = [];
     const sel = selectedNode ? located.find(p => p.node.id === selectedNode.id) : null;
@@ -373,7 +384,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         const where = sel.node.region ?? "";
         sub.textContent = sel.node.type === "funder"
           ? [`${myGrants.length.toLocaleString("en-GB")} grant${myGrants.length === 1 ? "" : "s"}`, where].filter(Boolean).join(" · ")
-          : [TYPE_LABEL[sel.node.type], where].filter(Boolean).join(" · ");
+          : [TYPE_LABEL[sel.node.type], where, sel.approximate ? "approximate place" : ""].filter(Boolean).join(" · ");
         el.append(name, sub);
         focusMarkers.current.push(new ml.Marker({ element: el, anchor: "left", offset: [20, 0] }).setLngLat([sel.lon, sel.lat]).addTo(map));
       }
@@ -545,7 +556,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     <div ref={gratLabels} className="ml-graticule-labels" aria-hidden="true"/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
-      <p>{located.length.toLocaleString("en-GB")} records have source coordinates; Browse records lists them all.</p>
+      <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>
       {error && <small>{error}</small>}
     </div>}
     {inset && !narrow && <svg className="ml-map-inset" viewBox={`0 0 ${inset.width} ${inset.height}`} aria-hidden="true">
@@ -568,6 +579,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         {mode === "hexagons" && <p>Darker hexagons hold more records. Places are counted where your source puts them.</p>}
         {selectedNode?.type === "funder" && myGrants.length > 0 && <p className="ml-map-arcnote"><span className="ml-key-arc"/>
           Arcs are recorded grants, wider for more money.</p>}
+        {approximate > 0 && <p className="ml-map-arcnote"><span className="ml-key-hollow" aria-hidden="true"/>
+          Hollow marks are approximate: placed from a postcode, not from source coordinates.</p>}
       </section>}
       {unplaced.length > 0 && <section className={"ml-overlay-card ml-unplaced" + (unplacedOpen ? "" : " is-closed")} aria-label="Records without coordinates">
         <button type="button" className="ml-unplaced-head" aria-expanded={unplacedOpen} onClick={() => setUnplacedOpen(v => !v)}>
@@ -575,7 +588,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           <span aria-hidden="true">{unplacedOpen ? "–" : "+"}</span>
         </button>
         {unplacedOpen && <>
-          <p>Kept here in the margin rather than guessed from a name or region.</p>
+          <p>Kept here in the margin rather than guessed from a name or region. A postcode or coordinates in your data would place them.</p>
           <ul>{unplaced.slice(0, 3).map(n => <li key={n.id}><button type="button" onClick={() => pick.current(n.id)}>{n.label}</button></li>)}
             {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Browse</button></li>}</ul>
         </>}
@@ -584,7 +597,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     <p className="ml-canvas-caption ml-drawing-caption ml-map-pill" data-status={status}>
       {selectedNode?.type === "funder" && myGrants.length > 0 && grantsOutside > 0
         ? <>{grantsOutside.toLocaleString("en-GB")} more grant{grantsOutside === 1 ? " is" : "s are"} outside this view or unplaced</>
-        : <>{located.length.toLocaleString("en-GB")} plotted · {unplaced.length.toLocaleString("en-GB")} without coordinates
+        : <>{located.length.toLocaleString("en-GB")} plotted{approximate > 0 && <> ({approximate.toLocaleString("en-GB")} approximate)</>} · {unplaced.length.toLocaleString("en-GB")} without a place
           {status === "ready" && outside > 0 && <> · {outside.toLocaleString("en-GB")} outside this view</>}</>}
     </p>
   </section>;

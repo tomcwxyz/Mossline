@@ -2,14 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sankey, sankeyJustify, sankeyLinkHorizontal, type SankeyLink, type SankeyNode } from "d3-sankey";
-import { fundingTotals, isRecorded, type FundingFlow, type GraphDocument } from "@mossline/graph-core";
+import { fundingTotals, isRecorded, placeName, type FundingFlow, type GraphDocument, type Grouping } from "@mossline/graph-core";
 import { PALETTES, formatMoney, type AtlasTheme } from "./palette";
 
-type Props = { graph: GraphDocument; flows: FundingFlow[]; theme: AtlasTheme; selectedId: string | null; onPick: (id: string | null) => void };
+type Props = { graph: GraphDocument; flows: FundingFlow[]; theme: AtlasTheme; selectedId: string | null; onPick: (id: string | null) => void;
+  grouping?: Grouping | null; groupLabel?: string };
 type Kind = "funder" | "theme" | "region";
-type N = { key: string; name: string; kind: Kind; id?: string; missing?: boolean };
+type N = { key: string; name: string; kind: Kind; id?: string; missing?: boolean; other?: boolean };
 type L = { source: number; target: number; value: number; funderId?: string };
-const NO_THEME = "No theme recorded", NO_PLACE = "No location recorded";
+const NO_THEME = "Not grouped", NO_PLACE = "No place recorded";
+/** How many named rows each column keeps; the rest are summed into one "other" row, never dropped. */
+const KEEP = { funder: 10, theme: 8, region: 8 };
 
 function useWidth(ref: React.RefObject<HTMLElement | null>) {
   const [width, setWidth] = useState(900);
@@ -22,10 +25,12 @@ function useWidth(ref: React.RefObject<HTMLElement | null>) {
   return width;
 }
 
-export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) {
+export function FundingLens({ graph, flows, theme, selectedId, onPick, grouping, groupLabel = "Theme" }: Props) {
   const palette = PALETTES[theme];
   const wrap = useRef<HTMLDivElement>(null);
   const width = useWidth(wrap);
+  // Phones get ranked bars: a flow chart needs more width than a phone has.
+  const narrowScreen = width < 640 || (typeof window !== "undefined" && window.innerWidth < 640);
   const byId = useMemo(() => new Map(graph.nodes.map(n => [n.id, n])), [graph]);
   const totals = useMemo(() => fundingTotals(flows), [flows]);
   const currency = totals[0]?.currency ?? null;
@@ -33,10 +38,43 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
   const [mode, setMode] = useState<"money" | "count">("money");
   const money = mode === "money" && canMoney;
   const used = useMemo(() => money ? flows.filter(f => f.amount !== null && f.currency === currency) : flows, [flows, money, currency]);
+  // With a funder chosen, the other columns describe that funder's grants only.
+  const chosenFunder = selectedId && byId.get(selectedId)?.type === "funder" ? selectedId : null;
+  const scoped = useMemo(() => chosenFunder ? used.filter(f => f.funderId === chosenFunder) : used, [used, chosenFunder]);
   const unvalued = flows.length - (canMoney ? flows.filter(f => f.amount !== null && f.currency === currency).length : 0);
 
+  const value = useMemo(() => (f: FundingFlow) => money ? f.amount ?? 0 : 1, [money]);
+  // The middle column is the chosen grouping, unless it would repeat a column either side.
+  const middle = !!grouping && grouping.kind !== "funder" && grouping.kind !== "place";
+  const themeOf = useMemo(() => (f: FundingFlow) =>
+    (grouping ? (f.grantId ? grouping.of.get(f.grantId) : undefined) ?? grouping.of.get(f.recipientId) : f.themes[0]) ?? NO_THEME, [grouping]);
+  const regionOf = useMemo(() => {
+    const cache = new Map<string, string>();
+    return (f: FundingFlow) => {
+      let v = cache.get(f.recipientId);
+      if (v === undefined) { const n = byId.get(f.recipientId); v = (n && placeName(n)) || NO_PLACE; cache.set(f.recipientId, v); }
+      return v;
+    };
+  }, [byId]);
+  /** Ranked totals per column, with the tail folded into one "other" row. */
+  const columns = useMemo(() => {
+    const sum = (key: (f: FundingFlow) => string, list = scoped) => {
+      const m = new Map<string, number>();
+      for (const f of list) m.set(key(f), (m.get(key(f)) ?? 0) + value(f));
+      return [...m].sort((a, b) => b[1] - a[1]);
+    };
+    const fold = (rows: [string, number][], keep: number, missing: string) => {
+      const named = rows.filter(([k]) => k !== missing), gap = rows.find(([k]) => k === missing);
+      const top = named.slice(0, keep), rest = named.slice(keep);
+      return { top: top.map(([k]) => k), rows: [...top, ...(rest.length ? [["other", rest.reduce((s, [, v]) => s + v, 0)] as [string, number]] : []),
+        ...(gap ? [gap] : [])], others: rest.length };
+    };
+    return { funder: fold(sum(f => f.funderId, used), KEEP.funder, ""), theme: fold(sum(themeOf), KEEP.theme, NO_THEME),
+      region: fold(sum(regionOf), KEEP.region, NO_PLACE), recipient: fold(sum(f => f.recipientId), 10, "") };
+  }, [used, scoped, value, themeOf, regionOf]);
+
   const chart = useMemo(() => {
-    if (!used.length) return null;
+    if (!used.length || narrowScreen) return null;
     const nodes: N[] = [], index = new Map<string, number>();
     const node = (key: string, name: string, kind: Kind, extra: Partial<N> = {}) => {
       if (!index.has(key)) { index.set(key, nodes.length); nodes.push({ key, name, kind, ...extra }); }
@@ -47,35 +85,28 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
       const k = s + ">" + t; const l = agg.get(k) ?? { source: s, target: t, value: 0, funderId };
       l.value += v; agg.set(k, l);
     };
-    const value = (f: FundingFlow) => money ? f.amount ?? 0 : 1;
-    const funderTotal = new Map<string, number>(), regionTotal = new Map<string, number>();
-    const themeOf = (f: FundingFlow) => f.themes[0] ?? NO_THEME;
-    const regionOf = (f: FundingFlow) => byId.get(f.recipientId)?.region ?? NO_PLACE;
-    for (const f of used) {
-      funderTotal.set(f.funderId, (funderTotal.get(f.funderId) ?? 0) + value(f));
-      regionTotal.set(regionOf(f), (regionTotal.get(regionOf(f)) ?? 0) + value(f));
+    const fKey = (f: FundingFlow) => columns.funder.top.includes(f.funderId) ? f.funderId : "other";
+    const tKey = (f: FundingFlow) => { const t = themeOf(f); return t === NO_THEME || columns.theme.top.includes(t) ? t : "other"; };
+    const rKey = (f: FundingFlow) => { const r = regionOf(f); return r === NO_PLACE || columns.region.top.includes(r) ? r : "other"; };
+    for (const [k] of chosenFunder ? [[chosenFunder, 0] as [string, number]] : columns.funder.rows) k === "other"
+      ? node("f:other", columns.funder.others + " other funders", "funder", { other: true })
+      : node("f:" + k, byId.get(k)?.label ?? k, "funder", { id: k });
+    if (middle) for (const [k] of columns.theme.rows)
+      node("t:" + k, k === "other" ? columns.theme.others + " more" : k, "theme", { missing: k === NO_THEME, other: k === "other" });
+    for (const [k] of columns.region.rows)
+      node("r:" + k, k === "other" ? columns.region.others + " more places" : k, "region", { missing: k === NO_PLACE, other: k === "other" });
+    for (const f of scoped) {
+      const fi = index.get("f:" + fKey(f))!, ri = index.get("r:" + rKey(f))!;
+      if (middle) { const ti = index.get("t:" + tKey(f))!; add(fi, ti, value(f), f.funderId); add(ti, ri, value(f)); }
+      else add(fi, ri, value(f), f.funderId);
     }
-    // Stable order: largest first, so the chart reads top-down.
-    for (const [id] of [...funderTotal].sort((a, b) => b[1] - a[1]))
-      node("f:" + id, byId.get(id)?.label ?? id, "funder", { id });
-    const themeTotal = new Map<string, number>();
-    for (const f of used) themeTotal.set(themeOf(f), (themeTotal.get(themeOf(f)) ?? 0) + value(f));
-    for (const [t] of [...themeTotal].sort((a, b) => b[1] - a[1])) node("t:" + t, t, "theme", { missing: t === NO_THEME });
-    for (const [r] of [...regionTotal].sort((a, b) => (a[0] === NO_PLACE ? 1 : 0) - (b[0] === NO_PLACE ? 1 : 0) || b[1] - a[1]))
-      node("r:" + r, r, "region", { missing: r === NO_PLACE });
-    for (const f of used) {
-      const fi = index.get("f:" + f.funderId)!, ti = index.get("t:" + themeOf(f))!, ri = index.get("r:" + regionOf(f))!;
-      add(fi, ti, value(f), f.funderId); add(ti, ri, value(f));
-    }
-    // Sized to sit above the fold on a laptop; long lists get thinner bands, not a taller chart.
-    const height = Math.max(360, Math.min(540, nodes.length * 20));
-    const narrow = width < 640;
-    const left = narrow ? 8 : Math.min(190, width * 0.2), right = narrow ? 8 : Math.min(200, width * 0.2);
-    const layout = sankey<N, L>().nodeWidth(10).nodePadding(narrow ? 6 : 9).nodeAlign(sankeyJustify)
+    const height = Math.max(360, Math.min(560, nodes.length * 22));
+    const left = Math.min(220, width * 0.24), right = Math.min(210, width * 0.22);
+    const layout = sankey<N, L>().nodeWidth(10).nodePadding(10).nodeAlign(sankeyJustify)
       .nodeSort(null).extent([[left, 12], [width - right, height - 12]]);
     const graphOut = layout({ nodes: nodes.map(n => ({ ...n })), links: [...agg.values()].map(l => ({ ...l })) });
-    return { ...graphOut, height, narrow };
-  }, [used, money, byId, width]);
+    return { ...graphOut, height, narrow: false };
+  }, [used, scoped, chosenFunder, value, byId, width, columns, themeOf, regionOf, middle, narrowScreen]);
 
   const highlightFunders = useMemo(() => {
     const set = new Set<string>();
@@ -113,7 +144,10 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
   }, [flows, graph, byId]);
 
   const short = (id: string) => (byId.get(id)?.label ?? id).replace(/ (Foundation|Trust|Fund)$/, "");
-  const headline = money && currency
+  const scopedTotal = scoped.reduce((s, f) => s + value(f), 0);
+  const headline = chosenFunder
+    ? `${byId.get(chosenFunder)?.label}: ${money && currency ? formatMoney(scopedTotal, currency) + " across " : ""}${scoped.length.toLocaleString("en-GB")} ${scoped.length === 1 ? "grant" : "grants"}`
+    : money && currency
     ? `${formatMoney(totals[0].total, currency)} across ${totals[0].valued.toLocaleString("en-GB")} grants`
     : `${flows.length.toLocaleString("en-GB")} recorded funding links`;
   if (!flows.length) return <section className="ml-chart-page" aria-label="Funding">
@@ -125,7 +159,9 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
     <div className="ml-chart-head">
       <div>
         <h2 className="ml-chart-title">{headline}</h2>
-        <p className="ml-chart-sub">From funder, through each recipient&rsquo;s primary source tag, to the region where the work is recorded.
+        {chosenFunder && <button type="button" className="ml-link-button" onClick={() => onPick(null)}>← All funders</button>}
+        <p className="ml-chart-sub">From funder{middle ? <>, through {groupLabel.toLowerCase()}{grouping?.suggested ? " (suggested, not in your source)" : ""}</> : ""},
+          to where each recipient is. The largest are named; the rest are added up, not left out.
           {money ? " Band widths are money." : " Band widths are numbers of recorded links."}
           {money && unvalued > 0 && <> {unvalued.toLocaleString("en-GB")} links have no recorded {currency} amount and are left out, not counted as zero.</>}</p>
       </div>
@@ -162,8 +198,10 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
             {n.kind === "funder" && n.id
               ? <foreignObject x={chart.narrow ? x1 + 4 : 0} y={mid - 11} width={chart.narrow ? 160 : x0 - 6} height={22}>
                   <button type="button" className={"ml-sankey-funder" + (highlightFunders.has(n.id) ? " is-selected" : "")}
-                    onClick={() => onPick(n.id ?? null)}>{n.name}<span>{label}</span></button>
+                    onClick={() => onPick(n.id ?? null)} title={n.name}><em>{n.name}</em><span>{label}</span></button>
                 </foreignObject>
+              : n.kind === "funder" ? <text x={x0 - 8} y={mid} textAnchor="end" className="ml-sankey-label is-missing"><tspan dy="0.35em">{n.name}</tspan>
+                  <tspan dx="6" className="ml-sankey-value">{label}</tspan></text>
               : tall && <text x={n.kind === "region" && !chart.narrow ? x1 + 8 : x1 + 6} y={mid}
                   className={"ml-sankey-label ml-sankey-label--" + n.kind + (n.missing ? " is-missing" : "")}>
                   <tspan dy={n.kind === "theme" ? "-0.1em" : "0.35em"}>{n.name}</tspan>
@@ -173,6 +211,28 @@ export function FundingLens({ graph, flows, theme, selectedId, onPick }: Props) 
           </g>;
         })}
       </svg>}
+      {(!chart || chosenFunder) && used.length > 0 && <div className="ml-funding-bars">
+        {((chart ? [["Largest recipients", columns.recipient, "recipient"]]
+          : chosenFunder ? [["Largest recipients", columns.recipient, "recipient"], ...(middle ? [[groupLabel, columns.theme, "theme"]] : []),
+            ["Where recipients are", columns.region, "region"], ["All funders", columns.funder, "funder"]]
+          : [["Largest funders", columns.funder, "funder"], ...(middle ? [[groupLabel, columns.theme, "theme"]] : []),
+            ["Where recipients are", columns.region, "region"]]) as
+          [string, typeof columns.funder, Kind | "recipient"][]).map(([title, col, kind]) => {
+          // Scale to the named rows: the summed "other" row would flatten them.
+          const max = Math.max(1, ...col.rows.filter(([k]) => k !== "other").map(([, v]) => v));
+          return <section key={title}><h3 className="ml-section-title">{title}</h3>
+            <ol>{col.rows.map(([k, v]) => {
+              const name = k === "other" ? col.others + (kind === "funder" ? " other funders" : " more")
+                : kind === "funder" || kind === "recipient" ? byId.get(k)?.label ?? k : k;
+              const label = <><span>{name}</span><i><b style={{ width: Math.min(100, v / max * 100) + "%", background: kind === "funder" ? palette.types.funder : kind === "recipient" ? palette.types.organisation : kind === "theme" ? palette.moss : palette.types.place }}/></i>
+                <span className="ml-mono">{money ? formatMoney(v, currency) : v.toLocaleString("en-GB")}</span></>;
+              return <li key={k} className={k === "other" || k === NO_THEME || k === NO_PLACE ? "is-quiet" : ""}>
+                {(kind === "funder" || kind === "recipient") && k !== "other"
+                  ? <button type="button" aria-pressed={kind === "funder" ? highlightFunders.has(k) : selectedId === k} onClick={() => onPick(k)}>{label}</button>
+                  : <div>{label}</div>}</li>;
+            })}</ol></section>;
+        })}
+      </div>}
     </div>
     {matrix.funders.length > 1 && <div className="ml-cofunding">
       <div>

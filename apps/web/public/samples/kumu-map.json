@@ -1,0 +1,53 @@
+{
+  "elements": [
+    {
+      "_id": "elem-larder",
+      "attributes": {
+        "label": "Allendale Larder",
+        "element type": "Organization",
+        "tags": [
+          "food"
+        ]
+      }
+    },
+    {
+      "_id": "elem-network",
+      "attributes": {
+        "label": "Tynedale Food Network",
+        "element type": "Project",
+        "description": "A network of food projects in the valley.",
+        "tags": [
+          "food",
+          "network"
+        ]
+      }
+    },
+    {
+      "_id": "elem-repair",
+      "attributes": {
+        "label": "Riverside Repair Cafe",
+        "element type": "Organization"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "_id": "conn-1",
+      "from": "elem-larder",
+      "to": "elem-network",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "member of"
+      }
+    },
+    {
+      "_id": "conn-2",
+      "from": "elem-repair",
+      "to": "elem-network",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "member of"
+      }
+    }
+  ]
+}

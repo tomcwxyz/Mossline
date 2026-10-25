@@ -33,7 +33,7 @@ for(const viewport of widths){
     await page.getByRole("button",{name:"Hide map settings"}).click();
     const more=page.locator(".studio-action-menu");
     await more.locator("summary").click();
-    await expect(more.getByRole("button",{name:"Import spreadsheet or Kumu network"})).toBeVisible();
+    await expect(more.getByRole("button",{name:"Previous importer: spreadsheet or Kumu network"})).toBeVisible();
     await more.locator("summary").click();
     await expect(page.getByRole("navigation",{name:"Choose how to explore this network"}))
       .toBeVisible();
@@ -101,7 +101,7 @@ test("desktop retains full map description and visible layout controls",async({p
   await page.goto("/");
   await page.getByRole("button",{name:/Or try an example network/i}).click();
   await expect(page.locator(".mossline-studio .heading .subtitle")).toBeVisible();
-  await expect(page.getByRole("button",{name:"↑ Import data"})).toBeVisible();
+  await expect(page.getByRole("button",{name:"↑ Add data"})).toBeVisible();
   await expect(page.getByRole("combobox",{name:"Network layout"})).toBeVisible();
   await expect(page.getByRole("button",{name:"Map settings"})).toBeHidden();
 });

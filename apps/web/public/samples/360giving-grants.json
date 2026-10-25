@@ -1,0 +1,31 @@
+{
+  "grants": [
+    {
+      "id": "360G-LARKSPUR-0003",
+      "title": "Peer support for carers",
+      "description": "Fortnightly peer support groups for unpaid carers.",
+      "currency": "GBP",
+      "amountAwarded": 7500,
+      "awardDate": "2025-09-30",
+      "recipientOrganization": [
+        {
+          "id": "GB-CHC-1990004",
+          "name": "Tynedale Carers Circle",
+          "charityNumber": "1990004",
+          "postalCode": "NE45 5ZZ"
+        }
+      ],
+      "fundingOrganization": [
+        {
+          "id": "GB-SC-SC099901",
+          "name": "Larkspur Community Trust"
+        }
+      ],
+      "grantProgramme": [
+        {
+          "title": "Care and Support"
+        }
+      ]
+    }
+  ]
+}

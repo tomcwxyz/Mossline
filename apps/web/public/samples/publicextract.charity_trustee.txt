@@ -1,0 +1,5 @@
+date_of_extract	organisation_number	registered_charity_number	linked_charity_number	trustee_id	trustee_name	trustee_is_chair	individual_or_organisation	trustee_date_of_appointment
+2026-10-01	5990001	1990001	0	8800101	Morgan Hale	True	P	2016-04-11
+2026-10-01	5990001	1990001	0	8800102	Priya Lowther	False	P	2021-07-19
+2026-10-01	5990003	1990003	0	8800301	Moorfield Foundation	False	O	2019-09-02
+2026-10-01	5990009	1990009	0	8800901	Robin Ashby	True	P	2001-05-30

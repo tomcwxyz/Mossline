@@ -12,6 +12,8 @@ export interface AtlasFilters {
   fromYear?: number;
   toYear?: number;
   funderId?: string;
+  /** Records in a chosen group (programme, place, topic); replaces the tag match. */
+  groupIds?: Set<string>;
 }
 export interface AtlasProjection {
   graph: GraphDocument;
@@ -92,7 +94,8 @@ export function projectAtlas(graph: GraphDocument, filters: AtlasFilters): Atlas
     (!filters.types?.length || filters.types.includes(n.type)) &&
     (!q || [n.label,n.description ?? "",n.region ?? "",...n.tags].some(s=>s.toLocaleLowerCase().includes(q))) &&
     (!filters.region || n.region === filters.region) &&
-    (!filters.theme || n.tags.some(t=>t.toLocaleLowerCase() === filters.theme!.toLocaleLowerCase())) &&
+    (filters.groupIds ? filters.groupIds.has(n.id) :
+      !filters.theme || n.tags.some(t=>t.toLocaleLowerCase() === filters.theme!.toLocaleLowerCase())) &&
     (!funderIds || funderIds.has(n.id))
   ).map(n=>n.id));
   const allEdges = graph.edges.filter(edge=> matching.has(edge.source) && matching.has(edge.target));
