@@ -1,0 +1,6 @@
+date_of_extract	organisation_number	registered_charity_number	linked_charity_number	classification_code	classification_type	classification_description
+2026-10-01	5990001	1990001	0	105	What	The Prevention Or Relief Of Poverty
+2026-10-01	5990001	1990001	0	202	Who	Children/young People
+2026-10-01	5990001	1990001	0	302	How	Provides Services
+2026-10-01	5990003	1990003	0	202	Who	Children/young People
+2026-10-01	5990009	1990009	0	117	What	Arts/culture/heritage/science

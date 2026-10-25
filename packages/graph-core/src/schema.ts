@@ -4,6 +4,18 @@ export const nodeTypeSchema = z.enum(["organisation", "project", "funder", "pers
 export type NodeType = z.infer<typeof nodeTypeSchema>;
 
 const webUrl = z.url().refine(value => /^https?:\/\//i.test(value), "Use an HTTP(S) URL");
+/** Where a record or link came from: the file, the row, and the shape that read it. */
+export const originSchema = z.object({
+  system: z.enum(["kumu", "csv", "annotation", "tsv", "json", "xlsx"]),
+  recordId: z.string(),
+  fileName: z.string().min(1).optional(),
+  recordNumber: z.number().int().positive().optional(),
+  /** Name of the source shape that read this row, e.g. "360Giving grants". */
+  shape: z.string().optional(),
+  /** The row's own values, kept when a second source fills in an existing record. */
+  fields: z.record(z.string(), z.string()).optional()
+});
+export type SourceOrigin = z.infer<typeof originSchema>;
 export const graphNodeSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
@@ -13,8 +25,11 @@ export const graphNodeSchema = z.object({
   imageUrl: webUrl.optional(),
   tags: z.array(z.string()).default([]),
   sourceUrl: webUrl.optional(),
-  origin: z.object({system:z.enum(["kumu","csv","annotation"]),recordId:z.string(),
-    fileName:z.string().min(1).optional(),recordNumber:z.number().int().positive().optional()}).optional(),
+  origin: originSchema.optional(),
+  /** Every source row that describes this record, in the order they were added. */
+  receipts: z.array(originSchema).optional(),
+  /** Stable identifiers such as GB-CHC-1234567 or GB-COH-01234567, used to join sources. */
+  identifiers: z.array(z.string()).optional(),
   properties: z.record(z.string(),z.unknown()).optional()
 });
 export const graphEdgeSchema = z.object({
@@ -27,8 +42,7 @@ export const graphEdgeSchema = z.object({
   inferred: z.boolean().optional(),
   evidenceNodeIds: z.array(z.string()).optional(),
   direction: z.enum(["directed","undirected","mutual"]).optional(),
-  origin: z.object({system:z.enum(["kumu","csv","annotation"]),recordId:z.string(),
-    fileName:z.string().min(1).optional(),recordNumber:z.number().int().positive().optional()}).optional(),
+  origin: originSchema.optional(),
   properties: z.record(z.string(),z.unknown()).optional()
 });
 export const graphDocumentSchema = z.object({

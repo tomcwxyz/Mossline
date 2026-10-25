@@ -1,4 +1,4 @@
-import type { GraphDocument, GraphNode } from "./schema";
+import type { SourceOrigin, GraphDocument, GraphNode } from "./schema";
 
 /**
  * A descriptive coverage report, not a confidence, quality or accuracy score.
@@ -17,7 +17,7 @@ export interface GraphAudit {
   categories: Record<GraphNode["type"], number>;
   isolated: { id: string; label: string }[];
   duplicateLabels: { label: string; ids: string[] }[];
-  sources: { system: "kumu" | "csv" | "annotation"; fileName?: string; nodes: number; relationships: number }[];
+  sources: { system: SourceOrigin["system"]; fileName?: string; nodes: number; relationships: number }[];
 }
 
 export function auditGraph(graph: GraphDocument): GraphAudit {
@@ -31,7 +31,7 @@ export function auditGraph(graph: GraphDocument): GraphAudit {
   }
   const labels = new Map<string, string[]>();
   const sourceRecords = new Map<string, GraphAudit["sources"][number]>();
-  function addSource(origin: { system: "kumu" | "csv" | "annotation"; fileName?: string } | undefined, kind: "nodes" | "relationships") {
+  function addSource(origin: { system: SourceOrigin["system"]; fileName?: string } | undefined, kind: "nodes" | "relationships") {
     if (!origin) return;
     const key = origin.system + "\u0000" + (origin.fileName ?? "");
     const entry = sourceRecords.get(key) ?? { system: origin.system, fileName: origin.fileName, nodes: 0, relationships: 0 };

@@ -1,0 +1,5 @@
+date_of_extract	organisation_number	registered_charity_number	linked_charity_number	charity_name	charity_type	charity_registration_status	date_of_registration	date_of_removal	latest_income	latest_expenditure	charity_contact_address1	charity_contact_postcode	charity_contact_web	charity_company_registration_number	charity_activities
+2026-10-01	5990001	1990001	0	ALLENDALE LARDER	Charitable company	Registered	2016-04-11		48210	45102	The Old Chapel	NE47 9QZ	www.example.org/larder	99000001	Runs a village larder and shared meals for families in the upper dale.
+2026-10-01	5990003	1990003	0	HEXMOOR YOUTH PROJECT	CIO	Registered	2019-09-02		86500	90120	Unit 4, Station Yard	NE46 1ZZ			Youth work, mentoring and holiday activities for young people in and around the town.
+2026-10-01	5990013	1990003	1	HEXMOOR YOUTH PROJECT MINIBUS FUND	Other	Registered	2020-01-15		1200	800					Holds funds for the project's minibus.
+2026-10-01	5990009	1990009	0	DISTANT DALES TRUST	Trust	Registered	2001-05-30		12000	9000		LA10 5ZZ			Grants for village halls.
