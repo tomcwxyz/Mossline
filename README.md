@@ -11,8 +11,10 @@ are optional demonstrations.
 
 ## What you can do
 
-- **Bring data:** import CSV, Kumu or 360Giving-style funding data. Review
-  proposed mappings and removals before they change a locally saved map.
+- **Bring data:** one *Add data* flow for 360Giving grants, the Charity
+  Commission register, Companies House, Kumu and any spreadsheet. Files join
+  on registered numbers and other identifiers, never on names, and you check
+  what each file adds before anything is saved. See [Getting data in](docs/DATA_IN.md).
 - **Five lenses:** explore the same records through Network, Map, Themes,
   Funding and Timeline, with shared search, filters and selection.
 - **Follow evidence:** inspect original source references and trace up to
@@ -33,8 +35,9 @@ are optional demonstrations.
 ### What is still changing
 
 This is the **first implementation slice** of the Field Atlas proposal, not
-the completed renderer migration. The current Map lens plots **source-given
-world coordinates**, but does not yet use MapLibre/Protomaps. Themes groups by
+the completed renderer migration. The Map lens plots **source-given
+coordinates** with MapLibre, and approximate places from postcodes as hollow
+marks. Themes groups by
 **source tags**, not on-device semantic embeddings. Funding currently shows
 recorded links rather than the proposed DuckDB-backed grant flows. The new
 network uses the established worker/WebGL/Canvas implementation for large
@@ -82,12 +85,17 @@ exports and download backups before clearing browser storage; see
 The original graph is canonical: visual groups, inferred links, local
 reviewer annotations and saved layouts must not silently rewrite it.
 An inferred connection never increases a recorded degree or funding total.
-A place name does not constitute coordinates. AI features, where
+A place name does not constitute coordinates; a postcode gives only an
+approximate place, marked as such. Approximate places use the ONS Postcode
+Directory: contains OS data © Crown copyright and database right 2026;
+contains Royal Mail data © Royal Mail copyright and database right 2026;
+source: Office for National Statistics, Open Government Licence v3.0. AI features, where
 configured, are optional and require a deliberate decision to use them.
 
 ## Project references
 
 [Architecture](docs/ARCHITECTURE.md) ·
+[Getting data in](docs/DATA_IN.md) ·
 [Field Atlas design implementation](docs/design/FIELD_ATLAS_IMPLEMENTATION.md) ·
 [Recovery and backups](docs/RECOVERY.md) ·
 [Hosted publishing](docs/HOSTED_PUBLISHING.md) ·

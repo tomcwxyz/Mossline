@@ -20,8 +20,9 @@ export interface PostcodeCentroids {
   sectors: Record<string, [number, number, number?]>; districts: Record<string, [number, number, number?]>;
 }
 
-const POSTCODE_FIELDS = ["Postcode", "postcode", "Post Code", "Postal Code", "postalCode", "Recipient Org:Postal Code",
-  "charity_contact_postcode", "RegAddress.PostCode"];
+/** Only a record's own postcode places it: source columns describing another
+ *  record (a grant row's "Recipient Org:Postal Code") are never used. */
+const POSTCODE_FIELDS = ["Postcode", "postcode", "Post Code", "Postal Code", "postalCode"];
 /** The postcode a record carries, from its own properties. */
 export function recordPostcode(node: GraphNode): string {
   const p = node.properties ?? {};

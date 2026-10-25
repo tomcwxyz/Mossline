@@ -2,7 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import {
-  evidenceReceipt, isRecorded, type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode
+  APPROXIMATE_KEY, approximatePlace, titleCaseName, describeApproximatePlace, describeIdentifier, evidenceReceipt, isRecorded, readAtlasLocation,
+  type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode, type SourceOrigin
 } from "@mossline/graph-core";
 import { TYPE_LABEL, formatMoney } from "./palette";
 
@@ -22,6 +23,33 @@ type Props = {
   onPick: (id: string) => void; onFollow: (id: string) => void;
   onConfirm: (edge: GraphEdge, input: ConfirmInput) => void;
 };
+
+const receiptText = (r: SourceOrigin) => [r.fileName ?? r.system, r.recordNumber ? "#" + r.recordNumber : r.recordId].join(" · ");
+const HIDDEN_PROPERTIES = new Set([APPROXIMATE_KEY]);
+
+/** Every source row behind a record, with the identifiers used to join them. */
+function Sources({ node }: { node: GraphNode }) {
+  const receipts = node.receipts?.length ? node.receipts : node.origin ? [node.origin] : [];
+  const approx = readAtlasLocation(node) ? null : approximatePlace(node);
+  const props = Object.entries(node.properties ?? {}).filter(([k]) => !HIDDEN_PROPERTIES.has(k));
+  return <section className="ml-panel-section ml-sources">
+    <h3 className="ml-section-title">Where this comes from · {receipts.length || "no source row"}</h3>
+    {(node.identifiers?.length ?? 0) > 0 && <ul className="ml-identifiers" aria-label="Identifiers">
+      {node.identifiers!.map(id => <li key={id} title={id}>{describeIdentifier(id)}</li>)}</ul>}
+    {approx && <p className="ml-approx-note"><span className="ml-key-hollow" aria-hidden="true"/>{describeApproximatePlace(approx)}</p>}
+    <ul className="ml-receipt-list">{receipts.map((r, i) => <li key={i}>
+      {r.fields && Object.keys(r.fields).length ? <details><summary><span className="ml-receipt">{receiptText(r)}</span>
+        {r.shape && <small>{r.shape}</small>}</summary>
+        <dl>{Object.entries(r.fields).map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl></details>
+        : <><span className="ml-receipt">{receiptText(r)}</span>{r.shape && <small>{r.shape}</small>}</>}
+    </li>)}</ul>
+    {receipts.length === 0 && <p className="ml-small">No source row reference supplied.</p>}
+    {node.sourceUrl && <a className="ml-source-link" href={node.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a>}
+    {props.length > 0 && <details className="ml-source-detail"><summary>All recorded values · {props.length}</summary>
+      <dl>{props.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{typeof v === "object" ? JSON.stringify(v) : String(v)}</dd></div>)}</dl>
+    </details>}
+  </section>;
+}
 
 function Receipt({ edge }: { edge: GraphEdge }) {
   const text = evidenceReceipt(edge);
@@ -74,7 +102,8 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
     </div>
   </div>;
 
-  const place = (node.properties?.Town as string | undefined) ?? (node.properties?.["Head office"] as string | undefined);
+  const place = (node.properties?.Town as string | undefined) ?? (node.properties?.["Head office"] as string | undefined) ??
+    (node.properties?.Postcode as string | undefined);
   const valued = funderFlows.filter(f => f.amount !== null && f.currency);
   const currency = valued[0]?.currency ?? null;
   const total = valued.filter(f => f.currency === currency).reduce((s, f) => s + (f.amount ?? 0), 0);
@@ -89,7 +118,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
   return <div className="ml-record-panel">
     <p className={"ml-eyebrow ml-eyebrow--" + node.type}><TypeMark type={node.type}/> {TYPE_LABEL[node.type]}</p>
     <h2>{node.label}</h2>
-    {(place || node.region) && <p className="ml-place">{[place, node.region].filter(Boolean).join(" · ")}
+    {(place || node.region) && <p className="ml-place">{[place && titleCaseName(place), node.region].filter(Boolean).join(" · ")}
       {node.type === "funder" && years.length > 0 && <> · grants {Math.min(...years)}–{Math.max(...years)}</>}</p>}
     <p className="ml-description">{node.description || "No description recorded in the source."}</p>
     {node.tags.length > 0 && <ul className="ml-tags">{node.tags.map(t => <li key={t}>{t}</li>)}</ul>}
@@ -163,12 +192,6 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
       {pencil.length > 8 && <p className="ml-small">{pencil.length - 8} more suggestions; select one of the records above to explore further.</p>}
     </section>}
 
-    <details className="ml-source-detail"><summary>Open source record</summary>
-      <p className="ml-mono">{node.origin ? [node.origin.fileName ?? node.origin.system,
-        node.origin.recordNumber ? "#" + node.origin.recordNumber : node.origin.recordId].join(" · ") : "No source row reference supplied"}</p>
-      {node.sourceUrl && <a href={node.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a>}
-      {node.properties && Object.keys(node.properties).length > 0 && <dl>{Object.entries(node.properties).map(([k, v]) =>
-        <div key={k}><dt>{k}</dt><dd>{typeof v === "object" ? JSON.stringify(v) : String(v)}</dd></div>)}</dl>}
-    </details>
+    <Sources node={node}/>
   </div>;
 }

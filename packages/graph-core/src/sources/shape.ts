@@ -29,7 +29,9 @@ export const recordTemplateSchema = z.object({
   identifiers: z.array(z.object({ value: template, scheme })).max(6).optional(),
   description: template.optional(),
   region: template.optional(),
-  tags: z.array(z.object({ value: template, split: z.string().max(3).optional(), strip: z.enum(["sic"]).optional() })).max(8).optional(),
+  tags: z.array(z.object({ value: template, split: z.string().max(3).optional(), strip: z.enum(["sic"]).optional(),
+    /** "sentence": "The Prevention Or Relief Of Poverty" → "The prevention or relief of poverty". */
+    case: z.enum(["sentence"]).optional() })).max(8).optional(),
   place: z.object({ latitude: template.optional(), longitude: template.optional(),
     postcode: template.optional(), address: template.optional() }).optional(),
   /** Columns kept on the record: the whole row, or a list of headings. */
@@ -120,6 +122,16 @@ export const normaliseHeading = norm;
 
 const KEEP_UPPER = new Set(["CIC", "CIO", "UK", "NHS", "YMCA", "YWCA", "PCC", "PTA", "LLP", "PLC", "CVS", "RSPB", "RNLI", "BBC", "NE", "NW", "SE", "SW", "II", "III", "IV"]);
 const SMALL = new Set(["of", "and", "the", "for", "in", "on", "at", "to", "a", "an", "by", "with", "de", "la"]);
+/** Sentence case for labels a register writes in Title Case; acronyms are kept. */
+export function sentenceCase(text: string): string {
+  let first = true;
+  return text.replace(/[A-Za-z][A-Za-z']*/g, word => {
+    const keep = word.length > 1 && word === word.toUpperCase();
+    const out = keep ? word : first ? word[0].toUpperCase() + word.slice(1).toLowerCase() : word.toLowerCase();
+    first = false;
+    return out;
+  });
+}
 /** Title case for names written entirely in capitals; anything with lower case is left alone. */
 export function titleCaseName(name: string): string {
   if (/[a-z]/.test(name) || !/[A-Z]{2}/.test(name)) return name;

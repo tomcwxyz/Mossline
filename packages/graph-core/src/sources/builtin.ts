@@ -6,7 +6,7 @@ import { parseShape, type Shape, type ShapeInput } from "./shape";
  * Alternatives inside braces cover CSV headings and flattened JSON keys.
  */
 const notLinked = { when: "{linked_charity_number}", notEquals: ["0", ""],
-  reason: "Linked charities are listed under their main charity number" };
+  reason: "Linked entries are listed under their main registered number" };
 
 const giving360: ShapeInput = {
   kind: "mossline-shape", version: 1, id: "360giving-grants", name: "360Giving grants",
@@ -38,9 +38,9 @@ const giving360: ShapeInput = {
 };
 
 const charity: ShapeInput = {
-  kind: "mossline-shape", version: 1, id: "charity-commission-charity", name: "Charity Commission: charities",
-  each: "Each row is a registered charity in England and Wales.",
-  about: "The charity table from the register download (tab-separated text or JSON). Joins on charity number, and on company number for charitable companies.",
+  kind: "mossline-shape", version: 1, id: "charity-commission-charity", name: "Charity Commission: register",
+  each: "Each row is an organisation on the register for England and Wales.",
+  about: "The charity table from the Charity Commission register download (tab-separated text or JSON). Joins on registered number, and on company number where there is one.",
   match: { all: ["registered_charity_number", "charity_name"], any: ["charity_registration_status", "charity_contact_postcode", "organisation_number", "latest_income"] },
   skip: [notLinked],
   records: [{ key: "charity", type: "organisation", label: "{charity_name}", labelCase: "title",
@@ -52,8 +52,8 @@ const charity: ShapeInput = {
 
 const trustees: ShapeInput = {
   kind: "mossline-shape", version: 1, id: "charity-commission-trustees", name: "Charity Commission: trustees",
-  each: "Each row is a trustee of a charity. These rows name individuals.",
-  about: "The charity_trustee table. Adds trustees as people and links them to the charities they serve.",
+  each: "Each row is a trustee of a registered organisation. These rows name individuals.",
+  about: "The charity_trustee table. Adds trustees and links them to the organisations they serve.",
   match: { all: ["trustee_name", "registered_charity_number"], any: ["trustee_id", "trustee_is_chair", "individual_or_organisation"] },
   skip: [notLinked],
   records: [{ key: "trustee", type: "{individual_or_organisation}", typeMap: { P: "person", O: "organisation" }, typeFallback: "person",
@@ -64,18 +64,18 @@ const trustees: ShapeInput = {
 
 const classification: ShapeInput = {
   kind: "mossline-shape", version: 1, id: "charity-commission-classification", name: "Charity Commission: what and who",
-  each: "Each row is one thing a charity does, or one group it serves.",
-  about: "The charity_classification table. Adds 'what' and 'who' descriptions as themes on charities already present.",
+  each: "Each row is one thing an organisation does, or one group it serves.",
+  about: "The charity_classification table. Adds its 'what' and 'who' descriptions as themes on organisations you already have.",
   match: { all: ["classification_description", "registered_charity_number"], any: ["classification_type", "classification_code"] },
-  skip: [notLinked, { when: "{classification_type}", equals: ["How"], reason: "How a charity works is not used as a theme" }],
+  skip: [notLinked, { when: "{classification_type}", equals: ["How"], reason: "‘How’ entries are not used as themes" }],
   records: [{ key: "charity", type: "organisation", label: "{registered_charity_number}", existingOnly: true,
-    identifiers: [{ value: "{registered_charity_number}", scheme: "charity" }], tags: [{ value: "{classification_description}" }] }]
+    identifiers: [{ value: "{registered_charity_number}", scheme: "charity" }], tags: [{ value: "{classification_description}", case: "sentence" }] }]
 };
 
 const area: ShapeInput = {
   kind: "mossline-shape", version: 1, id: "charity-commission-area", name: "Charity Commission: where they work",
-  each: "Each row is one area a charity says it operates in.",
-  about: "The charity_area_of_operation table. Kept as 'Area of operation' on charities already present; it is not used to place them on the map.",
+  each: "Each row is one area an organisation says it works in.",
+  about: "The charity_area_of_operation table. Kept as 'Area of operation' on organisations you already have; it is not used to place them on the map.",
   match: { all: ["geographic_area_description", "registered_charity_number"], any: ["geographic_area_type"] },
   skip: [notLinked],
   records: [{ key: "charity", type: "organisation", label: "{registered_charity_number}", existingOnly: true,

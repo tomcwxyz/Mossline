@@ -22,6 +22,8 @@ function readSample(name: string): SourceTable[] {
 const plan = (tables: SourceTable[], use: UseMode = "records"): PlannedTable[] =>
   tables.map(table => ({ table, shape: recogniseTable(table)[0].shape, use }));
 const all = () => readdirSync(SAMPLES).sort().flatMap(readSample);
+const centroids: PostcodeCentroids = { kind: "mossline-postcode-centroids", version: 1, generated: "2026-05-25", attribution: [],
+  sectors: { "NE47 9": [54.89, -2.25], "NE46 1": [54.963, -2.092] }, districts: { NE45: [54.97, -2.0] } };
 
 test("reads delimited text leniently and picks the delimiter", () => {
   assert.equal(detectDelimiter("a\tb\tc"), "\t");
@@ -115,8 +117,12 @@ test("joins 360Giving, Charity Commission and Companies House rows on identifier
   assert.deepEqual(larder.identifiers, ["GB-CHC-1990001", "GB-COH-99000001"]);
   assert.deepEqual(new Set(larder.receipts!.map(r => r.fileName)),
     new Set(["360giving-grants.csv", "publicextract.charity.txt", "companies-house.csv", "publicextract.charity_classification.txt"]));
-  assert.ok(larder.tags.includes("The Prevention Or Relief Of Poverty"));
-  assert.ok(!larder.tags.includes("Provides Services"), "'How' classifications are skipped");
+  assert.ok(larder.tags.includes("The prevention or relief of poverty"), "register Title Case becomes sentence case");
+  assert.ok(larder.tags.includes("Children/young people"));
+  assert.ok(!larder.tags.some(t => /provides services/i.test(t)), "'How' classifications are skipped");
+  const grantRow = g.nodes.find(n => n.id === "id:360G-MOORFIELD-0001")!;
+  assert.equal(placeByPostcode(g, centroids).graph.nodes.find(n => n.id === grantRow.id)!.properties![APPROXIMATE_KEY], undefined,
+    "a grant is not placed at its recipient's postcode");
   assert.equal(larder.properties!.Postcode, "NE47 9QZ");
   assert.equal(larder.properties!["Latest income"], "48210");
   // Kumu's "Allendale Larder" has no identifier, so it stays separate and is listed for a person to decide.
@@ -173,7 +179,7 @@ test("'fill in' keeps only rows about records already in the map", () => {
     ...readSample("publicextract.charity_trustee.txt"), ...readSample("publicextract.charity_classification.txt")], "fill"), base);
   const ch = res.tables.find(t => t.table === "companies-house.csv")!;
   assert.equal(ch.used, 2);
-  assert.deepEqual(ch.skipped, [{ reason: "Not about a record in this map", count: 1 }]);
+  assert.deepEqual(ch.skipped, [{ reason: "Not about a record you already have", count: 1 }]);
   assert.ok(!res.graph.nodes.some(n => n.label === "Distant Dales Trust"));
   assert.ok(!res.graph.nodes.some(n => n.label === "Robin Ashby"), "trustees of charities outside the map are left out");
   assert.equal(res.graph.nodes.length, before + 3, "three trustees of charities in the map are added");
@@ -183,6 +189,10 @@ test("'fill in' keeps only rows about records already in the map", () => {
   assert.equal(larder.properties!["Charity status"], "Registered");
   assert.ok(larder.receipts!.some(r => r.fileName === "companies-house.csv" && r.fields?.CompanyName === "ALLENDALE LARDER"));
   assert.ok(res.joins.some(j => j.text === "companies-house.csv ↔ records already in this map" && j.count === 2));
+  // With no map yet, "fill in" works against records added from other files in the same batch.
+  const fresh = applySources([...plan(readSample("360giving-grants.csv")), ...plan(readSample("companies-house.csv"), "fill")], null);
+  assert.equal(fresh.tables.find(t => t.table === "companies-house.csv")!.used, 2);
+  assert.ok(!fresh.graph.nodes.some(n => n.label === "Northern Sprocket Ltd"));
   // Re-adding the same files changes nothing.
   const again = applySources(plan([...readSample("companies-house.csv"), ...readSample("publicextract.charity_trustee.txt")], "fill"), res.graph);
   assert.equal(again.totals.newRecords, 0);
@@ -201,9 +211,6 @@ test("a same-name pair is merged only when a person confirms it", () => {
   assert.ok(merged.edges.some(e => e.source === pair.a && e.type === "member of"));
   assert.ok(!merged.edges.some(e => e.source === pair.b || e.target === pair.b));
 });
-
-const centroids: PostcodeCentroids = { kind: "mossline-postcode-centroids", version: 1, generated: "2026-05-25", attribution: [],
-  sectors: { "NE47 9": [54.89, -2.25], "NE46 1": [54.963, -2.092] }, districts: { NE45: [54.97, -2.0] } };
 
 test("places records approximately from postcodes, never over recorded coordinates", () => {
   assert.equal(extractPostcode("The Old Chapel, ne479qz"), "NE47 9QZ");

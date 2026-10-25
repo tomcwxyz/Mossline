@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
@@ -15,6 +15,7 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
+import {AddData,type AddTarget} from "./AddData";
 import {useAtlasTheme} from "./atlas/theme";
 import {ThemeButton,Wordmark} from "./atlas/Wordmark";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
@@ -148,6 +149,10 @@ export function MapStudio() {
     });
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
+  /** The one way in for files: where it was opened from decides the default target and the return. */
+  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"}|null>(null);
+  const [atlasMessage,setAtlasMessage]=useState("");
+  const clearAtlasMessage=useCallback(()=>setAtlasMessage(""),[]);
 
 
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
@@ -456,6 +461,27 @@ export function MapStudio() {
     }finally{setImportBusy(false);setImportStage("");}
   }
 
+  async function commitAddedData(next:GraphDocument,target:AddTarget,title:string,summary:string):Promise<true|string>{
+    if(target==="new"&&localMaps.length>=MAX_LOCAL_MAPS)
+      return "This browser already holds "+MAX_LOCAL_MAPS+" maps. Export and remove one, or add to the current map instead.";
+    const proposed=target==="new"?{...next,title:title.slice(0,100)}:{...next,title:graph.title};
+    try{
+      let storageId:string|undefined;
+      if(shouldStoreGeneralGraph(proposed)){
+        storageId=target==="add"?(localMaps.find(m=>m.id===activeMapId)?.generalDatasetId??crypto.randomUUID()):crypto.randomUUID();
+        await saveGeneralGraph(storageId,proposed);
+      }
+      const ok=target==="new"?createNewMap(proposed,undefined,undefined,storageId):updateGraph(proposed,storageId);
+      if(!ok)return "Could not save in this browser's storage. Export a backup of your maps, then try again.";
+    }catch(error){
+      return error instanceof Error?error.message:"Could not save in this browser's storage.";
+    }
+    setAtlasMessage((target==="new"?"Created ‘"+proposed.title+"’. ":"")+summary);
+    if(addData?.from!=="studio"){setFieldAtlasOpen(true);}
+    setExperienceSpace("studio");setAddData(null);
+    return true;
+  }
+
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
@@ -490,14 +516,22 @@ export function MapStudio() {
       filtered.graph.edges.length>650));
   const usingSourceExplorer=sourceExplorerCandidate;
 
+  if(addData){
+    const fundingMap=!!activeFundingMap?.fundingDatasetId;
+    return <AddData base={graph} baseTitle={graph.title} canAddToBase={!fundingMap}
+      startWith={addData.from==="home"||graphKey===DEMO_KEY?"new":"add"} intent={addData.intent}
+      onClose={()=>setAddData(null)} onCommit={commitAddedData}
+      onLargeFunding={()=>{setAddData(null);setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}/>;
+  }
+
   if(experienceSpace==="studio"&&fieldAtlasOpen&&!showFundingWorkbench&&!importPreview&&!discovery)
     return <div className="mossline-field-atlas-entry">
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
-      <FieldAtlasWorkspace key={graphKey} graph={graph}
+      <FieldAtlasWorkspace key={graphKey} graph={graph} message={atlasMessage} onMessageShown={clearAtlasMessage}
         datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
         onBack={()=>setExperienceSpace("home")}
-        onImport={()=>fileRef.current?.click()}
+        onImport={()=>setAddData({from:"atlas",intent:"general"})}
         onAdvanced={()=>{
           setFieldAtlasOpen(false);
           try{window.localStorage.setItem("mossline-workspace-v1","advanced");}catch{}
@@ -530,8 +564,8 @@ export function MapStudio() {
       summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
         " grants in complete dataset":undefined}))}
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
-      onImport={()=>fileRef.current?.click()}
-      onFunding={()=>{setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onImport={()=>setAddData({from:"home",intent:"general"})}
+      onFunding={()=>setAddData({from:"home",intent:"funding"})}
       onExample={()=>{
         // The atlas gets the worked food and farming example; the advanced
         // tools keep the small community network they were built around.
@@ -588,11 +622,11 @@ export function MapStudio() {
           ref={fileRef} type="file" multiple accept=".json,.csv,application/json,text/csv"
           hidden onChange={onImport}/>
         <button className="button-primary" type="button"
-          onClick={()=>fileRef.current?.click()}>↑ Import data</button>
+          onClick={()=>setAddData({from:"studio",intent:"general"})}>↑ Add data</button>
         <details className="studio-action-menu">
           <summary>More actions</summary>
           <div className="studio-action-popover">
-            <button type="button" onClick={()=>fileRef.current?.click()}>Import spreadsheet or Kumu network</button>
+            <button type="button" onClick={()=>fileRef.current?.click()}>Previous importer: spreadsheet or Kumu network</button>
             <button type="button" onClick={()=>{setFundingInitialFile(null);setShowFundingWorkbench(v=>!v);}}>
               {showFundingWorkbench?"Close funding import":"Import funding awards"}</button>
             <button type="button" onClick={tryExampleDiscovery}>Try a sample spreadsheet</button>

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer, fundingFlows, graphFingerprint,
-  graphWithAnnotations, isRecorded, parseAnnotationLayer, projectAtlas, recordedCoordinates,
+  graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
   type GraphDocument, type GraphEdge, type NodeType
 } from "@mossline/graph-core";
@@ -26,8 +26,10 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImport, onAdvanced, example }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImport, onAdvanced, example, message = "", onMessageShown }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
+  /** Shown once, e.g. after adding data; onMessageShown lets the owner clear it. */
+  message?: string; onMessageShown?: () => void;
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -78,6 +80,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     annotations.graphKey === graphKey ? annotations : emptyAnnotationLayer(graphKey)), [proposedGraph, annotations, graphKey]);
 
   const [notice, setNotice] = useState("");
+  useEffect(() => {
+    if (!message) return;
+    setNotice(message); onMessageShown?.();
+  }, [message, onMessageShown]);
   function exportAnnotations() {
     const payload = { kind: "mossline-atlas-annotation-backup", version: 1, exportedAt: new Date().toISOString(), layer: annotations };
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
@@ -197,7 +203,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     .slice(0, 5).map(node => ({ node, degree: degree.get(node.id) ?? 0 })), [graph, degree]);
   const recordList = useMemo(() => [...result.graph.nodes].sort((a, b) => a.label.localeCompare(b.label)), [result.graph]);
   useEffect(() => setBrowseLimit(100), [filters]);
-  const unplaced = useMemo(() => result.graph.nodes.filter(n => !recordedCoordinates(n)), [result.graph]);
+  const unplaced = useMemo(() => result.graph.nodes.filter(n => !placedCoordinates(n)), [result.graph]);
   const tagCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const node of result.graph.nodes) for (const tag of new Set(node.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
@@ -238,7 +244,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
         </summary>
         <div className="ml-menu" role="group" aria-label="Map and data">
           <button type="button" onClick={() => { closeMenu(); onBack(); }}>All maps</button>
-          <button type="button" onClick={() => { closeMenu(); onImport(); }}>Import data</button>
+          <button type="button" onClick={() => { closeMenu(); onImport(); }}>Add data…</button>
           <hr/>
           <p className="ml-menu-note">Reviewer confirmations are stored separately from your source records.</p>
           <button type="button" onClick={() => { closeMenu(); exportAnnotations(); }} disabled={!annotations.entries.length}>

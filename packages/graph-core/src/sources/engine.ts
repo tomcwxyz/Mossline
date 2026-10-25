@@ -1,6 +1,6 @@
 import { parseGraphDocument, type GraphDocument, type GraphEdge, type GraphNode, type NodeType, type SourceOrigin } from "../schema";
 import { normaliseIdentifier, type IdScheme } from "./identifiers";
-import { headingIndex, render, titleCaseName, type LinkTemplate, type RecordTemplate, type Shape } from "./shape";
+import { headingIndex, render, sentenceCase, titleCaseName, type LinkTemplate, type RecordTemplate, type Shape } from "./shape";
 import type { SourceTable } from "./tables";
 
 /**
@@ -135,6 +135,7 @@ export function applySources(plans: PlannedTable[], base: GraphDocument | null, 
           for (let tag of tagRule.split ? v.split(tagRule.split) : [v]) {
             tag = tag.trim();
             if (tagRule.strip === "sic") tag = tag.replace(/^\d{4,5}\s*-\s*/, "");
+            if (tagRule.case === "sentence") tag = sentenceCase(tag);
             if (tag && !tags.includes(tag) && tag.length <= 80) tags.push(tag);
           }
         }
@@ -260,19 +261,23 @@ export function applySources(plans: PlannedTable[], base: GraphDocument | null, 
     return nodes.length === 1 ? { node: nodes[0] } : null;
   };
 
-  /* ---- Fill-in: keep rows that touch a record already in the map ---- */
+  /* ---- Fill-in: keep rows about a record already in the map, or added from another file ---- */
   const keepRow = new Map<string, boolean>();
+  const fromRecordsTable = new Set<number>();
+  for (const info of rowsOf.values()) if (info.use === "records") for (const n of info.drafts) fromRecordsTable.add(find(n));
+  const known = (root: number) => groupExisting.has(root) || fromRecordsTable.has(root);
+  const NOT_ABOUT = "Not about a record you already have";
   for (const [rowKey, info] of rowsOf) {
     if (info.use === "records") { keepRow.set(rowKey, true); continue; }
-    const touches = info.drafts.some(n => groupExisting.has(find(n))) ||
+    const touches = info.drafts.some(n => known(find(n))) ||
       info.links.some(li => [links[li].from, links[li].to].some(ref => {
         const e = resolve(ref, links[li].file);
-        return !!e && ("node" in e || groupExisting.has(e.root));
+        return !!e && ("node" in e || known(e.root));
       }));
     keepRow.set(rowKey, touches);
     if (!touches) {
-      const s = info.report.skipped.find(x => x.reason === "Not about a record in this map");
-      if (s) s.count++; else info.report.skipped.push({ reason: "Not about a record in this map", count: 1 });
+      const s = info.report.skipped.find(x => x.reason === NOT_ABOUT);
+      if (s) s.count++; else info.report.skipped.push({ reason: NOT_ABOUT, count: 1 });
     }
   }
   const liveGroup = new Map<number, boolean>();

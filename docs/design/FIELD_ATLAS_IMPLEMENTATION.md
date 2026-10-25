@@ -74,6 +74,15 @@ The shell and every lens were rebuilt against the guidance pack's look and feel.
 5. **Stories.** Portable static HTML + Parquet, and a correction review queue.
 6. **Accessibility.** axe passes on Network, Funding and Timeline in day and night themes; a screen-reader pass at 200% zoom is still owed.
 
+## Getting data in
+
+One *Add data* flow (`apps/web/src/components/AddData.tsx`, worker
+`add-data.worker.ts`) replaces separate importers in the atlas and on the
+front page: tables are read by shapes, joined on org-id identifiers and
+checked before saving. Approximate places from postcodes are hollow marks
+on the Map and are described in the record panel. The previous importers
+remain in Advanced tools. Details: [Getting data in](../DATA_IN.md).
+
 ## Data/model gaps
 
 - Existing data may lack dates or coordinates. Show the gap; never invent.
