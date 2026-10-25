@@ -15,6 +15,8 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
+import {useAtlasTheme} from "./atlas/theme";
+import {ThemeButton,Wordmark} from "./atlas/Wordmark";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
 import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
 import {useNetworkImport} from "../hooks/useNetworkImport";
@@ -61,16 +63,8 @@ function saveJson(graph: GraphDocument) {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
-  // The front page shares the atlas's Night/Day choice, remembered on this device.
-  const [homeTheme,setHomeTheme]=useState<"day"|"night">("day");
-  useEffect(()=>{
-    try{const saved=window.localStorage.getItem("mossline:atlas-theme");if(saved==="night"||saved==="day")setHomeTheme(saved);}catch{}
-  },[experienceSpace]);
-  function toggleHomeTheme(){
-    const next=homeTheme==="night"?"day":"night";
-    setHomeTheme(next);
-    try{window.localStorage.setItem("mossline:atlas-theme",next);}catch{}
-  }
+  // The front page and tools share the atlas's Night/Day choice.
+  const [homeTheme,setHomeTheme]=useAtlasTheme();
   // New evidence-led workspace; existing specialised workflows remain available.
   const [fieldAtlasOpen,setFieldAtlasOpen]=useState(true);
   useEffect(()=>{
@@ -512,18 +506,12 @@ export function MapStudio() {
 
   if(experienceSpace==="home")return <main className="ml-atlas ml-home mossline-home" data-theme={homeTheme}>
     <header className="ml-home-header">
-      <span className="ml-wordmark">
-        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
-          <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
-          <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
-        <span>Mossline</span>
-      </span>
+      <Wordmark/>
       <span className="ml-home-version">alpha 2.22</span>
       <div className="ml-home-header-actions">
         <span className="ml-local"><i aria-hidden="true"/>On this device</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
-        <button type="button" className="ml-quiet" onClick={toggleHomeTheme}
-          aria-label={homeTheme==="night"?"Use day colours":"Use night colours"}>{homeTheme==="night"?"Day":"Night"}</button>
+        <ThemeButton theme={homeTheme} onChange={setHomeTheme}/>
       </div>
     </header>
     <input ref={fileRef} type="file" hidden multiple
@@ -559,8 +547,9 @@ export function MapStudio() {
   return <main className={"shell mossline-studio"+
     (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-explore":"")}>
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
+      <div className="brand"><Wordmark/><small>Advanced tools</small></div>
       <div className="topbar-right">
+        <ThemeButton theme={homeTheme} onChange={setHomeTheme}/>
         <button className="studio-home-link" type="button"
           onClick={()=>{
             setFieldAtlasOpen(true);
@@ -1213,6 +1202,6 @@ export function MapStudio() {
       </>}
     </details>
     </>}
-    <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
+    <footer className="footer"><span>Mossline — a field atlas for connected work.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
   </main>;
 }

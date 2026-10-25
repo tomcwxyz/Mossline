@@ -1,11 +1,13 @@
 /* ==========================================================================
    Mossline Field Atlas
+   Tokens are defined on :root as well, so the legacy tools, recovery and
+   shared views (globals.css) use the same palette and Night/Day setting.
    A field atlas for connected work: one set of records, five lenses.
    Tokens follow docs/design (ink, pencil, wash; survey-paper day, deep night).
    The canvas renderers mirror these values in components/atlas/palette.ts.
    ========================================================================== */
 
-.ml-atlas {
+:root, .ml-atlas, .ml-skin {
   color-scheme: light;
   /* Grounds */
   --ml-paper: #F2F1EC;
@@ -52,7 +54,13 @@
   --ml-overlay: rgba(251, 250, 246, 0.94);
   --ml-header-h: 60px;
   --ml-panel-w: 380px;
-
+  /* Status colours used by legacy tools */
+  --ml-danger: #A33A2B;
+  --ml-danger-soft: #F6E3DE;
+  --ml-warn-soft: #F6EBD2;
+  --ml-info-soft: #E2ECF4;
+}
+.ml-atlas {
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -62,8 +70,12 @@
   font: 400 14px/1.5 var(--ml-sans);
   -webkit-font-smoothing: antialiased;
 }
-.ml-atlas[data-theme="night"] {
+:root[data-theme="night"], .ml-atlas[data-theme="night"], .ml-skin[data-theme="night"] {
   color-scheme: dark;
+  --ml-danger: #F0A493;
+  --ml-danger-soft: #3A2420;
+  --ml-warn-soft: #33301F;
+  --ml-info-soft: #1D2B36;
   --ml-paper: #0F1915;
   --ml-raised: #14211C;
   --ml-surface: #1A2822;
@@ -686,3 +698,24 @@
   .ml-lane-label { padding: 0; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 8px; }
   .ml-lane--brush .ml-lane-label { display: none; }
 }
+
+/* ---- Shared chrome for the legacy tools, recovery and shared views --------- */
+body { background: var(--ml-paper); color: var(--ml-ink); }
+.ml-theme-button {
+  min-height: 34px; padding: 0 12px; border-radius: var(--ml-radius-sm); cursor: pointer;
+  border: 1px solid var(--ml-border-strong); background: var(--ml-surface); color: var(--ml-ink); font: 500 13px var(--ml-sans);
+}
+.ml-theme-button:hover { border-color: var(--ml-ink); }
+.topbar .brand { gap: 12px; font-weight: 400; letter-spacing: 0; }
+.topbar .brand .ml-wordmark span { font: 500 23px/1 var(--ml-serif); letter-spacing: -0.3px; }
+.topbar .brand small { font: 11px var(--ml-mono); color: var(--ml-subtle); background: transparent; border: 1px solid var(--ml-border); border-radius: 5px; padding: 2px 7px; margin-left: 0; }
+.topbar { border-bottom-color: var(--ml-border); }
+.topbar-right { gap: 12px; }
+.mossline-studio .heading h1, .published-wait h1, .recovery-content h1 { font-family: var(--ml-serif); font-weight: 400; }
+.recovery-brand { display: inline-flex; text-decoration: none; color: var(--ml-ink); }
+.recovery-brand:hover { text-decoration: none; }
+.recovery-header-actions { display: flex; align-items: center; gap: 14px; }
+/* Legacy view tabs read like the atlas lens pill: quiet until chosen. */
+.studio-primary-views .view-switch button { background: var(--ml-surface); color: var(--ml-ink); border-color: var(--ml-border-strong); }
+.studio-primary-views .view-switch button:hover:not(.on) { background: var(--ml-sunken); }
+.studio-primary-views .view-switch button.on { background: var(--ml-ink); color: var(--ml-paper); border-color: var(--ml-ink); }

@@ -10,6 +10,7 @@ import {
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { FollowConnection } from "./FollowConnection";
 import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
+import { useAtlasTheme } from "./atlas/theme";
 import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
@@ -127,7 +128,6 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const [trail, setTrail] = useState<ConnectionTrail | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [keyOpen, setKeyOpen] = useState(true);
-  const [nightPref, setNightPref] = useState<AtlasTheme | null>(null);
   const [urlReady, setUrlReady] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDetailsElement>(null);
@@ -214,15 +214,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const onUnavailable = useCallback(() =>
     setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
 
-  // One theme for every lens; the choice is remembered on this device.
-  const activeTheme: AtlasTheme = nightPref ?? "day";
-  useEffect(() => {
-    try { const saved = window.localStorage.getItem("mossline:atlas-theme"); if (saved === "night" || saved === "day") setNightPref(saved); } catch { /* storage blocked */ }
-  }, []);
-  const chooseTheme = (next: AtlasTheme) => {
-    setNightPref(next);
-    try { window.localStorage.setItem("mossline:atlas-theme", next); } catch { /* storage blocked */ }
-  };
+  // One Night/Day choice for every lens and page, remembered on this device.
+  const [activeTheme, chooseTheme] = useAtlasTheme();
   const activeFilters = [search, type, theme, region, funderId, range.from ?? range.to ?? ""].filter(v => v !== "" && v !== null).length;
   const clearAll = () => { setSearch(""); setType(null); setTheme(""); setRegion(""); setFunderId(""); setRange({ from: null, to: null }); };
   const canvasLens = lens === "network" || lens === "themes" || lens === "map";

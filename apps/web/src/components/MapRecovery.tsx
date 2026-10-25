@@ -1,6 +1,8 @@
 "use client";
 
 import {useEffect,useRef,useState} from "react";
+import {useAtlasTheme} from "./atlas/theme";
+import {ThemeButton,Wordmark} from "./atlas/Wordmark";
 import {FundingDatasetRecovery} from "./FundingDatasetRecovery";
 import {GeneralMapRecovery} from "./GeneralMapRecovery";
 import {LEGACY_GRAPH_STORAGE_KEY,MAP_LIBRARY_STORAGE_KEY,
@@ -12,6 +14,7 @@ type WorkerReply={
 };
 
 export function MapRecovery(){
+  const [theme,setTheme]=useAtlasTheme();
   const workerRef=useRef<Worker|null>(null);
   const restoreInput=useRef<HTMLInputElement>(null);
   const requestRef=useRef(0);
@@ -187,8 +190,8 @@ export function MapRecovery(){
   const count=maps.length;
   return <main className="recovery-shell">
     <header className="recovery-header">
-      <a href="/" className="recovery-brand">✳ mossline.</a>
-      <span>Browser map recovery</span>
+      <a href="/" className="recovery-brand" aria-label="Mossline — all maps"><Wordmark/></a>
+      <span className="recovery-header-actions"><span>Browser map recovery</span><ThemeButton theme={theme} onChange={setTheme}/></span>
     </header>
     <div className="recovery-content">
       <p className="eyebrow">Recovery tools · no network visualisation</p>
