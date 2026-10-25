@@ -20,6 +20,9 @@ type SigmaType = import("sigma").default;
  *  records. Themes also leaves room for the tag list on the left. */
 const FRAMES = { network: { x: 0.5, y: 0.495, ratio: 1.22, angle: 0 }, themes: { x: 0.43, y: 0.5, ratio: 1.34, angle: 0 } };
 type GraphType = import("graphology").default;
+type LayoutResult = { positions: Positions; areas: AtlasArea[]; washed: Positions; community: Map<string, number> };
+/** Recent layouts, so returning to a lens or switching Night/Day keeps records where they were. */
+const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
@@ -37,6 +40,9 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     selected: null, neighbours: new Set(), pencil: new Set(), route: null, routeNodes: new Set(), routeEdges: new Set(),
     labelled: new Set() });
   const [status, setStatus] = useState<"preparing" | "laying-out" | "ready" | "error">("preparing");
+  // Bumped after every rebuild: a cached layout can go from "ready" to "ready"
+  // inside one React batch, so status alone cannot signal a new drawing.
+  const [built, setBuilt] = useState(0);
   const [wash, setWash] = useState<{ d: string; level: number }[]>([]);
   const [areas, setAreas] = useState<AtlasArea[]>([]);
   const palette = PALETTES[theme];
@@ -81,39 +87,95 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     }
   };
 
+  // Filters hand over a new graph object even when the records are the same;
+  // rebuild (and lay out again) only when the records and links really change.
+  const signature = useMemo(() => {
+    let h = 2166136261;
+    const add = (text: string) => { for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); } };
+    for (const n of graph.nodes) { add(n.id); add(n.type); add(n.label); }
+    for (const e of graph.edges) { add(e.id); add(e.inferred ? "~" : "|"); }
+    return `${graph.nodes.length}:${graph.edges.length}:${h >>> 0}`;
+  }, [graph]);
+
   useEffect(() => {
     let cancelled = false;
     let renderer: SigmaType | null = null;
     let worker: Worker | null = null;
     setStatus("preparing"); setWash([]); setAreas([]);
+    const box = container.current;
+    // Marks are sized in screen pixels; a phone-width canvas gets smaller ones.
+    const narrow = (box?.clientWidth ?? 1000) < 600;
+    const tall = (box?.clientHeight ?? 0) > (box?.clientWidth ?? 1);
+    const cacheKey = [signature, mode, narrow, tall].join("|");
+
+    // 1. Layout first, off the main thread, while the renderer code loads. Sigma
+    //    is only created once positions are final, so a large map is drawn once.
+    const layout: Promise<LayoutResult> = LAYOUTS.has(cacheKey) ? Promise.resolve(LAYOUTS.get(cacheKey)!)
+      : mode === "themes" ? Promise.resolve((() => { const t = themeLayout(graph.nodes);
+        return { positions: t.positions, areas: t.areas, washed: t.positions, community: new Map<string, number>() }; })())
+      : new Promise<LayoutResult>(resolve => {
+        const linked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) > 0);
+        const unlinked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) === 0).map(n => n.id);
+        const complete = (positions: Positions, community: Map<string, number>) => {
+          const found = areasFromCommunities(linked, positions, community, degree);
+          // The wash follows linked records only; the unlinked block is not an area of activity.
+          const washed = new Map(positions);
+          const block = placeUnlinked(unlinked, positions, tall);
+          // A phone has room for the larger areas' names only.
+          const named = narrow ? found.slice(0, 6) : found;
+          resolve({ positions, areas: block ? [...named, block] : named, washed, community });
+        };
+        if (cancelled) return;
+        setStatus("laying-out");
+        try {
+          worker = new Worker(new URL("../../workers/atlas-layout.worker.ts", import.meta.url), { type: "module" });
+          worker.onmessage = (event: MessageEvent<{ kind: string; positions?: [string, number, number, number][] }>) => {
+            const positions: Positions = new Map(), community = new Map<string, number>();
+            for (const [id, x, y, c] of event.data.kind === "positions" ? event.data.positions ?? [] : []) {
+              if (Number.isFinite(x) && Number.isFinite(y)) { positions.set(id, { x, y }); community.set(id, c); }
+            }
+            complete(positions, community);
+          };
+          worker.onerror = () => complete(new Map(), new Map());
+          worker.postMessage({ kind: "layout", nodes: linked.map(n => n.id),
+            edges: graph.edges.filter(isRecorded).map(e => [e.source, e.target]) });
+        } catch {
+          complete(new Map(), new Map());
+        }
+      });
+
     (async () => {
       try {
-        const [{ default: Sigma, DEFAULT_STYLES }, { default: Graph },
-          { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved }] = await Promise.all([
-          import("sigma"), import("graphology"), import("sigma/rendering")]);
+        const [[{ default: Sigma, DEFAULT_STYLES }, { default: Graph },
+          { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved, pathLine }], placed] = await Promise.all([
+          Promise.all([import("sigma"), import("graphology"), import("sigma/rendering")]), layout]);
         try { await document.fonts.load('500 12px "IBM Plex Sans"'); } catch { /* fall back to system font */ }
         if (cancelled || !container.current) return;
+        LAYOUTS.set(cacheKey, placed);
+        if (LAYOUTS.size > 6) LAYOUTS.delete(LAYOUTS.keys().next().value!);
+
+        // 2. Build the drawing at its final positions. A record the layout could
+        //    not place (worker unavailable) falls back to a plain sunflower.
         const data = new Graph({ type: "mixed", multi: true, allowSelfLoops: true });
-        // Marks are sized in screen pixels; a phone-width canvas gets smaller ones.
-        const narrow = container.current.clientWidth < 600;
-        const tall = container.current.clientHeight > container.current.clientWidth;
         const scale = narrow ? 0.7 : 1;
-        // Seed: a stable sunflower so records are visible before layout finishes.
         graph.nodes.forEach((n, i) => {
-          const a = i * 2.399963, r = Math.sqrt(i) * 4;
+          const a = i * 2.399963, r = Math.sqrt(i) * 4, p = placed.positions.get(n.id);
           data.addNode(n.id, {
-            x: Math.cos(a) * r, y: Math.sin(a) * r, label: n.label,
+            x: p?.x ?? Math.cos(a) * r, y: p?.y ?? Math.sin(a) * r, label: n.label,
             size: markSize(degree.get(n.id) ?? 0, n.type) * scale, color: palette.types[n.type] ?? palette.types.other,
             baseColor: palette.types[n.type] ?? palette.types.other, nodeShape: SHAPE[n.type], nodeType: n.type
           });
         });
+        const community = placed.community;
         for (const e of graph.edges) {
           if (!data.hasNode(e.source) || !data.hasNode(e.target)) continue;
           const pencil = e.inferred === true;
+          // Links between areas are still ink, drawn quieter so each area stays legible.
+          const bridge = !pencil && community.size > 0 && community.get(e.source) !== community.get(e.target);
           data.addEdgeWithKey(e.id, e.source, e.target, {
             // Sigma's dashed layer draws nothing when the gap is zero, so a
             // recorded line is one very long dash with a token gap.
-            size: pencil ? 1.2 : 0.8, color: pencil ? palette.pencil : palette.inkSoft, inferred: pencil,
+            size: pencil ? 1.2 : 0.8, color: pencil ? palette.pencil : bridge ? palette.inkFaint : palette.inkSoft, inferred: pencil,
             dashSize: pencil ? 2 : 1e6, gapSize: pencil ? 4 : 0.5
           });
         }
@@ -126,7 +188,8 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
               label: { font: { family: "IBM Plex Sans", weight: "500" }, color: palette.label, margin: 4 }
             },
             edges: {
-              paths: [pathCurved({ curvature: 0.12 })],
+              // Curves read better, but cost more to draw; large maps get straight lines.
+              paths: [graph.edges.length > 3000 ? pathLine() : pathCurved({ curvature: 0.12 })],
               layers: [layerDashed({ dashSize: { attribute: "dashSize" }, gapSize: { attribute: "gapSize" }, cap: "round", align: 0 })]
             }
           },
@@ -183,6 +246,7 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
           }
         });
         sigmaRef.current = renderer;
+        renderer.getCamera().setState(home());
         renderer.on("clickNode", ({ node }) => pick.current(node));
         renderer.on("clickStage", () => pick.current(null));
         renderer.on("enterNode", () => { if (container.current) container.current.style.cursor = "pointer"; });
@@ -193,55 +257,14 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
           window.clearTimeout(replan);
           replan = window.setTimeout(() => { if (focus.current.selected || focus.current.route) planLabels(); }, 140);
         });
-        applyFocus();
-
-        const finish = (positions: Positions, nextAreas: AtlasArea[], washed: Positions = positions) => {
-          if (cancelled || !graphRef.current) return;
-          graphRef.current.updateEachNodeAttributes((id, attrs) => {
-            const p = positions.get(id);
-            return p ? { ...attrs, x: p.x, y: p.y } : attrs;
-          }, { attributes: ["x", "y"] });
-          setWash(terrain(washed));
-          setAreas(nextAreas);
-          setStatus("ready");
-          renderer?.refresh();
-          renderer?.getCamera().setState(home());
-        };
-
-        if (mode === "themes") { const t = themeLayout(graph.nodes); finish(t.positions, t.areas); return; }
-        setStatus("laying-out");
-        const linked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) > 0);
-        const unlinked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) === 0).map(n => n.id);
-        const complete = (positions: Positions, community: Map<string, number>) => {
-          const nextAreas = areasFromCommunities(linked, positions, community, degree);
-          // Links between areas are still ink, drawn quieter so each area stays legible.
-          graphRef.current?.updateEachEdgeAttributes((_edge, attrs, source, target) => {
-            if (attrs.inferred) return attrs;
-            const same = community.has(source) && community.get(source) === community.get(target);
-            return { ...attrs, color: same ? palette.inkSoft : palette.inkFaint };
-          }, { attributes: ["color"] });
-          // The wash follows linked records only; the unlinked block is not an area of activity.
-          const washed = new Map(positions);
-          const block = placeUnlinked(unlinked, positions, tall);
-          // A phone has room for the larger areas' names only.
-          const named = narrow ? nextAreas.slice(0, 6) : nextAreas;
-          finish(positions, block ? [...named, block] : named, washed);
-        };
-        try {
-          worker = new Worker(new URL("../../workers/atlas-layout.worker.ts", import.meta.url), { type: "module" });
-          worker.onmessage = (event: MessageEvent<{ kind: string; positions?: [string, number, number, number][] }>) => {
-            if (event.data.kind !== "positions") { complete(new Map(), new Map()); return; }
-            const positions: Positions = new Map(), community = new Map<string, number>();
-            for (const [id, x, y, c] of event.data.positions ?? []) {
-              if (Number.isFinite(x) && Number.isFinite(y)) { positions.set(id, { x, y }); community.set(id, c); }
-            }
-            complete(positions, community);
-          };
-          worker.postMessage({ kind: "layout", nodes: linked.map(n => n.id),
-            edges: graph.edges.filter(isRecorded).map(e => [e.source, e.target]) });
-        } catch {
-          complete(new Map(), new Map());
-        }
+        // The first frame is drawn with nothing in focus; the focus effect applies any selection.
+        focus.current = { selected: null, neighbours: new Set(), pencil: new Set(), route: null,
+          routeNodes: new Set(), routeEdges: new Set(), labelled: new Set() };
+        lastFocus.current = "|";
+        setWash(terrain(placed.washed));
+        setAreas(placed.areas);
+        setStatus("ready");
+        setBuilt(v => v + 1);
       } catch {
         if (cancelled) return;
         setStatus("error");
@@ -252,9 +275,10 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
       cancelled = true; worker?.terminate(); renderer?.kill();
       sigmaRef.current = null; graphRef.current = null;
     };
-    // The renderer is rebuilt when the records, lens mode or palette change.
+    // The renderer is rebuilt when the records, lens mode or palette change;
+    // a palette change reuses the cached layout.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graph, mode, theme]);
+  }, [signature, mode, theme]);
 
   /** Selection and route labels are always shown, but never on top of each
    *  other: the selected record first, then the best-connected neighbours. */
@@ -289,10 +313,15 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
         (e.inferred ? pencil : neighbours).add(other);
       }
     }
+    const selected = selectedId && data?.hasNode(selectedId) ? selectedId : null;
+    const active = route && route.nodeIds.length ? route : null;
+    // Nothing in focus before or after: the drawing is already right, so skip a full refresh.
+    const key = (selected ?? "") + "|" + (active?.edgeIds.join(",") ?? "");
+    if (key === "|" && lastFocus.current === "|") return;
+    lastFocus.current = key;
     focus.current = {
-      selected: selectedId && data?.hasNode(selectedId) ? selectedId : null, neighbours, pencil,
-      route: route && route.nodeIds.length ? route : null,
-      routeNodes: new Set(route?.nodeIds ?? []), routeEdges: new Set(route?.edgeIds ?? []), labelled: new Set()
+      selected, neighbours, pencil, route: active,
+      routeNodes: new Set(active?.nodeIds ?? []), routeEdges: new Set(active?.edgeIds ?? []), labelled: new Set()
     };
     planLabels(); // refreshes the renderer once with the new focus
   }
@@ -302,6 +331,7 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     return (container.current?.clientWidth ?? 1000) < 600 ? { ...f, x: 0.5, ratio: f.ratio * 0.9 } : f;
   };
   const hadRoute = useRef(false);
+  const lastFocus = useRef("");
   useEffect(() => {
     applyFocus();
     const renderer = sigmaRef.current, data = graphRef.current;
@@ -336,7 +366,9 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     const gx = middle.x + (centre.x - middle.x), gy = middle.y + (centre.y - middle.y);
     void cam.animate({ x: gx - (aim.x - middle.x) * k, y: gy - (aim.y - middle.y) * k, ratio }, { duration: 450 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, route, status]);
+  }, [selectedId, route, status, built]);
+  // Area names are placed on Sigma's render; place them as soon as they arrive.
+  useEffect(() => { syncOverlay(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [areas, built]);
 
   const camera = (action: "in" | "out" | "fit") => {
     const c = sigmaRef.current?.getCamera();
@@ -368,6 +400,8 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
       <button type="button" aria-label="Zoom out" onClick={() => camera("out")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
       <button type="button" aria-label="Fit everything" onClick={() => camera("fit")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5V1.5H5M9 1.5h3.5V5M12.5 9v3.5H9M5 12.5H1.5V9"/></svg></button>
     </div>
+    {(status === "preparing" || status === "laying-out") && <p className="ml-arranging" role="status">
+      Arranging {graph.nodes.length.toLocaleString("en-GB")} records by their recorded links…</p>}
     <p className="ml-canvas-caption" data-status={status}>
       {status === "laying-out" ? "Arranging by recorded links… · " : ""}
       {graph.nodes.length.toLocaleString("en-GB")} records · {recorded.toLocaleString("en-GB")} recorded links

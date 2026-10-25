@@ -25,14 +25,18 @@ function spread(positions: Record<string, { x: number; y: number }>, rounds = 40
   for (const p of pts) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
   const gap = Math.max(maxX - minX, maxY - minY, 1) / 65;
   for (let round = 0; round < rounds; round++) {
-    const grid = new Map<string, number[]>();
-    const key = (x: number, y: number) => `${Math.floor(x / gap)}:${Math.floor(y / gap)}`;
-    pts.forEach((p, i) => { const k = key(p.x, p.y); const cell = grid.get(k); if (cell) cell.push(i); else grid.set(k, [i]); });
+    // Numeric cell keys: string keys made this pass slow on large maps.
+    const grid = new Map<number, number[]>();
+    const cellKey = (cx: number, cy: number) => (cx + 32768) * 65536 + (cy + 32768);
+    pts.forEach((p, i) => {
+      const k = cellKey(Math.floor(p.x / gap), Math.floor(p.y / gap));
+      const cell = grid.get(k); if (cell) cell.push(i); else grid.set(k, [i]);
+    });
     let moved = false;
     pts.forEach((p, i) => {
       const cx = Math.floor(p.x / gap), cy = Math.floor(p.y / gap);
       for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
-        for (const j of grid.get(`${cx + dx}:${cy + dy}`) ?? []) {
+        for (const j of grid.get(cellKey(cx + dx, cy + dy)) ?? []) {
           if (j <= i) continue;
           const q = pts[j];
           const ex = q.x - p.x, ey = q.y - p.y, d = Math.hypot(ex, ey);
@@ -84,11 +88,12 @@ self.onmessage = (event: MessageEvent<Message>) => {
     });
     const n = graph.order;
     const positions = forceAtlas2(graph, {
-      iterations: n > 8000 ? 60 : n > 3000 ? 120 : n > 800 ? 220 : 320,
+      // Groups are seeded apart, so large maps settle in fewer, coarser steps.
+      iterations: n > 8000 ? 60 : n > 3000 ? 100 : n > 800 ? 220 : 320,
       getEdgeWeight: "weight",
       settings: {
         linLogMode: true, gravity: 0.6, scalingRatio: 4, slowDown: 2, edgeWeightInfluence: 1,
-        barnesHutOptimize: n > 500, barnesHutTheta: 0.7, strongGravityMode: false,
+        barnesHutOptimize: n > 500, barnesHutTheta: n > 3000 ? 1 : 0.7, strongGravityMode: false,
         adjustSizes: false, outboundAttractionDistribution: false
       }
     });

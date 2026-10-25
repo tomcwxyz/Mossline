@@ -65,7 +65,7 @@ The shell and every lens were rebuilt against the guidance pack's look and feel.
 
 ### Still to do
 
-1. **Real-device performance.** In this sandbox (software WebGL) a synthetic 5,876-record / 7,560-link map takes about 19 s from opening to a settled layout, of which about 2 s is JavaScript. Measure on a mid-range laptop and Android phone before calling the large-map case done. Possible next steps: fewer ForceAtlas2 iterations above 3,000 records, `hideEdgesOnMove`, progressive layout updates.
+1. **Real-device performance.** The network is laid out in a worker before Sigma is created, so a large map is drawn once, at its final positions. Layouts are cached per dataset and lens, so switching lens or Night/Day does not lay out again. Above 3,000 records the layout takes fewer, coarser steps and links are straight rather than curved. Measured on a synthetic 5,876-record / 7,560-link map, production build, in this sandbox (software WebGL, so slower than any real GPU): about 23 s to settle before, about 8 s after. Still to measure on a mid-range laptop and an Android phone.
 2. **Basemap detail.** The coastline is enough for national and regional views. Street-level context would need self-hosted PMTiles/Protomaps.
 3. **Themes by meaning.** Opt-in, on-device embeddings + UMAP with accept/dismiss and evidence. Until then Themes stays source-tag only.
 4. **Funding scale.** DuckDB-WASM, streaming GrantNav import and Parquet export.

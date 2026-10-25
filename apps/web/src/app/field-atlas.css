@@ -208,6 +208,11 @@
 .ml-wash { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .ml-sigma-viewport { position: absolute; inset: 0; }
 .ml-sigma-viewport canvas { outline: none; }
+/* Shown only if layout takes a moment, so small maps never flash it. */
+.ml-arranging { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); z-index: 5; margin: 0;
+  font: italic 400 17px/1.3 var(--ml-serif); color: var(--ml-muted); text-align: center; max-width: 80%;
+  opacity: 0; animation: ml-arrive .4s ease .35s forwards; }
+@keyframes ml-arrive { to { opacity: 1; } }
 .ml-area-labels { position: absolute; inset: 0; pointer-events: none; transition: opacity .2s; }
 .ml-area-label { position: absolute; left: 0; top: 0; display: grid; justify-items: center; gap: 1px; white-space: nowrap; will-change: transform; }
 .ml-area-label span {
@@ -511,4 +516,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ml-area-labels { transition: none; }
+  .ml-arranging { animation: none; opacity: 1; }
 }
