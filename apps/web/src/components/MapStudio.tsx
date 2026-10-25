@@ -61,6 +61,16 @@ function saveJson(graph: GraphDocument) {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
+  // The front page shares the atlas's Night/Day choice, remembered on this device.
+  const [homeTheme,setHomeTheme]=useState<"day"|"night">("day");
+  useEffect(()=>{
+    try{const saved=window.localStorage.getItem("mossline:atlas-theme");if(saved==="night"||saved==="day")setHomeTheme(saved);}catch{}
+  },[experienceSpace]);
+  function toggleHomeTheme(){
+    const next=homeTheme==="night"?"day":"night";
+    setHomeTheme(next);
+    try{window.localStorage.setItem("mossline:atlas-theme",next);}catch{}
+  }
   // New evidence-led workspace; existing specialised workflows remain available.
   const [fieldAtlasOpen,setFieldAtlasOpen]=useState(true);
   useEffect(()=>{
@@ -500,21 +510,30 @@ export function MapStudio() {
         }}/>
     </div>;
 
-  if(experienceSpace==="home")return <main className="shell mossline-home">
-    <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
-      <div className="topbar-right"><span className="local-tag"><span className="signal"/> Browser-local studio</span>
+  if(experienceSpace==="home")return <main className="ml-atlas ml-home mossline-home" data-theme={homeTheme}>
+    <header className="ml-home-header">
+      <span className="ml-wordmark">
+        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
+          <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
+          <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
+        <span>Mossline</span>
+      </span>
+      <span className="ml-home-version">alpha 2.22</span>
+      <div className="ml-home-header-actions">
+        <span className="ml-local"><i aria-hidden="true"/>On this device</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
+        <button type="button" className="ml-quiet" onClick={toggleHomeTheme}
+          aria-label={homeTheme==="night"?"Use day colours":"Use night colours"}>{homeTheme==="night"?"Day":"Night"}</button>
       </div>
     </header>
     <input ref={fileRef} type="file" hidden multiple
       accept=".csv,.json,application/json,text/csv"
       aria-label="Import a spreadsheet or Kumu network"
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
-    {notice&&<div className="notice" role="status"><span>{notice}</span>
+    {notice&&<div className="ml-home-notice" role="status"><span>{notice}</span>
       <button type="button" aria-label="Dismiss message" onClick={()=>setNotice("")}>×</button>
     </div>}
-    {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
+    {oversizedSavedMaps&&<p className="ml-home-notice" role="alert">An oversized browser map library was found.
       <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
       nodes:m.sourceCounts?.nodes??m.graph.nodes.length,

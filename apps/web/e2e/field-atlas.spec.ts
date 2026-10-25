@@ -6,7 +6,7 @@ import AxeBuilder from "@axe-core/playwright";
 async function openExample(page:Page){
   await page.goto("/");
   await page.getByRole("button",{name:/Or try an example network/i}).click();
-  await expect(page.locator(".ml-atlas")).toBeVisible();
+  await expect(page.locator(".ml-atlas:not(.ml-home)")).toBeVisible();
 }
 const lens=(page:Page,name:string)=>page.getByRole("navigation",{name:"Atlas lenses"})
   .getByRole("button",{name:new RegExp("^"+name)});
@@ -60,14 +60,20 @@ test("Network lens draws every record with named areas and the ink/pencil key",a
 test("Map never geocodes records from names and keeps the unplaced margin",async({page})=>{
   await openExample(page);
   await lens(page,"Map").click();
-  await expect(page.locator(".ml-unplaced")).toContainText(/Not placed · \d+/);
+  await expect(page.locator(".ml-unplaced")).toContainText(/\d+ records have no location/);
+  await expect(page.locator(".ml-unplaced")).toContainText("rather than guessed from a name or region");
   await expect(page.locator(".ml-drawing-caption")).toContainText(/\d+ plotted · \d+ without coordinates/);
   await expect(page.locator(".maplibregl-canvas")).toBeVisible();
   await expect(page.locator(".maplibregl-ctrl-attrib")).toContainText("Natural Earth");
-  // A funder's recorded grants are drawn as arcs; the key explains them.
+  // Place names come from place records in the source, drawn as a map would.
+  await expect(page.locator(".ml-map-place").filter({hasText:"Durham"})).toBeAttached();
+  // A funder's recorded grants are drawn as arcs, with a name card and a count of what is out of view.
   await choose(page,"Fellside Fund");
-  await expect(page.locator(".ml-key")).toContainText("Arc · a recorded grant");
-  await expect(page.locator(".ml-map-label--selected")).toHaveText("Fellside Fund");
+  await expect(page.locator(".ml-map-callout")).toContainText("Fellside Fund");
+  await expect(page.locator(".ml-map-callout")).toContainText(/\d+ grants/);
+  await expect(page.locator(".ml-map-show")).toContainText("Arcs are recorded grants");
+  await page.getByRole("group",{name:"Show places as"}).getByRole("button",{name:"Hexagons"}).click();
+  await expect(page.getByRole("group",{name:"Show places as"}).getByRole("button",{name:"Hexagons"})).toHaveAttribute("aria-pressed","true");
 });
 
 test("Themes, Funding and Timeline read the same records",async({page})=>{
@@ -83,6 +89,12 @@ test("Themes, Funding and Timeline read the same records",async({page})=>{
   await expect(page.locator(".ml-chart-page")).toContainText("Overlap means the same organisations, not coordinated funding");
 
   await lens(page,"Timeline").click();
+  // Swimlanes: one row per funder, with its grants along time.
+  const fellside=page.locator(".ml-lane").filter({hasText:"Fellside Fund"});
+  await expect(fellside).toContainText(/\d+ grants · £/);
+  await page.getByRole("group",{name:"Rows by"}).getByRole("button",{name:"Themes"}).click();
+  await expect(page.locator(".ml-lane").filter({hasText:"Food justice"})).toBeVisible();
+  await expect(page.locator(".ml-lanes-note")).toContainText("not given an invented day");
   await page.getByRole("combobox",{name:"From year"}).first().selectOption("2020");
   await expect(page).toHaveURL(/from=2020/);
   await lens(page,"Network").click();
@@ -103,7 +115,7 @@ test("the Field Atlas uses mobile-first filters and retains advanced tools",asyn
   await page.getByRole("button",{name:/Advanced tools/}).click();
   await expect(page.locator(".mossline-studio .workspace")).toBeVisible();
   await page.getByRole("button",{name:/Field atlas/}).click();
-  await expect(page.locator(".ml-atlas")).toBeVisible();
+  await expect(page.locator(".ml-atlas:not(.ml-home)")).toBeVisible();
 });
 
 test("Follow a connection uses recorded steps with source receipts, not inferred shortcuts",async({page})=>{
@@ -121,10 +133,28 @@ test("Follow a connection uses recorded steps with source receipts, not inferred
   await expect(follow).toContainText("not proof of a partnership");
 });
 
+test("the front page uses the atlas identity and follows Night/Day",async({page})=>{
+  await page.goto("/");
+  await expect(page.locator(".ml-home .ml-wordmark")).toContainText("Mossline");
+  await expect(page.getByRole("heading",{level:1})).toHaveText("See the relationships, not just the parts.");
+  await page.getByRole("button",{name:"Use night colours"}).click();
+  await expect(page.locator(".ml-home")).toHaveAttribute("data-theme","night");
+  const home=await new AxeBuilder({page}).include(".ml-home").withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();
+  expect(home.violations.map(v=>"home: "+v.id+" "+v.nodes.length)).toEqual([]);
+  // The atlas opens in the same colours, on every lens.
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  await expect(page.locator(".ml-atlas:not(.ml-home)").first()).toHaveAttribute("data-theme","night");
+  await lens(page,"Themes").click();
+  await expect(page.locator(".ml-atlas:not(.ml-home)").first()).toHaveAttribute("data-theme","night");
+  await page.getByRole("button",{name:"Use day colours"}).click();
+  await lens(page,"Themes").click();
+  await expect(page.locator(".ml-atlas:not(.ml-home)").first()).toHaveAttribute("data-theme","day");
+});
+
 test("the atlas has no detectable WCAG A/AA issues on its main views",async({page})=>{
   await openExample(page);
   await expect(page.locator(".ml-area-label").first()).toBeAttached();
-  for(const view of ["Network","Funding","Timeline"]){
+  for(const view of ["Network","Map","Funding","Timeline"]){
     await lens(page,view).click();
     const result=await new AxeBuilder({page}).include(".ml-atlas")
       .withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();

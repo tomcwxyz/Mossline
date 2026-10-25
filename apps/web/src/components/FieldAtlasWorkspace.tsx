@@ -214,7 +214,15 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const onUnavailable = useCallback(() =>
     setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
 
-  const activeTheme: AtlasTheme = nightPref ?? (lens === "themes" ? "night" : "day");
+  // One theme for every lens; the choice is remembered on this device.
+  const activeTheme: AtlasTheme = nightPref ?? "day";
+  useEffect(() => {
+    try { const saved = window.localStorage.getItem("mossline:atlas-theme"); if (saved === "night" || saved === "day") setNightPref(saved); } catch { /* storage blocked */ }
+  }, []);
+  const chooseTheme = (next: AtlasTheme) => {
+    setNightPref(next);
+    try { window.localStorage.setItem("mossline:atlas-theme", next); } catch { /* storage blocked */ }
+  };
   const activeFilters = [search, type, theme, region, funderId, range.from ?? range.to ?? ""].filter(v => v !== "" && v !== null).length;
   const clearAll = () => { setSearch(""); setType(null); setTheme(""); setRegion(""); setFunderId(""); setRange({ from: null, to: null }); };
   const canvasLens = lens === "network" || lens === "themes" || lens === "map";
@@ -262,7 +270,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
       </label>
       <div className="ml-header-actions">
         <span className="ml-local"><i aria-hidden="true"/>On this device</span>
-        <button type="button" className="ml-quiet" onClick={() => setNightPref(activeTheme === "night" ? "day" : "night")}
+        <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
         <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() =>
           setNotice("View link copied. The underlying local dataset does not travel with the link."))
@@ -313,9 +321,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
           </div> : <>
             {(lens === "network" || lens === "themes") && <NetworkLens graph={result.graph} mode={lens} theme={activeTheme}
               selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}/>}
-            {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}/>}
+            {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
+              unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}/>}
-            {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}/>}
+            {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
+              selectedId={selectedId} onPick={pickRecord}/>}
           </>}
 
           {lens === "themes" && result.graph.nodes.length > 0 && <aside className="ml-overlay-card ml-tag-card" aria-label="Source tags">
@@ -326,14 +336,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
             {tagCounts.length > 12 && <p className="ml-small">{tagCounts.length - 12} more tags in the Theme filter.</p>}
             {tagCounts.length === 0 && <p className="ml-small">No source tags are recorded for these records.</p>}
           </aside>}
-          {lens === "map" && <aside className="ml-overlay-card ml-unplaced" aria-label="Records without coordinates">
-            <strong>Not placed · {unplaced.length.toLocaleString("en-GB")}</strong>
-            <p>No source coordinates. Mossline will not guess a location from a name or region.</p>
-            <ul>{unplaced.slice(0, 4).map(n => <li key={n.id}><button type="button" onClick={() => setSelectedId(n.id)}>{n.label}</button></li>)}</ul>
-            {unplaced.length > 4 && <button type="button" className="ml-link-button" onClick={() => setBrowse(true)}>
-              + {unplaced.length - 4} more in Browse</button>}
-          </aside>}
-          {canvasLens && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
+
+          {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
             <button type="button" className="ml-key-toggle" aria-expanded={keyOpen} onClick={() => setKeyOpen(v => !v)}>Key</button>
             {keyOpen && <div className="ml-key-body" aria-label="How to read this atlas">
               <ul className="ml-key-types">{typesPresent.filter(t => t !== "topic" && t !== "methodology" && t !== "outcome").map(t =>
@@ -341,9 +345,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
               <ul className="ml-key-grammar">
                 {lens !== "themes" && <li><span className="ml-key-ink"/>Ink · recorded in a source</li>}
                 {lens === "network" && <li><span className="ml-key-pencil"/>Pencil · inferred, not confirmed</li>}
-                {lens === "map" && <li><span className="ml-key-arc"/>Arc · a recorded grant, wider for more money</li>}
-                {lens !== "map" && <li><span className="ml-key-wash"/>{lens === "themes"
-                  ? "Area · records sharing a source tag" : "Wash · drawn to help you navigate"}</li>}
+                <li><span className="ml-key-wash"/>{lens === "themes"
+                  ? "Area · records sharing a source tag" : "Wash · drawn to help you navigate"}</li>
               </ul>
             </div>}
           </div>}
