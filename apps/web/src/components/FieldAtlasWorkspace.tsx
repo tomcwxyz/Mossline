@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  collaborationGraph, confirmInferredRelationship, emptyAnnotationLayer, fundingFlows, graphFingerprint,
+  collaborationGraph, confirmInferredRelationship, defaultGrouping, emptyAnnotationLayer, fundingFlows, grantsAsLinks, graphFingerprint,
+  groupRecords, groupingOptions, type GroupingKind,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
   type GraphDocument, type GraphEdge, type NodeType
@@ -20,7 +21,7 @@ import { TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 const LENSES: { id: AtlasLens; label: string; help: string }[] = [
   { id: "network", label: "Network", help: "Position follows recorded relationships" },
   { id: "map", label: "Map", help: "Position follows source coordinates" },
-  { id: "themes", label: "Themes", help: "Areas follow source tags, not inferred meanings" },
+  { id: "themes", label: "Themes", help: "Areas follow a grouping you choose: source tags, programme, place, funder or suggested topics" },
   { id: "funding", label: "Funding", help: "Recorded funding, not implied collaboration" },
   { id: "timeline", label: "Timeline", help: "Dates on recorded relationships" }
 ];
@@ -124,6 +125,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [theme, setTheme] = useState("");
+  const [groupChoice, setGroupChoice] = useState<GroupingKind | null>(null);
+  const [grantView, setGrantView] = useState<"links" | "records" | null>(null);
   const [region, setRegion] = useState("");
   const [funderId, setFunderId] = useState("");
   const [range, setRange] = useState<YearRange>({ from: null, to: null });
@@ -143,6 +146,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     if (LENSES.some(l => l.id === requested)) setLens(requested as AtlasLens);
     setSelectedId(params.get("record")); setSearch(params.get("q") ?? "");
     setTheme(params.get("theme") ?? ""); setRegion(params.get("region") ?? "");
+    const g = params.get("group");
+    if (g && ["tags", "topics", "programme", "funder", "place"].includes(g)) setGroupChoice(g as GroupingKind);
     setFunderId(params.get("funder") ?? "");
     const year = (key: string) => { const y = Number(params.get(key)); return params.has(key) && y >= 1800 && y <= 2200 ? y : null; };
     const legacy = year("year");
@@ -153,7 +158,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   useEffect(() => {
     if (!urlReady) return;
     const url = new URL(window.location.href);
-    for (const key of ["lens", "record", "q", "theme", "region", "funder", "year", "from", "to", "type"]) url.searchParams.delete(key);
+    for (const key of ["lens", "record", "q", "theme", "group", "region", "funder", "year", "from", "to", "type"]) url.searchParams.delete(key);
+    if (groupChoice) url.searchParams.set("group", groupChoice);
     url.searchParams.set("lens", lens);
     if (selectedId) url.searchParams.set("record", selectedId);
     if (search) url.searchParams.set("q", search);
@@ -164,7 +170,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     if (range.to !== null) url.searchParams.set("to", String(range.to));
     if (type) url.searchParams.set("type", type);
     window.history.replaceState(window.history.state, "", url.toString());
-  }, [urlReady, lens, selectedId, search, theme, region, funderId, range, type]);
+  }, [urlReady, lens, selectedId, search, theme, groupChoice, region, funderId, range, type]);
   useEffect(() => {
     const listener = (e: globalThis.KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
@@ -178,19 +184,49 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     return () => document.removeEventListener("keydown", listener);
   }, []);
 
+  // ---- Groupings: worked out once a lens or filter needs them ---------------
+  const sourceFlows = useMemo(() => fundingFlows(graph), [graph]);
+  const [groupsWanted, setGroupsWanted] = useState(false);
+  useEffect(() => { if (lens === "themes" || lens === "funding" || lens === "timeline" || theme) setGroupsWanted(true); }, [lens, theme]);
+  const groupOptions = useMemo(() => groupsWanted ? groupingOptions(graph, sourceFlows) : [], [groupsWanted, graph, sourceFlows]);
+  const groupKind: GroupingKind = groupChoice && groupOptions.some(o => o.kind === groupChoice) ? groupChoice
+    : defaultGrouping(groupOptions, graph.nodes.length);
+  const grouping = useMemo(() => groupsWanted ? groupRecords(graph, groupKind, sourceFlows) : null, [groupsWanted, graph, groupKind, sourceFlows]);
+  const groupOption = groupOptions.find(o => o.kind === groupKind);
+  /** Records in the chosen group, with the funders and recipients of their grants for context. */
+  const groupIds = useMemo(() => {
+    if (!theme || !grouping || groupKind === "tags") return undefined;
+    const ids = new Set<string>();
+    for (const [id, g] of grouping.of) if (g === theme) ids.add(id);
+    for (const f of sourceFlows) if (ids.has(f.recipientId) || (f.grantId && ids.has(f.grantId))) {
+      ids.add(f.funderId); ids.add(f.recipientId); if (f.grantId) ids.add(f.grantId);
+    }
+    return ids;
+  }, [theme, grouping, groupKind, sourceFlows]);
+  const chooseGroup = (kind: GroupingKind) => { setGroupChoice(kind); setTheme(""); };
+
   // ---- Projections ------------------------------------------------------------
-  const baseFilters: AtlasFilters = useMemo(() => ({ query: search, theme, region, funderId: funderId || undefined,
-    types: type ? [type] : undefined }), [search, theme, region, funderId, type]);
+  const baseFilters: AtlasFilters = useMemo(() => ({ query: search, theme, region, funderId: funderId || undefined, groupIds,
+    types: type ? [type] : undefined }), [search, theme, region, funderId, type, groupIds]);
   const filters: AtlasFilters = useMemo(() => ({ ...baseFilters, fromYear: range.from ?? undefined, toYear: range.to ?? undefined }),
     [baseFilters, range]);
   const result = useMemo(() => projectAtlas(graph, filters), [graph, filters]);
   const undated = useMemo(() => projectAtlas(graph, baseFilters), [graph, baseFilters]);
   const selected = useMemo(() => graph.nodes.find(n => n.id === selectedId) ?? null, [graph, selectedId]);
-  const flowsAll = useMemo(() => fundingFlows(graph), [graph]);
+  useEffect(() => { if (selected?.type === "funder") setGroupsWanted(true); }, [selected]);
+  const flowsAll = sourceFlows;
   const flowsView = useMemo(() => fundingFlows(result.graph), [result.graph]);
   const flowsUndated = useMemo(() => fundingFlows(undated.graph), [undated.graph]);
   const recordedTotal = useMemo(() => graph.edges.filter(isRecorded).length, [graph]);
-  const themes = useMemo(() => [...new Set(graph.nodes.flatMap(n => n.tags))].sort(), [graph]);
+  const themes = useMemo(() => grouping && groupKind !== "tags" ? grouping.groups.slice(0, 80).map(g => g.name)
+    : [...new Set(graph.nodes.flatMap(n => n.tags))].sort(), [graph, grouping, groupKind]);
+  // Grants drawn as links between funder and recipient when there are many of them.
+  const grantCount = useMemo(() => sourceFlows.filter(f => f.grantId).length, [sourceFlows]);
+  const showGrantsAs = grantView ?? (grantCount >= 100 ? "links" : "records");
+  const linksView = useMemo(() => grantCount && showGrantsAs === "links" ? grantsAsLinks(result.graph, flowsView) : null,
+    [grantCount, showGrantsAs, result.graph, flowsView]);
+  const alias = useMemo(() => linksView ? new Map([...linksView.grantEnds].map(([g, e]) => [g, e.recipientId])) : undefined, [linksView]);
+  const drawn = linksView?.graph ?? result.graph;
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((s): s is string => !!s))].sort(), [graph]);
   const funders = useMemo(() => graph.nodes.filter(n => n.type === "funder").sort((a, b) => a.label.localeCompare(b.label)), [graph]);
   const typesPresent = useMemo(() => [...new Set(graph.nodes.map(n => n.type))], [graph]);
@@ -204,11 +240,13 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const recordList = useMemo(() => [...result.graph.nodes].sort((a, b) => a.label.localeCompare(b.label)), [result.graph]);
   useEffect(() => setBrowseLimit(100), [filters]);
   const unplaced = useMemo(() => result.graph.nodes.filter(n => !placedCoordinates(n)), [result.graph]);
-  const tagCounts = useMemo(() => {
+  /** Group sizes among the records drawn in the Themes lens. */
+  const groupCounts = useMemo(() => {
+    if (!grouping) return [] as [string, number][];
     const counts = new Map<string, number>();
-    for (const node of result.graph.nodes) for (const tag of new Set(node.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    for (const n of drawn.nodes) { const g = grouping.of.get(n.id); if (g) counts.set(g, (counts.get(g) ?? 0) + 1); }
     return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  }, [result.graph]);
+  }, [grouping, drawn]);
   const route: AtlasRoute | null = useMemo(() => trail && trail.steps.length ? {
     nodeIds: [trail.steps[0].fromId, ...trail.steps.map(s => s.toId)], edgeIds: trail.steps.map(s => s.edgeId)
   } : null, [trail]);
@@ -288,7 +326,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
                 <option value="">All types</option>{typesPresent.map(t => <option key={t} value={t}>{TYPE_PLURAL[t]}</option>)}</select></label>
             <label className={"ml-chip" + (theme ? " is-on" : "")}><span className="ml-visually-hidden">Theme</span>
               <select aria-label="Theme" value={theme} onChange={e => setTheme(e.target.value)}>
-                <option value="">Any theme</option>{themes.map(t => <option key={t}>{t}</option>)}</select></label>
+                <option value="">{groupOption && groupKind !== "tags" ? "Any " + groupOption.label.toLowerCase().replace(/^main /, "") : "Any theme"}</option>
+                {themes.map(t => <option key={t}>{t}</option>)}</select></label>
+            {grantCount > 0 && (lens === "network" || lens === "themes") && <label className={"ml-chip" + (showGrantsAs === "records" ? " is-on" : "")}>
+              <span className="ml-visually-hidden">Grants</span>
+              <select aria-label="Grants" value={showGrantsAs} onChange={e => setGrantView(e.target.value as "links" | "records")}>
+                <option value="links">Grants as links</option><option value="records">Each grant as a record</option></select></label>}
             <label className={"ml-chip" + (region ? " is-on" : "")}><span className="ml-visually-hidden">Place</span>
               <select aria-label="Place" value={region} onChange={e => setRegion(e.target.value)}>
                 <option value="">Anywhere</option>{regions.map(r => <option key={r}>{r}</option>)}</select></label>
@@ -318,22 +361,30 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
             <h2>No matching records</h2><p>Nothing in this dataset matches the current filters.</p>
             <button type="button" className="ml-solid" onClick={clearAll}>Clear all filters</button>
           </div> : <>
-            {(lens === "network" || lens === "themes") && <NetworkLens graph={result.graph} mode={lens} theme={activeTheme}
+            {(lens === "network" || lens === "themes") && <NetworkLens graph={drawn} mode={lens} theme={activeTheme}
+              groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
-            {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}/>}
+            {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
+              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
+              grouping={grouping} groupLabel={groupOption?.label ?? "Themes"}
               selectedId={selectedId} onPick={pickRecord}/>}
           </>}
 
-          {lens === "themes" && result.graph.nodes.length > 0 && <aside className="ml-overlay-card ml-tag-card" aria-label="Source tags">
-            <p className="ml-overlay-note">Grouped by source tags · not model-inferred themes</p>
-            <ol>{tagCounts.slice(0, 12).map(([tag, count]) => <li key={tag}>
-              <button type="button" aria-pressed={theme === tag} onClick={() => setTheme(theme === tag ? "" : tag)}>
-                <span>{tag}</span><b>{count}</b></button></li>)}</ol>
-            {tagCounts.length > 12 && <p className="ml-small">{tagCounts.length - 12} more tags in the Theme filter.</p>}
-            {tagCounts.length === 0 && <p className="ml-small">No source tags are recorded for these records.</p>}
+          {lens === "themes" && result.graph.nodes.length > 0 && <aside className={"ml-overlay-card ml-tag-card" + (grouping?.suggested ? " is-suggested" : "")}
+            aria-label="Groups">
+            <label className="ml-group-by"><span>Group by</span>
+              <select value={groupKind} onChange={e => chooseGroup(e.target.value as GroupingKind)}>
+                {groupOptions.map(o => <option key={o.kind} value={o.kind}>{o.label}</option>)}</select></label>
+            <p className="ml-overlay-note">{groupOption?.note ?? "Grouped by source tags"}
+              {groupOption && <> · {groupOption.covered.toLocaleString("en-GB")} of {graph.nodes.length.toLocaleString("en-GB")} records</>}</p>
+            <ol>{groupCounts.slice(0, 12).map(([name, count]) => <li key={name}>
+              <button type="button" aria-pressed={theme === name} onClick={() => setTheme(theme === name ? "" : name)}>
+                <span>{name}</span><b>{count}</b></button></li>)}</ol>
+            {groupCounts.length > 12 && <p className="ml-small">{groupCounts.length - 12} more in the filter above.</p>}
+            {groupCounts.length === 0 && <p className="ml-small">Nothing in this view can be grouped this way. Try another grouping.</p>}
           </aside>}
 
           {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
@@ -377,7 +428,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
           aria-label="Clear selection">×</button>}
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
-          onPick={setSelectedId} onFollow={id => { setRouteFromId(id); }} onConfirm={confirm}/>
+          onPick={setSelectedId} onFollow={id => { setRouteFromId(id); }} onConfirm={confirm}
+          grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
       </aside>
     </section>
     <div className="ml-announcer" role="status" aria-live="polite">

@@ -14,6 +14,13 @@ type Props = {
   route: AtlasRoute | null;
   onPick: (id: string | null) => void;
   onUnavailable: () => void;
+  /** Themes: the group of each record, and whether the grouping is a suggestion. */
+  groupOf?: Map<string, string>;
+  groupKey?: string;
+  groupName?: string;
+  suggested?: boolean;
+  /** Records not drawn here (grants drawn as links) and the record that stands for them. */
+  alias?: Map<string, string>;
 };
 type SigmaType = import("sigma").default;
 /** Home framing: a little zoomed out so chips, key and caption do not cover
@@ -26,7 +33,8 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onUnavailable }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias }: Props) {
+  const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
   const stage = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const washGroup = useRef<SVGGElement>(null);
@@ -106,12 +114,12 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     // Marks are sized in screen pixels; a phone-width canvas gets smaller ones.
     const narrow = (box?.clientWidth ?? 1000) < 600;
     const tall = (box?.clientHeight ?? 0) > (box?.clientWidth ?? 1);
-    const cacheKey = [signature, mode, narrow, tall].join("|");
+    const cacheKey = [signature, mode, mode === "themes" ? groupKey : "", narrow, tall].join("|");
 
     // 1. Layout first, off the main thread, while the renderer code loads. Sigma
     //    is only created once positions are final, so a large map is drawn once.
     const layout: Promise<LayoutResult> = LAYOUTS.has(cacheKey) ? Promise.resolve(LAYOUTS.get(cacheKey)!)
-      : mode === "themes" ? Promise.resolve((() => { const t = themeLayout(graph.nodes);
+      : mode === "themes" ? Promise.resolve((() => { const t = themeLayout(graph.nodes, groupOf, suggested);
         return { positions: t.positions, areas: t.areas, washed: t.positions, community: new Map<string, number>() }; })())
       : new Promise<LayoutResult>(resolve => {
         const linked = graph.nodes.filter(n => (degree.get(n.id) ?? 0) > 0);
@@ -278,7 +286,7 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
     // The renderer is rebuilt when the records, lens mode or palette change;
     // a palette change reuses the cached layout.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signature, mode, theme]);
+  }, [signature, mode, theme, groupKey]);
 
   /** Selection and route labels are always shown, but never on top of each
    *  other: the selected record first, then the best-connected neighbours. */
@@ -379,7 +387,7 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
   };
   const suggestions = graph.edges.length - recorded;
   return <section ref={stage} className={"ml-network ml-network--" + mode}
-    aria-label={mode === "themes" ? "Records grouped by source tags" : "Complete Sigma network"}>
+    aria-label={mode === "themes" ? "Records grouped by " + (suggested ? "suggested topics" : groupName.toLowerCase()) : "Complete Sigma network"}>
     <svg className="ml-wash" aria-hidden="true">
       <g ref={washGroup}>
         {wash.map(c => <path key={c.level} d={c.d} vectorEffect="non-scaling-stroke"
@@ -392,7 +400,7 @@ export function NetworkLens({ graph, mode, theme, selectedId, route, onPick, onU
       aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
       {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
-        <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records</small>
+        <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records{a.kind === "suggested" ? " · suggested" : ""}</small>
       </div>)}
     </div>
     <div className="ml-zoom" role="group" aria-label="Zoom">

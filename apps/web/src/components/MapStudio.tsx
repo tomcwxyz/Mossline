@@ -478,6 +478,7 @@ export function MapStudio() {
     }
     setAtlasMessage((target==="new"?"Created ‘"+proposed.title+"’. ":"")+summary);
     if(addData?.from!=="studio"){setFieldAtlasOpen(true);}
+    window.scrollTo(0,0);
     setExperienceSpace("studio");setAddData(null);
     return true;
   }

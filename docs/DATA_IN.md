@@ -55,6 +55,10 @@ stored apart from source data (`Approximate location`), drawn as hollow
 marks on the map, and described in the record panel. A grant is never placed
 at its recipient's postcode; only a record's own postcode places it.
 
+Each sector also carries the town and region most of its postcodes are in
+(OS Open Names), so a record can be grouped by *Place* without guessing from
+its name.
+
 Exact positions are available from [postcodes.io](https://postcodes.io), but
 only when the person asks and agrees: the postcodes (nothing else) leave the
 device.
@@ -69,6 +73,32 @@ redistribution. Attribution, shown wherever approximate places are used:
 > Mail data © Royal Mail copyright and database right 2026. Contains National
 > Statistics data © Crown copyright and database right 2026. Source: Office
 > for National Statistics licensed under the Open Government Licence v.3.0.
+
+## Large maps of grants
+
+A regional GrantNav download can hold thousands of grants. The lenses adapt
+rather than drawing every award as a mark:
+
+- **Grants as links.** Network and Themes draw each funder → recipient pair
+  once, as a recorded link carrying its number of grants and total
+  (`grantsAsLinks`). The grants stay in the map, Browse records and the
+  record panel; *Each grant as a record* switches back.
+- **Group by.** Themes, the Funding lens's middle column, Timeline rows and the
+  record panel use one chosen grouping (`groupings.ts`): source tags,
+  programme, place, main funder, or **suggested topics**. Topics come from a
+  small, readable word guide applied to titles and descriptions; they are
+  marked as suggestions and never shown by default when the file's own
+  tags or programmes cover enough of the map.
+- **Funding** names the ten largest funders and eight largest groups and
+  places, and adds the rest up as one row rather than leaving them out.
+  Phones get ranked bars. Choosing a funder shows its grants by recipient,
+  group and place.
+- **Timeline** reads by month when the dates fall within a year or two, and
+  busy rows become bars per month (sized by money) instead of one mark per
+  grant.
+
+`data/generators/large-grants.mjs` writes an invented 4,178-grant file for
+checking this; `apps/web/e2e/add-data.spec.ts` uses it.
 
 ## Sample files
 

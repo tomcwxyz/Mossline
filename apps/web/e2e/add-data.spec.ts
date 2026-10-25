@@ -76,3 +76,32 @@ test("adding to the open map fills in records it already has",async({page})=>{
   await expect(page.locator(".ml-dataset summary small")).toContainText("9 records");
   await expect(page.locator(".ml-toast")).toContainText("2 filled in");
 });
+
+test("a large grants file stays readable: grants as links, groupings, ranked funders and monthly rows",async({page},info)=>{
+  test.setTimeout(150_000);
+  const {execFileSync}=await import("node:child_process");
+  const csv=info.outputPath("large-grants.csv");
+  execFileSync(process.execPath,[resolve(__dirname,"../../../data/generators/large-grants.mjs"),csv]);
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/");
+  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.locator(".ml-add-drop input[type=file]").setInputFiles(csv);
+  await page.getByRole("button",{name:/Check what this adds/}).click();
+  await page.getByRole("button",{name:"Create the map"}).click({timeout:60_000});
+  await page.getByRole("button",{name:/Refine results/}).click({timeout:60_000});
+  await expect(page.getByRole("combobox",{name:"Grants"})).toHaveValue("links");
+  await page.getByRole("button",{name:"Hide filters"}).click();
+  const lens=(name:string)=>page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:new RegExp("^"+name)}).click();
+  await lens("Themes");
+  const groupBy=page.locator(".ml-group-by select");
+  await expect(groupBy).toHaveValue("programme");
+  await groupBy.selectOption("topics");
+  await expect(page.locator(".ml-tag-card")).toContainText("Not in your source");
+  await lens("Funding");
+  await expect(page.locator(".ml-funding-bars")).toContainText("Largest funders");
+  await expect(page.locator(".ml-funding-bars")).toContainText("other funders");
+  await lens("Timeline");
+  await expect(page.locator(".ml-lane-label").first()).toContainText("Recorded per month");
+  const busiest=page.locator(".ml-lane").filter({hasText:"Northfield Community Foundation"});
+  await expect(busiest).toContainText("2,007 grants");
+});

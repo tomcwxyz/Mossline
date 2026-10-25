@@ -14,10 +14,14 @@ export type PlacePrecision = "postcode" | "postcode sector" | "postcode district
 export interface ApproximatePlace {
   latitude: number; longitude: number; precision: PlacePrecision;
   method: "offline lookup" | "postcodes.io"; from: string;
+  /** Town and region most of the postcode's sector lies in (OS Open Names). */
+  town?: string; region?: string;
 }
+type CentroidRow = [number, number, number?, number?, number?];
 export interface PostcodeCentroids {
   kind: "mossline-postcode-centroids"; version: 1; generated: string; attribution: string[];
-  sectors: Record<string, [number, number, number?]>; districts: Record<string, [number, number, number?]>;
+  towns?: string[]; regions?: string[];
+  sectors: Record<string, CentroidRow>; districts: Record<string, CentroidRow>;
 }
 
 /** Only a record's own postcode places it: source columns describing another
@@ -39,10 +43,15 @@ export function postcodeParts(postcode: string): { postcode: string; sector: str
 export function lookupPostcode(postcode: string, data: PostcodeCentroids): ApproximatePlace | null {
   const parts = postcodeParts(postcode);
   if (!parts) return null;
+  const names = (row: CentroidRow) => {
+    const town = row[3] !== undefined && row[3] >= 0 ? data.towns?.[row[3]] : undefined;
+    const region = row[4] !== undefined && row[4] >= 0 ? data.regions?.[row[4]] : undefined;
+    return { ...(town ? { town } : {}), ...(region ? { region } : {}) };
+  };
   const s = data.sectors[parts.sector];
-  if (s) return { latitude: s[0], longitude: s[1], precision: "postcode sector", method: "offline lookup", from: parts.postcode };
+  if (s) return { latitude: s[0], longitude: s[1], precision: "postcode sector", method: "offline lookup", from: parts.postcode, ...names(s) };
   const d = data.districts[parts.district];
-  if (d) return { latitude: d[0], longitude: d[1], precision: "postcode district", method: "offline lookup", from: parts.postcode };
+  if (d) return { latitude: d[0], longitude: d[1], precision: "postcode district", method: "offline lookup", from: parts.postcode, ...names(d) };
   return null;
 }
 
@@ -52,7 +61,8 @@ export function approximatePlace(node: GraphNode): ApproximatePlace | null {
   const a = v as Partial<ApproximatePlace>;
   if (typeof a.latitude !== "number" || typeof a.longitude !== "number" || !Number.isFinite(a.latitude) || !Number.isFinite(a.longitude)) return null;
   return { latitude: a.latitude, longitude: a.longitude, precision: a.precision ?? "postcode district",
-    method: a.method ?? "offline lookup", from: a.from ?? "" };
+    method: a.method ?? "offline lookup", from: a.from ?? "",
+    ...(typeof a.town === "string" ? { town: a.town } : {}), ...(typeof a.region === "string" ? { region: a.region } : {}) };
 }
 
 /** Where to draw a record: its recorded position, else an approximate one. */
@@ -103,7 +113,11 @@ export function placeByPostcode(graph: GraphDocument, data: PostcodeCentroids | 
     const current = approximatePlace(node);
     const hit = exact[pc];
     let next: ApproximatePlace | null = null;
-    if (hit) next = { latitude: hit[0], longitude: hit[1], precision: "postcode", method: "postcodes.io", from: pc };
+    if (hit) {
+      const offline = data ? lookupPostcode(pc, data) : current;
+      next = { latitude: hit[0], longitude: hit[1], precision: "postcode", method: "postcodes.io", from: pc,
+        ...(offline?.town ? { town: offline.town } : {}), ...(offline?.region ? { region: offline.region } : {}) };
+    }
     else if (!current && data) next = lookupPostcode(pc, data);
     if (!next || (current && current.precision === next.precision && current.from === next.from)) return node;
     placed++;

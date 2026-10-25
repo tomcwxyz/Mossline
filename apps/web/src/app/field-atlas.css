@@ -385,7 +385,8 @@
   width: 100%; height: 22px; display: flex; justify-content: flex-end; align-items: center; gap: 6px;
   border: 0; background: none; padding: 0; font-size: 11.5px; text-align: right; white-space: nowrap; overflow: hidden;
 }
-.ml-sankey-funder span { font: 10px var(--ml-mono); color: var(--ml-subtle); }
+.ml-sankey-funder span { font: 10px var(--ml-mono); color: var(--ml-subtle); flex: none; }
+.ml-sankey-funder em { font-style: normal; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ml-sankey-funder.is-selected { font-weight: 600; }
 .ml-sankey-funder:hover { text-decoration: underline; }
 .ml-section-title { display: flex; align-items: center; gap: 8px; font: 600 11.5px var(--ml-sans) !important; letter-spacing: .1em; text-transform: uppercase; }
@@ -888,3 +889,26 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
 }
 .ml-atlas .maplibregl-ctrl-attrib.maplibregl-compact-show { max-width: min(560px, calc(100vw - 140px)); }
 .ml-atlas .maplibregl-ctrl-attrib-inner { white-space: normal; line-height: 1.45; }
+
+/* ---- Groupings, grants as links, busy timelines ------------------------------ */
+.ml-group-by { display: grid; gap: 4px; margin-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ml-subtle); }
+.ml-group-by select { min-height: 34px; padding: 0 8px; border: 1px solid var(--ml-border-strong); border-radius: var(--ml-radius-sm);
+  background: var(--ml-surface); color: var(--ml-ink); font: 500 13px var(--ml-sans); letter-spacing: 0; text-transform: none; }
+.ml-tag-card.is-suggested { border-style: dashed; border-color: var(--ml-border-pencil); }
+.ml-tag-card.is-suggested .ml-overlay-note { color: var(--ml-ink); }
+.ml-area-label--suggested span { font-style: italic; text-decoration: underline dotted var(--ml-pencil); text-underline-offset: 4px; }
+.ml-monthbars { cursor: default; }
+.ml-lane-month { stroke: var(--ml-rule); stroke-width: 1; stroke-dasharray: 1 3; }
+.ml-funding-bars { display: grid; gap: 22px; }
+.ml-funding-bars ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
+.ml-funding-bars li > button, .ml-funding-bars li > div { width: 100%; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 10px;
+  align-items: center; border: 0; background: none; padding: 7px 4px; border-bottom: 1px solid var(--ml-rule); text-align: left; font-size: 13px; color: var(--ml-ink); }
+.ml-funding-bars li > button[aria-pressed="true"] { background: var(--ml-sunken); font-weight: 600; }
+.ml-funding-bars li span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ml-funding-bars i { display: block; height: 8px; border-radius: 4px; background: var(--ml-sunken); overflow: hidden; }
+.ml-funding-bars b { display: block; height: 100%; border-radius: 4px; }
+.ml-funding-bars .ml-mono { font-size: 11px; text-align: right; }
+.ml-funding-bars li.is-quiet span:first-child { color: var(--ml-muted); font-style: italic; }
+.ml-funding-bars li.is-quiet b { opacity: .45; }
+.ml-chart-page, .ml-cofunding, .ml-cofunding > div { min-width: 0; }
+.ml-matrix { display: block; max-width: 100%; overflow-x: auto; }

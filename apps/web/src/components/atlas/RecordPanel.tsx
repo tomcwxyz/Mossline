@@ -3,7 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import {
   APPROXIMATE_KEY, approximatePlace, titleCaseName, describeApproximatePlace, describeIdentifier, evidenceReceipt, isRecorded, readAtlasLocation,
-  type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode, type SourceOrigin
+  type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode, type Grouping, type SourceOrigin
 } from "@mossline/graph-core";
 import { TYPE_LABEL, formatMoney } from "./palette";
 
@@ -22,6 +22,7 @@ type Props = {
   leads: { node: GraphNode; degree: number }[]; totalRecords: number; totalRecorded: number;
   onPick: (id: string) => void; onFollow: (id: string) => void;
   onConfirm: (edge: GraphEdge, input: ConfirmInput) => void;
+  grouping?: Grouping | null; groupLabel?: string;
 };
 
 const receiptText = (r: SourceOrigin) => [r.fileName ?? r.system, r.recordNumber ? "#" + r.recordNumber : r.recordId].join(" · ");
@@ -56,7 +57,7 @@ function Receipt({ edge }: { edge: GraphEdge }) {
   return <span className="ml-receipt" title={text}>{text}</span>;
 }
 
-export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm }: Props) {
+export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme" }: Props) {
   const [showAll, setShowAll] = useState(false);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("");
@@ -109,7 +110,10 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
   const total = valued.filter(f => f.currency === currency).reduce((s, f) => s + (f.amount ?? 0), 0);
   const years = funderFlows.map(f => f.year).filter((y): y is number => y !== null);
   const byTheme = new Map<string, number>();
-  for (const f of valued) if (f.currency === currency) byTheme.set(f.themes[0] ?? "No theme recorded", (byTheme.get(f.themes[0] ?? "No theme recorded") ?? 0) + (f.amount ?? 0));
+  const groupOf = (f: FundingFlow) => grouping && grouping.kind !== "funder"
+    ? (f.grantId ? grouping.of.get(f.grantId) : undefined) ?? grouping.of.get(f.recipientId) ?? "Not grouped"
+    : f.themes[0] ?? "No theme recorded";
+  for (const f of valued) if (f.currency === currency) byTheme.set(groupOf(f), (byTheme.get(groupOf(f)) ?? 0) + (f.amount ?? 0));
   const themeRows = [...byTheme].sort((a, b) => b[1] - a[1]).slice(0, 6);
   const largest = [...valued].filter(f => f.currency === currency).sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0)).slice(0, 4);
   const shownRecorded = showAll ? recorded : recorded.slice(0, 6);
@@ -119,7 +123,8 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
     <p className={"ml-eyebrow ml-eyebrow--" + node.type}><TypeMark type={node.type}/> {TYPE_LABEL[node.type]}</p>
     <h2>{node.label}</h2>
     {(place || node.region) && <p className="ml-place">{[place && titleCaseName(place), node.region].filter(Boolean).join(" · ")}
-      {node.type === "funder" && years.length > 0 && <> · grants {Math.min(...years)}–{Math.max(...years)}</>}</p>}
+      {node.type === "funder" && years.length > 0 && <> · grants {Math.min(...years) === Math.max(...years)
+        ? "in " + Math.min(...years) : Math.min(...years) + "–" + Math.max(...years)}</>}</p>}
     <p className="ml-description">{node.description || "No description recorded in the source."}</p>
     {node.tags.length > 0 && <ul className="ml-tags">{node.tags.map(t => <li key={t}>{t}</li>)}</ul>}
 
@@ -138,7 +143,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
       Follow a recorded connection →</button>
 
     {node.type === "funder" && themeRows.length > 0 && <section className="ml-panel-section">
-      <h3 className="ml-section-title">By theme</h3>
+      <h3 className="ml-section-title">By {grouping && grouping.kind !== "funder" ? groupLabel.toLowerCase() : "theme"}</h3>
       <ul className="ml-mini-bars">{themeRows.map(([t, v]) => <li key={t}><span>{t}</span>
         <i><b style={{ width: (v / themeRows[0][1] * 100) + "%" }}/></i><span className="ml-mono">{formatMoney(v, currency)}</span></li>)}</ul>
     </section>}
