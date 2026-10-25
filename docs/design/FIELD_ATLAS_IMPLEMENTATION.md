@@ -42,29 +42,37 @@ architecture change, **not** permission to discard existing capabilities.
 - Existing import and specialised full-network workflows remain accessible
   under **Detailed tools & full network**.
 
-## The next engineering migrations — not yet shipped
+## v2: the atlas as designed (`feat/field-atlas-v2`)
 
-These are substantial enough to do in independent, measured changes rather
-than quietly claiming a mock-up is a new graph engine.
+The shell and every lens were rebuilt against the guidance pack's look and feel.
 
-1. **Network rendering:** benchmark graphology + ForceAtlas2 worker +
-   sigma.js against the real 5,876-node / 7,560-edge map, including Android.
-   Replace the transitional SVG detail renderer and retire redundant renderers
-   only after selection, labels, touch, evidence styling and performance pass.
-2. **World map:** MapLibre + a self-hosted PMTiles/Protomaps basemap, arcs,
-   density and unplaced drawer. The first atlas provides honest worldwide
-   source-coordinate positions, but **does not yet have the new basemap**.
-3. **Themes:** opt-in **on-device** embeddings + UMAP, theme suggestions with
-   accept/dismiss and evidence. Current Themes groups by **source tags only**;
-   it must never be represented as semantic embedding.
-4. **Funding scale:** DuckDB-WASM, streaming GrantNav import and Parquet
-   export, with the existing full-funding analysis preserved during migration.
-   Current funding lens counts **direct source links**, not monetary totals.
-5. **Stories:** portable static HTML + tiles + Parquet, and a correction
-   review queue. Keep publication safety review, including sensitive records.
-6. **Accessibility and speed:** keyboard and screen-reader audits at
-   200% zoom; virtualised all-record browser; move layout and expensive
-   aggregations to workers; 44px tap targets, avoid canvas-specific-only UI.
+| Area | What it is now | Where |
+| --- | --- | --- |
+| Shell | Full-bleed canvas, one header (dataset menu, lens pill, search, Night/Day, Share view), filter chips over the canvas, key bottom-left, time strip under the canvas, 380px record panel. Phone: chips behind **Refine results**, panel becomes a bottom sheet. One Night/Day choice for every lens and the front page, remembered on the device (`mossline:atlas-theme`). | `FieldAtlasWorkspace.tsx`, `field-atlas.css` |
+| Network | Sigma 4 on a paper ground. Louvain groups, then ForceAtlas2 (LinLog) in a worker with links inside a group pulling harder than links between groups, then a short spacing pass. A d3-contour **wash** sits under the marks and each area is named by its dominant source tag (or "Around <hub>"). Bridging links are drawn quieter. Selecting a record draws its ink links, quiet pencil links and non-overlapping labels; a route is framed clear of the route panel. | `atlas/NetworkLens.tsx`, `atlas/layout.ts`, `workers/atlas-layout.worker.ts` |
+| Map | MapLibre GL with a self-hosted Natural Earth 1:10m coastline (simplified, 971 KB) and water-lining. Small pale marks at rest; the selection and what it touches come forward in full colour, with a name card. Place records are drawn as dots with uppercase names; seas and uplands come from a small built-in gazetteer (`atlas/gazetteer.ts`, orientation only, never used to place records). Graticule with degree labels, an inset locator, funder arcs sized by recorded amount, a pill counting what is outside the view, a Points/Hexagons switch, and a margin card for records without coordinates (a pill on phones). Selecting a record frames it and what it touches. No tiles or third-party requests. | `atlas/MapLens.tsx`, `atlas/gazetteer.ts`, `scripts/build-basemap.mjs`, `public/geo/` |
+| Themes | Source tags only: each record sits in its most widely shared tag, packed with d3-hierarchy. Never presented as semantic clustering. | `atlas/layout.ts#themeLayout` |
+| Funding | d3-sankey funder → theme → region, by money where amounts are recorded (unvalued links disclosed, not counted as zero) or by links. Co-funding matrix with the "overlap is not coordination" caveat. | `atlas/FundingLens.tsx`, `graph-core/field-atlas.ts#fundingFlows` |
+| Timeline | Swimlanes: rows by funder (grants sized by amount), by theme, or by relationship, with each dated record as a mark along a shared year axis. Year-only dates are spread across their year rather than given an invented day. The brushable year bars sit on the same axis and filter every lens. | `atlas/TimeLens.tsx` |
+| Front page | Rebuilt in the atlas identity: line-mark logo and Newsreader wordmark, paper and ink tokens, a small drawn atlas showing ink, pencil and wash, and the same Night/Day choice. | `StartScreen.tsx`, `MapStudio.tsx` |
+| Everywhere else | Advanced tools, the funding and import workbenches, recovery and shared views use the same tokens, fonts, wordmark and Night/Day choice. The atlas tokens are defined on `:root`; the theme is set on `<html data-theme>` before first paint. The legacy stylesheet's ~1,100 literal colours were moved onto tokens by `scripts/retheme-legacy-css.py` (by role and hue); the old graph canvases keep a dark plate because their renderers draw light marks. | `field-atlas.css`, `globals.css`, `atlas/theme.ts`, `atlas/Wordmark.tsx` |
+| Example | A seeded, fictional northern food and farming network (383 records, 671 recorded links, 248 grants with amounts) opened from **Or try an example network**. The advanced tools keep the small community example. | `data/generators/northern-food-example.mjs` |
+
+### Implementation notes worth keeping
+
+- **Sigma 4 sizes:** set `itemSizesReference: "screen"`. The default sizes marks in graph units, so a ForceAtlas2 layout thousands of units wide draws pin-pricks.
+- **Sigma 4 dashed edges:** `layerDashed({ dashSize: { attribute } })` reads the *display data*, so the edge reducer must copy `dashSize`/`gapSize` through. A zero gap draws nothing, so a recorded (solid) line is one very long dash with a token gap.
+- **MapLibre worker:** MapLibre looks for its worker beside its own module, which the bundler moves. `apps/web/scripts/copy-maplibre-worker.mjs` (run by `predev`/`prebuild`) copies it to `public/vendor/` and `MapLens` calls `setWorkerUrl`. `maplibre-gl.css` sets `.maplibregl-map { position: relative }`, hence the doubled class on the map container.
+- **Colour in WebGL:** Sigma and MapLibre cannot read CSS custom properties, so `atlas/palette.ts` mirrors the `--ml-*` tokens. Change both together.
+
+### Still to do
+
+1. **Real-device performance.** The network is laid out in a worker before Sigma is created, so a large map is drawn once, at its final positions. Layouts are cached per dataset and lens, so switching lens or Night/Day does not lay out again. Above 3,000 records the layout takes fewer, coarser steps and links are straight rather than curved. Measured on a synthetic 5,876-record / 7,560-link map, production build, in this sandbox (software WebGL, so slower than any real GPU): about 23 s to settle before, about 8 s after. Still to measure on a mid-range laptop and an Android phone.
+2. **Basemap detail.** The coastline is enough for national and regional views. Street-level context would need self-hosted PMTiles/Protomaps.
+3. **Themes by meaning.** Opt-in, on-device embeddings + UMAP with accept/dismiss and evidence. Until then Themes stays source-tag only.
+4. **Funding scale.** DuckDB-WASM, streaming GrantNav import and Parquet export.
+5. **Stories.** Portable static HTML + Parquet, and a correction review queue.
+6. **Accessibility.** axe passes on Network, Funding and Timeline in day and night themes; a screen-reader pass at 200% zoom is still owed.
 
 ## Data/model gaps
 

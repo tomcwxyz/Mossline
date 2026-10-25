@@ -1,5 +1,6 @@
 import { readAtlasLocation } from "./geography";
 import type { GraphDocument, GraphEdge, GraphNode, NodeType } from "./schema";
+import { fundingAwards } from "./funding";
 
 /** The canonical graph is immutable; the atlas is a read-only projection. */
 export type AtlasLens = "network" | "map" | "themes" | "funding" | "timeline";
@@ -74,9 +75,10 @@ function connectedToFunder(graph: GraphDocument, funderId: string): Set<string> 
     if (edge.source === funderId) ids.add(edge.target);
     if (edge.target === funderId) ids.add(edge.source);
   }
-  const intermediaries = [...ids].filter(id => graph.nodes.some(n => n.id === id && n.type === "project"));
-  for (const edge of recorded) if (intermediaries.includes(edge.source) ||
-      intermediaries.includes(edge.target)) {
+  const projects = new Set(graph.nodes.filter(n => n.type === "project").map(n => n.id));
+  const intermediaries = new Set([...ids].filter(id => projects.has(id)));
+  for (const edge of recorded) if (intermediaries.has(edge.source) ||
+      intermediaries.has(edge.target)) {
     ids.add(edge.source); ids.add(edge.target);
   }
   return ids;
@@ -142,4 +144,84 @@ export function atlasFundingOverlap(graph: GraphDocument): {
   return [...counts].map(([funderId,item])=>({
     funderId,recipientCount:item.recipients.size,grantLinks:item.links
   })).sort((a,b)=>b.grantLinks-a.grantLinks);
+}
+
+/** One recorded funding relationship, from either supported source shape:
+ *  - grant records (funder → grant → recipient), as produced by funding imports;
+ *  - a direct recorded funder relationship, optionally carrying an amount.
+ *  Inferred edges never produce a flow, and nothing is double counted. */
+export interface FundingFlow {
+  id: string;
+  funderId: string;
+  recipientId: string;
+  grantId: string | null;
+  amount: number | null;
+  currency: string | null;
+  year: number | null;
+  themes: string[];
+  edgeIds: string[];
+}
+const AMOUNT_KEYS = ["amountAwarded", "amount", "awardAmount", "grantAmount", "value", "amountGbp"];
+const CURRENCY_KEYS = ["currency", "currencyCode"];
+function parseAmount(value: unknown): number | null {
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  if (typeof value !== "string") return null;
+  const cleaned = value.replace(/[£$€,\s]/g, "");
+  if (!/^-?\d+(\.\d+)?$/.test(cleaned)) return null;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : null;
+}
+function currencyOf(properties: Record<string, unknown> | undefined, raw: unknown): string | null {
+  const explicit = first(properties, CURRENCY_KEYS);
+  if (typeof explicit === "string" && explicit.trim()) return explicit.trim().toUpperCase();
+  if (typeof raw === "string") {
+    if (raw.includes("£")) return "GBP";
+    if (raw.includes("€")) return "EUR";
+    if (raw.includes("$")) return "USD";
+  }
+  return null;
+}
+export function fundingFlows(graph: GraphDocument): FundingFlow[] {
+  const byId = new Map(graph.nodes.map(n => [n.id, n]));
+  const flows: FundingFlow[] = [];
+  const grantIds = new Set<string>();
+  const between = new Map<string, string[]>();
+  for (const e of graph.edges) if (isRecorded(e)) {
+    const key = e.source + "\u0000" + e.target;
+    between.set(key, [...(between.get(key) ?? []), e.id]);
+  }
+  for (const award of fundingAwards(graph)) {
+    grantIds.add(award.grantId);
+    const year = award.date ? (award.date.match(/(18|19|20|21)\d{2}/)?.[0] ?? null) : null;
+    const edgeIds = [...(between.get(award.funderId + "\u0000" + award.grantId) ?? []),
+      ...(between.get(award.grantId + "\u0000" + award.recipientId) ?? [])];
+    flows.push({ id: "grant:" + award.grantId, funderId: award.funderId, recipientId: award.recipientId,
+      grantId: award.grantId, amount: award.amount, currency: award.currency || null,
+      year: year ? Number(year) : null, themes: award.themes, edgeIds });
+  }
+  for (const edge of graph.edges) {
+    if (!isRecorded(edge)) continue;
+    const source = byId.get(edge.source), target = byId.get(edge.target);
+    if (!source || !target) continue;
+    if (grantIds.has(source.id) || grantIds.has(target.id)) continue;
+    const funder = source.type === "funder" ? source : target.type === "funder" ? target : null;
+    const recipient = funder === source ? target : source;
+    if (!funder || recipient.type === "funder") continue;
+    const raw = first(edge.properties, AMOUNT_KEYS);
+    flows.push({ id: "edge:" + edge.id, funderId: funder.id, recipientId: recipient.id, grantId: null,
+      amount: parseAmount(raw), currency: currencyOf(edge.properties, raw),
+      year: recordedYear(edge), themes: recipient.tags, edgeIds: [edge.id] });
+  }
+  return flows;
+}
+/** Totals per currency, from recorded amounts only. Missing amounts are never zero. */
+export function fundingTotals(flows: FundingFlow[]): { currency: string; total: number; valued: number }[] {
+  const totals = new Map<string, { currency: string; total: number; valued: number }>();
+  for (const flow of flows) {
+    if (flow.amount === null || !flow.currency) continue;
+    const item = totals.get(flow.currency) ?? { currency: flow.currency, total: 0, valued: 0 };
+    item.total += flow.amount; item.valued++;
+    totals.set(flow.currency, item);
+  }
+  return [...totals.values()].sort((a, b) => b.total - a.total);
 }
