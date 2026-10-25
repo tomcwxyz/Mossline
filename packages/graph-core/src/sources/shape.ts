@@ -57,6 +57,8 @@ export const linkTemplateSchema = z.object({
   from: endpoint, to: endpoint,
   type: template,
   direction: z.union([z.enum(["directed", "undirected", "mutual"]), template]).optional(),
+  /** Cause and effect: "+" (more leads to more) or "−" (more leads to less). */
+  polarity: template.optional(),
   description: template.optional(),
   fields: z.union([z.literal("row"), z.array(z.string().max(150)).max(60)]).optional(),
   /** Named values on the link, e.g. {"Start Date": "{trustee_date_of_appointment}"}. */

@@ -18,12 +18,12 @@ type Reply = { kind: "positions"; positions: [string, number, number, number][] 
 /** LinLog pulls single-link records onto their hub. A short relaxation keeps
  *  a minimum gap between marks (about 1/65 of the drawing) so each stays
  *  pickable; it moves records apart, never towards anything. */
-function spread(positions: Record<string, { x: number; y: number }>, rounds = 40) {
+function spread(positions: Record<string, { x: number; y: number }>, rounds = 40, share = 65) {
   const pts = Object.values(positions);
   if (pts.length < 2) return;
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const p of pts) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
-  const gap = Math.max(maxX - minX, maxY - minY, 1) / 65;
+  const gap = Math.max(maxX - minX, maxY - minY, 1) / share;
   for (let round = 0; round < rounds; round++) {
     // Numeric cell keys: string keys made this pass slow on large maps.
     const grid = new Map<number, number[]>();
@@ -66,9 +66,12 @@ self.onmessage = (event: MessageEvent<Message>) => {
     graph.forEachNode(id => { if (graph.degree(id) === 0) graph.dropNode(id); });
     if (graph.order === 0) { post({ kind: "positions", positions: [] }); return; }
 
+    // A small map (a systems map, a theory of change) is one drawing, not areas:
+    // every link pulls equally and records keep room for their names.
+    const small = graph.order <= 80;
     const community = graph.size > 0 ? louvain(graph, { resolution: 1.1, randomWalk: false }) : {};
     graph.forEachEdge((edge, _attrs, source, target) =>
-      graph.setEdgeAttribute(edge, "weight", community[source] === community[target] ? 1 : 0.12));
+      graph.setEdgeAttribute(edge, "weight", small || community[source] === community[target] ? 1 : 0.12));
     // Seed: each community gets a centre on a sunflower, sized by membership.
     const members = new Map<number, string[]>();
     graph.forEachNode(id => {
@@ -87,7 +90,11 @@ self.onmessage = (event: MessageEvent<Message>) => {
       });
     });
     const n = graph.order;
-    const positions = forceAtlas2(graph, {
+    const positions = small ? forceAtlas2(graph, {
+      iterations: 600, getEdgeWeight: "weight",
+      settings: { linLogMode: false, gravity: 1, scalingRatio: 12, slowDown: 1.5, edgeWeightInfluence: 1, strongGravityMode: true,
+        barnesHutOptimize: false, adjustSizes: false, outboundAttractionDistribution: false }
+    }) : forceAtlas2(graph, {
       // Groups are seeded apart, so large maps settle in fewer, coarser steps.
       iterations: n > 8000 ? 60 : n > 3000 ? 100 : n > 800 ? 220 : 320,
       getEdgeWeight: "weight",
@@ -97,7 +104,7 @@ self.onmessage = (event: MessageEvent<Message>) => {
         adjustSizes: false, outboundAttractionDistribution: false
       }
     });
-    spread(positions);
+    spread(positions, small ? 80 : 40, small ? 9 : 65);
     post({ kind: "positions", positions: Object.entries(positions).map(([id, p]) =>
       [id, p.x, p.y, community[id] ?? 0]) });
   } catch (e) {

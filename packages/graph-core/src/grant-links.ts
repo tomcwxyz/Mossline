@@ -44,7 +44,8 @@ export function grantsAsLinks(graph: GraphDocument, flows: FundingFlow[] = fundi
     const first = byEdge.get(p.flows[0].edgeIds[0] ?? "");
     return {
       id: "grants:" + p.funderId + ">" + p.recipientId, source: p.funderId, target: p.recipientId,
-      type: p.flows.length === 1 ? "funded · 1 grant" : "funded · " + p.flows.length + " grants", direction: "directed",
+      // One kind of link ("funded"), so the key and filters stay short; the count travels with it.
+      type: "funded", direction: "directed", description: p.flows.length === 1 ? "1 grant" : p.flows.length + " grants",
       ...(first?.origin ? { origin: first.origin } : {}),
       properties: {
         grants: p.flows.length,

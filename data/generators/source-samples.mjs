@@ -106,6 +106,30 @@ write("kumu-map.json", JSON.stringify({
   ]
 }, null, 2));
 
+/* Kumu: a cause-and-effect (systems) map. "+" means more leads to more; "-" more leads to less. */
+const factors = ["Volunteer capacity", "Meals served", "Community trust", "Food donations", "Food sent to landfill",
+  "Household food insecurity", "Demand on food services", "Staff and volunteer burnout", "Grant funding",
+  "Local growing projects", "Cooking skills", "Fresh food eaten"];
+const fid = (name) => "elem-" + name.toLowerCase().replace(/[^a-z]+/g, "-");
+const causal = [
+  ["Meals served", "Community trust", "+"], ["Community trust", "Volunteer capacity", "+"], ["Volunteer capacity", "Meals served", "+"],
+  ["Community trust", "Food donations", "+"], ["Food donations", "Meals served", "+"], ["Food donations", "Food sent to landfill", "-"],
+  ["Household food insecurity", "Demand on food services", "+"], ["Demand on food services", "Meals served", "+"],
+  ["Meals served", "Household food insecurity", "-"], ["Meals served", "Staff and volunteer burnout", "+"],
+  ["Staff and volunteer burnout", "Volunteer capacity", "-"], ["Grant funding", "Volunteer capacity", "+"],
+  ["Grant funding", "Local growing projects", "+"], ["Local growing projects", "Cooking skills", "+"],
+  ["Cooking skills", "Fresh food eaten", "+"], ["Fresh food eaten", "Household food insecurity", "-"],
+  ["Local growing projects", "Community trust", "+"]
+];
+write("kumu-systems-map.json", JSON.stringify({
+  elements: factors.map(name => ({ _id: fid(name), attributes: { label: name, "element type": "Factor" } })),
+  connections: [
+    ...causal.map(([from, to, sign], i) => ({ _id: "conn-" + (i + 1), from: fid(from), to: fid(to), direction: "directed",
+      attributes: { "connection type": sign === "+" ? "increases" : "decreases", polarity: sign } })),
+    { _id: "conn-related", from: fid("Cooking skills"), to: fid("Community trust"), direction: "undirected", attributes: { "connection type": "related to" } }
+  ]
+}, null, 2));
+
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const colName = (i) => { let s = ""; i++; while (i) { const r = (i - 1) % 26; s = String.fromCharCode(65 + r) + s; i = Math.floor((i - 1) / 26); } return s; };
 export function buildXlsx(sheets) {

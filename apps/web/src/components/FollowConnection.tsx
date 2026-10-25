@@ -2,7 +2,7 @@
 
 import {useEffect,useMemo,useState} from "react";
 import {
-  evidenceReceipt,findRecordedRoutes,isRecorded,
+  edgePolarity,evidenceReceipt,findRecordedRoutes,isRecorded,
   type ConnectionTrail,type GraphDocument
 } from "@mossline/graph-core";
 
@@ -22,6 +22,9 @@ export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
   const [routes,setRoutes]=useState<ConnectionTrail[]>([]);
   const [routeIndex,setRouteIndex]=useState(0);
   const [searched,setSearched]=useState(false);
+  // Cause → effect, activity → outcome: only walk directed links the way they point.
+  const [arrows,setArrows]=useState(false);
+  const directed=useMemo(()=>graph.edges.some(e=>isRecorded(e)&&(e.direction??"directed")!=="undirected"&&e.direction!==undefined),[graph.edges]);
   const byId=useMemo(()=>new Map(graph.nodes.map(n=>[n.id,n])),[graph.nodes]);
   const edges=useMemo(()=>new Map(graph.edges.filter(isRecorded).map(e=>[e.id,e])),[graph.edges]);
   const from=byId.get(fromId);
@@ -41,7 +44,7 @@ export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
   }
   function follow(){
     if(!target||!from)return;
-    setRoutes(findRecordedRoutes(graph,from.id,target,{maxHops:5,maxRoutes:3}));
+    setRoutes(findRecordedRoutes(graph,from.id,target,{maxHops:5,maxRoutes:3,followDirection:arrows}));
     setSearched(true);setRouteIndex(0);
   }
   return <section className="ml-follow" aria-label="Follow a recorded connection">
@@ -59,6 +62,9 @@ export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
             setQuery(event.target.value);setTarget("");setRoutes([]);setSearched(false);
           }}/>
       </label>
+      {directed&&<label className="ml-follow-arrows"><input type="checkbox" checked={arrows}
+        onChange={e=>{setArrows(e.target.checked);setRoutes([]);setSearched(false);}}/>
+        <span>Follow arrows only <small>cause → effect, activity → outcome</small></span></label>}
       <button type="button" disabled={!target} onClick={follow}>Find recorded route →</button>
     </div>
     {query.trim().length>=2&&!target&&<div className="ml-follow-choices" role="group" aria-label="Matching destinations">
@@ -68,7 +74,7 @@ export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
       {choices.length===12&&<small>Showing the first 12. Add more words to narrow your search.</small>}
     </div>}
     {searched&&routes.length===0&&<p role="status" className="ml-route-none">
-      No recorded route within five steps. This does not mean the records are unconnected
+      No recorded route within five steps{arrows?" following the arrows":""}. This does not mean the records are unconnected
       outside this dataset or beyond five steps.
     </p>}
     {route&&<section className="ml-route-result" aria-label="Documented route">
@@ -88,7 +94,8 @@ export function FollowConnection({graph,fromId,onChoose,onClose,onRoute}:Props){
           return <li key={step.edgeId+"-"+i}>
             <button type="button" onClick={()=>onChoose(step.fromId)}>
               {byId.get(step.fromId)?.label??step.fromId}</button>
-            <span className="ml-route-relation">{step.forward?"→":"←"} {step.relation}</span>
+            <span className="ml-route-relation">{step.direction==="undirected"?"—":step.direction==="mutual"?"↔":step.forward?"→":"←"} {step.relation}
+              {e&&edgePolarity(e)&&<b className={"ml-sign ml-sign--"+(edgePolarity(e)==="+"?"plus":"minus")}>{edgePolarity(e)==="+"?"+":"−"}</b>}</span>
             <button type="button" onClick={()=>onChoose(step.toId)}>
               {byId.get(step.toId)?.label??step.toId}</button>
             <small>{e?evidenceReceipt(e):"Source record unavailable"}

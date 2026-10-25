@@ -912,3 +912,47 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
 .ml-funding-bars li.is-quiet b { opacity: .45; }
 .ml-chart-page, .ml-cofunding, .ml-cofunding > div { min-width: 0; }
 .ml-matrix { display: block; max-width: 100%; overflow-x: auto; }
+
+/* ---- Relationships: arrows, kinds of link, signs, loops ---------------------- */
+.ml-key-arrow { display: inline-block; width: 24px; text-align: center; font: 600 13px/1 var(--ml-sans); color: var(--ml-ink); }
+.ml-key-links { display: grid; gap: 4px; padding-top: 8px; margin-top: 6px; border-top: 1px solid var(--ml-rule); }
+.ml-key-links-head { font-size: 11px; color: var(--ml-subtle); }
+.ml-key-links ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; max-height: 180px; overflow: auto; }
+.ml-key-links li.ml-key-sign { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 2px 6px; }
+.ml-key-links i { display: inline-block; flex: none; width: 18px; height: 3px; border-radius: 2px; }
+.ml-key-links i.is-ink { background: var(--ml-ink); opacity: .45; }
+.ml-key-links button { width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 8px;
+  border: 0; background: none; padding: 4px 6px; border-radius: 6px; font-size: 12px; text-align: left; }
+.ml-key-links button:hover { background: var(--ml-sunken); }
+.ml-key-links button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ml-key-links button b { font: 10.5px var(--ml-mono); color: var(--ml-subtle); }
+.ml-key-links button[aria-pressed="false"] span { text-decoration: line-through; color: var(--ml-subtle); }
+.ml-key-links button[aria-pressed="false"] i { opacity: .25; }
+.ml-loop-card { left: 14px; top: 62px; width: 300px; max-height: calc(100% - 250px); overflow: auto; display: grid; gap: 8px; }
+.ml-loop-card.is-closed { width: max-content; padding: 8px 14px; border-radius: 999px; }
+.ml-loop-card ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.ml-loop-card li button { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: start;
+  border: 0; background: none; padding: 6px; border-radius: 6px; text-align: left; font-size: 12.5px; line-height: 1.4; }
+.ml-loop-card li button:hover, .ml-loop-card li button[aria-pressed="true"] { background: var(--ml-sunken); }
+.ml-loop-chip { display: inline-grid; place-items: center; min-width: 30px; padding: 1px 6px; border-radius: 999px;
+  font: 600 11px var(--ml-mono); border: 1.5px solid currentColor; background: var(--ml-surface); }
+.ml-loop-chip--reinforcing { color: var(--ml-funder); }
+.ml-loop-chip--balancing { color: var(--ml-danger); }
+.ml-loop-chip--unknown { color: var(--ml-subtle); border-style: dashed; }
+.ml-loop-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ml-loop-chips button.ml-loop-chip { cursor: pointer; font-size: 11.5px; padding: 3px 9px; }
+.ml-sign { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 50%;
+  font: 700 11px/1 var(--ml-mono); color: var(--ml-surface); vertical-align: 1px; }
+.ml-sign--plus { background: var(--ml-funder); }
+.ml-sign--minus { background: var(--ml-danger); }
+.ml-follow-arrows { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: 8px !important; font-size: 12.5px !important; color: var(--ml-ink) !important; }
+.ml-follow-arrows input { min-height: 0 !important; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--ml-moss); }
+.ml-follow-arrows span { display: grid; gap: 1px; }
+.ml-follow-arrows small { color: var(--ml-muted); font-size: 11.5px; }
+@media (max-width: 720px) {
+  .ml-loop-card { top: auto; bottom: 12px; left: 12px; right: 12px; width: auto; max-height: 40%; }
+}
+.ml-key:has(.ml-key-links) { max-width: min(460px, calc(100% - 28px)); }
+.ml-key-links ul { max-height: 132px; }
+.ml-sign-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.ml-sign--map { position: absolute; left: 0; top: 0; margin: 0; width: 18px; height: 18px; font-size: 12px; box-shadow: 0 0 0 2px var(--ml-paper); }

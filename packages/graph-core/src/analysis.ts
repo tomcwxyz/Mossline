@@ -6,6 +6,8 @@ export interface RouteOptions {
   maxRoutes?: number;
   /** Exact relationship types omitted from the analysis. Not keyword matching. */
   excludeTypes?: string[];
+  /** Only walk directed links the way they point (cause → effect, activity → outcome). */
+  followDirection?: boolean;
 }
 
 export interface ReachableDestination {
@@ -85,7 +87,9 @@ export function findRecordedRoutes(
     };
     const reverse: ConnectionStep = { ...forward, fromId: edge.target, toId: edge.source, forward: false };
     adjacent.set(edge.source, [...(adjacent.get(edge.source) ?? []), forward]);
-    adjacent.set(edge.target, [...(adjacent.get(edge.target) ?? []), reverse]);
+    // Following direction: a directed link is only walked the way it points.
+    if (!options.followDirection || direction !== "directed")
+      adjacent.set(edge.target, [...(adjacent.get(edge.target) ?? []), reverse]);
   }
   // Stable output independent of CSV row ordering.
   for (const links of adjacent.values()) links.sort((a, b) =>

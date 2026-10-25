@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { isRecorded, type GraphDocument, type GraphNode } from "@mossline/graph-core";
+import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode } from "@mossline/graph-core";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
 
@@ -21,6 +21,9 @@ type Props = {
   suggested?: boolean;
   /** Records not drawn here (grants drawn as links) and the record that stands for them. */
   alias?: Map<string, string>;
+  /** Colour of a recorded link (by kind or by sign), or null for plain ink; linkKey changes when the rule does. */
+  linkColour?: (edge: GraphEdge) => string | null;
+  linkKey?: string;
 };
 type SigmaType = import("sigma").default;
 /** Home framing: a little zoomed out so chips, key and caption do not cover
@@ -33,12 +36,14 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "" }: Props) {
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
   const stage = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const washGroup = useRef<SVGGElement>(null);
   const areaLayer = useRef<HTMLDivElement>(null);
+  /** "+" and "−" badges on the links in focus: signs drawn as HTML so they stay legible. */
+  const signLayer = useRef<HTMLDivElement>(null);
   const sigmaRef = useRef<SigmaType | null>(null);
   const graphRef = useRef<GraphType | null>(null);
   const pick = useRef(onPick); pick.current = onPick;
@@ -73,6 +78,16 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     const ay = renderer.graphToViewport({ x: 0, y: 1 });
     washGroup.current?.setAttribute("transform",
       `matrix(${ax.x - o.x} ${ax.y - o.y} ${ay.x - o.x} ${ay.y - o.y} ${o.x} ${o.y})`);
+    const signs = signLayer.current, data = graphRef.current;
+    if (signs && data) for (const el of Array.from(signs.children) as HTMLElement[]) {
+      const id = el.dataset.edge!;
+      if (!data.hasEdge(id)) continue;
+      const [s, t] = data.extremities(id);
+      const a = renderer.getNodeDisplayData(s), b = renderer.getNodeDisplayData(t);
+      if (!a || !b) continue;
+      const pa = renderer.framedGraphToViewport(a), pb = renderer.framedGraphToViewport(b);
+      el.style.transform = `translate(${Math.round((pa.x + pb.x) / 2 - 9)}px, ${Math.round((pa.y + pb.y) / 2 - 9)}px)`;
+    }
     const layer = areaLayer.current;
     if (!layer) return;
     const ratio = renderer.getCamera().ratio;
@@ -130,7 +145,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
           const washed = new Map(positions);
           const block = placeUnlinked(unlinked, positions, tall);
           // A phone has room for the larger areas' names only.
-          const named = narrow ? found.slice(0, 6) : found;
+          const named = linked.length <= 80 ? [] : narrow ? found.slice(0, 6) : found;
           resolve({ positions, areas: block ? [...named, block] : named, washed, community });
         };
         if (cancelled) return;
@@ -155,7 +170,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     (async () => {
       try {
         const [[{ default: Sigma, DEFAULT_STYLES }, { default: Graph },
-          { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved, pathLine }], placed] = await Promise.all([
+          { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved, pathLine, extremityArrow }], placed] = await Promise.all([
           Promise.all([import("sigma"), import("graphology"), import("sigma/rendering")]), layout]);
         try { await document.fonts.load('500 12px "IBM Plex Sans"'); } catch { /* fall back to system font */ }
         if (cancelled || !container.current) return;
@@ -165,7 +180,9 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         // 2. Build the drawing at its final positions. A record the layout could
         //    not place (worker unavailable) falls back to a plain sunflower.
         const data = new Graph({ type: "mixed", multi: true, allowSelfLoops: true });
-        const scale = narrow ? 0.7 : 1;
+        // A small map is drawn larger, with every name shown.
+        const small = graph.nodes.length <= 80;
+        const scale = (narrow ? 0.7 : 1) * (small ? 1.9 : 1);
         graph.nodes.forEach((n, i) => {
           const a = i * 2.399963, r = Math.sqrt(i) * 4, p = placed.positions.get(n.id);
           data.addNode(n.id, {
@@ -179,11 +196,18 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
           if (!data.hasNode(e.source) || !data.hasNode(e.target)) continue;
           const pencil = e.inferred === true;
           // Links between areas are still ink, drawn quieter so each area stays legible.
-          const bridge = !pencil && community.size > 0 && community.get(e.source) !== community.get(e.target);
+          const bridge = !small && !pencil && community.size > 0 && community.get(e.source) !== community.get(e.target);
+          const dir = e.direction ?? "directed";
+          const typed = !pencil ? linkColour?.(e) ?? null : null;
+          const sign = !pencil ? edgePolarity(e) : null;
           data.addEdgeWithKey(e.id, e.source, e.target, {
             // Sigma's dashed layer draws nothing when the gap is zero, so a
             // recorded line is one very long dash with a token gap.
-            size: pencil ? 1.2 : 0.8, color: pencil ? palette.pencil : bridge ? palette.inkFaint : palette.inkSoft, inferred: pencil,
+            size: (pencil ? 1.2 : typed ? 1.1 : 0.8) * (small ? 1.6 : 1),
+            color: pencil ? palette.pencil : typed ? mix(typed, palette.paper, bridge ? 0.55 : small ? 0.1 : 0.25) : bridge ? palette.inkFaint : small ? palette.ink : palette.inkSoft,
+            typed, inferred: pencil, sign: sign === "-" ? "−" : sign ?? "",
+            // Arrows show which way a recorded link points; a mutual link points both ways.
+            head: !pencil && dir !== "undirected" ? "arrow" : "none", tail: !pencil && dir === "mutual" ? "arrow" : "none",
             dashSize: pencil ? 2 : 1e6, gapSize: pencil ? 4 : 0.5
           });
         }
@@ -198,10 +222,12 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
             edges: {
               // Curves read better, but cost more to draw; large maps get straight lines.
               paths: [graph.edges.length > 3000 ? pathLine() : pathCurved({ curvature: 0.12 })],
-              layers: [layerDashed({ dashSize: { attribute: "dashSize" }, gapSize: { attribute: "gapSize" }, cap: "round", align: 0 })]
+              extremities: [extremityArrow(small ? { lengthRatio: 8, widthRatio: 7, margin: 1 } : { lengthRatio: 5, widthRatio: 4.5, margin: 1 })],
+              layers: [layerDashed({ dashSize: { attribute: "dashSize" }, gapSize: { attribute: "gapSize" }, cap: "round", align: 0, solidExtremities: true })]
             }
           },
           styles: {
+            edges: [DEFAULT_STYLES.edges, { head: { attribute: "head" }, tail: { attribute: "tail" } }],
             nodes: [DEFAULT_STYLES.nodes, {
               shape: { attribute: "nodeShape" }, labelColor: palette.label, labelSize: 12,
               labelBackgroundColor: palette.labelPlate, labelBackgroundPadding: 2,
@@ -232,10 +258,11 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
             const attrs = data.getEdgeAttributes(id);
             const inferred = attrs.inferred === true;
             // Dash sizes are read from display data, so they travel with every result.
-            const out = { ...display, dashSize: attrs.dashSize, gapSize: attrs.gapSize };
+            const out = { ...display, dashSize: attrs.dashSize, gapSize: attrs.gapSize, head: attrs.head, tail: attrs.tail };
             if (f.route) {
+              // A route or loop names each link's sign (+ more leads to more, − more leads to less).
               return f.routeEdges.has(id)
-                ? { ...out, color: palette.moss, size: 3.2, visibility: "visible", zIndex: 3 }
+                ? { ...out, color: attrs.typed ?? palette.moss, size: 3.6, visibility: "visible", zIndex: 3 }
                 : { ...out, visibility: "hidden" };
             }
             if (f.selected) {
@@ -243,12 +270,13 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
               if (s !== f.selected && t !== f.selected) return { ...out, visibility: "hidden" };
               return inferred
                 ? { ...out, color: palette.pencilSoft, size: 1, visibility: "visible" }
-                : { ...out, color: palette.ink, size: 1.6, visibility: "visible", zIndex: 2 };
+                : { ...out, color: attrs.typed ?? palette.ink, size: 2, visibility: "visible", zIndex: 2 };
             }
             return inferred || mode === "themes" ? { ...out, visibility: "hidden" } : out;
           },
           settings: {
-            itemSizesReference: "screen", renderEdgeLabels: false, labelDensity: 0.4, labelGridCellSize: 130, labelRenderedSizeThreshold: narrow ? 8 : 6,
+            itemSizesReference: "screen", renderEdgeLabels: false, labelDensity: small ? 4 : 0.4, labelGridCellSize: small ? 40 : 130,
+            labelRenderedSizeThreshold: small ? 0 : narrow ? 8 : 6,
             hideEdgesOnMove: graph.edges.length > 4000, hideLabelsOnMove: false,
             minCameraRatio: 0.02, maxCameraRatio: 6, stagePadding: 40, zoomDuration: 220
           }
@@ -269,7 +297,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         focus.current = { selected: null, neighbours: new Set(), pencil: new Set(), route: null,
           routeNodes: new Set(), routeEdges: new Set(), labelled: new Set() };
         lastFocus.current = "|";
-        setWash(terrain(placed.washed));
+        setWash(graph.nodes.length <= 80 ? [] : terrain(placed.washed));
         setAreas(placed.areas);
         setStatus("ready");
         setBuilt(v => v + 1);
@@ -286,7 +314,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     // The renderer is rebuilt when the records, lens mode or palette change;
     // a palette change reuses the cached layout.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signature, mode, theme, groupKey]);
+  }, [signature, mode, theme, groupKey, linkKey]);
 
   /** Selection and route labels are always shown, but never on top of each
    *  other: the selected record first, then the best-connected neighbours. */
@@ -309,6 +337,18 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       if (labelled.size >= 32) break;
     }
     f.labelled = labelled;
+    const signs = signLayer.current, data = graphRef.current;
+    if (signs && data) {
+      const ids = f.route ? [...f.routeEdges] : f.selected && data.hasNode(f.selected) ? data.edges(f.selected) : [];
+      signs.replaceChildren(...ids.filter(id => data.hasEdge(id) && data.getEdgeAttribute(id, "sign")).map(id => {
+        const el = document.createElement("span");
+        const sign = data.getEdgeAttribute(id, "sign") as string;
+        el.className = "ml-sign ml-sign--" + (sign === "+" ? "plus" : "minus") + " ml-sign--map";
+        el.textContent = sign; el.dataset.edge = id;
+        el.title = sign === "+" ? "More leads to more" : "More leads to less";
+        return el;
+      }));
+    }
     renderer.refresh();
   }
   function applyFocus() {
@@ -336,7 +376,10 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   /** Home view; a phone-width canvas has no side cards, so it can sit closer. */
   const home = () => {
     const f = FRAMES[mode];
-    return (container.current?.clientWidth ?? 1000) < 600 ? { ...f, x: 0.5, ratio: f.ratio * 0.9 } : f;
+    const w = container.current?.clientWidth ?? 1000;
+    if (w < 600) return { ...f, x: 0.5, ratio: f.ratio * 0.9 };
+    // A small map sits clear of the cards on the left (loops, groups).
+    return graph.nodes.length <= 80 && mode === "network" ? { ...f, x: 0.4, ratio: 1.3 } : f;
   };
   const hadRoute = useRef(false);
   const lastFocus = useRef("");
@@ -398,6 +441,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     </svg>
     <div ref={container} className="ml-sigma-viewport" role="img"
       aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
+    <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
       {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
         <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records{a.kind === "suggested" ? " · suggested" : ""}</small>

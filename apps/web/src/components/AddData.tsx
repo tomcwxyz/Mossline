@@ -110,15 +110,15 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       if (m.tables.length || m.maps.length) setPhase("plan");
     });
   }, [send, target, base]);
-  async function trySamples() {
+  async function trySamples(names = SAMPLE_FILES, title = "Invented sample data") {
     setBusy("Fetching the sample files…");
     try {
-      const files = await Promise.all(SAMPLE_FILES.map(async name => {
+      const files = await Promise.all(names.map(async name => {
         const res = await fetch("/samples/" + name);
         if (!res.ok) throw Error(name);
         return new File([await res.blob()], name);
       }));
-      readFiles(files, "Invented sample data");
+      readFiles(files, title);
     } catch { setBusy(""); setError("Could not fetch the sample files."); }
   }
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); readFiles(Array.from(event.dataTransfer.files)); };
@@ -226,7 +226,9 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
         <div className="ml-add-try">
           <button type="button" className="ml-quiet" onClick={() => void trySamples()} disabled={!!busy}>Try it with sample files</button>
-          <span className="ml-small">Seven small files in these formats. Every name and number in them is invented.</span>
+          <button type="button" className="ml-quiet" onClick={() => void trySamples(["kumu-systems-map.json"], "Invented systems map")} disabled={!!busy}>
+            Try a cause-and-effect map</button>
+          <span className="ml-small">Small files in these formats. Every name and number in them is invented.</span>
         </div>
         {intent === "funding" && onLargeFunding && <p className="ml-small ml-add-legacy">More than 100,000 grants in one file?
           <button type="button" className="ml-link-button" onClick={onLargeFunding}>Use the complete funding explorer</button></p>}

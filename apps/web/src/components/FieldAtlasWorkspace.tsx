@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   collaborationGraph, confirmInferredRelationship, defaultGrouping, emptyAnnotationLayer, fundingFlows, grantsAsLinks, graphFingerprint,
-  groupRecords, groupingOptions, type GroupingKind,
+  groupRecords, groupingOptions, type GroupingKind, connectionTypes, edgePolarity, feedbackLoops, loopLabels,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
   type GraphDocument, type GraphEdge, type NodeType
@@ -16,7 +16,7 @@ import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
 import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
-import { TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
+import { LINK_INKS, SIGN_INKS, TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 
 const LENSES: { id: AtlasLens; label: string; help: string }[] = [
   { id: "network", label: "Network", help: "Position follows recorded relationships" },
@@ -206,8 +206,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const chooseGroup = (kind: GroupingKind) => { setGroupChoice(kind); setTheme(""); };
 
   // ---- Projections ------------------------------------------------------------
+  const [hiddenLinks, setHiddenLinks] = useState<Set<string>>(new Set());
   const baseFilters: AtlasFilters = useMemo(() => ({ query: search, theme, region, funderId: funderId || undefined, groupIds,
-    types: type ? [type] : undefined }), [search, theme, region, funderId, type, groupIds]);
+    hiddenLinkTypes: hiddenLinks.size ? hiddenLinks : undefined,
+    types: type ? [type] : undefined }), [search, theme, region, funderId, type, groupIds, hiddenLinks]);
   const filters: AtlasFilters = useMemo(() => ({ ...baseFilters, fromYear: range.from ?? undefined, toYear: range.to ?? undefined }),
     [baseFilters, range]);
   const result = useMemo(() => projectAtlas(graph, filters), [graph, filters]);
@@ -226,7 +228,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const linksView = useMemo(() => grantCount && showGrantsAs === "links" ? grantsAsLinks(result.graph, flowsView) : null,
     [grantCount, showGrantsAs, result.graph, flowsView]);
   const alias = useMemo(() => linksView ? new Map([...linksView.grantEnds].map(([g, e]) => [g, e.recipientId])) : undefined, [linksView]);
-  const drawn = linksView?.graph ?? result.graph;
+  const drawnAll = linksView?.graph ?? result.graph;
+  // Summary links (grants drawn as links) are hidden here; source links are left out by the filter.
+  const drawn = useMemo(() => hiddenLinks.size ? { ...drawnAll, edges: drawnAll.edges.filter(e => !hiddenLinks.has(e.type)) } : drawnAll,
+    [drawnAll, hiddenLinks]);
   const regions = useMemo(() => [...new Set(graph.nodes.map(n => n.region).filter((s): s is string => !!s))].sort(), [graph]);
   const funders = useMemo(() => graph.nodes.filter(n => n.type === "funder").sort((a, b) => a.label.localeCompare(b.label)), [graph]);
   const typesPresent = useMemo(() => [...new Set(graph.nodes.map(n => n.type))], [graph]);
@@ -247,10 +252,44 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     for (const n of drawn.nodes) { const g = grouping.of.get(n.id); if (g) counts.set(g, (counts.get(g) ?? 0) + 1); }
     return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   }, [grouping, drawn]);
-  const route: AtlasRoute | null = useMemo(() => trail && trail.steps.length ? {
+  // One Night/Day choice for every lens and page, remembered on this device.
+  const [activeTheme, chooseTheme] = useAtlasTheme();
+  const activeThemeRef = useRef(activeTheme); activeThemeRef.current = activeTheme;
+  const byLabel = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
+  // ---- Kinds of link, signs and feedback loops -----------------------------------
+  /** The kinds of recorded link as drawn; hidden kinds stay listed so they can be shown again. */
+  const linkTypes = useMemo(() => {
+    const shown = connectionTypes(drawn);
+    return [...shown, ...[...hiddenLinks].filter(t => !shown.some(x => x.type === t)).map(type => ({ type, count: 0, directed: 0, signed: 0 }))];
+  }, [drawn, hiddenLinks]);
+  const signedShare = useMemo(() => {
+    const total = linkTypes.reduce((s, t) => s + t.count, 0);
+    return total ? linkTypes.reduce((s, t) => s + t.signed, 0) / total : 0;
+  }, [linkTypes]);
+  // A cause-and-effect map is coloured by sign; a map with a handful of kinds, by kind; otherwise plain ink.
+  const linkMode: "sign" | "type" | "plain" = signedShare >= 0.5 ? "sign" : linkTypes.length >= 2 && linkTypes.length <= LINK_INKS.day.length ? "type" : "plain";
+  const linkInk = useMemo(() => new Map(linkTypes.slice(0, LINK_INKS.day.length).map((t, i) => [t.type, i])), [linkTypes]);
+  const linkColour = useCallback((e: GraphEdge) => {
+    if (linkMode === "sign") { const p = edgePolarity(e); return p ? SIGN_INKS[activeThemeRef.current][p === "+" ? "plus" : "minus"] : null; }
+    if (linkMode === "type") { const i = linkInk.get(e.type); return i === undefined ? null : LINK_INKS[activeThemeRef.current][i]; }
+    return null;
+  }, [linkMode, linkInk]);
+  const toggleLink = (t: string) => setHiddenLinks(h => { const n = new Set(h); if (n.has(t)) n.delete(t); else n.add(t); return n; });
+  const loopsFound = useMemo(() => lens === "network" || selectedId ? feedbackLoops(result.graph) : { loops: [], truncated: false },
+    [lens, selectedId, result.graph]);
+  const loopLabel = useMemo(() => loopLabels(loopsFound.loops), [loopsFound]);
+  const [loopId, setLoopId] = useState<string | null>(null);
+  const loop = loopId ? loopsFound.loops.find(l => l.id === loopId) ?? null : null;
+  const [loopsOpen, setLoopsOpen] = useState(true);
+  // On a phone the list starts folded, so the drawing comes first.
+  useEffect(() => { if (window.innerWidth <= 720) setLoopsOpen(false); }, []);
+  const route: AtlasRoute | null = useMemo(() => loop ? { nodeIds: loop.nodeIds, edgeIds: loop.edgeIds }
+    : trail && trail.steps.length ? {
     nodeIds: [trail.steps[0].fromId, ...trail.steps.map(s => s.toId)], edgeIds: trail.steps.map(s => s.edgeId)
-  } : null, [trail]);
+  } : null, [trail, loop]);
+  const showLoop = useCallback((id: string | null) => { setLoopId(id); if (id) { setTrail(null); setRouteFromId(null); setLens("network"); } }, []);
   const onRoute = useCallback((next: ConnectionTrail | null) => {
+    if (next) setLoopId(null);
     setTrail(next);
     if (next) setLens(current => current === "network" || current === "map" ? current : "network");
   }, []);
@@ -258,8 +297,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   const onUnavailable = useCallback(() =>
     setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
 
-  // One Night/Day choice for every lens and page, remembered on this device.
-  const [activeTheme, chooseTheme] = useAtlasTheme();
+
   const activeFilters = [search, type, theme, region, funderId, range.from ?? range.to ?? ""].filter(v => v !== "" && v !== null).length;
   const clearAll = () => { setSearch(""); setType(null); setTheme(""); setRegion(""); setFunderId(""); setRange({ from: null, to: null }); };
   const canvasLens = lens === "network" || lens === "themes" || lens === "map";
@@ -363,6 +401,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
           </div> : <>
             {(lens === "network" || lens === "themes") && <NetworkLens graph={drawn} mode={lens} theme={activeTheme}
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
+              linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
               selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
@@ -390,16 +429,49 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
           {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
             <button type="button" className="ml-key-toggle" aria-expanded={keyOpen} onClick={() => setKeyOpen(v => !v)}>Key</button>
             {keyOpen && <div className="ml-key-body" aria-label="How to read this atlas">
-              <ul className="ml-key-types">{typesPresent.filter(t => t !== "topic" && t !== "methodology" && t !== "outcome").map(t =>
+              <ul className="ml-key-types">{typesPresent.filter(t => t !== "topic" && t !== "methodology").map(t =>
                 <li key={t}><TypeMark type={t}/>{TYPE_PLURAL[t]}</li>)}</ul>
               <ul className="ml-key-grammar">
                 {lens !== "themes" && <li><span className="ml-key-ink"/>Ink · recorded in a source</li>}
                 {lens === "network" && <li><span className="ml-key-pencil"/>Pencil · inferred, not confirmed</li>}
                 <li><span className="ml-key-wash"/>{lens === "themes"
                   ? "Area · records sharing a source tag" : "Wash · drawn to help you navigate"}</li>
+                {lens === "network" && linkTypes.some(t => t.directed > 0) && <li><span className="ml-key-arrow" aria-hidden="true">→</span>Arrows point the way a link is recorded</li>}
               </ul>
+              {lens === "network" && linkTypes.length > 1 && <div className="ml-key-links">
+                <p className="ml-key-links-head">{linkMode === "sign" ? "Cause and effect" : "Kinds of link"} · choose which to show</p>
+                <ul>{(linkMode === "sign"
+                  ? [{ key: "+", label: "+ more leads to more", colour: SIGN_INKS[activeTheme].plus },
+                    { key: "-", label: "− more leads to less", colour: SIGN_INKS[activeTheme].minus }]
+                  : []).map(s => <li key={s.key} className="ml-key-sign"><i style={{ background: s.colour }}/>{s.label}</li>)}
+                  {linkTypes.slice(0, 12).map(t => <li key={t.type}>
+                    <button type="button" aria-pressed={!hiddenLinks.has(t.type)} onClick={() => toggleLink(t.type)}
+                      title={(hiddenLinks.has(t.type) ? "Show " : "Hide ") + t.type + " links"}>
+                      <i style={{ background: linkMode === "type" && linkInk.has(t.type) ? LINK_INKS[activeTheme][linkInk.get(t.type)!] : undefined }}
+                        className={linkMode === "type" && linkInk.has(t.type) ? "" : "is-ink"}/>
+                      <span>{t.type}</span><b>{hiddenLinks.has(t.type) ? "hidden" : t.count.toLocaleString("en-GB")}</b></button></li>)}</ul>
+                {hiddenLinks.size > 0 && <button type="button" className="ml-link-button" onClick={() => setHiddenLinks(new Set())}>Show every kind</button>}
+              </div>}
             </div>}
           </div>}
+
+          {lens === "network" && loopsFound.loops.length > 0 && !routeFromId && <aside className={"ml-overlay-card ml-loop-card" + (loopsOpen ? "" : " is-closed")} aria-label="Feedback loops">
+            <button type="button" className="ml-unplaced-head" aria-expanded={loopsOpen} onClick={() => setLoopsOpen(v => !v)}>
+              <strong>Feedback loops · {loopsFound.loops.length}{loopsFound.truncated ? "+" : ""}</strong><span aria-hidden="true">{loopsOpen ? "–" : "+"}</span></button>
+            {loopsOpen && <>
+              <p className="ml-small">Chains of recorded, directed links that come back to where they started.
+                {signedShare > 0 && <> <strong>R</strong>einforcing loops build on themselves; <strong>B</strong>alancing loops push back.</>}</p>
+              <ol>{loopsFound.loops.slice(0, 12).map(l => <li key={l.id}>
+                <button type="button" aria-pressed={loopId === l.id} onClick={() => showLoop(loopId === l.id ? null : l.id)}>
+                  <b className={"ml-loop-chip ml-loop-chip--" + l.kind}>{loopLabel.get(l.id)}</b>
+                  <span>{l.nodeIds.map(id => byLabel.get(id) ?? id).join(" → ")} →</span>
+                </button></li>)}</ol>
+              {loopsFound.loops.length > 12 && <p className="ml-small">{loopsFound.loops.length - 12} more; select a record to see the loops it is in.</p>}
+              {loopsFound.truncated && <p className="ml-small">This map has more loops than are listed; longer ones were not searched.</p>}
+              {loop && <p className="ml-small" role="status">{loopLabel.get(loop.id)} is {loop.kind === "unknown" ? "a loop whose links do not all record a sign" : "a " + loop.kind + " loop"}
+                {loop.kind !== "unknown" ? (loop.kind === "reinforcing" ? ": a change anywhere in it comes back stronger." : ": a change anywhere in it comes back weaker, steadying the loop.") : "."}</p>}
+            </>}
+          </aside>}
 
           {routeFromId && <div className="ml-follow-dock">
             <FollowConnection graph={graph} fromId={routeFromId} onChoose={setSelectedId} onRoute={onRoute}
@@ -428,7 +500,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
           aria-label="Clear selection">×</button>}
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
-          onPick={setSelectedId} onFollow={id => { setRouteFromId(id); }} onConfirm={confirm}
+          onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={confirm}
+          loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
           grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
       </aside>
     </section>

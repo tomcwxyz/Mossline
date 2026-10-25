@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import {
-  APPROXIMATE_KEY, approximatePlace, titleCaseName, describeApproximatePlace, describeIdentifier, evidenceReceipt, isRecorded, readAtlasLocation,
+  APPROXIMATE_KEY, approximatePlace, edgePolarity, titleCaseName, type FeedbackLoop, describeApproximatePlace, describeIdentifier, evidenceReceipt, isRecorded, readAtlasLocation,
   type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode, type Grouping, type SourceOrigin
 } from "@mossline/graph-core";
 import { TYPE_LABEL, formatMoney } from "./palette";
@@ -23,6 +23,8 @@ type Props = {
   onPick: (id: string) => void; onFollow: (id: string) => void;
   onConfirm: (edge: GraphEdge, input: ConfirmInput) => void;
   grouping?: Grouping | null; groupLabel?: string;
+  /** Feedback loops this map has, their labels (R1, B1…) and how to show one. */
+  loops?: FeedbackLoop[]; loopLabel?: Map<string, string>; onLoop?: (id: string) => void;
 };
 
 const receiptText = (r: SourceOrigin) => [r.fileName ?? r.system, r.recordNumber ? "#" + r.recordNumber : r.recordId].join(" · ");
@@ -57,7 +59,7 @@ function Receipt({ edge }: { edge: GraphEdge }) {
   return <span className="ml-receipt" title={text}>{text}</span>;
 }
 
-export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme" }: Props) {
+export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop }: Props) {
   const [showAll, setShowAll] = useState(false);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("");
@@ -141,6 +143,15 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
     </div>
     <button type="button" className="ml-primary ml-follow-trigger" onClick={() => onFollow(node.id)}>
       Follow a recorded connection →</button>
+    {(() => {
+      const mine = loops.filter(l => l.nodeIds.includes(node.id));
+      return mine.length > 0 && <section className="ml-panel-section">
+        <h3 className="ml-section-title">In feedback loops · {mine.length}</h3>
+        <ul className="ml-loop-chips">{mine.slice(0, 12).map(l => <li key={l.id}>
+          <button type="button" className={"ml-loop-chip ml-loop-chip--" + l.kind} onClick={() => onLoop?.(l.id)}
+            title={l.kind + " loop of " + l.nodeIds.length + " steps"}>{loopLabel?.get(l.id) ?? "Loop"}</button></li>)}</ul>
+      </section>;
+    })()}
 
     {node.type === "funder" && themeRows.length > 0 && <section className="ml-panel-section">
       <h3 className="ml-section-title">By {grouping && grouping.kind !== "funder" ? groupLabel.toLowerCase() : "theme"}</h3>
@@ -166,7 +177,9 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
           .find(([k]) => /date|year/i.test(k))?.[1] : undefined;
         return <li key={e.id}><button type="button" onClick={() => other && onPick(other.id)}>
           <strong>{other?.label ?? "Unknown record"}</strong>
-          <small>{e.type}{year ? " · " + String(year).slice(0, 4) : ""}{e.origin?.system === "annotation" ? " · reviewer-confirmed" : ""}</small>
+          <small><span aria-hidden="true">{(e.direction ?? "directed") === "undirected" ? "— " : e.direction === "mutual" ? "↔ " : e.source === node.id ? "→ " : "← "}</span>
+            {e.type}{edgePolarity(e) && <b className={"ml-sign ml-sign--" + (edgePolarity(e) === "+" ? "plus" : "minus")}>{edgePolarity(e) === "+" ? "+" : "−"}</b>}
+            {e.description && e.type === "funded" ? " · " + e.description : ""}{year ? " · " + String(year).slice(0, 4) : ""}{e.origin?.system === "annotation" ? " · reviewer-confirmed" : ""}</small>
         </button><Receipt edge={e}/>{e.sourceUrl && <a className="ml-source-link" href={e.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a>}</li>;
       })}</ul>
       {recorded.length > 6 && <button type="button" className="ml-link-button" onClick={() => setShowAll(v => !v)}>
