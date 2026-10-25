@@ -18,10 +18,12 @@
     "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "typescript": "^5.9.0",
-    "tsx": "^4.20.0",
-    "@types/node": "^22.0.0",
+    "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.56.1",
-    "@axe-core/playwright": "^4.10.2"
+    "@types/node": "^22.0.0",
+    "topojson-simplify": "3.0.3",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "world-atlas": "2.0.2"
   }
 }

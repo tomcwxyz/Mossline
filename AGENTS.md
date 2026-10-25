@@ -4,7 +4,7 @@ Mossline is a question-centred, open-source platform for navigating networks and
 
 ## Structure
 
-- apps/web: Next.js browser explorer with Cytoscape.js.
+- apps/web: Next.js Field Atlas with Sigma.js 4 / Graphology; legacy specialised tools remain behind Advanced.
 - apps/mcp: local read-only MCP server via the official TypeScript SDK v2.
 - packages/graph-core: portable graph schema, projections, graph queries and tests.
 - data/demo.json: fictional example entities and relationships.
@@ -30,3 +30,17 @@ npm run build
 ~~~
 
 A browser smoke test and accessibility check are also required. Previous authoring environment could not download packages from npm; do not claim the full build passes until it has run in CI.
+
+## Field Atlas design contract
+
+The supplied design guidance calls this a **field atlas for connected work**, not a collection of dashboards. Before adding a rendering layer or control, first check whether the existing lens and shared inspector can support the task.
+
+- **One canonical source graph, five lenses**: Network, Map, Themes, Funding, Timeline. Share the current selection, filters and source receipts. Renderer state cannot mutate source records.
+- **Ink, pencil, wash**: ink is recorded evidence or separately disclosed human-confirmed annotation; pencil is a reversible hypothesis; wash is a navigation aid. Never use pencil to compute recorded totals, award sums, node size or documented routes.
+- **Only Sigma inside Network**: Sigma v4 primitives and styles, Graphology and worker layout. Do not embed WholeGraphExplorer or revive the handmade network SVG. The old explorer belongs in Advanced only. In v4 use `visibility`, `labelVisibility` and `sigma/rendering` primitives, not v3 options. Keep `itemSizesReference: "screen"`, and pass per-edge `dashSize`/`gapSize` through the edge reducer (see `docs/design/FIELD_ATLAS_IMPLEMENTATION.md`).
+- **Geography is sourced**: use real source coordinates and a fitting projection/basemap. Show unplaced records. Never guess locations from text. Preserve source coordinate accuracy.
+- **Honest scale**: never silently display a truncated graph or label a subset as full coverage. Prefer IndexedDB-backed full datasets and worker aggregation; disclose any staged feature/limit.
+- **Review and recovery**: annotations must identify reviewer, reason and dataset version. Keep them outside source imports, include them in recovery/export planning, and never auto-confirm suggestions.
+- **Typography and colour**: use locally served Newsreader, IBM Plex Sans and IBM Plex Mono, and the `ml-` token family in `field-atlas.css`. Tokens live on `:root` and every page follows one Night/Day choice (`atlas/theme.ts`); do not add literal colours to `globals.css`. All primary actions need WCAG AA contrast in day and night themes. Funder values use the funder-blue semantic token; hypotheses use a distinct pencil treatment.
+- **Progressive UI**: start with find/select/follow/evidence, not renderer choices or technical menus. Keep tools accessible through Advanced; avoid duplicate navigation/controls on mobile.
+- **Tests must exercise actual interaction**: run core, typecheck, build, browser, mobile and accessibility checks. Add coverage for complete-source restoration, inferred review, selection and map extent as work evolves.

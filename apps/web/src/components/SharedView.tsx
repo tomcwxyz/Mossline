@@ -1,6 +1,8 @@
 "use client";
 
 import {useEffect,useMemo,useState} from "react";
+import {useAtlasTheme} from "./atlas/theme";
+import {ThemeButton,Wordmark} from "./atlas/Wordmark";
 import {applyNodeStyleImages,sharedSnapshotGraph,type PublishedSnapshot}
   from "@mossline/graph-core";
 import {GraphCanvas} from "./GraphCanvas";
@@ -8,6 +10,7 @@ import {AtlasCanvas,type AtlasMode,type KindFilter} from "./AtlasCanvas";
 import {decodeShareSnapshot} from "../lib/share-codec";
 
 export function SharedView({initialSnapshot}:{initialSnapshot?:PublishedSnapshot}={}){
+  const [theme,setTheme]=useAtlasTheme();
   const [snapshot,setSnapshot]=useState<PublishedSnapshot|null>(initialSnapshot??null);
   const [error,setError]=useState("");
   const [selectedId,setSelectedId]=useState<string|null>(null);
@@ -39,9 +42,8 @@ export function SharedView({initialSnapshot}:{initialSnapshot?:PublishedSnapshot
   const related=graph&&selected?graph.edges.filter(e=>e.source===selected.id||e.target===selected.id):[];
   return <main className="shell published-shell">
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span>
-        <small>shared view</small></div>
-      <div className="topbar-right"><a href="/" rel="noreferrer">Open Mossline studio ↗</a></div>
+      <div className="brand"><Wordmark/><small>Shared view</small></div>
+      <div className="topbar-right"><ThemeButton theme={theme} onChange={setTheme}/><a href="/" rel="noreferrer">Open Mossline ↗</a></div>
     </header>
     {!snapshot&&<section className="published-wait" role={error?"alert":"status"}>
       <h1>{error?"Unable to open this view":"Opening shared map…"}</h1>

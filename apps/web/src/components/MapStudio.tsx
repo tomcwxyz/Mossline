@@ -14,6 +14,9 @@ import {
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
+import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
+import {useAtlasTheme} from "./atlas/theme";
+import {ThemeButton,Wordmark} from "./atlas/Wordmark";
 import {CoverageReport,NodeInspector,RelationshipInspector} from "./NetworkInspector";
 import {useSavedViewLibrary} from "../hooks/useSavedViewLibrary";
 import {useNetworkImport} from "../hooks/useNetworkImport";
@@ -60,6 +63,14 @@ function saveJson(graph: GraphDocument) {
 export function MapStudio() {
   const [graph, setGraph] = useState<GraphDocument>(ORIGINAL);
   const [experienceSpace,setExperienceSpace]=useState<"home"|"studio">("home");
+  // The front page and tools share the atlas's Night/Day choice.
+  const [homeTheme,setHomeTheme]=useAtlasTheme();
+  // New evidence-led workspace; existing specialised workflows remain available.
+  const [fieldAtlasOpen,setFieldAtlasOpen]=useState(true);
+  useEffect(()=>{
+    try{if(window.localStorage.getItem("mossline-workspace-v1")==="advanced")
+      setFieldAtlasOpen(false);}catch{}
+  },[]);
   const [traceOpen,setTraceOpen]=useState(false);
   const [insightsOpen,setInsightsOpen]=useState(false);
   const [mobileFiltersOpen,setMobileFiltersOpen]=useState(false);
@@ -454,6 +465,18 @@ export function MapStudio() {
       closeImport();
     }
   }
+  async function openFieldAtlasExample() {
+    try {
+      // Loaded on demand: the worked example is larger than the bundled demos.
+      const example = parseGraphDocument((await import("../../../../data/northern-food-example.json")).default);
+      if (createNewMap(example)) {
+        setNotice("Opened a fictional food and farming network. Every record is invented; your other maps are preserved.");
+        closeImport();
+      }
+    } catch {
+      setNotice("Could not open the example network.");
+    }
+  }
   function openPftVisualExample() {
     if(createNewMap(PFT_VISUAL_EXAMPLE)) {
       setIllustrated(true);
@@ -467,21 +490,38 @@ export function MapStudio() {
       filtered.graph.edges.length>650));
   const usingSourceExplorer=sourceExplorerCandidate;
 
-  if(experienceSpace==="home")return <main className="shell mossline-home">
-    <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
-      <div className="topbar-right"><span className="local-tag"><span className="signal"/> Browser-local studio</span>
+  if(experienceSpace==="studio"&&fieldAtlasOpen&&!showFundingWorkbench&&!importPreview&&!discovery)
+    return <div className="mossline-field-atlas-entry">
+      <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
+        aria-label="Import source records" onChange={onImport}/>
+      <FieldAtlasWorkspace key={graphKey} graph={graph}
+        datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
+        onBack={()=>setExperienceSpace("home")}
+        onImport={()=>fileRef.current?.click()}
+        onAdvanced={()=>{
+          setFieldAtlasOpen(false);
+          try{window.localStorage.setItem("mossline-workspace-v1","advanced");}catch{}
+        }}/>
+    </div>;
+
+  if(experienceSpace==="home")return <main className="ml-atlas ml-home mossline-home" data-theme={homeTheme}>
+    <header className="ml-home-header">
+      <Wordmark/>
+      <span className="ml-home-version">alpha 2.22</span>
+      <div className="ml-home-header-actions">
+        <span className="ml-local"><i aria-hidden="true"/>On this device</span>
         <a href="https://github.com/tomcwxyz/Mossline" target="_blank" rel="noreferrer">Open source ↗</a>
+        <ThemeButton theme={homeTheme} onChange={setHomeTheme}/>
       </div>
     </header>
     <input ref={fileRef} type="file" hidden multiple
       accept=".csv,.json,application/json,text/csv"
       aria-label="Import a spreadsheet or Kumu network"
       onChange={e=>{setExperienceSpace("studio");void onImport(e);}}/>
-    {notice&&<div className="notice" role="status"><span>{notice}</span>
+    {notice&&<div className="ml-home-notice" role="status"><span>{notice}</span>
       <button type="button" aria-label="Dismiss message" onClick={()=>setNotice("")}>×</button>
     </div>}
-    {oversizedSavedMaps&&<p className="notice" role="alert">An oversized browser map library was found.
+    {oversizedSavedMaps&&<p className="ml-home-notice" role="alert">An oversized browser map library was found.
       <a href="/recover">Back it up or recover it before continuing ↗</a></p>}
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
       nodes:m.sourceCounts?.nodes??m.graph.nodes.length,
@@ -492,6 +532,12 @@ export function MapStudio() {
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>fileRef.current?.click()}
       onFunding={()=>{setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}
+      onExample={()=>{
+        // The atlas gets the worked food and farming example; the advanced
+        // tools keep the small community network they were built around.
+        if(fieldAtlasOpen)void openFieldAtlasExample().then(()=>setExperienceSpace("studio"));
+        else{openCommunityExample();setExperienceSpace("studio");}
+      }}
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
@@ -501,8 +547,14 @@ export function MapStudio() {
   return <main className={"shell mossline-studio"+
     (!showFundingWorkbench&&!importPreview&&!discovery?" mobile-explore":"")}>
     <header className="topbar">
-      <div className="brand"><span className="brand-mark">✳</span><span>mossline<span className="brand-period">.</span></span><small>alpha 2.22</small></div>
+      <div className="brand"><Wordmark/><small>Advanced tools</small></div>
       <div className="topbar-right">
+        <ThemeButton theme={homeTheme} onChange={setHomeTheme}/>
+        <button className="studio-home-link" type="button"
+          onClick={()=>{
+            setFieldAtlasOpen(true);
+            try{window.localStorage.removeItem("mossline-workspace-v1");}catch{}
+          }}>← Field atlas</button>
         <button className="studio-home-link" type="button"
           onClick={()=>{closeImport();setShowFundingWorkbench(false);setExperienceSpace("home");}}>
           ← All maps</button>
@@ -1150,6 +1202,6 @@ export function MapStudio() {
       </>}
     </details>
     </>}
-    <footer className="footer"><span>mossline — make sense of connected worlds.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
+    <footer className="footer"><span>Mossline — a field atlas for connected work.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
   </main>;
 }
