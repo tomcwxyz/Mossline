@@ -956,3 +956,56 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
 .ml-key-links ul { max-height: 132px; }
 .ml-sign-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
 .ml-sign--map { position: absolute; left: 0; top: 0; margin: 0; width: 18px; height: 18px; font-size: 12px; box-shadow: 0 0 0 2px var(--ml-paper); }
+
+/* ---- Editing a map ----------------------------------------------------------- */
+.ml-edit-toggle[aria-pressed="true"] { box-shadow: 0 0 0 2px color-mix(in srgb, var(--ml-moss) 45%, transparent); }
+.ml-edit-count { font: 11px var(--ml-mono); color: var(--ml-subtle); }
+.ml-edit-card { left: 14px; top: 62px; width: 330px; max-height: calc(100% - 140px); overflow: auto; display: grid; gap: 10px; z-index: 13;
+  border-color: color-mix(in srgb, var(--ml-moss) 45%, var(--ml-border)); }
+.ml-edit-card.is-closed { width: max-content; padding: 8px 14px; border-radius: 999px; }
+.ml-edit-tabs { display: flex; }
+.ml-edit-tabs button { flex: 1; font-size: 12.5px; }
+.ml-edit-form { display: grid; gap: 9px; }
+.ml-edit-form--inline { flex: 1 1 100%; padding: 10px; border-radius: var(--ml-radius-sm); background: var(--ml-sunken); }
+.ml-edit-field { display: grid; gap: 3px; font-size: 11.5px; font-weight: 600; color: var(--ml-muted); }
+.ml-edit-field small { font-weight: 400; color: var(--ml-subtle); }
+.ml-edit-field input, .ml-edit-field select, .ml-edit-field textarea { min-height: 36px; padding: 6px 9px; border: 1px solid var(--ml-border-strong);
+  border-radius: var(--ml-radius-sm); background: var(--ml-surface); color: var(--ml-ink); font: 400 13px var(--ml-sans); width: 100%; }
+.ml-edit-field textarea { resize: vertical; line-height: 1.45; }
+.ml-edit-field textarea[spellcheck="false"] { font: 12.5px/1.5 var(--ml-mono); }
+.ml-edit-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ml-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ml-edit-bar { display: flex; flex-wrap: wrap; gap: 8px; }
+.ml-edit-bar button[aria-pressed="true"] { border-color: var(--ml-ink); background: var(--ml-sunken); }
+.ml-edit-remove { color: var(--ml-danger) !important; justify-self: start; }
+.ml-edit-confirm { display: grid; gap: 8px; padding: 10px; border: 1px solid color-mix(in srgb, var(--ml-danger) 40%, transparent);
+  border-radius: var(--ml-radius-sm); background: var(--ml-danger-soft); font-size: 13px; }
+.ml-atlas .ml-danger { background: var(--ml-danger); border-color: var(--ml-danger); color: var(--ml-surface); }
+.ml-edit-from, .ml-edit-target { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+.ml-edit-target { padding: 6px 9px; border: 1px solid var(--ml-border-strong); border-radius: var(--ml-radius-sm); background: var(--ml-surface); }
+.ml-edit-target .ml-link-button { margin-left: auto; padding: 0; }
+.ml-edit-matches { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; max-height: 180px; overflow: auto; }
+.ml-edit-matches button { width: 100%; display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 6px 8px;
+  border-radius: 6px; text-align: left; font-size: 13px; }
+.ml-edit-matches button:hover { background: var(--ml-sunken); }
+.ml-edit-pick { justify-self: start; }
+.ml-edit-link { padding: 0 !important; font-size: 12px !important; }
+.ml-edit-preview { display: grid; gap: 6px; padding: 8px 10px; border: 1px dashed var(--ml-border-pencil); border-radius: var(--ml-radius-sm); font-size: 12.5px; }
+.ml-edit-form code { font: 11.5px var(--ml-mono); padding: 0 3px; border-radius: 3px; background: var(--ml-sunken); }
+.ml-edit-changes { display: grid; gap: 10px; }
+.ml-edit-changes ol { list-style: none; margin: 0; padding: 0; display: grid; }
+.ml-edit-changes li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--ml-rule); }
+.ml-edit-changes li > div { display: grid; gap: 1px; min-width: 0; }
+.ml-edit-changes li strong { font-size: 12.5px; font-weight: 500; overflow-wrap: anywhere; }
+.ml-edit-changes li small { font-size: 11px; color: var(--ml-subtle); }
+.ml-edit-changes li .ml-quiet { min-height: 28px; padding: 0 10px; font-size: 12px; }
+.ml-edit-changes li.is-undone strong { text-decoration: line-through; color: var(--ml-subtle); }
+.ml-edit-changes li.is-stale small { color: var(--ml-danger); }
+.ml-edit-exports { display: grid; gap: 6px; padding-top: 6px; border-top: 1px solid var(--ml-rule); }
+.ml-edit-exports .ml-quiet { min-height: 32px; font-size: 12.5px; text-align: left; }
+.ml-pick-banner { top: 14px; left: 50%; transform: translateX(-50%); z-index: 16; border-color: var(--ml-moss); }
+.ml-pick-banner button { border: 1px solid var(--ml-border-strong); background: var(--ml-surface); border-radius: 6px; padding: 2px 8px; }
+@media (max-width: 720px) {
+  .ml-edit-card { top: auto; bottom: 12px; left: 12px; right: 12px; width: auto; max-height: 55%; }
+  .ml-edit-row { grid-template-columns: 1fr; }
+}

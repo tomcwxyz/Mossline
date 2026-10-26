@@ -63,6 +63,8 @@ export function recordedYear(edge: GraphEdge): number | null {
 }
 export function evidenceReceipt(edge: GraphEdge): string {
   if (edge.inferred) return "Inferred association · not a source record";
+  if (edge.origin?.system === "edit")
+    return "Entered by " + (edge.origin.fields?.by ?? "you") + " · " + (edge.origin.fields?.at ?? "").slice(0, 10);
   if (edge.origin) {
     return [edge.origin.fileName ?? edge.origin.system,
       edge.origin.recordNumber ? "#" + edge.origin.recordNumber : edge.origin.recordId].join(" · ");

@@ -6,7 +6,7 @@ export type NodeType = z.infer<typeof nodeTypeSchema>;
 const webUrl = z.url().refine(value => /^https?:\/\//i.test(value), "Use an HTTP(S) URL");
 /** Where a record or link came from: the file, the row, and the shape that read it. */
 export const originSchema = z.object({
-  system: z.enum(["kumu", "csv", "annotation", "tsv", "json", "xlsx"]),
+  system: z.enum(["kumu", "csv", "annotation", "tsv", "json", "xlsx", "edit"]),
   recordId: z.string(),
   fileName: z.string().min(1).optional(),
   recordNumber: z.number().int().positive().optional(),

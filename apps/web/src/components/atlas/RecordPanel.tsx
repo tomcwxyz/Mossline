@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { LinkCreator, LinkEditor, RecordEditor, type EditingApi } from "./Editing";
 import {
   APPROXIMATE_KEY, approximatePlace, edgePolarity, titleCaseName, type FeedbackLoop, describeApproximatePlace, describeIdentifier, evidenceReceipt, isRecorded, readAtlasLocation,
   type FundingFlow, type GraphDocument, type GraphEdge, type GraphNode, type Grouping, type SourceOrigin
@@ -25,9 +26,14 @@ type Props = {
   grouping?: Grouping | null; groupLabel?: string;
   /** Feedback loops this map has, their labels (R1, B1…) and how to show one. */
   loops?: FeedbackLoop[]; loopLabel?: Map<string, string>; onLoop?: (id: string) => void;
+  /** Present while the map is being edited. */
+  editing?: EditingApi | null;
 };
 
-const receiptText = (r: SourceOrigin) => [r.fileName ?? r.system, r.recordNumber ? "#" + r.recordNumber : r.recordId].join(" · ");
+const receiptText = (r: SourceOrigin) => r.system === "edit"
+  ? (r.fields?.change === "add node" ? "Added here" : "Changed here") + " by " + (r.fields?.by ?? "you") + " · " +
+    (r.fields?.at ? new Date(r.fields.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "")
+  : [r.fileName ?? r.system, r.recordNumber ? "#" + r.recordNumber : r.recordId].join(" · ");
 const HIDDEN_PROPERTIES = new Set([APPROXIMATE_KEY]);
 
 /** Every source row behind a record, with the identifiers used to join them. */
@@ -59,8 +65,12 @@ function Receipt({ edge }: { edge: GraphEdge }) {
   return <span className="ml-receipt" title={text}>{text}</span>;
 }
 
-export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop }: Props) {
+export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop, editing }: Props) {
   const [showAll, setShowAll] = useState(false);
+  /** What is open for editing: the details, a new link, or one link (by ID). */
+  const [open, setOpen] = useState<string | null>(null);
+  useEffect(() => { setOpen(null); }, [node?.id, editing === null || editing === undefined]);
+  useEffect(() => { if (editing?.picked && node) setOpen("link"); }, [editing?.picked, node]);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("");
   const [reason, setReason] = useState("");
@@ -127,8 +137,16 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
     {(place || node.region) && <p className="ml-place">{[place && titleCaseName(place), node.region].filter(Boolean).join(" · ")}
       {node.type === "funder" && years.length > 0 && <> · grants {Math.min(...years) === Math.max(...years)
         ? "in " + Math.min(...years) : Math.min(...years) + "–" + Math.max(...years)}</>}</p>}
-    <p className="ml-description">{node.description || "No description recorded in the source."}</p>
-    {node.tags.length > 0 && <ul className="ml-tags">{node.tags.map(t => <li key={t}>{t}</li>)}</ul>}
+    {editing && <div className="ml-edit-bar" role="group" aria-label="Edit this record">
+      <button type="button" className="ml-quiet" aria-pressed={open === "details"} onClick={() => setOpen(open === "details" ? null : "details")}>Edit details</button>
+      <button type="button" className="ml-quiet" aria-pressed={open === "link"} onClick={() => setOpen(open === "link" ? null : "link")}>Add a link</button>
+    </div>}
+    {editing && open === "details" ? <RecordEditor key={node.id} node={node} api={editing} onDone={() => setOpen(null)}/>
+      : <>
+        <p className="ml-description">{node.description || "No description recorded in the source."}</p>
+        {node.tags.length > 0 && <ul className="ml-tags">{node.tags.map(t => <li key={t}>{t}</li>)}</ul>}
+      </>}
+    {editing && open === "link" && <LinkCreator key={node.id} from={node} api={editing} onDone={() => setOpen(null)}/>}
 
     <div className="ml-stats">
       {node.type === "funder" ? <>
@@ -180,7 +198,10 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
           <small><span aria-hidden="true">{(e.direction ?? "directed") === "undirected" ? "— " : e.direction === "mutual" ? "↔ " : e.source === node.id ? "→ " : "← "}</span>
             {e.type}{edgePolarity(e) && <b className={"ml-sign ml-sign--" + (edgePolarity(e) === "+" ? "plus" : "minus")}>{edgePolarity(e) === "+" ? "+" : "−"}</b>}
             {e.description && e.type === "funded" ? " · " + e.description : ""}{year ? " · " + String(year).slice(0, 4) : ""}{e.origin?.system === "annotation" ? " · reviewer-confirmed" : ""}</small>
-        </button><Receipt edge={e}/>{e.sourceUrl && <a className="ml-source-link" href={e.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a>}</li>;
+        </button><Receipt edge={e}/>{e.sourceUrl && <a className="ml-source-link" href={e.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a>}
+          {editing && open !== e.id && <button type="button" className="ml-link-button ml-edit-link" onClick={() => setOpen(e.id)}
+            aria-label={"Edit link to " + (other?.label ?? "record")}>Edit</button>}
+          {editing && open === e.id && <LinkEditor edge={e} label={node.label + " – " + (other?.label ?? "")} api={editing} onDone={() => setOpen(null)}/>}</li>;
       })}</ul>
       {recorded.length > 6 && <button type="button" className="ml-link-button" onClick={() => setShowAll(v => !v)}>
         {showAll ? "Show fewer" : `Show ${recorded.length - 6} more`}</button>}
