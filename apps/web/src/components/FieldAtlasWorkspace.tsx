@@ -19,6 +19,8 @@ import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
 import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
+import { PublishCard } from "./atlas/PublishCard";
+import { useAccount } from "../hooks/useAccount";
 import { LINK_INKS, SIGN_INKS, TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 
 const LENSES: { id: AtlasLens; label: string; help: string }[] = [
@@ -149,6 +151,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const [urlReady, setUrlReady] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDetailsElement>(null);
+  const shareRef = useRef<HTMLDetailsElement>(null);
+  const [publishOpen, setPublishOpen] = useState(false);
+  const publishing = useAccount().state.status === "ready";
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("lens");
@@ -356,6 +361,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const canvasLens = lens === "network" || lens === "themes" || lens === "map";
   const funderName = funderId ? graph.nodes.find(n => n.id === funderId)?.label : "";
   const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
+  const closeShare = () => { if (shareRef.current) shareRef.current.open = false; };
 
   return <main className="ml-atlas" data-theme={activeTheme} data-lens={lens}>
     <header className="ml-header">
@@ -403,9 +409,18 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
-        <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() =>
-          setNotice("View link copied. The underlying local dataset does not travel with the link."))
-          .catch(() => setNotice("Copy the address from your browser."))}>Share view</button>
+        <details className="ml-share" ref={shareRef}>
+          <summary className="ml-solid">Share</summary>
+          <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
+            <button type="button" onClick={() => { closeShare(); void navigator.clipboard?.writeText(window.location.href).then(() =>
+              setNotice("View link copied. The underlying local dataset does not travel with the link."))
+              .catch(() => setNotice("Copy the address from your browser.")); }}>Copy view link</button>
+            <p className="ml-menu-note">Opens this view for someone with the same data in their browser.</p>
+            {publishing && <><hr/>
+              <button type="button" onClick={() => { closeShare(); setPublishOpen(true); }}>Publish online…</button>
+              <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
+          </div>
+        </details>
       </div>
     </header>
 
@@ -569,6 +584,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             Click the record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to.
             <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
 
+          {publishOpen && <PublishCard graph={result.graph} title={imported.title} mapId={mapId} onClose={() => setPublishOpen(false)}/>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
         {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}

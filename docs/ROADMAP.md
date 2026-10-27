@@ -267,7 +267,8 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Isolated development DB setup, migration application and live read/update/withdraw acceptance.
 - [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
 - [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
-- [ ] Real user accounts, team roles, invitations and restricted/private publications.
+- [x] Real user accounts for publishing: Microsoft, Google or email link; maps belong to accounts (October 2026).
+- [ ] Team roles, invitations and restricted/private publications.
 
 
 ## Alpha 1.9 — funding landscapes and potential thematic connections

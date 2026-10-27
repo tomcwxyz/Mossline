@@ -1,18 +1,23 @@
 import {parsePublishedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../lib/hosted-response";
-import {createPublication} from "../../../lib/hosted-db";
-import {isHostedConfigured,makePublicationId,makeManagementKey,
-  readBearer,readJsonBody,verifyPublisherKey} from "../../../lib/hosted-auth";
+import {createPublication,listOwned,publishedToday} from "../../../lib/hosted-db";
+import {dailyPublishLimit,makePublicationId,readJsonBody} from "../../../lib/hosted-auth";
+import {requirePublisher} from "../../../lib/hosted-guard";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 
-/** Creation is disabled without both DB and a strong server-side admin key.
- *  Never store the admin key or include it in any URL or published snapshot.
- */
+/** The signed-in account's published maps. */
+export async function GET(request:Request){
+  const user=await requirePublisher(request,{write:false});
+  if(user instanceof Response)return user;
+  try{return apiResult({publications:await listOwned(user.id)});}
+  catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+}
+
+/** Publishes one reviewed, reduced snapshot under the signed-in account. */
 export async function POST(request:Request){
-  if(!isHostedConfigured())return apiResult({error:"Hosted publishing is not configured"},503);
-  if(!verifyPublisherKey(readBearer(request)))
-    return apiResult({error:"Authorisation required"},401);
+  const user=await requirePublisher(request,{write:true});
+  if(user instanceof Response)return user;
   let snapshot;
   try {
     const body=await readJsonBody(request) as Record<string,unknown>;
@@ -24,10 +29,10 @@ export async function POST(request:Request){
     return apiResult({error:"Invalid or oversized publication snapshot"},400);
   }
   try{
-    const slug=makePublicationId(),managementKey=makeManagementKey();
-    const publication=await createPublication(slug,managementKey,snapshot);
-    return apiResult({slug:publication.slug,revision:publication.revision,
-      managementKey},201);
+    if(await publishedToday(user.id)>=dailyPublishLimit())
+      return apiResult({error:"You've reached today's publishing limit. Try again tomorrow, or update a map you've already published."},429);
+    const publication=await createPublication(makePublicationId(),user.id,snapshot);
+    return apiResult({slug:publication.slug,revision:publication.revision},201);
   }catch{
     return apiResult({error:"Could not publish. Check the database migration and connection."},503);
   }

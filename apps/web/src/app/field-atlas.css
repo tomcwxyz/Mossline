@@ -1009,3 +1009,58 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
   .ml-edit-card { top: auto; bottom: 12px; left: 12px; right: 12px; width: auto; max-height: 55%; }
   .ml-edit-row { grid-template-columns: 1fr; }
 }
+
+/* ---- Sharing, publishing and accounts ----------------------------------------- */
+.ml-share { position: relative; }
+.ml-share summary { list-style: none; display: inline-flex; align-items: center; cursor: pointer; }
+.ml-share summary::-webkit-details-marker { display: none; }
+.ml-share summary::after { content: "▾"; font-size: 10px; margin-left: 6px; opacity: .7; }
+.ml-menu--right { left: auto; right: 0; }
+.ml-check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.4; }
+.ml-check input { margin-top: 2px; accent-color: var(--ml-moss); flex: none; }
+.ml-atlas a.ml-account-button { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; justify-self: start; }
+.ml-atlas a.ml-quiet.ml-account-button { color: var(--ml-ink); }
+.ml-publish-card { right: 14px; top: 62px; width: 360px; max-height: calc(100% - 140px); overflow: auto; display: grid; gap: 10px; z-index: 14; }
+.ml-publish-card .ml-unplaced-head .ml-link-button { font-size: 18px; padding: 0 4px; color: var(--ml-subtle); }
+.ml-publish-limit { padding: 10px; border: 1px dashed var(--ml-border-pencil); border-radius: var(--ml-radius-sm); font-size: 12.5px; line-height: 1.5; }
+.ml-publish-review { font-size: 12.5px; border-top: 1px solid var(--ml-rule); padding-top: 8px; }
+.ml-publish-review summary { cursor: pointer; font-weight: 600; }
+.ml-publish-review ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 3px; max-height: 180px; overflow: auto; }
+.ml-publish-review li small { color: var(--ml-subtle); }
+.ml-publish-done { display: grid; gap: 8px; padding: 10px; border-radius: var(--ml-radius-sm); background: var(--ml-sunken); font-size: 13px; }
+.ml-publish-done input { min-height: 34px; padding: 4px 8px; border: 1px solid var(--ml-border-strong); border-radius: var(--ml-radius-sm);
+  background: var(--ml-surface); color: var(--ml-ink); font: 12px var(--ml-mono); }
+.ml-publish-foot a { color: var(--ml-link); }
+
+.ml-account { min-height: 100vh; min-height: 100dvh; }
+.ml-account-home { text-decoration: none; color: var(--ml-ink); }
+.ml-account-body { padding: clamp(24px, 6vw, 72px) clamp(16px, 4vw, 48px) 64px; display: grid; justify-items: center; }
+.ml-account-card { width: 100%; max-width: 460px; display: grid; gap: 16px; align-content: start; }
+.ml-account-card--wide { max-width: 720px; }
+.ml-atlas .ml-account-card h1 { font: 400 clamp(30px, 4vw, 42px)/1.08 var(--ml-serif); letter-spacing: -0.015em; margin: 0; }
+.ml-atlas .ml-account-card h2 { font: 500 20px/1.2 var(--ml-serif); margin: 0; display: inline; }
+.ml-account-methods { display: grid; gap: 10px; }
+.ml-account-provider { min-height: 44px !important; font-weight: 500; }
+.ml-account-or { display: flex; align-items: center; gap: 10px; color: var(--ml-subtle); font-size: 12px; margin: 2px 0; }
+.ml-account-or::before, .ml-account-or::after { content: ""; flex: 1; border-top: 1px solid var(--ml-rule); }
+.ml-account-note { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--ml-border); border-radius: var(--ml-radius-sm);
+  background: var(--ml-surface); font-size: 13.5px; line-height: 1.5; }
+.ml-account-privacy { border-top: 1px solid var(--ml-rule); padding-top: 12px; }
+.ml-account-who { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.ml-account-who dt { font-size: 11.5px; font-weight: 600; color: var(--ml-muted); }
+.ml-account-who dd { margin: 2px 0 0; font-size: 14px; overflow-wrap: anywhere; }
+.ml-account-section { display: grid; gap: 10px; padding-top: 16px; border-top: 1px solid var(--ml-rule); }
+details.ml-account-section summary { cursor: pointer; }
+.ml-account-delete { justify-self: start; }
+.ml-account-empty { font-size: 13px; color: var(--ml-muted); }
+.ml-account-maps { list-style: none; margin: 0; padding: 0; display: grid; }
+.ml-account-maps li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--ml-rule); }
+.ml-account-maps li > div:first-child { display: grid; gap: 2px; min-width: 0; }
+.ml-account-maps strong { font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.ml-account-maps small { font-size: 12px; color: var(--ml-subtle); }
+.ml-account-maps .ml-quiet { min-height: 32px; font-size: 12.5px; }
+@media (max-width: 720px) {
+  .ml-publish-card { top: 8px; left: 12px; right: 12px; width: auto; max-height: calc(100% - 120px); z-index: 20; }
+  .ml-account-maps li { grid-template-columns: 1fr; }
+  .ml-account-who { grid-template-columns: 1fr; }
+}

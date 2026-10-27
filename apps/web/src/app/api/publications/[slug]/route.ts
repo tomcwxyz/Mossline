@@ -1,8 +1,8 @@
 import {parsePublishedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../../lib/hosted-response";
 import {getPublished,updatePublication,unpublish} from "../../../../lib/hosted-db";
-import {isHostedConfigured,readBearer,readJsonBody,
-  validPublicationId} from "../../../../lib/hosted-auth";
+import {isHostedConfigured,readJsonBody,validPublicationId} from "../../../../lib/hosted-auth";
+import {requirePublisher} from "../../../../lib/hosted-guard";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 type Ctx={params:Promise<{slug:string}>};
@@ -21,14 +21,12 @@ export async function GET(_:Request,context:Ctx){
       updatedAt:item.updatedAt});
   }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
-/** The management key is an unguessable capability returned on creation only.
- *  Missing, invalid or stale capabilities never update a published snapshot.
- */
+/** Only the owning account can replace a publication, and only from the revision it last saw. */
 export async function PATCH(request:Request,context:Ctx){
-  if(!isHostedConfigured())return apiResult({error:"Hosted publishing unavailable"},503);
-  const slug=await readSlug(context),ownerKey=readBearer(request);
+  const user=await requirePublisher(request,{write:true});
+  if(user instanceof Response)return user;
+  const slug=await readSlug(context);
   if(!slug)return apiResult({error:"Not found"},404);
-  if(ownerKey.length<40)return apiResult({error:"Management key required"},401);
   let revision:number,snapshot;
   try {
     const body=await readJsonBody(request) as Record<string,unknown>;
@@ -40,19 +38,19 @@ export async function PATCH(request:Request,context:Ctx){
     snapshot=parsePublishedSnapshot(body.snapshot);
   }catch{return apiResult({error:"Invalid or oversized publication update"},400);}
   try {
-    const updated=await updatePublication(slug,ownerKey,revision,snapshot);
-    if(!updated)return apiResult({error:"Not authorised, withdrawn, or revision changed"},409);
+    const updated=await updatePublication(slug,user.id,revision,snapshot);
+    if(!updated)return apiResult({error:"Not yours, withdrawn, or changed since you opened it"},409);
     return apiResult({slug:updated.slug,revision:updated.revision});
   }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
+/** Unpublishing deletes the stored copy. */
 export async function DELETE(request:Request,context:Ctx){
-  if(!isHostedConfigured())return apiResult({error:"Hosted publishing unavailable"},503);
-  const slug=await readSlug(context),ownerKey=readBearer(request);
+  const user=await requirePublisher(request,{write:true});
+  if(user instanceof Response)return user;
+  const slug=await readSlug(context);
   if(!slug)return apiResult({error:"Not found"},404);
-  if(ownerKey.length<40)return apiResult({error:"Management key required"},401);
   try {
-    const withdrawn=await unpublish(slug,ownerKey);
-    if(!withdrawn)return apiResult({error:"Not authorised or already withdrawn"},404);
+    if(!await unpublish(slug,user.id))return apiResult({error:"Not found"},404);
     return apiResult({unpublished:true});
   }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
