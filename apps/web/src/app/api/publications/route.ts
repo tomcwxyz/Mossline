@@ -1,4 +1,4 @@
-import {parsePublishedSnapshot} from "@mossline/graph-core";
+import {parseHostedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../lib/hosted-response";
 import {createPublication,listOwned,publishedToday} from "../../../lib/hosted-db";
 import {dailyPublishLimit,makePublicationId,readJsonBody} from "../../../lib/hosted-auth";
@@ -24,7 +24,7 @@ export async function POST(request:Request){
     if(!body || typeof body!=="object" || Array.isArray(body) ||
       Object.keys(body).length!==1 || !("snapshot" in body))
       throw Error("Provide one reviewed snapshot");
-    snapshot=parsePublishedSnapshot(body.snapshot);
+    snapshot=parseHostedSnapshot(body.snapshot);
   }catch{
     return apiResult({error:"Invalid or oversized publication snapshot"},400);
   }

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { parseGraphDocument, nodeTypeSchema, type GraphDocument } from "./schema";
 import { nodeStyleSchema, type NodeStyleOverride } from "./perspectives";
 import { readAtlasLocation } from "./geography";
+import { edgePolarity } from "./systems";
 
 /** A snapshot is deliberately much smaller than the source graph: no source URLs,
  * import provenance, arbitrary custom properties, private metadata or evidence payloads.
@@ -25,10 +26,20 @@ const sharedEdgeSchema=z.object({
   target:z.string().min(1).max(200),
   type:z.string().min(1).max(120),
   inferred:z.boolean().optional(),
-  direction:z.enum(["directed","undirected","mutual"]).optional()
+  direction:z.enum(["directed","undirected","mutual"]).optional(),
+  /** Cause and effect: part of what the link asserts, like its direction. */
+  polarity:z.enum(["+","-"]).optional()
 }).strict();
 const sharedStyleSchema=nodeStyleSchema;
-export const publishedSnapshotSchema=z.object({
+/**
+ * Two sizes. A link that carries the map inside its own address has to stay
+ * short (LINK_LIMITS). A copy stored on a Mossline server has no such limit;
+ * HOSTED_LIMITS only keep one upload within what a server request can carry.
+ */
+export const LINK_LIMITS={records:150,links:300} as const;
+export const HOSTED_LIMITS={records:20_000,links:60_000} as const;
+export type SnapshotLimits={records:number;links:number};
+const snapshotSchema=(limits:SnapshotLimits)=>z.object({
   format:z.literal("mossline-shared-view"),
   version:z.literal(1),
   title:z.string().trim().min(1).max(120),
@@ -39,8 +50,8 @@ export const publishedSnapshotSchema=z.object({
   labels:z.enum(["essential","all"]),
   illustrated:z.boolean(),
   exportedAt:z.string().datetime(),
-  nodes:z.array(sharedNodeSchema).min(1).max(150),
-  edges:z.array(sharedEdgeSchema).max(300),
+  nodes:z.array(sharedNodeSchema).min(1).max(limits.records),
+  edges:z.array(sharedEdgeSchema).max(limits.links),
   nodeStyles:z.record(z.string().min(1).max(200),sharedStyleSchema).optional(),
   positions:z.record(z.string().min(1).max(200),z.object({
     x:z.number().finite().min(-1000000).max(1000000),
@@ -64,6 +75,8 @@ export const publishedSnapshotSchema=z.object({
       ctx.addIssue({code:"custom",path:[field],message:"Unknown node in view styling"});
   }
 });
+export const publishedSnapshotSchema=snapshotSchema(LINK_LIMITS);
+export const hostedSnapshotSchema=snapshotSchema(HOSTED_LIMITS);
 export type PublishedSnapshot=z.infer<typeof publishedSnapshotSchema>;
 export type PublishSettings={
   view:PublishedSnapshot["view"];
@@ -81,7 +94,7 @@ export type PublishSettings={
 
 /** Opt-in fields are explicit; source identifiers and relationship assertions remain visible. */
 export function createPublishedSnapshot(graph:GraphDocument,settings:PublishSettings,
-  date=new Date()):PublishedSnapshot {
+  date=new Date(),limits:SnapshotLimits=LINK_LIMITS):PublishedSnapshot {
   const ids=new Set(graph.nodes.map(node=>node.id));
   const nodes=graph.nodes.map(node=>{
     const coordinate=settings.view==="atlas"?readAtlasLocation(node):null;
@@ -95,7 +108,8 @@ export function createPublishedSnapshot(graph:GraphDocument,settings:PublishSett
   const edges=graph.edges.filter(edge=>ids.has(edge.source)&&ids.has(edge.target))
     .map(edge=>({id:edge.id,source:edge.source,target:edge.target,type:edge.type,
       ...(edge.inferred!==undefined?{inferred:edge.inferred}:{}),
-      ...(edge.direction?{direction:edge.direction}:{})}));
+      ...(edge.direction?{direction:edge.direction}:{}),
+      ...(()=>{const p=edgePolarity(edge);return p?{polarity:p}:{};})()}));
   const nodeStyles:Record<string,NodeStyleOverride>={};
   for(const [id,style] of Object.entries(settings.nodeStyles??{})){
     if(!ids.has(id))continue;
@@ -106,7 +120,7 @@ export function createPublishedSnapshot(graph:GraphDocument,settings:PublishSett
   }
   const positions=Object.fromEntries(Object.entries(settings.positions??{})
     .filter(([id])=>ids.has(id)));
-  return publishedSnapshotSchema.parse({
+  return (limits===LINK_LIMITS?publishedSnapshotSchema:snapshotSchema(limits)).parse({
     format:"mossline-shared-view",version:1,
     title:settings.title.trim(),view:settings.view,layout:settings.layout,
     labels:settings.labels,illustrated:settings.illustrated,
@@ -119,7 +133,10 @@ export function createPublishedSnapshot(graph:GraphDocument,settings:PublishSett
 }
 export const parsePublishedSnapshot=(value:unknown):PublishedSnapshot=>
   publishedSnapshotSchema.parse(value);
+/** A copy stored on a Mossline server: same fields, room for whole maps. */
+export const parseHostedSnapshot=(value:unknown):PublishedSnapshot=>
+  hostedSnapshotSchema.parse(value);
 export function sharedSnapshotGraph(snapshot:PublishedSnapshot):GraphDocument {
   return parseGraphDocument({version:1,title:snapshot.title,description:snapshot.introduction??"",
-    nodes:snapshot.nodes,edges:snapshot.edges});
+    nodes:snapshot.nodes,edges:snapshot.edges.map(({polarity,...edge})=>polarity?{...edge,properties:{polarity}}:edge)});
 }

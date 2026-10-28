@@ -1064,3 +1064,6 @@ details.ml-account-section summary { cursor: pointer; }
   .ml-account-maps li { grid-template-columns: 1fr; }
   .ml-account-who { grid-template-columns: 1fr; }
 }
+.ml-dataset--static { display: grid; gap: 1px; max-width: 360px; }
+.ml-dataset--static strong { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ml-dataset--static small { font: 11px var(--ml-mono); color: var(--ml-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

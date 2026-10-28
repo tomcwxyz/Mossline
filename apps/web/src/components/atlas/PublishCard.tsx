@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createPublishedSnapshot, type GraphDocument, type PublishedSnapshot } from "@mossline/graph-core";
+import { createPublishedSnapshot, HOSTED_LIMITS, type GraphDocument, type PublishedSnapshot } from "@mossline/graph-core";
 import { account, useAccount, type OwnedPublication } from "../../hooks/useAccount";
 
-/** The published-view schema's limits: a published map is a small, reviewed extract. */
-const MAX_RECORDS = 150, MAX_LINKS = 300, SHOW = 200;
+/** What one upload can carry; a whole map normally fits. Long review lists are cut on screen only. */
+const MAX_RECORDS = HOSTED_LIMITS.records, MAX_LINKS = HOSTED_LIMITS.links, MAX_BYTES = 4_000_000, SHOW = 200;
+const megabytes = (n: number) => (n / 1_000_000).toLocaleString("en-GB", { maximumFractionDigits: 1 }) + " MB";
 
 /**
  * Publishing from the atlas: what is drawn now (recorded links only), reviewed
@@ -40,10 +41,14 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
     if (!name.trim()) return { snapshot: null, error: "Give the map a title." };
     try {
       const make = (view: "atlas" | "landscape") => createPublishedSnapshot(recorded, { view, layout: "organic", labels: "essential",
-        illustrated: false, title: name, includeDescriptions: descriptions, includeImages: images });
+        illustrated: false, title: name, includeDescriptions: descriptions, includeImages: images }, new Date(), HOSTED_LIMITS);
       // A map with recorded places opens on the map; one without opens on the network.
       const placed = make("atlas");
-      return { snapshot: placed.nodes.some(n => n.properties) ? placed : make("landscape"), error: "" };
+      const snapshot = placed.nodes.some(n => n.properties) ? placed : make("landscape");
+      const bytes = new TextEncoder().encode(JSON.stringify({ snapshot })).length;
+      if (bytes > MAX_BYTES) return { snapshot: null, error: "This view comes to " + megabytes(bytes) + ", more than the " +
+        megabytes(MAX_BYTES) + " one upload can carry." + (descriptions ? " Leave out descriptions, or" : "") + " narrow it down with search or the filters first." };
+      return { snapshot, error: "" };
     } catch { return { snapshot: null, error: "Some records can't be published as they are (a name or description is too long)." }; }
   }, [recorded, tooBig, name, descriptions, images]);
   useEffect(() => { setChecked(false); setDone(null); }, [prepared.snapshot, target]);
@@ -98,8 +103,8 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
         <input value={name} maxLength={120} onChange={e => setName(e.target.value)}/></label>
 
       {tooBig ? <p className="ml-publish-limit" role="status">This view has {recorded.nodes.length.toLocaleString("en-GB")} records
-        and {recorded.edges.length.toLocaleString("en-GB")} recorded links. A published map holds up to {MAX_RECORDS} records
-        and {MAX_LINKS} links: narrow it down with search or the filters first.</p> : <>
+        and {recorded.edges.length.toLocaleString("en-GB")} recorded links. A published map holds up to {MAX_RECORDS.toLocaleString("en-GB")}
+        records and {MAX_LINKS.toLocaleString("en-GB")} links: narrow it down with search or the filters first.</p> : <>
         <p className="ml-small">Publishes what&apos;s drawn now: <strong>{recorded.nodes.length} records</strong> and
           {" "}<strong>{recorded.edges.length} recorded links</strong>. Suggested links, your files, tags, amounts, sources and
           notes stay here.</p>
@@ -119,7 +124,7 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
             {n.description && <small> · {n.description}</small>}</li>)}</ul>
           <ul tabIndex={0} aria-label="Links to publish">{snapshot.edges.slice(0, SHOW).map(e => <li key={e.id}>{labelOf.get(e.source)} {e.direction === "directed" ? "→" : "–"}
             {" "}{labelOf.get(e.target)} <small>{e.type}</small></li>)}</ul>
-          {(snapshot.nodes.length > SHOW || snapshot.edges.length > SHOW) && <p className="ml-small">Longer lists are cut here; everything is published.</p>}
+          {(snapshot.nodes.length > SHOW || snapshot.edges.length > SHOW) && <p className="ml-small">Showing the first {SHOW} of each. Everything listed in the counts above is published.</p>}
         </details>
         <label className="ml-check"><input type="checkbox" checked={checked} onChange={e => setChecked(e.target.checked)}/>
           {" "}I&apos;ve checked this and have permission to publish it.</label>

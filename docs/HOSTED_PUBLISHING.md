@@ -80,10 +80,19 @@ menu offers only the view link.
 ## What gets published
 
 The Share menu publishes **what's drawn now**, recorded links only: names,
-types, links between them and, where records have places, their locations.
-Descriptions and picture addresses only when ticked. Never source files, tags,
-amounts, sources, notes, suggested links or the list of changes. A published map
-holds up to 150 records and 300 links.
+types, links between them (with their direction and any + / − sign) and, where
+records have places, their locations. Descriptions and picture addresses only
+when ticked. Never source files, tags, amounts, sources, notes, suggested links
+or the list of changes.
+
+A published copy can be a whole map: up to 20,000 records and 60,000 links, and
+4 MB per upload (what one serverless request can carry). The link opens in the
+same atlas, read-only: nothing is read from or saved to the visitor's browser.
+
+(*Share → Copy view link* is different: it opens the view for someone who has
+the same data in their own browser. The older `/share#…` links that carry a
+small map inside the address itself are still limited to 150 records and 300
+links, because an address can only be so long.)
 
 **Anyone with the link can see it.** Unpublishing stops the link working but
 cannot recall copies already downloaded, screenshotted or cached.

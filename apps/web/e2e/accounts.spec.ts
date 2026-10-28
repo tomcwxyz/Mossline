@@ -66,6 +66,11 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   const published=await page.context().newPage();
   await published.goto("/p/"+slug);
   await expect(published.getByText("Kitchen loops, first look").first()).toBeVisible();
+  // The published copy opens in the atlas, read-only, with the links' signs kept.
+  await expect(published.getByRole("button",{name:"Copy link"})).toBeVisible();
+  await expect(published.getByRole("button",{name:"Edit",exact:true})).toHaveCount(0);
+  await expect(published.getByRole("complementary",{name:"Feedback loops"})).toContainText("R1");
+  await axe(published);
 
   // Updating keeps the link.
   await card.getByLabel("Publish as").selectOption(slug);

@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect,useState} from "react";
-import {createPublishedSnapshot,type GraphDocument,type NodeStyleOverride,
+import {createPublishedSnapshot,HOSTED_LIMITS,type GraphDocument,type NodeStyleOverride,
   type PublishedSnapshot,type PublishSettings} from "@mossline/graph-core";
 import type {LabelDensity,NetworkLayout} from "./GraphCanvas";
 import {account,useAccount,type OwnedPublication} from "../hooks/useAccount";
@@ -42,7 +42,7 @@ export function HostedPublishPanel(props:Props){
         ...props,includeDescriptions,includeImages,
         introduction:includeIntroduction?props.introduction:undefined
       };
-      setSnapshot(createPublishedSnapshot(props.graph,settings));
+      setSnapshot(createPublishedSnapshot(props.graph,settings,new Date(),HOSTED_LIMITS));
     }catch(err){setError(err instanceof Error?err.message:"Could not prepare publication.");}
   }
   function changeOptions(update:()=>void){

@@ -2,7 +2,8 @@ import {createHash, randomBytes} from "node:crypto";
 
 type Env=Record<string,string|undefined>;
 export const PUBLICATION_SLUG=/^[A-Za-z0-9_-]{16,32}$/;
-export const PUBLISH_MAX_BYTES=170_000;
+/** One upload, kept under what a serverless request can carry (about 4.5 MB on Vercel). */
+export const PUBLISH_MAX_BYTES=4_000_000;
 
 /** Ways to sign in that this deployment has been given credentials for. */
 export function signInMethods(env:Env=process.env){

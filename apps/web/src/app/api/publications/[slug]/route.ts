@@ -1,4 +1,4 @@
-import {parsePublishedSnapshot} from "@mossline/graph-core";
+import {parseHostedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../../lib/hosted-response";
 import {getPublished,updatePublication,unpublish} from "../../../../lib/hosted-db";
 import {isHostedConfigured,readJsonBody,validPublicationId} from "../../../../lib/hosted-auth";
@@ -35,7 +35,7 @@ export async function PATCH(request:Request,context:Ctx){
       !Number.isSafeInteger(body.revision) || (body.revision as number)<1)
       throw Error("Invalid publication revision");
     revision=body.revision as number;
-    snapshot=parsePublishedSnapshot(body.snapshot);
+    snapshot=parseHostedSnapshot(body.snapshot);
   }catch{return apiResult({error:"Invalid or oversized publication update"},400);}
   try {
     const updated=await updatePublication(slug,user.id,revision,snapshot);

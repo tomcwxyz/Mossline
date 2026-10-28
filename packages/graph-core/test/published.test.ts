@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {parseGraphDocument,createPublishedSnapshot,parsePublishedSnapshot,sharedSnapshotGraph}
+import {parseGraphDocument,createPublishedSnapshot,parsePublishedSnapshot,sharedSnapshotGraph,
+  parseHostedSnapshot,HOSTED_LIMITS}
   from "../src/index.ts";
 const source=parseGraphDocument({version:1,title:"Sensitive working map",
   nodes:[
@@ -48,4 +49,16 @@ test("shared payload validation rejects unknown fields, malicious entries and br
   assert.throws(()=>parsePublishedSnapshot({...baseline,nodeStyles:{missing:{highlight:true}}}));
   assert.throws(()=>parsePublishedSnapshot({...baseline,coverUrl:"javascript:alert(1)"}));
   assert.throws(()=>createPublishedSnapshot({...source,nodes:[]},settings));
+});
+
+test("a link-carried view stays short; a stored copy can hold a whole map",()=>{
+  const nodes=Array.from({length:5000},(_,i)=>({id:"n"+i,label:"Record "+i,type:"organisation"}));
+  const edges=Array.from({length:8000},(_,i)=>({id:"e"+i,source:"n"+(i%5000),target:"n"+((i*7+1)%5000),type:"funds"}));
+  const big=parseGraphDocument({version:1,title:"Whole map",nodes,edges});
+  assert.throws(()=>createPublishedSnapshot(big,settings));
+  const stored=createPublishedSnapshot(big,settings,new Date(),HOSTED_LIMITS);
+  assert.equal(stored.nodes.length,5000);
+  assert.equal(stored.edges.length,8000);
+  assert.equal(parseHostedSnapshot(JSON.parse(JSON.stringify(stored))).edges.length,8000);
+  assert.throws(()=>parsePublishedSnapshot(stored));
 });

@@ -1,4 +1,4 @@
-import {parsePublishedSnapshot, type PublishedSnapshot} from "@mossline/graph-core";
+import {parseHostedSnapshot, type PublishedSnapshot} from "@mossline/graph-core";
 import {pool} from "./db";
 import {hashManagementKey, isHostedConfigured} from "./hosted-auth";
 
@@ -13,7 +13,7 @@ function db(){
 }
 const iso=(v:Date|string)=>new Date(v).toISOString();
 function parseRow(row:Row):HostedPublication {
-  return {slug:row.slug,snapshot:parsePublishedSnapshot(row.snapshot),revision:row.revision,updatedAt:iso(row.updated_at)};
+  return {slug:row.slug,snapshot:parseHostedSnapshot(row.snapshot),revision:row.revision,updatedAt:iso(row.updated_at)};
 }
 
 /** Public read always checks current publish state and never uses static caches. */

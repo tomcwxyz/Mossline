@@ -32,12 +32,14 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
   /** Shown once, e.g. after adding data; onMessageShown lets the owner clear it. */
   message?: string; onMessageShown?: () => void;
+  /** A published copy: explore only. No editing, reviews, data menus or publishing, and nothing read from this browser's storage. */
+  readOnly?: boolean;
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -60,7 +62,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const sourceGraph = fullSource ?? imported;
   const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
   // ---- Changes made here sit beside the imported records ---------------------
-  const edits = useMapEdits(mapId);
+  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly);
   const editedMap = useMemo(() => applyEdits(sourceGraph, edits.layer), [sourceGraph, edits.layer]);
   const workingGraph = editedMap.graph;
 
@@ -71,13 +73,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const annotationFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
+      if (readOnly) { setAnnotations(emptyAnnotationLayer(graphKey)); setAnnotationsReady(true); return; }
       const stored = window.localStorage.getItem(storageKey);
       setAnnotations(stored ? parseAnnotationLayer(JSON.parse(stored), graphKey) : emptyAnnotationLayer(graphKey));
     } catch { setAnnotations(emptyAnnotationLayer(graphKey)); }
     setAnnotationsReady(true);
-  }, [storageKey, graphKey]);
+  }, [storageKey, graphKey, readOnly]);
   useEffect(() => {
-    if (!annotationsReady || annotations.graphKey !== graphKey) return;
+    if (readOnly || !annotationsReady || annotations.graphKey !== graphKey) return;
     try { window.localStorage.setItem(storageKey, JSON.stringify(annotations)); } catch { /* storage full or blocked */ }
   }, [annotations, annotationsReady, graphKey, storageKey]);
   const largeSource = workingGraph.nodes.length > SUGGESTION_LIMIT.nodes || workingGraph.edges.length > SUGGESTION_LIMIT.edges;
@@ -153,7 +156,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const menuRef = useRef<HTMLDetailsElement>(null);
   const shareRef = useRef<HTMLDetailsElement>(null);
   const [publishOpen, setPublishOpen] = useState(false);
-  const publishing = useAccount().state.status === "ready";
+  const publishing = useAccount(!readOnly).state.status === "ready";
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("lens");
@@ -371,6 +374,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
         <span>Mossline</span>
       </button>
+      {readOnly ? <div className="ml-dataset ml-dataset--static">
+        <strong>{imported.title}</strong>
+        <small>{graph.nodes.length.toLocaleString("en-GB")} records · {recordedTotal.toLocaleString("en-GB")} recorded links · published copy</small>
+      </div> : <>
       <details className="ml-dataset" ref={menuRef}>
         <summary>
           <strong>{imported.title}</strong>
@@ -389,6 +396,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           <button type="button" onClick={() => { closeMenu(); onAdvanced(); }}>Advanced tools ↗</button>
         </div>
       </details>
+      </>}
       <input ref={annotationFileRef} hidden type="file" accept=".json,application/json" aria-label="Restore review backup"
         onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void importAnnotations(file); event.currentTarget.value = ""; }}/>
       <nav className="ml-lenses" aria-label="Atlas lenses">
@@ -403,12 +411,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           : <kbd aria-hidden="true">/</kbd>}
       </label>
       <div className="ml-header-actions">
-        <span className="ml-local"><i aria-hidden="true"/>On this device</span>
-        <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+        <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>
+        {!readOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
           onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); }}>
-          {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>
+          {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
+        {readOnly ? <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.origin + window.location.pathname)
+          .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button> :
         <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
@@ -420,7 +430,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               <button type="button" onClick={() => { closeShare(); setPublishOpen(true); }}>Publish online…</button>
               <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
           </div>
-        </details>
+        </details>}
       </div>
     </header>
 
@@ -596,7 +606,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           aria-label="Clear selection">×</button>}
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads} editing={editing}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
-          onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={confirm}
+          onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
           grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
       </aside>
