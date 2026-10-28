@@ -121,7 +121,8 @@ const kumuConnections: ShapeInput = {
   match: { all: ["From|from", "To|to"], any: ["Type|Connection Type|type|connection type|attributes.connection type", "Direction|direction"] },
   records: [],
   links: [{ from: { ref: "{From|from}" }, to: { ref: "{To|to}" }, type: "{Type|Connection Type|type|connection type|attributes.connection type}",
-    direction: "{Direction|direction}", description: "{Description|description|attributes.description}", fields: "row" }]
+    direction: "{Direction|direction}", description: "{Description|description|attributes.description}", fields: "row",
+    polarity: "{Polarity|Effect|Sign|polarity|effect|sign|attributes.polarity|attributes.effect|attributes.sign}" }]
 };
 
 export const BUILT_IN_SHAPES: Shape[] = [giving360, charity, trustees, classification, area, companies, kumuElements, kumuConnections].map(parseShape);

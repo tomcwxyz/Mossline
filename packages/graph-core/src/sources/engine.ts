@@ -1,5 +1,6 @@
 import { parseGraphDocument, type GraphDocument, type GraphEdge, type GraphNode, type NodeType, type SourceOrigin } from "../schema";
 import { normaliseIdentifier, type IdScheme } from "./identifiers";
+import { readPolarity } from "../systems";
 import { headingIndex, render, sentenceCase, titleCaseName, type LinkTemplate, type RecordTemplate, type Shape } from "./shape";
 import type { SourceTable } from "./tables";
 
@@ -17,7 +18,8 @@ const TYPE_WORDS: Record<string, NodeType> = {
   group: "organisation", network: "organisation", project: "project", programme: "project", program: "project", initiative: "project",
   grant: "project", funder: "funder", foundation: "funder", donor: "funder", trust: "funder", person: "person", people: "person",
   individual: "person", contact: "person", place: "place", location: "place", region: "place", area: "place", geography: "place",
-  topic: "topic", theme: "topic", issue: "topic", methodology: "methodology", outcome: "outcome"
+  topic: "topic", theme: "topic", issue: "topic", methodology: "methodology", outcome: "outcome",
+  factor: "outcome", variable: "outcome", stock: "outcome", impact: "outcome", result: "outcome", condition: "outcome"
 };
 export function typeFromWord(value: string, fallback: NodeType): NodeType {
   const w = value.toLowerCase().replace(/[^a-z ]/g, "").trim();
@@ -185,6 +187,8 @@ export function applySources(plans: PlannedTable[], base: GraphDocument | null, 
             fields: (() => {
               const f = { ...(fieldsFor(l.fields, table.headings, row) ?? {}) };
               for (const [k, tpl] of Object.entries(l.properties ?? {})) { const v = render(tpl, row, index); if (v) f[k] = v; }
+              const sign = readPolarity(render(l.polarity, row, index));
+              if (sign) f.Polarity = sign;
               return Object.keys(f).length ? f : undefined;
             })(),
             receipt: receipt("link:" + (li + 1) + ":" + (ti + 1)),

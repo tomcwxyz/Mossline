@@ -83,6 +83,34 @@ checked before saving. Approximate places from postcodes are hollow marks
 on the Map and are described in the record panel. The previous importers
 remain in Advanced tools. Details: [Getting data in](../DATA_IN.md).
 
+## Relationships: direction, kinds, signs and loops
+
+Relationship and systems maps (as people draw them in Kumu) read in the
+Network lens:
+
+- **Direction.** Directed links carry arrowheads, mutual links point both
+  ways, undirected links have none. The record panel and Follow a connection
+  show → ← ↔ —. Follow can be limited to arrows only, so routes run cause →
+  effect or activity → outcome (`findRecordedRoutes(…, { followDirection })`).
+- **Kinds of link.** The key lists each kind with its count and hides or
+  shows it across every lens (`hiddenLinkTypes`). A map with up to eight kinds
+  colours links by kind.
+- **Signs.** A link's `Polarity` (from a Kumu polarity/effect/sign field, a
+  links table's column, or a type that is only "+" or "−") marks cause and
+  effect: + more leads to more, − more leads to less. A map where most links
+  are signed colours by sign; signs show as badges on the links in focus.
+- **Feedback loops.** `feedbackLoops` finds simple cycles along recorded,
+  directed links only, bounded in length, number and search effort (and says
+  when it stopped early). A loop is reinforcing (R) with an even number of −
+  links, balancing (B) with an odd number, and unknown (L) if any sign is
+  missing. Loops are listed beside the network, highlighted as a route, and
+  listed on each record they pass through.
+- **Small maps** (80 records or fewer) are laid out as one drawing with room
+  for every name, and without the wash or area names.
+
+`apps/web/public/samples/kumu-systems-map.json` is an invented
+cause-and-effect map for trying this (*Try a cause-and-effect map* in Add data).
+
 ## Data/model gaps
 
 - Existing data may lack dates or coordinates. Show the gap; never invent.

@@ -64,7 +64,8 @@ test("draws many grants as one recorded link per funder and recipient, keeping c
   assert.equal(view.pairs, 3);
   assert.ok(!view.graph.nodes.some(n => n.properties?.mosslineFundingGrant), "grant records are not drawn");
   const larder = view.graph.edges.find(e => e.id === "grants:id:GB-CHC-1990101>id:GB-CHC-1990001")!;
-  assert.equal(larder.type, "funded · 2 grants");
+  assert.equal(larder.type, "funded");
+  assert.equal(larder.description, "2 grants");
   assert.equal(larder.properties!.amountAwarded, 18000);
   assert.equal(larder.origin?.fileName, "360giving-grants.csv", "the link keeps a receipt from its first grant");
   assert.deepEqual(view.grantEnds.get("id:360G-MOORFIELD-0003"), { funderId: "id:GB-CHC-1990101", recipientId: "id:GB-CHC-1990001" });

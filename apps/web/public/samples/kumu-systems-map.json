@@ -1,0 +1,269 @@
+{
+  "elements": [
+    {
+      "_id": "elem-volunteer-capacity",
+      "attributes": {
+        "label": "Volunteer capacity",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-meals-served",
+      "attributes": {
+        "label": "Meals served",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-community-trust",
+      "attributes": {
+        "label": "Community trust",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-food-donations",
+      "attributes": {
+        "label": "Food donations",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-food-sent-to-landfill",
+      "attributes": {
+        "label": "Food sent to landfill",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-household-food-insecurity",
+      "attributes": {
+        "label": "Household food insecurity",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-demand-on-food-services",
+      "attributes": {
+        "label": "Demand on food services",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-staff-and-volunteer-burnout",
+      "attributes": {
+        "label": "Staff and volunteer burnout",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-grant-funding",
+      "attributes": {
+        "label": "Grant funding",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-local-growing-projects",
+      "attributes": {
+        "label": "Local growing projects",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-cooking-skills",
+      "attributes": {
+        "label": "Cooking skills",
+        "element type": "Factor"
+      }
+    },
+    {
+      "_id": "elem-fresh-food-eaten",
+      "attributes": {
+        "label": "Fresh food eaten",
+        "element type": "Factor"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "_id": "conn-1",
+      "from": "elem-meals-served",
+      "to": "elem-community-trust",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-2",
+      "from": "elem-community-trust",
+      "to": "elem-volunteer-capacity",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-3",
+      "from": "elem-volunteer-capacity",
+      "to": "elem-meals-served",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-4",
+      "from": "elem-community-trust",
+      "to": "elem-food-donations",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-5",
+      "from": "elem-food-donations",
+      "to": "elem-meals-served",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-6",
+      "from": "elem-food-donations",
+      "to": "elem-food-sent-to-landfill",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "decreases",
+        "polarity": "-"
+      }
+    },
+    {
+      "_id": "conn-7",
+      "from": "elem-household-food-insecurity",
+      "to": "elem-demand-on-food-services",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-8",
+      "from": "elem-demand-on-food-services",
+      "to": "elem-meals-served",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-9",
+      "from": "elem-meals-served",
+      "to": "elem-household-food-insecurity",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "decreases",
+        "polarity": "-"
+      }
+    },
+    {
+      "_id": "conn-10",
+      "from": "elem-meals-served",
+      "to": "elem-staff-and-volunteer-burnout",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-11",
+      "from": "elem-staff-and-volunteer-burnout",
+      "to": "elem-volunteer-capacity",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "decreases",
+        "polarity": "-"
+      }
+    },
+    {
+      "_id": "conn-12",
+      "from": "elem-grant-funding",
+      "to": "elem-volunteer-capacity",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-13",
+      "from": "elem-grant-funding",
+      "to": "elem-local-growing-projects",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-14",
+      "from": "elem-local-growing-projects",
+      "to": "elem-cooking-skills",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-15",
+      "from": "elem-cooking-skills",
+      "to": "elem-fresh-food-eaten",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-16",
+      "from": "elem-fresh-food-eaten",
+      "to": "elem-household-food-insecurity",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "decreases",
+        "polarity": "-"
+      }
+    },
+    {
+      "_id": "conn-17",
+      "from": "elem-local-growing-projects",
+      "to": "elem-community-trust",
+      "direction": "directed",
+      "attributes": {
+        "connection type": "increases",
+        "polarity": "+"
+      }
+    },
+    {
+      "_id": "conn-related",
+      "from": "elem-cooking-skills",
+      "to": "elem-community-trust",
+      "direction": "undirected",
+      "attributes": {
+        "connection type": "related to"
+      }
+    }
+  ]
+}

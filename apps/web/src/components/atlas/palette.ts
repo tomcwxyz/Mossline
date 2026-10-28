@@ -17,7 +17,7 @@ export const PALETTES: Record<AtlasTheme, AtlasPalette> = {
     label: "#1F2622", labelPlate: "rgba(242,241,236,0.86)", areaLabel: "#38432F",
     types: {
       organisation: "#4F7A44", project: "#B87A2B", funder: "#2F5F86", place: "#857D6B",
-      person: "#8F5E86", topic: "#6F746C", methodology: "#6F746C", outcome: "#6F746C", other: "#6F746C"
+      person: "#8F5E86", topic: "#6F746C", methodology: "#6F746C", outcome: "#2E7D78", other: "#6F746C"
     }
   },
   night: {
@@ -27,9 +27,18 @@ export const PALETTES: Record<AtlasTheme, AtlasPalette> = {
     label: "#E8E6D9", labelPlate: "rgba(15,25,21,0.82)", areaLabel: "#E8E6D9",
     types: {
       organisation: "#93C27E", project: "#E2AA5A", funder: "#86B5DE", place: "#BDB49C",
-      person: "#C99BC0", topic: "#A3A99F", methodology: "#A3A99F", outcome: "#A3A99F", other: "#A3A99F"
+      person: "#C99BC0", topic: "#A3A99F", methodology: "#A3A99F", outcome: "#7FC8C0", other: "#A3A99F"
     }
   }
+};
+/** Kinds of link, when a map has a handful: distinct inks that read on paper and at night. */
+export const LINK_INKS: Record<AtlasTheme, string[]> = {
+  day: ["#2F5F86", "#A4562E", "#4F7A44", "#7D4F8C", "#9A7A1F", "#2E7D78", "#8C3B4A", "#4A5568"],
+  night: ["#86B5DE", "#E9A27A", "#93C27E", "#C9A0D8", "#E0C46C", "#7FC8C0", "#E8919F", "#B8C2D0"]
+};
+/** Cause and effect: more leads to more (+), more leads to less (−). */
+export const SIGN_INKS: Record<AtlasTheme, { plus: string; minus: string }> = {
+  day: { plus: "#2F5F86", minus: "#B0442F" }, night: { plus: "#86B5DE", minus: "#F0A08F" }
 };
 export type MarkShape = "circle" | "square" | "diamond" | "triangle";
 export const SHAPE: Record<NodeType, MarkShape> = {

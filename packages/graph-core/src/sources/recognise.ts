@@ -62,8 +62,10 @@ export function suggestShape(table: SourceTable): Shape | null {
   const to = pick(h, ["to", "target", "targetentity", "targetorganisation", "toname"]);
   const kind = pick(h, ["type", "relationship", "relationshiptype", "connectiontype", "link", "linktype"]);
   if (from && to) {
+    const sign = pick(h, ["polarity", "effect", "sign"]), dir = pick(h, ["direction"]);
     return parseShape({ ...base, name: "Links between named records", each: "Each row links one named record to another.",
-      records: [], links: [{ from: { ref: brace(from) }, to: { ref: brace(to) }, type: kind ? brace(kind) : "connected", fields: "row" }] });
+      records: [], links: [{ from: { ref: brace(from) }, to: { ref: brace(to) }, type: kind ? brace(kind) : "connected", fields: "row",
+        ...(sign ? { polarity: brace(sign) } : {}), ...(dir ? { direction: brace(dir) } : {}) }] });
   }
 
   const label = pick(h, ["label", "name", "organisation", "organisationname", "organization", "organizationname", "title", "entity", "project", "projectname", "charityname", "companyname"]) || h[0];
