@@ -20,6 +20,7 @@ Mossline is a question-centred, open-source platform for navigating networks and
 6. Inspect actual export shapes before supporting a source, and support it as a shape read by the one engine in `packages/graph-core/src/sources` (see `docs/DATA_IN.md`), not as a separate importer. Join records on identifiers, never on names.
 7. Prefer small, keyboard-accessible components and targeted tests.
 8. Work on feature branches; review diffs before merging.
+9. Changes people make in Mossline are edit-list entries applied over imported records (`graph-core/src/edits.ts`). Never write them into imported data; keep the receipt and the previous value.
 
 ## Verify before merge
 

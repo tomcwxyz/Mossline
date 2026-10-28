@@ -111,6 +111,35 @@ Network lens:
 `apps/web/public/samples/kumu-systems-map.json` is an invented
 cause-and-effect map for trying this (*Try a cause-and-effect map* in Add data).
 
+## Editing a map in place
+
+**Edit** in the atlas header lets a person build and change a map inside
+Mossline, as in Kumu, without touching what their files said
+(`packages/graph-core/src/edits.ts`, `apps/web/src/components/atlas/Editing.tsx`).
+
+- **Changes beside imports.** Every change (add, change or remove a record or
+  link) is an entry in an edit list saved in this browser under the map's ID
+  (`mossline:edits:v1:<mapId>`). `applyEdits` lays them over the imported map;
+  adding data again refreshes the imported part and the changes reapply. A
+  change whose record is no longer present waits rather than vanishing.
+- **Receipts.** A changed record keeps its file receipts and gains one for the
+  change (who, when, why). A link entered here reads "Entered by …". An
+  overridden value keeps what the file said (`was`), shown in the change list
+  and restored by Undo.
+- **What you can do.** Add a record; edit its name, type, description, tags,
+  region and postcode; remove it (its links go with it). Add a link from the
+  record panel, choosing the other end by name or on the map, with its kind,
+  direction and sign; edit or remove any link. **Quick entry** turns typed
+  lines into records and links (`Volunteers + Meals served`,
+  `Trust -> funds -> Project`, `A <-> partners <-> B`).
+- **Undo and export.** Each change can be undone and redone. Export the map
+  with its changes (Mossline JSON), as Elements and Connections sheets that
+  Kumu imports (with a Source column for each item), or the changes alone as a
+  backup.
+- **One person, one browser for now.** Sharing an edit list between people
+  would need storage outside the browser; the list is designed so it could be
+  merged later.
+
 ## Data/model gaps
 
 - Existing data may lack dates or coordinates. Show the gap; never invent.

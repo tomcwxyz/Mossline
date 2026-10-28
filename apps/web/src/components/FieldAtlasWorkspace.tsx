@@ -4,11 +4,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   collaborationGraph, confirmInferredRelationship, defaultGrouping, emptyAnnotationLayer, fundingFlows, grantsAsLinks, graphFingerprint,
   groupRecords, groupingOptions, type GroupingKind, connectionTypes, edgePolarity, feedbackLoops, loopLabels,
+  applyEdits, toKumuWorkbook,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
   type GraphDocument, type GraphEdge, type NodeType
 } from "@mossline/graph-core";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
+import { useMapEdits } from "../hooks/useMapEdits";
+import { ChangeList, QuickEntry, RecordCreator, type EditingApi } from "./atlas/Editing";
 import { FollowConnection } from "./FollowConnection";
 import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
 import { useAtlasTheme } from "./atlas/theme";
@@ -27,8 +30,10 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImport, onAdvanced, example, message = "", onMessageShown }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
+  /** The saved map's ID: changes made here are kept under it. */
+  mapId?: string;
   /** Shown once, e.g. after adding data; onMessageShown lets the owner clear it. */
   message?: string; onMessageShown?: () => void;
 }) {
@@ -52,6 +57,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
   }, [datasetId]);
   const sourceGraph = fullSource ?? imported;
   const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
+  // ---- Changes made here sit beside the imported records ---------------------
+  const edits = useMapEdits(mapId);
+  const editedMap = useMemo(() => applyEdits(sourceGraph, edits.layer), [sourceGraph, edits.layer]);
+  const workingGraph = editedMap.graph;
 
   // ---- Reviewer confirmations: a separate, dataset-bound annotation layer -----
   const [annotations, setAnnotations] = useState<AtlasAnnotationLayer>(() => emptyAnnotationLayer(graphKey));
@@ -69,14 +78,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     if (!annotationsReady || annotations.graphKey !== graphKey) return;
     try { window.localStorage.setItem(storageKey, JSON.stringify(annotations)); } catch { /* storage full or blocked */ }
   }, [annotations, annotationsReady, graphKey, storageKey]);
-  const largeSource = sourceGraph.nodes.length > SUGGESTION_LIMIT.nodes || sourceGraph.edges.length > SUGGESTION_LIMIT.edges;
+  const largeSource = workingGraph.nodes.length > SUGGESTION_LIMIT.nodes || workingGraph.edges.length > SUGGESTION_LIMIT.edges;
   const proposedGraph = useMemo(() => {
     // Shared-funder/project associations are pencil: derived, reversible, never counted.
-    if (largeSource) return sourceGraph;
-    const existing = new Set(sourceGraph.edges.map(e => e.id));
-    const suggestions = collaborationGraph(sourceGraph, "all").edges.filter(e => e.inferred && !existing.has(e.id));
-    return suggestions.length ? { ...sourceGraph, edges: [...sourceGraph.edges, ...suggestions] } : sourceGraph;
-  }, [sourceGraph, largeSource]);
+    if (largeSource) return workingGraph;
+    const existing = new Set(workingGraph.edges.map(e => e.id));
+    const suggestions = collaborationGraph(workingGraph, "all").edges.filter(e => e.inferred && !existing.has(e.id));
+    return suggestions.length ? { ...workingGraph, edges: [...workingGraph.edges, ...suggestions] } : workingGraph;
+  }, [workingGraph, largeSource]);
   const graph = useMemo(() => graphWithAnnotations(proposedGraph,
     annotations.graphKey === graphKey ? annotations : emptyAnnotationLayer(graphKey)), [proposedGraph, annotations, graphKey]);
 
@@ -176,7 +185,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "/") { e.preventDefault(); searchRef.current?.focus(); }
-      if (e.key === "Escape") { setSelectedId(null); setBrowse(false); }
+      if (e.key === "Escape") { if (pickingRef.current) { setPickingFrom(null); return; } setSelectedId(null); setBrowse(false); }
       const index = Number(e.key) - 1;
       if (index >= 0 && index < LENSES.length) setLens(LENSES[index].id);
     };
@@ -293,7 +302,51 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
     setTrail(next);
     if (next) setLens(current => current === "network" || current === "map" ? current : "network");
   }, []);
-  const pickRecord = useCallback((id: string | null) => { setSelectedId(id); }, []);
+  // ---- Editing ------------------------------------------------------------------
+  const [editMode, setEditMode] = useState(false);
+  const [editTab, setEditTab] = useState<"add" | "quick" | "changes">("add");
+  const [editCardOpen, setEditCardOpen] = useState(true);
+  /** Choosing a link's other end on the map: the record it starts from, and the one picked. */
+  const [pickingFrom, setPickingFrom] = useState<string | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
+  const pickingRef = useRef(pickingFrom); pickingRef.current = pickingFrom;
+  const pickRecord = useCallback((id: string | null) => {
+    const from = pickingRef.current;
+    if (from) {
+      if (id && id !== from) { setPicked(id); setPickingFrom(null); setSelectedId(from); }
+      return;
+    }
+    setSelectedId(id);
+  }, []);
+  const liveChanges = edits.layer.entries.filter(e => !e.undone).length;
+  const editing: EditingApi | null = useMemo(() => editMode ? {
+    graph: workingGraph, editor: edits.editor || "you", add: list => { edits.add(list); },
+    pickTarget: from => { setPickingFrom(from); setPicked(null); }, picked, clearPicked: () => setPicked(null),
+    linkKinds: connectionTypes(workingGraph).map(t => t.type).filter(t => t !== "funded").slice(0, 40)
+  } : null, [editMode, workingGraph, edits, picked]);
+  const download = (name: string, data: BlobPart, type: string) => {
+    const url = URL.createObjectURL(new Blob([data], { type }));
+    const a = document.createElement("a"); a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  };
+  const fileStem = (imported.title || "mossline-map").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase().slice(0, 60) || "mossline-map";
+  /** A record's name, even when it has since been removed or never arrived. */
+  const labelOf = (id: string) => {
+    const now = workingGraph.nodes.find(n => n.id === id) ?? sourceGraph.nodes.find(n => n.id === id);
+    if (now) return now.label;
+    for (const e of edits.layer.entries) {
+      if (e.op.kind === "remove-node" && e.op.id === id) return e.op.label;
+      if (e.op.kind === "add-node" && e.op.node.id === id) return e.op.node.label;
+    }
+    return "a record no longer in this map";
+  };
+  function exportEdits(kind: "map" | "kumu" | "changes") {
+    if (kind === "map") download(fileStem + ".json", JSON.stringify(workingGraph, null, 2), "application/json");
+    else if (kind === "kumu") download(fileStem + "-kumu.xlsx", toKumuWorkbook(workingGraph) as BlobPart,
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    else download(fileStem + "-changes.json", JSON.stringify(edits.layer, null, 2), "application/json");
+    setNotice(kind === "changes" ? "Changes saved as a separate backup file." : "Map exported with your changes. Each item notes where it came from.");
+  }
   const onUnavailable = useCallback(() =>
     setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
 
@@ -345,6 +398,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
       </label>
       <div className="ml-header-actions">
         <span className="ml-local"><i aria-hidden="true"/>On this device</span>
+        <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+          onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); }}>
+          {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
         <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() =>
@@ -483,11 +539,35 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
               <button type="button" className="ml-quiet" onClick={() => setBrowse(false)} aria-label="Close list">×</button></div>
             <p className="ml-small">Every matching record, including any not drawn on a dense view.</p>
             <div className="ml-browse-list">{recordList.slice(0, browseLimit).map(n => <button type="button" key={n.id}
-              aria-pressed={selectedId === n.id} onClick={() => setSelectedId(n.id)}>
+              aria-pressed={selectedId === n.id} onClick={() => pickRecord(n.id)}>
               <TypeMark type={n.type}/><strong>{n.label}</strong><small>{n.type}</small></button>)}</div>
             {recordList.length > browseLimit && <button className="ml-browse-next" type="button" onClick={() => setBrowseLimit(n => n + 100)}>
               Show 100 more · {recordList.length - browseLimit} not listed yet</button>}
           </section>}
+
+          {editMode && <aside className={"ml-overlay-card ml-edit-card" + (editCardOpen ? "" : " is-closed")} aria-label="Editing this map">
+            <button type="button" className="ml-unplaced-head" aria-expanded={editCardOpen} onClick={() => setEditCardOpen(v => !v)}>
+              <strong>Editing this map</strong><span aria-hidden="true">{editCardOpen ? "–" : "+"}</span></button>
+            {editCardOpen && <>
+              <label className="ml-edit-field ml-edit-name"><span>Your name on changes</span>
+                <input value={edits.editor} maxLength={80} placeholder="e.g. Tom" onChange={e => edits.setEditor(e.target.value)}/></label>
+              <div className="ml-segmented ml-edit-tabs" role="group" aria-label="Editing">
+                {([["add", "Add record"], ["quick", "Quick entry"], ["changes", "Changes · " + liveChanges]] as const).map(([id, text]) =>
+                  <button key={id} type="button" aria-pressed={editTab === id} onClick={() => setEditTab(id)}>{text}</button>)}
+              </div>
+              {editing && editTab === "add" && <RecordCreator api={editing} onAdded={id => { setSelectedId(id);
+                if (window.innerWidth <= 720) setEditCardOpen(false);
+                setNotice("Record added. Use Add a link in the panel to connect it."); }}/>}
+              {editing && editTab === "quick" && <QuickEntry api={editing}/>}
+              {editTab === "changes" && <ChangeList layer={edits.layer} stale={editedMap.stale}
+                label={labelOf}
+                onUndo={(id, undone) => edits.undo(id, undone)} onExport={exportEdits}/>}
+              <p className="ml-small">Select a record to change it or link it. Your files are never changed.</p>
+            </>}
+          </aside>}
+          {pickingFrom && <div className="ml-banner ml-pick-banner" role="status">
+            Click the record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to.
+            <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
 
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
@@ -498,7 +578,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, onBack, onImpo
       <aside className="ml-inspector" aria-label="Selected record">
         {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
           aria-label="Clear selection">×</button>}
-        <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads}
+        <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads} editing={editing}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
           onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}

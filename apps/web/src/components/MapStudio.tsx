@@ -529,7 +529,7 @@ export function MapStudio() {
     return <div className="mossline-field-atlas-entry">
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
-      <FieldAtlasWorkspace key={graphKey} graph={graph} message={atlasMessage} onMessageShown={clearAtlasMessage}
+      <FieldAtlasWorkspace key={graphKey} graph={graph} message={atlasMessage} onMessageShown={clearAtlasMessage} mapId={activeMapId ?? undefined}
         datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
         onBack={()=>setExperienceSpace("home")}
         onImport={()=>setAddData({from:"atlas",intent:"general"})}
