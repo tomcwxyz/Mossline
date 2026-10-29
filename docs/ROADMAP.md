@@ -268,7 +268,8 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
 - [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
 - [x] Real user accounts for publishing: Microsoft, Google or email link; maps belong to accounts (October 2026).
-- [ ] Team roles, invitations and restricted/private publications.
+- [x] Shared maps: save to an account, invite editors or viewers, changes sync between browsers (October 2026).
+- [ ] Organisations and team roles; restricted/private publications.
 
 
 ## Alpha 1.9 — funding landscapes and potential thematic connections

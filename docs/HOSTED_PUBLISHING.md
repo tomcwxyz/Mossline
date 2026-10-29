@@ -30,6 +30,9 @@ stops that account publishing at once; its maps stay up until unpublished.
 **Leaving:** *Your account → Delete account* removes the person and everything
 they published. Unpublishing a map deletes its stored copy.
 
+To let people save maps to their accounts and work on them together, see
+[SHARED_MAPS.md](SHARED_MAPS.md).
+
 ## Ways to sign in
 
 Each is switched on by giving it credentials. Use at least one.

@@ -58,8 +58,8 @@ export function Account() {
           {user.name && <div><dt>Name</dt><dd>{user.name}</dd></div>}
           <div><dt>Email</dt><dd>{user.email}</dd></div>
         </dl>
-        {!user.canPublish && <p className="ml-account-note">This address isn&apos;t set up to publish here any more.
-          Ask whoever runs this Mossline if that&apos;s a mistake. You can still delete your account below.</p>}
+        {!user.canPublish && <p className="ml-account-note">This account can open maps people have shared with it, from
+          Mossline&apos;s front page. It can&apos;t publish maps or save its own. Ask whoever runs this Mossline if that&apos;s a mistake.</p>}
 
         {user.canPublish && <section className="ml-account-section" aria-labelledby="maps-title">
           <h2 id="maps-title">Published maps</h2>
@@ -109,7 +109,8 @@ export function Account() {
             <strong>Delete your account</strong>
             <p>This deletes your name and email address from Mossline and unpublishes
               {maps?.length === 1 ? " your published map" : maps?.length ? " your " + maps.length + " published maps" : " any maps you've published"}. Copies people have
-              already downloaded can&apos;t be recalled. Maps in your browser are not affected.</p>
+              already downloaded can&apos;t be recalled. Maps you&apos;ve saved to your account are deleted too, for everyone
+              you shared them with, and you leave maps others shared with you. Maps in your browser are not affected.</p>
             <label className="ml-check"><input type="checkbox" checked={deleteOk} onChange={e => setDeleteOk(e.target.checked)}/>
               {" "}I understand. Delete my account.</label>
             <button type="button" className="ml-danger ml-quiet ml-account-delete" disabled={!deleteOk || busy} onClick={() => void run(async () => {

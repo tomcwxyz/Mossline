@@ -8,9 +8,11 @@ import {generalMapCounts,generalMapStub} from "./general-map-store";
  */
 export const MAX_LOCAL_MAPS=8;
 export const MAX_AUTO_RESTORE_CHARS=2_600_000;
+/** This browser's copy of a map kept in someone's Mossline account. */
+export type SharedLink={id:string;role:"owner"|"editor"|"viewer";sourceVersion:number};
 export type LocalMap={id:string;createdAt:number;title:string;graph:GraphDocument;
   generalDatasetId?:string;sourceCounts?:{nodes:number;edges:number};
-  fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string};
+  fundingAnalysis?:FundingFullAnalysis;fundingDatasetId?:string;shared?:SharedLink};
 export type PersistedMapLibrary={activeId:string;maps:LocalMap[]};
 
 /** Store a tiny placeholder for any complete general network held in IndexedDB. */

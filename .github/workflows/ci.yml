@@ -26,6 +26,7 @@ jobs:
           --health-cmd "pg_isready -U mossline" --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       MOSSLINE_HOSTED_PUBLISHING_ENABLED: "true"
+      MOSSLINE_SHARED_MAPS_ENABLED: "true"
       MOSSLINE_DATABASE_URL: postgres://mossline:mossline@127.0.0.1:5432/mossline_ci
       MOSSLINE_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
       MOSSLINE_BASE_URL: http://127.0.0.1:3000

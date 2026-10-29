@@ -35,10 +35,10 @@ export function SignIn({ next, error }: { next: string; error: string }) {
 
   return <AccountShell title="Sign in">
     <section className="ml-account-card" aria-labelledby="sign-in-title">
-      <p className="ml-start-eyebrow">Publishing</p>
-      <h1 id="sign-in-title">Sign in to publish</h1>
-      <p className="ml-add-lede">You only need an account to publish maps online. Everything else in Mossline works
-        without one, and your maps stay in this browser.</p>
+      <p className="ml-start-eyebrow">Your account</p>
+      <h1 id="sign-in-title">Sign in to Mossline</h1>
+      <p className="ml-add-lede">You only need an account to publish maps or work on them with other people. Everything else in Mossline works
+        without one, and your maps stay in this browser unless you choose to save one to your account.</p>
 
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
 
@@ -67,8 +67,8 @@ export function SignIn({ next, error }: { next: string; error: string }) {
         </form>}
       </div>)}
 
-      <p className="ml-small ml-account-privacy">Mossline keeps your name, your email address and the maps you publish.
-        Nothing else is kept with your account, and there's no password. Delete your account at any time and your published maps go with it.</p>
+      <p className="ml-small ml-account-privacy">Mossline keeps your name, your email address, and the maps you publish or save to your account.
+        Nothing else is kept with your account, and there's no password. Delete your account at any time and those maps go with it.</p>
       <a className="ml-small" href={back}>← Back to Mossline</a>
     </section>
   </AccountShell>;

@@ -12,7 +12,7 @@ export type AccountUser = { name: string; email: string; canPublish: boolean };
 export type AccountState =
   | { status: "loading" }
   | { status: "off" }
-  | { status: "ready"; signIn: SignInMethods; user: AccountUser | null };
+  | { status: "ready"; signIn: SignInMethods; user: AccountUser | null; sharedMaps: boolean };
 
 export type OwnedPublication = { slug: string; title: string; nodes: number; edges: number; revision: number; createdAt: string; updatedAt: string };
 
@@ -22,8 +22,8 @@ export function useAccount(enabled = true) {
     if (!enabled) { setState({ status: "off" }); return; }
     try {
       const r = await fetch("/api/publications/status", { cache: "no-store", credentials: "same-origin" });
-      const data = await r.json() as { enabled?: boolean; signIn?: SignInMethods; user?: AccountUser | null };
-      setState(data.enabled && data.signIn ? { status: "ready", signIn: data.signIn, user: data.user ?? null } : { status: "off" });
+      const data = await r.json() as { enabled?: boolean; signIn?: SignInMethods; user?: AccountUser | null; sharedMaps?: boolean };
+      setState(data.enabled && data.signIn ? { status: "ready", signIn: data.signIn, user: data.user ?? null, sharedMaps: !!data.sharedMaps } : { status: "off" });
     } catch { setState({ status: "off" }); }
   }, [enabled]);
   useEffect(() => { void refresh(); }, [refresh]);
