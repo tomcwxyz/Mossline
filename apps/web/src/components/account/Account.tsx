@@ -20,6 +20,22 @@ export function Account() {
   const [busy, setBusy] = useState(false);
   const [org, setOrg] = useState<OrgState | null>(null);
   const [name, setName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  // Coming back from an email-change link.
+  useEffect(() => {
+    const state = new URLSearchParams(window.location.search).get("email");
+    if (!state) return;
+    window.history.replaceState(null, "", "/account");
+    const say: Record<string, [string, boolean]> = {
+      changed: ["Your email address has changed. Use it to sign in from now on.", false],
+      expired: ["That link had expired. Ask for a new one below.", true],
+      taken: ["Another account started using that address in the meantime, so nothing changed.", true],
+      invalid: ["That link has already been used or isn't valid.", true],
+      failed: ["Something went wrong confirming that address. Try again.", true]
+    };
+    const [text, bad] = say[state] ?? say.invalid;
+    if (bad) setProblem(text); else setNotice(text);
+  }, []);
   useEffect(() => { setName(user?.name ?? ""); }, [user?.name]);
   useEffect(() => { if (user) orgs.get().then(setOrg).catch(() => setOrg(null)); }, [user]);
 
@@ -123,12 +139,32 @@ export function Account() {
           </form>
         </details>}
 
+        <section className="ml-account-section" aria-labelledby="data-title">
+          <h2 id="data-title">Your data</h2>
+          <p className="ml-small">Everything Mossline holds about you, in one file: your account, organisation, published maps,
+            maps kept in your account with their changes, and the changes you&apos;ve made to maps shared with you.</p>
+          <a className="ml-quiet ml-account-button" href="/api/account/export" download>Download your data</a>
+          <form className="ml-edit-form" aria-label="Change your email address" onSubmit={(e: FormEvent) => {
+            e.preventDefault(); void run(async () => { await account.changeEmail(newEmail.trim());
+              setNotice("Check " + newEmail.trim() + " for a link to confirm it. Your address changes only once you open it."); setNewEmail(""); });
+          }}>
+            <div className="ml-edit-row">
+              <label className="ml-edit-field"><span>Change email address <small>maps shared with you follow it</small></span>
+                <input type="email" required value={newEmail} onChange={e => setNewEmail(e.target.value)} autoComplete="email"/></label>
+              <button type="submit" className="ml-quiet ml-share-invite" disabled={busy || !newEmail.trim()}>Send a link</button>
+            </div>
+          </form>
+        </section>
+
         <section className="ml-account-section" aria-labelledby="leave-title">
           <h2 id="leave-title">Sign out or leave</h2>
           <div className="ml-edit-actions">
             <button type="button" className="ml-quiet" disabled={busy} onClick={() => void run(async () => {
               await account.signOut(); await refresh(); setMaps(null); setNotice("Signed out.");
             })}>Sign out</button>
+            <button type="button" className="ml-quiet" disabled={busy} onClick={() => void run(async () => {
+              await account.signOutEverywhere(); await refresh(); setMaps(null); setNotice("Signed out on every device, including this one.");
+            })}>Sign out everywhere</button>
           </div>
           <div className="ml-edit-confirm">
             <strong>Delete your account</strong>

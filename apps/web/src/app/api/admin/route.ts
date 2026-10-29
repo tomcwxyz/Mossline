@@ -1,3 +1,4 @@
+import {reportError} from "../../../lib/report";
 import {apiResult} from "../../../lib/hosted-response";
 import {isOperator,requireSignedIn} from "../../../lib/hosted-guard";
 import {allOrgs,counts,recentPublications} from "../../../lib/orgs-db";
@@ -10,5 +11,5 @@ export async function GET(request:Request){
   if(user instanceof Response)return user;
   if(!isOperator(user.email))return apiResult({error:"Not found"},404);
   try{return apiResult({counts:await counts(),orgs:await allOrgs(),publications:await recentPublications()});}
-  catch{return apiResult({error:"Temporarily unavailable"},503);}
+  catch(error){reportError("admin",error);return apiResult({error:"Temporarily unavailable"},503);}
 }

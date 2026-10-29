@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../lib/hosted-auth";
 import {isOperator,requireSignedIn} from "../../../../lib/hosted-guard";
@@ -18,5 +19,5 @@ export async function POST(request:Request){
   if(until&&Number.isNaN(until.getTime()))return apiResult({error:"That end date isn't a date"},400);
   const source=body.source==="operator"?"operator":"invoice";
   try{await setPlan(orgId,plan,until,source);return apiResult({ok:true});}
-  catch{return apiResult({error:"Temporarily unavailable"},503);}
+  catch(error){reportError("admin/plan",error);return apiResult({error:"Temporarily unavailable"},503);}
 }

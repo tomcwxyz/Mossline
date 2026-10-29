@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {billingEnabled,planFromSubscription,verifyWebhook,type StripeSubscription} from "../../../../lib/billing";
 import {firstTime,forgetEvent,orgForStripe,setPlan,setStripe} from "../../../../lib/orgs-db";
 export const runtime="nodejs";
@@ -32,7 +33,8 @@ export async function POST(request:Request){
       }
     }
     return new Response("OK",{status:200});
-  }catch{
+  }catch(error){
+    reportError("billing webhook "+event.type,error);
     // Stripe retries on failure, so this event mustn't count as handled.
     await forgetEvent(event.id).catch(()=>{});
     return new Response("Try again",{status:500});

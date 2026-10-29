@@ -1,3 +1,4 @@
+import {reportError} from "../../../lib/report";
 import {apiResult} from "../../../lib/hosted-response";
 import {readJsonBody} from "../../../lib/hosted-auth";
 import {requireSignedIn} from "../../../lib/hosted-guard";
@@ -18,7 +19,7 @@ export async function GET(request:Request){
       joinable:org?[]:await joinable(user.email),usage:await usageFor(user.id),
       canCreate:user.canPublish,plans:plansEnabled(),billing:billingEnabled(),price:planPrice(),
       domain:canUseAsJoinDomain(user.email)?domainOf(user.email):null});
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }
 
 /** Starts an organisation, with this account as its admin. What it already made moves in. */
@@ -32,7 +33,7 @@ export async function POST(request:Request){
   try{
     if(await orgOf(user.id))return apiResult({error:"You're already in an organisation. Leave it first."},409);
     return apiResult({org:await createOrg(user.id,name)},201);
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }
 
 /** Admins rename the organisation, or let anyone at their email domain join. */
@@ -56,5 +57,5 @@ export async function PATCH(request:Request){
       await updateOrg(org.id,{joinDomain:body.openToDomain?domain:null});
     }
     return apiResult({org:await orgOf(user.id)});
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }

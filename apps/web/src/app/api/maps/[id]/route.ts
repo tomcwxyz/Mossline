@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {deleteMap,listMembers,mapInfo} from "../../../../lib/shared-maps-db";
 import {requireRole} from "../../../../lib/shared-maps-http";
@@ -13,7 +14,7 @@ export async function GET(request:Request,context:Ctx){
     const info=await mapInfo(id);
     if(!info)return apiResult({error:"Not found"},404);
     return apiResult({...info,role:access.role,members:await listMembers(id)});
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }
 
 /** The owner takes the map off the server: its records, changes and invitations go. Copies in browsers stay. */
@@ -24,5 +25,5 @@ export async function DELETE(request:Request,context:Ctx){
   try{
     if(!await deleteMap(id,access.user.id))return apiResult({error:"Not found"},404);
     return apiResult({deleted:true});
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }

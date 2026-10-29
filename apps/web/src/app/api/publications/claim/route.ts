@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {claimPublication} from "../../../../lib/hosted-db";
 import {readJsonBody,validPublicationId} from "../../../../lib/hosted-auth";
@@ -21,5 +22,5 @@ export async function POST(request:Request){
     if(!await claimPublication(slug,key,user.id))
       return apiResult({error:"No unclaimed publication matches that ID and key"},404);
     return apiResult({claimed:true,slug});
-  }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+  }catch(error){reportError("publications/claim",error);return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }

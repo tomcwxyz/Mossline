@@ -35,6 +35,7 @@ jobs:
       MOSSLINE_STRIPE_SECRET_KEY: ci-placeholder-not-a-key
       MOSSLINE_STRIPE_PRICE_ID: ci-placeholder-price
       MOSSLINE_STRIPE_WEBHOOK_SECRET: ci-placeholder-webhook-secret
+      MOSSLINE_CRON_SECRET: ci-placeholder-cron-secret
       MOSSLINE_DATABASE_URL: postgres://mossline:mossline@127.0.0.1:5432/mossline_ci
       MOSSLINE_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
       MOSSLINE_BASE_URL: http://127.0.0.1:3000
@@ -56,10 +57,7 @@ jobs:
         run: npm run build
 
       - name: Prepare the publishing database
-        run: |
-          for f in apps/web/migrations/*.sql; do
-            PGPASSWORD=mossline psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U mossline -d mossline_ci -f "$f"
-          done
+        run: npm run db:migrate
       - name: Install headless browser
         timeout-minutes: 7
         # The Ubuntu hosted runner already carries the Chromium runtime libs.

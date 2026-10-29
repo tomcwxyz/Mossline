@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../lib/hosted-auth";
 import {requireSignedIn} from "../../../../lib/hosted-guard";
@@ -27,7 +28,7 @@ export async function POST(request:Request){
       catch{/* they can still sign in and accept */}
     }
     return apiResult({...(await members(org.id)),emailed},201);
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org/invites",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }
 export async function DELETE(request:Request){
   const user=await requireSignedIn(request,{write:true});
@@ -38,5 +39,5 @@ export async function DELETE(request:Request){
     if(!org||org.role!=="admin")return apiResult({error:"Only an organisation's admins can do that"},403);
     await cancelInvite(org.id,email);
     return apiResult(await members(org.id));
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org/invites",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }

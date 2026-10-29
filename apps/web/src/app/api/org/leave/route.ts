@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {requireSignedIn} from "../../../../lib/hosted-guard";
 import {leave,orgOf} from "../../../../lib/orgs-db";
@@ -14,5 +15,5 @@ export async function POST(request:Request){
     const result=await leave(org.id,user.id);
     if(result==="last-admin")return apiResult({error:"Make someone else an admin before you leave"},409);
     return apiResult({result});
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org/leave",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }

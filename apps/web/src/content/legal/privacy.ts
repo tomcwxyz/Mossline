@@ -24,6 +24,8 @@ Two exceptions happen only if you choose them:
 | A sign-in session | To keep you signed in | Contract | 30 days, or until you sign out |
 | A one-time sign-in link, stored scrambled | To sign you in by email | Contract | 10 minutes, or until used |
 | A short-lived count of sign-in attempts, keyed on your network address | To stop people guessing or flooding sign-in | Legitimate interests (security) | About a minute |
+| A scrambled (hashed) copy of addresses that asked for sign-in links | To stop anyone flooding an inbox with sign-in emails | Legitimate interests (security) | One day |
+| When you last signed in | To know which accounts are unused (see below) | Legitimate interests | Until you delete your account |
 | Maps you publish | To show them at their link | Contract | Until you unpublish them or delete your account |
 | Maps you keep in your account, their changes, and who you shared them with | To let you and the people you choose open and change them | Contract | Until you or your organisation delete them, or you delete your account |
 | Your organisation, your role in it, and invitations | To run the organisation | Contract | Until you leave, or the organisation is closed |
@@ -74,9 +76,10 @@ You can ask us to:
 - move it to another service;
 - stop using it, where we rely on legitimate interests.
 
-Most of this you can do yourself in Mossline:
+Most of this you can do yourself on **Your account**:
 
-- change your name on **Your account**;
+- download everything we hold about you, in one file;
+- change your name or email address;
 - unpublish or delete maps;
 - delete your account, which deletes your information except what we must keep for tax.
 

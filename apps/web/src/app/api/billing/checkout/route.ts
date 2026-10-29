@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {requireSignedIn} from "../../../../lib/hosted-guard";
 import {billingEnabled,checkoutUrl} from "../../../../lib/billing";
@@ -17,5 +18,5 @@ export async function POST(request:Request){
     const url=await checkoutUrl({orgId:org.id,orgName:org.name,email:user.email,customer:await stripeCustomerOf(org.id),
       base:process.env.MOSSLINE_BASE_URL!});
     return apiResult({url});
-  }catch{return apiResult({error:"Couldn't reach the payment service. Try again in a moment."},502);}
+  }catch(error){reportError("billing/checkout",error);return apiResult({error:"Couldn't reach the payment service. Try again in a moment."},502);}
 }
