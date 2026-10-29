@@ -7,9 +7,9 @@ import {
   applyEdits, toKumuWorkbook,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
-  type GraphDocument, type GraphEdge, type NodeType, newStory, stepRecords, type Story, type StoryMark, type StoryView
+  type GraphDocument, type GraphEdge, type NodeType, stepRecords, type Story, type StoryMark, type StoryView
 } from "@mossline/graph-core";
-import { listStories, removeStory, saveStory } from "../lib/story-store";
+import { useStories } from "../hooks/useStories";
 import { MARK_NEEDS, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { useMapEdits } from "../hooks/useMapEdits";
@@ -327,7 +327,6 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   // ---- Stories ------------------------------------------------------------------
   // Kept in this browser with the map (by its saved ID, or by its data for maps that aren't saved).
   const storyKey = mapId ?? graphKey;
-  const [stories, setStories] = useState<Story[]>(publishedStory ? [publishedStory] : []);
   const [storyId, setStoryId] = useState<string | null>(publishedStory?.id ?? null);
   const [storyMode, setStoryMode] = useState<null | "edit" | "read" | "present">(publishedStory ? "read" : null);
   const presentFrom = useRef<"edit" | "read">("read");
@@ -339,34 +338,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     const q = window.matchMedia("(max-width: 720px)"); const on = () => setNarrow(q.matches);
     on(); q.addEventListener("change", on); return () => q.removeEventListener("change", on);
   }, []);
-  useEffect(() => {
-    if (readOnly) return;
-    let cancelled = false;
-    listStories(storyKey).then(list => { if (!cancelled) setStories(list); }).catch(() => { /* stories just aren't available here */ });
-    return () => { cancelled = true; };
-  }, [storyKey, readOnly]);
+  const storyStore = useStories({ storeKey: storyKey, sharedId: shared?.id, readOnly, published: publishedStory,
+    active: storyMode !== null, onNotice: setNotice });
+  const { stories, change: changeStory, flush: flushStory } = storyStore;
   const story = stories.find(s => s.id === storyId) ?? null;
   const step = story && storyMode ? story.steps[Math.min(stepIndex, story.steps.length - 1)] ?? null : null;
-  // Typing is saved a moment after it stops, and straight away when the page is left.
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const unsaved = useRef<{ key: string; story: Story } | null>(null);
-  const flushStory = useCallback(() => {
-    if (saveTimer.current) { clearTimeout(saveTimer.current); saveTimer.current = null; }
-    const pending = unsaved.current; unsaved.current = null;
-    if (pending) saveStory(pending.key, pending.story).catch(e => setNotice(e instanceof Error ? e.message : "Couldn't save the story."));
-  }, []);
-  const changeStory = useCallback((next: Story) => {
-    setStories(list => list.map(s => s.id === next.id ? next : s));
-    if (readOnly) return;
-    if (unsaved.current && unsaved.current.story.id !== next.id) flushStory();
-    unsaved.current = { key: storyKey, story: next };
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(flushStory, 300);
-  }, [readOnly, storyKey, flushStory]);
-  useEffect(() => {
-    window.addEventListener("pagehide", flushStory);
-    return () => { window.removeEventListener("pagehide", flushStory); flushStory(); };
-  }, [flushStory]);
   const captureView = (): StoryView => ({ lens,
     ...(selectedId ? { record: selectedId } : {}), ...(search ? { q: search.slice(0, 200) } : {}), ...(theme ? { theme } : {}),
     ...(groupChoice ? { group: groupChoice } : {}), ...(region ? { region } : {}), ...(funderId ? { funder: funderId } : {}),
@@ -710,11 +686,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           </aside>}
           {storyMode === "edit" && !readOnly && <StoryEditor stories={stories} story={story} graph={workingGraph} stepIndex={stepIndex}
             labelOf={labelOf} captureView={captureView} picking={markPick} onPick={setMarkPick} onStep={setStepIndex} onChange={changeStory}
-            onCreate={title => { const s = newStory(title); setStories(list => [s, ...list]); setStoryId(s.id); setStepIndex(0);
-              saveStory(storyKey, s).catch(e => setNotice(e instanceof Error ? e.message : "Couldn't save the story.")); }}
+            canWrite={storyStore.canWrite} shared={storyStore.shared} local={storyStore.local} onMoveLocal={() => void storyStore.moveLocal()}
+            onCreate={title => { const s = storyStore.create(title); setStoryId(s.id); setStepIndex(0); }}
             onOpen={id => { setStoryId(id); setStepIndex(0); }}
-            onDelete={id => { setStories(list => list.filter(s => s.id !== id)); setStoryId(null);
-              removeStory(id).catch(() => setNotice("Couldn't delete the story.")); }}
+            onDelete={id => { storyStore.remove(id); setStoryId(null); }}
             onRead={() => { presentFrom.current = "edit"; setStoryMode("read"); }}
             onPresent={() => { presentFrom.current = "edit"; setStoryMode("present"); }}
             onClose={() => { flushStory(); setStoryMode(null); }} onSave={flushStory}/>}

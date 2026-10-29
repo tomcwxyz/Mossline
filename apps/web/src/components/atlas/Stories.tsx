@@ -41,13 +41,17 @@ const viewSummary = (v: StoryView, labelOf: (id: string) => string) => {
 
 // ---- Writing a story ---------------------------------------------------------------
 export function StoryEditor({ stories, story, graph, stepIndex, labelOf, captureView, picking, onPick, onStep, onChange, onCreate,
-  onOpen, onDelete, onRead, onPresent, onClose, onSave }: {
+  onOpen, onDelete, onRead, onPresent, onClose, onSave, canWrite = true, shared = false, local = [], onMoveLocal }: {
   stories: Story[]; story: Story | null; graph: GraphDocument; stepIndex: number; labelOf: (id: string) => string;
   captureView: () => StoryView; picking: MarkPick | null; onPick: (p: MarkPick | null) => void;
   onStep: (i: number) => void; onChange: (s: Story) => void; onCreate: (title: string) => void;
   onOpen: (id: string | null) => void; onDelete: (id: string) => void; onRead: () => void; onPresent: () => void; onClose: () => void;
   /** Saves what's been typed now, rather than in a moment: called when focus leaves the editor. */
   onSave: () => void;
+  /** Viewers of a shared map can read and present stories, not change them. */
+  canWrite?: boolean;
+  /** Kept with a shared map, and this browser's stories for it that aren't there yet. */
+  shared?: boolean; local?: Story[]; onMoveLocal?: () => void;
 }) {
   const [newTitle, setNewTitle] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -76,7 +80,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
   }
   const fileRef = useRef<HTMLInputElement>(null);
 
-  return <aside className={"ml-overlay-card ml-edit-card ml-story-editor" + (open ? "" : " is-closed")} aria-label="Writing a story"
+  return <aside className={"ml-overlay-card ml-edit-card ml-story-editor" + (open ? "" : " is-closed")} aria-label={canWrite ? "Writing a story" : "Stories"}
     onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) onSave(); }}>
     <div className="ml-story-editor-head">
       <button type="button" className="ml-unplaced-head" aria-expanded={open} onClick={() => setOpen(v => !v)}>
@@ -89,15 +93,35 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
       {stories.length > 0 && <ul className="ml-story-list">{stories.map(s => <li key={s.id}>
         <button type="button" onClick={() => onOpen(s.id)}><strong>{s.title}</strong>
           <small>{s.steps.length} {s.steps.length === 1 ? "step" : "steps"}</small></button></li>)}</ul>}
-      <form className="ml-edit-form" onSubmit={e => { e.preventDefault(); onCreate(newTitle); setNewTitle(""); }}>
+      {!stories.length && !canWrite && <p className="ml-small">No stories on this map yet.</p>}
+      {canWrite && <form className="ml-edit-form" onSubmit={e => { e.preventDefault(); onCreate(newTitle); setNewTitle(""); }}>
         <label className="ml-edit-field"><span>New story</span>
           <input value={newTitle} maxLength={140} placeholder="e.g. How the food network grew" onChange={e => setNewTitle(e.target.value)}/></label>
         <div className="ml-edit-actions"><button type="submit" className="ml-solid">Start a story</button></div>
-      </form>
-      <p className="ml-small">Stories are kept in this browser with the map. They aren&apos;t shared with people you share the map with yet;
-        publish the map with its story to show it to others.</p>
+      </form>}
+      {shared && canWrite && local.length > 0 && <div className="ml-edit-form ml-edit-form--inline ml-story-local" role="group" aria-label="Stories in this browser">
+        <p className="ml-small">{local.length === 1 ? "“" + local[0].title + "” is" : local.length + " stories are"} only in this browser,
+          from before this map was shared.</p>
+        <div className="ml-edit-actions"><button type="button" className="ml-quiet" onClick={onMoveLocal}>
+          Move {local.length === 1 ? "it" : "them"} into the shared map</button></div>
+      </div>}
+      <p className="ml-small">{shared
+        ? "Stories are kept with the shared map: everyone who can open it can read them" + (canWrite ? ", and people who can change it can write them." : ".")
+        : "Stories are kept in this browser with the map. Save the map to your account to write them with others, or publish the map with its story."}</p>
     </>}
-    {open && story && <>
+    {open && story && !canWrite && <>
+      <div className="ml-edit-actions">
+        <button type="button" className="ml-link-button" onClick={() => onOpen(null)}>← All stories</button>
+        <span className="ml-story-spacer"/>
+        <button type="button" className="ml-quiet" onClick={onRead} disabled={!story.steps.length}>Read</button>
+        <button type="button" className="ml-quiet" onClick={onPresent} disabled={!story.steps.length}>Present</button>
+      </div>
+      {story.steps.length > 0 && <div className="ml-story-steps"><ol>{story.steps.map((s, i) => <li key={s.id}>
+        <button type="button" aria-current={i === stepIndex ? "step" : undefined} onClick={() => onStep(i)}>
+          <b>{i + 1}</b><span>{s.title.trim() || viewSummary(s.view, labelOf)}</span></button></li>)}</ol></div>}
+      <p className="ml-small">You can view this map, so you can read and present its stories but not change them.</p>
+    </>}
+    {open && story && canWrite && <>
       <div className="ml-edit-actions">
         <button type="button" className="ml-link-button" onClick={() => onOpen(null)}>← All stories</button>
         <span className="ml-story-spacer"/>

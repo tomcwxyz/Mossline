@@ -29,6 +29,13 @@ Shared maps need hosted publishing and accounts set up first
   everyone; their changes stay, applied over the new records. If someone else
   added data first, Mossline says so rather than overwrite theirs. People
   with the map open are told and can pull the new data in.
+- **Stories.** A shared map's stories are kept with it on the server. People
+  who can change the map write them; viewers read and present them. Stories
+  written in a browser before the map was shared are offered for moving in.
+  Each save goes over the version the writer last saw: if someone else saved
+  the same story first, their version is shown and the writer's is kept
+  beside it as "(your version)", so nothing is lost. Others' saves arrive
+  within about fifteen seconds while stories are open.
 - **Offline.** Each browser keeps a copy of the map and its changes. Changes
   made offline are sent when Mossline can be reached again.
 - **Stop sharing** (owner) deletes the map from the server, with everyone's
@@ -42,6 +49,7 @@ Shared maps need hosted publishing and accounts set up first
 | `mossline_maps` | The imported records, one gzip-compressed JSON document per map; title; counts; source version |
 | `mossline_map_members` | Invited email addresses and their role |
 | `mossline_map_edits` | Every change, one row each, in the order the server received them; undone or not |
+| `mossline_map_stories` | Each story whole (JSON, with its pictures), its version and who last saved it |
 
 Changes are never written into the imported records (AGENTS.md rule 9). Every
 browser applies the same changes in the server's order, so everyone's map
@@ -49,7 +57,7 @@ comes out the same. Two people changing the same value at the same moment:
 the one the server received last wins, and both changes stay in the list with
 their names, so either can be undone.
 
-**Deleting an account** deletes the maps it owns (with their changes and
+**Deleting an account** deletes the maps it owns (with their changes, stories and
 invitations) and its invitations to other people's maps. Changes it made to
 other people's maps stay in those maps, with the name they were made under.
 
@@ -63,6 +71,9 @@ other people's maps stay in those maps, with the name they were made under.
 - Reviews (confirmed suggestions) and saved views are not shared yet; they
   stay in each browser.
 - Changes arrive by polling every ten seconds, not instantly.
+- A story is saved whole, up to the plan's upload size (1 MB free, 4 MB for
+  organisations), mostly pictures. A map keeps up to 50 stories. Two people
+  typing in the same story at once make two versions, not a merge.
 
 ## Plans and policies
 

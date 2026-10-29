@@ -1,6 +1,6 @@
 "use client";
 
-import { parseGraphDocument, type Edit, type GraphDocument, type RemoteEdit } from "@mossline/graph-core";
+import { parseGraphDocument, parseStory, type Edit, type GraphDocument, type RemoteEdit, type Story } from "@mossline/graph-core";
 
 /** Talking to Mossline's shared-map endpoints. Maps travel gzip-compressed both ways. */
 export type MapRole = "owner" | "editor" | "viewer";
@@ -61,3 +61,23 @@ export const sharedMaps = {
 };
 
 export const sharedMapLink = (id: string) => window.location.origin + "/?map=" + id;
+
+/** Stories kept with a shared map. */
+export type StorySummary = { id: string; title: string; steps: number; version: number; updatedAt: string; updatedBy: string };
+export class StoryConflict extends Error {
+  constructor(readonly current: { story: Story; version: number } | null) { super("Someone else saved this story first."); }
+}
+export const mapStories = {
+  list: (mapId: string) => json<{ stories: StorySummary[]; canWrite: boolean }>("/api/maps/" + mapId + "/stories"),
+  get: (mapId: string, id: string) => json<{ story: Story; version: number }>("/api/maps/" + mapId + "/stories/" + encodeURIComponent(id)),
+  save: async (mapId: string, story: Story, version: number): Promise<number> => {
+    const r = await fetch("/api/maps/" + mapId + "/stories/" + encodeURIComponent(story.id) + "?version=" + version,
+      { method: "PUT", cache: "no-store", credentials: "same-origin", ...send({ story }) }).catch(() => null);
+    if (!r) throw new SharedMapError("Can't reach Mossline. Check your connection.", 0);
+    const data = await r.json().catch(() => ({})) as { version?: number; error?: string; current?: { story: unknown; version: number } | null };
+    if (r.status === 409) throw new StoryConflict(data.current ? { story: parseStory(data.current.story), version: data.current.version } : null);
+    if (!r.ok) throw new SharedMapError(data.error ?? "Couldn't save the story.", r.status);
+    return data.version!;
+  },
+  remove: (mapId: string, id: string) => json<{ deleted: boolean }>("/api/maps/" + mapId + "/stories/" + encodeURIComponent(id), { method: "DELETE" })
+};
