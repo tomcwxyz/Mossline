@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/copy-maplibre-worker.mjs",
+    "prebuild": "node scripts/copy-maplibre-worker.mjs && node scripts/migrate-on-deploy.mjs",
     "build": "next build",
     "start": "next start",
     "db:migrate": "node scripts/migrate.mjs"

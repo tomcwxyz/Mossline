@@ -40,7 +40,7 @@ The sub-processors page reads these. Use the providers' legal entity names and w
 - [ ] **Write a short data protection impact assessment.** Organisations' maps can name many people, so it's worth recording the risks and the safeguards (most of them are already in `docs/HOSTED_PUBLISHING.md` and `docs/SHARED_MAPS.md`).
 - [ ] **Keep a record of processing.** The privacy notice's table is most of it.
 - [ ] **Test payments end to end** in Stripe's test mode (`docs/PLANS.md`).
-- [ ] **Run the database migrations** with `npm run db:migrate`, and schedule housekeeping (below).
+- [ ] **Migrations:** on Vercel they run with each production build (below); elsewhere, run `npm run db:migrate`. Then schedule housekeeping (below).
 - [ ] **Set up the health check and alerts** (below).
 - [ ] **Have the policies reviewed.** Then set `TERMS_VERSION` in `apps/web/src/lib/legal.ts` to the date they take effect.
 
@@ -130,9 +130,24 @@ By hand:
 
 ## Releasing a new version
 
-1. Run `npm run db:migrate` against the live database **before** the new code goes live. Migrations only add things, so the old code keeps working meanwhile.
+**On Vercel, migrations run as part of the production build.** Before `next build`, `scripts/migrate-on-deploy.mjs` applies any pending migrations to the production database:
+
+- If a migration fails, the build fails and the live site stays as it was.
+- Migrations only add things, so the code that's live keeps working while they run, and until the new code takes over.
+- Two builds at once take turns: the runner holds a database lock.
+- **Preview builds don't migrate.** A preview usually shares production's database, and its branch may never be merged. If previews have a database of their own (a Neon branch, say), set `MOSSLINE_MIGRATE_PREVIEWS=true` for the Preview environment.
+- **Use a direct connection if you can.** If `MOSSLINE_DATABASE_URL` goes through a connection pooler (on Neon, a host with `-pooler` in it), set `MOSSLINE_MIGRATION_DATABASE_URL` to the direct one (Neon's "unpooled" string) for the Production environment. The lock and long-running statements need a session of their own.
+- To turn it off and migrate by hand, set `MOSSLINE_MIGRATE_ON_DEPLOY=false`.
+
+The build log says what it did, in lines starting `[mossline]`. Then check `/api/health`.
+
+**Anywhere else** (another host, or with it turned off):
+
+1. Run `npm run db:migrate` against the live database **before** the new code goes live.
 2. Deploy.
 3. Check `/api/health`.
+
+Builds that aren't on Vercel (a laptop, CI) never touch a database.
 
 ## VAT
 
