@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  newStep, storyId, storyProblems, storyTextToHtml,
+  describeStep, newStep, storyId, storyProblems, storyTextToHtml,
   type GraphDocument, type Story, type StoryMark, type StoryMedia, type StoryStep, type StoryView
 } from "@mossline/graph-core";
 import { prepareImage } from "../../lib/story-store";
@@ -28,6 +28,19 @@ export function makeMark(pick: MarkPick & { kind: StoryMark["kind"] }, step: Sto
   return { id, kind: "number", targets: [pick.targets[0]], n: Math.min(n, 99) };
 }
 
+/** The parts of a step's view an author may want to drop: a selection left over, a search, a filter. */
+function viewParts(v: StoryView, labelOf: (id: string) => string): { key: string; text: string; clear: (keyof StoryView)[] }[] {
+  const parts: { key: string; text: string; clear: (keyof StoryView)[] }[] = [];
+  if (v.record) parts.push({ key: "record", text: labelOf(v.record) + " selected", clear: ["record"] });
+  if (v.q) parts.push({ key: "q", text: "search “" + v.q + "”", clear: ["q"] });
+  if (v.theme) parts.push({ key: "theme", text: v.theme, clear: ["theme"] });
+  if (v.type) parts.push({ key: "type", text: "only " + v.type + " records", clear: ["type"] });
+  if (v.region) parts.push({ key: "region", text: v.region, clear: ["region"] });
+  if (v.funder) parts.push({ key: "funder", text: "funded by " + labelOf(v.funder), clear: ["funder"] });
+  if (v.from || v.to) parts.push({ key: "dates", text: (v.from ?? "…") + "–" + (v.to ?? "…"), clear: ["from", "to"] });
+  if (v.loop) parts.push({ key: "loop", text: "a feedback loop", clear: ["loop"] });
+  return parts;
+}
 const viewSummary = (v: StoryView, labelOf: (id: string) => string) => {
   const parts: string[] = [v.lens[0].toUpperCase() + v.lens.slice(1)];
   if (v.record) parts.push(labelOf(v.record));
@@ -71,13 +84,17 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
     const steps = [...story.steps]; const [s] = steps.splice(from, 1); steps.splice(to, 0, s);
     put({ steps }); onStep(to);
   };
-  async function addImage(file: File) {
+  const [dropping, setDropping] = useState(false);
+  async function addImages(files: File[]) {
     if (!step) return;
     setImageError("");
-    try {
-      const src = await prepareImage(file);
-      putStep({ media: [...step.media, { id: storyId("media:"), kind: "image", src, alt: "", people: "unknown" }] });
-    } catch (e) { setImageError(e instanceof Error ? e.message : "Couldn't add that image."); }
+    const added: StoryMedia[] = [];
+    for (const file of files.slice(0, Math.max(0, 6 - step.media.length))) {
+      try { added.push({ id: storyId("media:"), kind: "image", src: await prepareImage(file), alt: "", people: "unknown" }); }
+      catch (e) { setImageError(e instanceof Error ? e.message : "Couldn't add that image."); }
+    }
+    if (files.length > 6 - step.media.length) setImageError("A step can have up to six pictures and quotes.");
+    if (added.length) putStep({ media: [...step.media, ...added] });
   }
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -147,14 +164,26 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <p className="ml-small">Set up the map first (lens, selection, filters), then add a step. It remembers what the map shows.</p>
       </div>
 
-      {step && <section className="ml-story-step-edit" aria-label={"Step " + (stepIndex + 1)}>
+      {step && <section className={"ml-story-step-edit" + (dropping ? " is-dropping" : "")} aria-label={"Step " + (stepIndex + 1)}
+        // Pictures can be dropped onto the step, or pasted while writing it.
+        onDragOver={e => { if ([...e.dataTransfer.items].some(i => i.kind === "file")) { e.preventDefault(); setDropping(true); } }}
+        onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDropping(false); }}
+        onDrop={e => { const files = [...e.dataTransfer.files].filter(f => f.type.startsWith("image/")); if (!files.length) return;
+          e.preventDefault(); setDropping(false); void addImages(files); }}
+        onPaste={e => { const files = [...e.clipboardData.files].filter(f => f.type.startsWith("image/")); if (!files.length) return;
+          e.preventDefault(); void addImages(files); }}>
         <div className="ml-edit-actions">
           <strong className="ml-story-label">Step {stepIndex + 1}</strong><span className="ml-story-spacer"/>
           <button type="button" className="ml-quiet" aria-label="Move step earlier" disabled={stepIndex === 0} onClick={() => move(stepIndex, stepIndex - 1)}>↑</button>
           <button type="button" className="ml-quiet" aria-label="Move step later" disabled={stepIndex === story.steps.length - 1} onClick={() => move(stepIndex, stepIndex + 1)}>↓</button>
         </div>
-        <p className="ml-small ml-story-view">Shows: {viewSummary(step.view, labelOf)}
-          {" "}<button type="button" className="ml-link-button" onClick={() => putStep({ view: captureView() })}>Use the map as it is now</button></p>
+        <div className="ml-story-view" role="group" aria-label="What this step shows">
+          <span className="ml-story-view-lens">{step.view.lens[0].toUpperCase() + step.view.lens.slice(1)}</span>
+          {viewParts(step.view, labelOf).map(p => <span key={p.key} className="ml-story-view-chip">{p.text}
+            <button type="button" aria-label={"Stop showing " + p.text} title="Remove from this step"
+              onClick={() => { const v = { ...step.view }; for (const k of p.clear) delete v[k]; putStep({ view: v }); }}>×</button></span>)}
+          <button type="button" className="ml-link-button" onClick={() => putStep({ view: captureView() })}>Use the map as it is now</button>
+        </div>
         <label className="ml-edit-field"><span>Heading</span>
           <input value={step.title} maxLength={140} onChange={e => putStep({ title: e.target.value })}/></label>
         <label className="ml-edit-field"><span>Text <small>**bold**, *italic*, [link](https://…); a blank line starts a new paragraph</small></span>
@@ -178,13 +207,18 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
           <button type="button" className="ml-link-button" onClick={() => putStep({ marks: step.marks.filter(x => x.id !== m.id) })}>Remove</button>
         </li>)}</ul>}
 
+        <label className="ml-story-check"><input type="checkbox" checked={step.fade !== false}
+          onChange={e => putStep({ fade: e.target.checked ? undefined : false })}/>
+          Fade the rest of the map, so this step&apos;s records stand out</label>
+
         <p className="ml-story-label">Pictures and quotes</p>
         <div className="ml-edit-bar">
-          <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() => fileRef.current?.click()}>Add a picture…</button>
+          <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() => fileRef.current?.click()}
+            title="Or drop a picture onto the step, or paste one">Add a picture…</button>
           <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() =>
             putStep({ media: [...step.media, { id: storyId("media:"), kind: "quote", text: "", who: "", consent: false }] })}>Add a quote</button>
-          <input ref={fileRef} hidden type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose a picture"
-            onChange={e => { const f = e.currentTarget.files?.[0]; if (f) void addImage(f); e.currentTarget.value = ""; }}/>
+          <input ref={fileRef} hidden type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose pictures"
+            onChange={e => { const files = [...(e.currentTarget.files ?? [])]; if (files.length) void addImages(files); e.currentTarget.value = ""; }}/>
         </div>
         {imageError && <p className="ml-small ml-story-error" role="alert">{imageError}</p>}
         {step.media.map(m => <div key={m.id} className="ml-edit-form ml-edit-form--inline ml-story-media-edit">
@@ -228,7 +262,15 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
             <span className="ml-small">Delete this step?</span>
             <button type="button" className="ml-danger ml-solid" onClick={() => { put({ steps: story.steps.filter((_, i) => i !== stepIndex) }); onStep(Math.max(0, stepIndex - 1)); }}>Delete</button>
             <button type="button" className="ml-quiet" onClick={() => setConfirmDelete(false)}>Keep</button>
-          </> : <button type="button" className="ml-link-button ml-edit-remove" onClick={() => setConfirmDelete(true)}>Delete step</button>}
+          </> : <>
+            <button type="button" className="ml-link-button" disabled={story.steps.length >= 60} onClick={() => {
+              const copy: StoryStep = { ...step, id: storyId("step:"), title: step.title ? step.title + " (copy)" : "",
+                media: step.media.map(m => ({ ...m, id: storyId("media:") })), marks: step.marks.map(m => ({ ...m, id: storyId("mark:") })) };
+              put({ steps: [...story.steps.slice(0, stepIndex + 1), copy, ...story.steps.slice(stepIndex + 1)] }); onStep(stepIndex + 1);
+            }}>Duplicate step</button>
+            <span className="ml-story-spacer"/>
+            <button type="button" className="ml-link-button ml-edit-remove" onClick={() => setConfirmDelete(true)}>Delete step</button>
+          </>}
         </div>
       </section>}
 
@@ -271,8 +313,11 @@ function Media({ media }: { media: StoryMedia[] }) {
  * in the middle of the column. Every step can also be reached with the buttons
  * or the arrow keys.
  */
-export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPresent }: {
+export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPresent, labelOf, onCopyStep }: {
   story: Story; stepIndex: number; onStep: (i: number) => void; onExit: () => void; exitLabel: string; onPresent: () => void;
+  labelOf: (id: string) => string;
+  /** Published stories: copy a link that opens on this step. */
+  onCopyStep?: (i: number) => void;
 }) {
   const column = useRef<HTMLDivElement>(null);
   const fromScroll = useRef(false);
@@ -323,6 +368,9 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
       <h2 id={"story-step-" + i}><span className="ml-story-num">{i + 1}</span>{s.title || "Step " + (i + 1)}</h2>
       <Html text={s.text} className="ml-story-text"/>
       <Media media={s.media}/>
+      <Described step={s} labelOf={labelOf}/>
+      {onCopyStep && i === stepIndex && <button type="button" className="ml-link-button ml-story-steplink" onClick={() => onCopyStep(i)}>
+        Copy a link to this step</button>}
     </section>)}
     <footer className="ml-story-end">
       <p>End of the story.</p>
@@ -331,21 +379,51 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
   </div>;
 }
 
-/** One step at a time over the map: presenting to a room, and reading on a phone. */
-export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, presenting }: {
+/** The map's marks in words, read out with the step (hidden from sight: the marks are on the map). */
+function Described({ step, labelOf }: { step: StoryStep; labelOf: (id: string) => string }) {
+  const text = describeStep(step, labelOf);
+  return text ? <p className="ml-visually-hidden">{text}</p> : null;
+}
+
+/**
+ * One step at a time over the map: presenting to a room, and reading on a
+ * phone. It opens on a title card; on a phone it can be folded down to its
+ * buttons, to look at the map.
+ */
+export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, presenting, labelOf, cover, onBegin }: {
   story: Story; stepIndex: number; onStep: (i: number) => void; onExit: () => void; exitLabel: string; presenting: boolean;
+  labelOf: (id: string) => string;
+  /** Show the title card first; onBegin moves on to the first step. */
+  cover?: boolean; onBegin?: () => void;
 }) {
   const s = story.steps[stepIndex];
   const head = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { head.current?.focus({ preventScroll: true }); }, [stepIndex]);
+  const [folded, setFolded] = useState(false);
+  useEffect(() => { head.current?.focus({ preventScroll: true }); }, [stepIndex, cover]);
   if (!s) return null;
-  return <section className={"ml-story-card" + (presenting ? " is-presenting" : "")} aria-label={"Story: " + story.title}>
-    <p className="ml-story-kicker">{story.title} · {stepIndex + 1} of {story.steps.length}</p>
+  if (cover) return <section className={"ml-story-card ml-story-cover" + (presenting ? " is-presenting" : "")} aria-label={"Story: " + story.title}>
+    <p className="ml-story-kicker">A story about this map · {story.steps.length} {story.steps.length === 1 ? "step" : "steps"}</p>
+    <h2 ref={head} tabIndex={-1} className="ml-story-cover-title">{story.title}</h2>
+    {story.intro.trim() && <div className="ml-story-card-body" tabIndex={0}><Html text={story.intro} className="ml-story-text"/></div>}
+    <nav className="ml-story-nav" aria-label="Story steps">
+      <button type="button" className="ml-quiet" onClick={onExit}>{presenting ? "Stop" : exitLabel}</button>
+      <span className="ml-story-spacer"/>
+      <button type="button" className="ml-solid" onClick={onBegin}>Begin →</button>
+    </nav>
+    {presenting && <p className="ml-story-keys">→ to begin · Esc to stop</p>}
+  </section>;
+  return <section className={"ml-story-card" + (presenting ? " is-presenting" : "") + (folded ? " is-folded" : "")} aria-label={"Story: " + story.title}>
+    <div className="ml-story-card-top">
+      <p className="ml-story-kicker">{story.title} · {stepIndex + 1} of {story.steps.length}</p>
+      {!presenting && <button type="button" className="ml-link-button ml-story-fold" aria-expanded={!folded} onClick={() => setFolded(v => !v)}>
+        {folded ? "Show text" : "Hide text"}</button>}
+    </div>
     <h2 ref={head} tabIndex={-1}>{s.title || "Step " + (stepIndex + 1)}</h2>
-    <div className="ml-story-card-body">
+    {!folded && <div className="ml-story-card-body" key={s.id} tabIndex={0}>
       <Html text={s.text} className="ml-story-text"/>
       <Media media={s.media}/>
-    </div>
+      <Described step={s} labelOf={labelOf}/>
+    </div>}
     <nav className="ml-story-nav" aria-label="Story steps">
       <button type="button" className="ml-quiet" disabled={stepIndex === 0} onClick={() => onStep(stepIndex - 1)}>← Back</button>
       <span className="ml-story-dots" aria-hidden="true">{story.steps.map((x, i) => <i key={x.id} className={i === stepIndex ? "is-on" : ""}/>)}</span>

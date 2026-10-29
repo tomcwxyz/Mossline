@@ -68,7 +68,9 @@ export const storyStepSchema = z.object({
   text: z.string().max(4000),
   view: storyViewSchema,
   media: z.array(storyMediaSchema).max(6).default([]),
-  marks: z.array(storyMarkSchema).max(40).default([])
+  marks: z.array(storyMarkSchema).max(40).default([]),
+  /** Fade the rest of the map so the step's records stand out (on unless turned off). */
+  fade: z.boolean().optional()
 }).strict();
 
 export const storySchema = z.object({
@@ -105,6 +107,23 @@ export function stepRecords(step: StoryStep): string[] {
   for (const m of step.marks) for (const t of m.targets) ids.add(t);
   for (const m of step.media) if (m.record) ids.add(m.record);
   return [...ids];
+}
+
+/**
+ * The marks and pinned pictures in words, for people who can't see them:
+ * read out with the step, so the map's annotations reach everyone.
+ */
+export function describeStep(step: StoryStep, labelOf: (id: string) => string): string {
+  const list = (ids: string[]) => ids.length <= 2 ? ids.map(labelOf).join(" and ")
+    : ids.slice(0, -1).map(labelOf).join(", ") + " and " + labelOf(ids[ids.length - 1]);
+  const parts = step.marks.map(m =>
+    m.kind === "ring" ? "a ring around " + list(m.targets) + (m.text ? " labelled “" + m.text + "”" : "")
+    : m.kind === "callout" ? "a note on " + labelOf(m.targets[0]) + ": “" + m.text + "”"
+    : m.kind === "arrow" ? "an arrow from " + labelOf(m.targets[0]) + " to " + labelOf(m.targets[1]) + (m.text ? " labelled “" + m.text + "”" : "")
+    : "number " + m.n + " on " + labelOf(m.targets[0]));
+  for (const m of step.media) if (m.kind === "image" && m.record)
+    parts.push("a picture beside " + labelOf(m.record) + (m.alt.trim() ? " (" + m.alt.trim() + ")" : ""));
+  return parts.length ? "On the map: " + parts.join("; ") + "." : "";
 }
 
 export type StoryProblem = { stepId: string | null; severity: "block" | "note"; message: string };

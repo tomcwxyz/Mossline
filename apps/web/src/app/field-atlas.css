@@ -1258,3 +1258,24 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-story-pin { display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
 .ml-story-pin .ml-link-button { padding: 0; }
 .ml-atlas--reading .ml-map-cards { display: none; }
+/* Stories: a title card, a fold for phones, and a gentle arrival for each step. */
+.ml-story-cover-title { font-size: 30px !important; }
+.ml-story-card.is-presenting .ml-story-cover-title { font-size: 38px !important; }
+.ml-story-card-top { display: flex; align-items: baseline; gap: 10px; }
+.ml-story-card-top .ml-story-kicker { flex: 1; }
+.ml-story-fold { padding: 0; font-size: 12px; }
+.ml-story-card.is-folded { gap: 6px; }
+.ml-story-card-body { animation: ml-story-arrive .35s ease; }
+@keyframes ml-story-arrive { from { opacity: 0; transform: translateY(4px); } }
+.ml-story-steplink { justify-self: start; padding: 0; font-size: 12.5px; }
+@media (prefers-reduced-motion: reduce) { .ml-story-card-body { animation: none; } }
+.ml-story-card-body:focus-visible { outline: 2px solid var(--ml-margin); outline-offset: 2px; border-radius: 4px; }
+.ml-story-view { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 12px; }
+.ml-story-view-lens { font-weight: 600; color: var(--ml-muted); margin-right: 2px; }
+.ml-story-view-chip { display: inline-flex; align-items: center; gap: 2px; padding: 2px 4px 2px 9px; border-radius: 12px;
+  background: var(--ml-sunken); color: var(--ml-text-2, var(--ml-ink)); }
+.ml-story-view-chip button { border: 0; background: none; width: 22px; height: 22px; border-radius: 50%; font-size: 14px; line-height: 1; color: var(--ml-muted); }
+.ml-story-view-chip button:hover { background: var(--ml-border); color: var(--ml-ink); }
+.ml-story-view .ml-link-button { padding: 0 4px; font-size: 12px; }
+.ml-story-step-edit.is-dropping { outline: 2px dashed var(--ml-margin); outline-offset: 4px; border-radius: 6px; }
+.ml-atlas--writing .ml-map-cards { display: none; }

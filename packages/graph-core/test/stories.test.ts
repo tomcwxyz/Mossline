@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {newStory,newStep,parseStory,parseGraphDocument,storyProblems,storyTextToHtml,stepRecords,createPublishedSnapshot,parseHostedSnapshot,parsePublishedSnapshot,HOSTED_LIMITS} from "../src/index.ts";
+import {newStory,newStep,parseStory,parseGraphDocument,storyProblems,storyTextToHtml,stepRecords,describeStep,createPublishedSnapshot,parseHostedSnapshot,parsePublishedSnapshot,HOSTED_LIMITS} from "../src/index.ts";
 
 const graph=parseGraphDocument({version:1,title:"Map",nodes:[{id:"a",label:"Allotments",type:"project"},{id:"b",label:"Food bank",type:"organisation"}],edges:[]});
 
@@ -52,4 +52,15 @@ test("only server copies of a published map carry a story", () => {
   const story = { ...newStory("Walkthrough", new Date("2026-10-29T00:00:00Z")), steps: [newStep({ lens: "network", record: "a" }, "Start")] };
   assert.equal(parseHostedSnapshot({ ...snapshot, story }).story?.steps[0].title, "Start");
   assert.throws(() => parsePublishedSnapshot({ ...snapshot, story }));
+});
+
+test("a step's marks and pinned pictures can be read out in words",()=>{
+  const step=newStep({lens:"network"},"Here");
+  step.marks.push({id:"r",kind:"ring",targets:["a","b"],text:"growers"},{id:"c",kind:"callout",targets:["b"],text:"busy"},
+    {id:"w",kind:"arrow",targets:["a","b"]},{id:"n",kind:"number",targets:["a"],n:1});
+  step.media.push({id:"i",kind:"image",src:"https://example.org/x.jpg",alt:"Raised beds",people:"none",record:"a"});
+  const names:Record<string,string>={a:"Allotments",b:"Food bank"};
+  assert.equal(describeStep(step,id=>names[id]),"On the map: a ring around Allotments and Food bank labelled “growers”; a note on Food bank: “busy”; "+
+    "an arrow from Allotments to Food bank; number 1 on Allotments; a picture beside Allotments (Raised beds).");
+  assert.equal(describeStep(newStep({lens:"map"}),id=>id),"");
 });

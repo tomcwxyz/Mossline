@@ -86,10 +86,11 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await expect(page.locator(".ml-story-section.is-current h2")).toContainText("Where skills come in");
   await expect(page.locator(".ml-inspector--story")).toBeVisible();
 
-  // Presenting: one step at a time, by keyboard.
+  // Presenting: a title card, then one step at a time, by keyboard.
   await page.getByRole("button",{name:"Present"}).click();
   const card=page.locator(".ml-story-card");
   await expect(card).toHaveClass(/is-presenting/);
+  await expect(card.locator("h2")).toHaveText("How cooking spreads");
   await page.keyboard.press("ArrowLeft");
   await expect(card.locator("h2")).toHaveText("The whole picture");
   await page.keyboard.press("ArrowRight");
@@ -106,6 +107,21 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await page.getByRole("button",{name:/^Stories · 1/}).click();
   await page.getByRole("button",{name:/How cooking spreads/}).click();
   await expect(page.getByRole("complementary",{name:"Writing a story"}).locator(".ml-story-steps li")).toHaveCount(2);
+
+  // On a phone: a title card, then a card per step that folds away to show the map.
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole("complementary",{name:"Writing a story"}).getByRole("button",{name:"Read",exact:true}).click();
+  const phone=page.locator(".ml-story-card");
+  await expect(phone.locator("h2")).toHaveText("How cooking spreads");
+  await phone.getByRole("button",{name:"Begin →"}).click();
+  await expect(phone.locator("h2")).toHaveText("The whole picture");
+  await phone.getByRole("button",{name:"Hide text"}).click();
+  await expect(phone.locator(".ml-story-card-body")).toHaveCount(0);
+  await phone.getByRole("button",{name:"Next →"}).click();
+  await expect(phone.locator("h2")).toHaveText("Where skills come in");
+  await phone.getByRole("button",{name:"Show text"}).click();
+  await expect(phone.locator(".ml-story-card-body")).toBeVisible();
+  await axe(page);
 });
 
 test("a published story opens on the story, and the map can still be explored",async({page,request})=>{
@@ -164,6 +180,9 @@ test("a published story opens on the story, and the map can still be explored",a
   const reader=published.locator(".ml-story-reader");
   await expect(reader.getByRole("heading",{name:"A short tour"})).toBeVisible();
   await expect(reader.locator("blockquote")).toContainText("Lunch brings people in.");
+  // A step's address opens on it.
+  await expect(published).toHaveURL(/[?&]step=1/);
+  await expect(reader.getByRole("button",{name:"Copy a link to this step"})).toBeVisible();
   await expect(published.getByRole("button",{name:"Edit",exact:true})).toHaveCount(0);
   await axe(published);
   await reader.getByRole("button",{name:"Explore the map"}).first().click();
@@ -181,7 +200,13 @@ test("on the Map lens, marks sit on places and pictures are pinned beside record
   const editor=page.getByRole("complementary",{name:"Writing a story"});
   await editor.getByLabel("New story").fill("Along the Tyne");
   await editor.getByRole("button",{name:"Start a story"}).click();
+  await choose(page,"Hexham");
   await editor.getByRole("button",{name:"Add a step from this view"}).click();
+  // A selection left over from exploring can be dropped from the step.
+  const shows=editor.getByRole("group",{name:"What this step shows"});
+  await expect(shows).toContainText("Hexham selected");
+  await shows.getByRole("button",{name:"Stop showing Hexham selected"}).click();
+  await expect(shows).not.toContainText("Hexham selected");
   await editor.getByLabel("Heading").fill("Two towns");
   await expect(editor).toContainText("On the Map, marks show for records that have a place.");
   await editor.getByRole("group",{name:"Draw a mark"}).getByRole("button",{name:"Ring"}).click();
@@ -202,7 +227,12 @@ test("on the Map lens, marks sit on places and pictures are pinned beside record
 
   // Presenting frames the step's places, with marks and the pin.
   await editor.getByRole("button",{name:"Present"}).click();
+  await expect(page.locator(".ml-story-card h2")).toHaveText("Along the Tyne");
+  await page.getByRole("button",{name:"Begin →"}).click();
   await expect(page.locator(".ml-story-card h2")).toHaveText("Two towns");
+  // The marks are in words too, for people who can't see the map.
+  await expect(page.locator(".ml-story-card .ml-visually-hidden")).toHaveText(
+    "On the map: a ring around Hexham and Newcastle; a picture beside Newcastle (A bridge over a river).");
   await expect(page.locator(".ml-map .ml-mark--ring")).toBeVisible();
   await expect(page.locator(".ml-map .ml-pin")).toBeVisible();
   await axe(page);
