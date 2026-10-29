@@ -20,6 +20,8 @@ type Props = {
   onBrowse: () => void;
   /** A story step: the author's marks and pinned pictures, and the records to bring into view. */
   marks?: StoryMark[]; pins?: StoryPin[]; frame?: string[];
+  /** A story step's records: they stand out, and the rest of the map fades. */
+  spotlight?: string[];
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
   frameKey?: string;
 };
@@ -90,7 +92,7 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, frame, frameKey }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, frame, frameKey, spotlight }: Props) {
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -162,7 +164,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       const n = byId.get(id); const c = n ? placedCoordinates(n) : null;
       return c ? [c.lon, c.lat] as [number, number] : null;
     };
-    const focusSet = selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
+    const focusSet = spotlight?.length ? new Set(spotlight)
+      : selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
     const records = collection(located.map(({ node, lon, lat, approximate: approx }) => {
       const focus = !!focusSet?.has(node.id);
       const base = palette.types[node.type] ?? palette.types.other;
@@ -198,7 +201,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       }
     }
     return { records, arcs: collection(arcs), ego: collection(ego), hiddenArcs };
-  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId]);
+  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|")]);
 
   // ---- Build the map once per theme; data changes update sources in place --
   useEffect(() => {

@@ -79,6 +79,12 @@ A conversation map invites responses: "is this your experience?", "add a place t
 
 ## Storage and publishing
 
+- **Spotlight.** While a step is read, its records stand out: the rest of the map fades, the links between them are drawn, and their names are shown. On by default; *Fade the rest of the map* turns it off for a step.
+- **Marks in words.** Each step carries a sentence describing its marks and pinned pictures ("On the map: a ring around Hexham and Newcastle…"), read out by screen readers, since the marks themselves are drawings.
+- **Title card.** Presenting, and reading on a phone, open on the story's title and introduction, with *Begin*.
+- **On a phone,** the step card folds down to its buttons (*Hide text*) to look at the map.
+- **Links to a step.** A published story keeps the current step in its address (`?step=3`), and *Copy a link to this step* gives one to send.
+- **Writing.** A step's view is shown as chips: a selection, search or filter left over from exploring can be removed with ×. Steps can be duplicated. Pictures can be dropped onto a step or pasted, several at once.
 - **Where stories live.** Stories are kept with their map: in the browser, in a shared map, or in an organisation.
 - **What publishing includes.** The map, the story and its media, after the same item-by-item review as publishing a map. (The first release publishes the whole map with a story, since steps use filters; see below.)
 - **How the published page works.** Published stories open in the atlas's read-only mode, with the story column added.
@@ -94,6 +100,12 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 - **Pictures and quotes.** Uploaded pictures are shrunk to 1,600 pixels across and kept in the browser (IndexedDB) with the story. A picture needs a description (alt text) and an answer about recognisable people before the story can be published; a missing credit is a note, not a block. A quote needs the person's agreement, ticked by the author.
 - **Writing.** *Stories…* in the map's menu. A step is added from the map as it is; *Use the map as it is now* updates it. Marks are made by clicking records on the map, or choosing them from *Browse records* (keyboard). A checklist shows what blocks publishing and what's worth a look.
 - **Reading.** A column of steps beside the pinned map, which follows the step a third of the way down the column. On a phone, one step at a time on a card over the map. **Presenting** is the card, larger, with ← → and Esc. The map frames each step's records, clear of the card; with reduced motion, it cuts instead of moving.
+- **Spotlight.** While a step is read, its records stand out: the rest of the map fades, the links between them are drawn, and their names are shown. On by default; *Fade the rest of the map* turns it off for a step.
+- **Marks in words.** Each step carries a sentence describing its marks and pinned pictures ("On the map: a ring around Hexham and Newcastle…"), read out by screen readers, since the marks themselves are drawings.
+- **Title card.** Presenting, and reading on a phone, open on the story's title and introduction, with *Begin*.
+- **On a phone,** the step card folds down to its buttons (*Hide text*) to look at the map.
+- **Links to a step.** A published story keeps the current step in its address (`?step=3`), and *Copy a link to this step* gives one to send.
+- **Writing.** A step's view is shown as chips: a selection, search or filter left over from exploring can be removed with ×. Steps can be duplicated. Pictures can be dropped onto a step or pasted, several at once.
 - **Where stories live.** In the browser, with the map (by its saved ID). On a shared map, on the server with the map: editors write, viewers read and present, and a clash keeps both versions (see `docs/SHARED_MAPS.md`).
 - **Publishing.** Choose a story in *Publish online*. The page opens on the story, with *Explore the map* to leave it. Because steps use filters, the whole map is published with a story, not just what's drawn now, after the same review. Pictures go inside the published copy, within the 4 MB a publication can carry; object storage for larger media comes with audio and video.
 

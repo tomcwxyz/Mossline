@@ -146,6 +146,8 @@ test("stories travel with a shared map: moved in, written together, clashes keep
   await reading.getByRole("button",{name:/^Changed elsewhere/}).click();
   await expect(reading).toContainText("read and present its stories but not change them");
   await reading.getByRole("button",{name:"Present"}).click();
+  await expect(lee.locator(".ml-story-card h2")).toHaveText("Changed elsewhere");
+  await lee.keyboard.press("ArrowRight");
   await expect(lee.locator(".ml-story-card h2")).toHaveText("Where we started");
   await lee.keyboard.press("ArrowRight");
   await expect(lee.locator(".ml-story-card h2")).toHaveText("Ade's step");

@@ -301,7 +301,9 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
             itemSizesReference: "screen", renderEdgeLabels: false, labelDensity: small ? 4 : 0.4, labelGridCellSize: small ? 40 : 130,
             labelRenderedSizeThreshold: small ? 0 : narrow ? 8 : 6,
             hideEdgesOnMove: graph.edges.length > 4000, hideLabelsOnMove: false,
-            minCameraRatio: 0.02, maxCameraRatio: 6, stagePadding: 40, zoomDuration: 220
+            minCameraRatio: 0.02, maxCameraRatio: 6, stagePadding: 40, zoomDuration: 220,
+            // The canvas can be briefly hidden (a story card opening, a phone turning); skip drawing rather than throw.
+            allowInvalidContainer: true
           }
         });
         sigmaRef.current = renderer;
