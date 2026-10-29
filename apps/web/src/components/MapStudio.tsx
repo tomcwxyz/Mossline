@@ -155,6 +155,17 @@ export function MapStudio() {
   const clearAtlasMessage=useCallback(()=>setAtlasMessage(""),[]);
 
 
+  // "/?open=<map>" reopens a saved map, e.g. on the way back from signing in.
+  const reopened=useRef(false);
+  useEffect(()=>{
+    if(reopened.current)return;
+    const id=new URLSearchParams(window.location.search).get("open");
+    if(!id||!localMaps.some(item=>item.id===id))return;
+    reopened.current=true;
+    window.history.replaceState(null,"",window.location.pathname);
+    void selectLocalMap(id);setFieldAtlasOpen(true);setExperienceSpace("studio");
+  },[localMaps,selectLocalMap]);
+
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
   const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
   // In the full-source experience the worker owns the source-graph query and

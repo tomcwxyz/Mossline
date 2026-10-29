@@ -13,6 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # Postgres lets the browser tests sign in and publish; sign-in links go to files, never email.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: mossline
+          POSTGRES_PASSWORD: mossline
+          POSTGRES_DB: mossline_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U mossline" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      MOSSLINE_HOSTED_PUBLISHING_ENABLED: "true"
+      MOSSLINE_DATABASE_URL: postgres://mossline:mossline@127.0.0.1:5432/mossline_ci
+      MOSSLINE_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
+      MOSSLINE_BASE_URL: http://127.0.0.1:3000
+      MOSSLINE_PUBLISHERS: "@example.net"
+      MOSSLINE_EMAIL_FROM: Mossline CI <ci@example.net>
+      MOSSLINE_TEST_MAIL_DIR: /tmp/mossline-mail
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,6 +46,11 @@ jobs:
       - name: Build web app
         run: npm run build
 
+      - name: Prepare the publishing database
+        run: |
+          for f in apps/web/migrations/*.sql; do
+            PGPASSWORD=mossline psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U mossline -d mossline_ci -f "$f"
+          done
       - name: Install headless browser
         timeout-minutes: 7
         # The Ubuntu hosted runner already carries the Chromium runtime libs.

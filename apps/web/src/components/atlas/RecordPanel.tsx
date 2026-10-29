@@ -22,7 +22,8 @@ type Props = {
   source: GraphDocument; view: GraphDocument; node: GraphNode | null; flows: FundingFlow[];
   leads: { node: GraphNode; degree: number }[]; totalRecords: number; totalRecorded: number;
   onPick: (id: string) => void; onFollow: (id: string) => void;
-  onConfirm: (edge: GraphEdge, input: ConfirmInput) => void;
+  /** Absent on a published, read-only map. */
+  onConfirm?: (edge: GraphEdge, input: ConfirmInput) => void;
   grouping?: Grouping | null; groupLabel?: string;
   /** Feedback loops this map has, their labels (R1, B1…) and how to show one. */
   loops?: FeedbackLoop[]; loopLabel?: Map<string, string>; onLoop?: (id: string) => void;
@@ -217,7 +218,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
           <button type="button" onClick={() => other && onPick(other.id)}><strong>{other?.label ?? "Related record"}</strong>
             <small>via {via.slice(0, 2).join(", ")}{via.length > 2 ? ` and ${via.length - 2} more` : ""}</small></button>
           {candidate === e.id ? <form className="ml-confirm" onSubmit={(event: FormEvent) => {
-            event.preventDefault(); onConfirm(e, { reviewer, reason, relationship }); setCandidate(null); setReason("");
+            event.preventDefault(); onConfirm?.(e, { reviewer, reason, relationship }); setCandidate(null); setReason("");
           }}>
             <label>Relationship<input required maxLength={120} value={relationship} onChange={ev => setRelationship(ev.target.value)}/></label>
             <label>Reviewed by<input required minLength={2} value={reviewer} onChange={ev => setReviewer(ev.target.value)}/></label>
@@ -225,7 +226,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
             <p className="ml-small">This adds a separate, auditable annotation. The imported source stays unchanged.</p>
             <div className="ml-confirm-actions"><button type="submit" className="ml-primary">Confirm relationship</button>
               <button type="button" onClick={() => setCandidate(null)}>Cancel</button></div>
-          </form> : <button type="button" className="ml-link-button" onClick={() => setCandidate(e.id)}>Confirm with evidence…</button>}
+          </form> : onConfirm && <button type="button" className="ml-link-button" onClick={() => setCandidate(e.id)}>Confirm with evidence…</button>}
         </li>;
       })}</ul>
       {pencil.length > 8 && <p className="ml-small">{pencil.length - 8} more suggestions; select one of the records above to explore further.</p>}

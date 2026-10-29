@@ -21,6 +21,7 @@ Mossline is a question-centred, open-source platform for navigating networks and
 7. Prefer small, keyboard-accessible components and targeted tests.
 8. Work on feature branches; review diffs before merging.
 9. Changes people make in Mossline are edit-list entries applied over imported records (`graph-core/src/edits.ts`). Never write them into imported data; keep the receipt and the previous value.
+10. Accounts exist only to publish. Keep only name and email; never store provider tokens, photos, IPs or browser details on accounts or sessions. Everything else must keep working signed out. See `docs/HOSTED_PUBLISHING.md`.
 
 ## Verify before merge
 

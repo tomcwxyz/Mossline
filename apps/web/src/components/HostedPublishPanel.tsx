@@ -1,9 +1,10 @@
 "use client";
 
 import {useEffect,useState} from "react";
-import {createPublishedSnapshot,type GraphDocument,type NodeStyleOverride,
+import {createPublishedSnapshot,HOSTED_LIMITS,type GraphDocument,type NodeStyleOverride,
   type PublishedSnapshot,type PublishSettings} from "@mossline/graph-core";
 import type {LabelDensity,NetworkLayout} from "./GraphCanvas";
+import {account,useAccount,type OwnedPublication} from "../hooks/useAccount";
 
 type Props={
   graph:GraphDocument;
@@ -13,14 +14,12 @@ type Props={
   positions:Record<string,{x:number;y:number}>;
   nodeStyles:Record<string,NodeStyleOverride>;
 };
-type Result={slug:string;revision:number;managementKey?:string;error?:string};
-const PUBLIC_ID=/^[A-Za-z0-9_-]{16,32}$/;
 export function HostedPublishPanel(props:Props){
   const [open,setOpen]=useState(false);
-  const [available,setAvailable]=useState<boolean|null>(null);
-  const [adminKey,setAdminKey]=useState("");
+  const {state}=useAccount();
+  const user=state.status==="ready"?state.user:null;
+  const [mine,setMine]=useState<OwnedPublication[]>([]);
   const [slug,setSlug]=useState("");
-  const [managementKey,setManagementKey]=useState("");
   const [includeDescriptions,setIncludeDescriptions]=useState(false);
   const [includeIntroduction,setIncludeIntroduction]=useState(false);
   const [includeImages,setIncludeImages]=useState(false);
@@ -30,17 +29,11 @@ export function HostedPublishPanel(props:Props){
   const [link,setLink]=useState("");
   const [error,setError]=useState("");
   const [busy,setBusy]=useState(false);
-  const [withdrawConfirm,setWithdrawConfirm]=useState(false);
-  const [keyCopied,setKeyCopied]=useState(false);
 
   useEffect(()=>{
-    if(!open)return;
-    let cancelled=false;
-    void fetch("/api/publications/status",{cache:"no-store"}).then(r=>r.json()).then(
-      data=>{if(!cancelled)setAvailable(data.enabled===true);}
-    ).catch(()=>{if(!cancelled)setAvailable(false);});
-    return ()=>{cancelled=true;};
-  },[open]);
+    if(!open||!user?.canPublish)return;
+    account.publications().then(setMine).catch(()=>setMine([]));
+  },[open,user?.canPublish]);
 
   function review(){
     setSnapshot(null);setReviewed(false);setError("");setLink("");
@@ -49,69 +42,21 @@ export function HostedPublishPanel(props:Props){
         ...props,includeDescriptions,includeImages,
         introduction:includeIntroduction?props.introduction:undefined
       };
-      setSnapshot(createPublishedSnapshot(props.graph,settings));
+      setSnapshot(createPublishedSnapshot(props.graph,settings,new Date(),HOSTED_LIMITS));
     }catch(err){setError(err instanceof Error?err.message:"Could not prepare publication.");}
   }
   function changeOptions(update:()=>void){
     update();setSnapshot(null);setReviewed(false);setLink("");setError("");
   }
-  function publicationUrl(id:string){return window.location.origin+"/p/"+id;}
-  async function copy(value:string,label:string){
-    try{await navigator.clipboard.writeText(value);if(label==="key")setKeyCopied(true);}
-    catch{setError("Clipboard permission unavailable. Copy the value manually.");}
-  }
   async function send(){
-    if(!snapshot||!reviewed||!available||busy)return;
-    const updating=!!slug.trim();
-    if(updating && (!PUBLIC_ID.test(slug.trim())||managementKey.length<40)){
-      setError("For an update, provide the existing publication ID and its secret management key.");
-      return;
-    }
-    if(!updating && adminKey.length<32){
-      setError("Enter the author's publishing key (at least 32 characters).");return;
-    }
-    setBusy(true);setError("");setKeyCopied(false);
-    try{
-      let expectedRevision=1;
-      if(updating){
-        const current=await fetch("/api/publications/"+slug.trim(),{cache:"no-store"});
-        if(!current.ok)throw Error("This publication is not available to update.");
-        const metadata=await current.json() as {revision:number};
-        expectedRevision=metadata.revision;
-      }
-      const response=await fetch(
-        updating?"/api/publications/"+slug.trim():"/api/publications",{
-          method:updating?"PATCH":"POST",
-          headers:{"Content-Type":"application/json",
-            "Authorization":"Bearer "+(updating?managementKey:adminKey)},
-          body:JSON.stringify(updating?{snapshot,revision:expectedRevision}:{snapshot}),
-          cache:"no-store",
-          credentials:"omit"
-        });
-      const data=await response.json() as Result;
-      if(!response.ok)throw Error(data.error??"Publication failed.");
-      setSlug(data.slug);setResult({slug:data.slug,revision:data.revision});
-      if(data.managementKey)setManagementKey(data.managementKey);
-      setLink(publicationUrl(data.slug));setAdminKey("");setSnapshot(null);setReviewed(false);
-    }catch(err){setError(err instanceof Error?err.message:"Could not publish this map.");}
-    finally{setBusy(false);}
-  }
-  async function withdraw(){
-    if(!withdrawConfirm||busy||!PUBLIC_ID.test(slug)||managementKey.length<40)return;
+    if(!snapshot||!reviewed||busy)return;
     setBusy(true);setError("");
     try{
-      const response=await fetch("/api/publications/"+slug,{
-        method:"DELETE",headers:{"Authorization":"Bearer "+managementKey},
-        cache:"no-store",credentials:"omit"
-      });
-      if(!response.ok){
-        const data=await response.json() as {error?:string};
-        throw Error(data.error??"Could not withdraw this publication.");
-      }
-      setResult(null);setLink("");setWithdrawConfirm(false);setSnapshot(null);
-      setManagementKey("");setSlug("");
-      setError("Publication withdrawn. Its public page now returns not found. Previously downloaded copies cannot be recalled.");
-    }catch(err){setError(err instanceof Error?err.message:"Withdrawal failed.");}
+      const current=mine.find(m=>m.slug===slug);
+      const data=current?await account.update(current.slug,current.revision,snapshot):await account.publish(snapshot);
+      setResult(data);setLink(window.location.origin+"/p/"+data.slug);setSnapshot(null);setReviewed(false);
+      setMine(await account.publications());
+    }catch(err){setError(err instanceof Error?err.message:"Could not publish this map.");}
     finally{setBusy(false);}
   }
   return <section className="hosted-publish-panel" aria-label="Managed online publishing">
@@ -119,28 +64,23 @@ export function HostedPublishPanel(props:Props){
       setOpen(!open);setSnapshot(null);setReviewed(false);setError("");
     }}>{open?"− Close online publishing":"+ Publish online"}</button>
     {open&&<div className="hosted-controls">
-      <p className="eyebrow">Hosted publishing · controlled alpha</p>
-      {available===null&&<p className="help" role="status">Checking publishing configuration…</p>}
-      {available===false&&<p className="help">
-        Hosted publishing is not enabled for this deployment. An administrator needs to
-        configure a Neon database, apply the publication migration and set the server-only
-        publishing credentials. The local Share a view option still works.
+      <p className="eyebrow">Hosted publishing</p>
+      {state.status==="loading"&&<p className="help" role="status">Checking publishing configuration…</p>}
+      {state.status==="off"&&<p className="help">
+        Hosted publishing is not enabled for this deployment. The local Share a view option still works.
       </p>}
-      {available===true&&<>
-        <p className="help">Create a stable, read-only URL you can update or unpublish.
-          Only what you explicitly approve is stored online. Anyone with the URL can see the
-          published content; this version does not support private audience access.</p>
-        <label>Existing publication ID (leave blank to publish new)
-          <input className="search" value={slug} maxLength={32}
-            onChange={e=>{setSlug(e.target.value.trim());setLink("");setResult(null);}} placeholder="Optional publication ID"/>
+      {state.status==="ready"&&!user&&<p className="help">Publishing needs an account.{" "}
+        <a href={"/sign-in?next="+encodeURIComponent(window.location.pathname+window.location.search)}>Sign in to publish</a></p>}
+      {user&&!user.canPublish&&<p className="help">{user.email} isn&apos;t set up to publish here.</p>}
+      {user?.canPublish&&<>
+        <p className="help">Create a stable, read-only URL you can update or unpublish from your account.
+          Only what you explicitly approve is stored online. Anyone with the URL can see it.</p>
+        <label>Publish as
+          <select className="search" value={slug} onChange={e=>{setSlug(e.target.value);setLink("");setResult(null);}}>
+            <option value="">A new publication</option>
+            {mine.map(m=><option key={m.slug} value={m.slug}>Update “{m.title}”</option>)}
+          </select>
         </label>
-        {slug?<label>Secret management key
-          <input className="search" type="password" autoComplete="off" value={managementKey}
-            onChange={e=>setManagementKey(e.target.value)} placeholder="Paste the key saved at publication"/>
-        </label>:<label>Author publishing key
-          <input className="search" type="password" autoComplete="off" value={adminKey}
-            onChange={e=>setAdminKey(e.target.value)} placeholder="Server-authorised creation key"/>
-        </label>}
         <label className="share-checkbox"><input type="checkbox" checked={includeDescriptions}
           onChange={e=>changeOptions(()=>setIncludeDescriptions(e.target.checked))}/>
           Include entity descriptions</label>
@@ -186,32 +126,11 @@ export function HostedPublishPanel(props:Props){
             <textarea rows={2} readOnly value={link} aria-label="Hosted publication URL"
               onFocus={e=>e.target.select()}/>
           </label>
-          <div className="share-link-actions"><button type="button" onClick={()=>void copy(link,"link")}>
+          <div className="share-link-actions"><button type="button" onClick={()=>void navigator.clipboard?.writeText(link).catch(()=>setError("Copy the link manually."))}>
             Copy public URL</button><a href={link} target="_blank" rel="noreferrer">Open public map ↗</a></div>
-          {managementKey&&<div className="hosted-secret">
-            <strong>Keep this management key safe</strong>
-            <p>It is required to update or unpublish this map. Mossline cannot recover it.
-              It is not included in the public URL.</p>
-            <textarea rows={2} readOnly value={managementKey}
-              aria-label="Secret publication management key"
-              onFocus={e=>e.target.select()}/>
-            <button type="button" onClick={()=>void copy(managementKey,"key")}>
-              {keyCopied?"Management key copied":"Copy management key"}
-            </button>
-          </div>}
         </div>}
-        {slug&&<div className="hosted-withdraw">
-          <label className="share-checkbox">
-            <input type="checkbox" checked={withdrawConfirm}
-              onChange={e=>setWithdrawConfirm(e.target.checked)}/>
-            Unpublish the existing map and make its URL inaccessible.
-          </label>
-          <button type="button" disabled={!withdrawConfirm||managementKey.length<40||busy}
-            onClick={withdraw}>Unpublish this map</button>
-        </div>}
-        <p className="help">Keep the management key in your password manager.
-          Mossline does not store it in browser storage. Unpublishing stops access on this
-          server, but cannot remove downloaded or cached copies.</p>
+        <p className="help">Signed in as {user.name||user.email}. Unpublish from{" "}
+          <a href="/account" target="_blank" rel="noreferrer">your account ↗</a>. Unpublishing cannot remove downloaded or cached copies.</p>
       </>}
       {error&&<p role="alert" className="share-error">{error}</p>}
     </div>}
