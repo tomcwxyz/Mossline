@@ -38,3 +38,12 @@ export async function sendInvitation(to:string,from:string,title:string,role:"ed
     "If you weren't expecting this, you can ignore it."
   ].join("\n"),"invite",url);
 }
+
+export async function sendOrgInvitation(to:string,from:string,org:string,url:string):Promise<void>{
+  await send(to,from+" invited you to "+org+" on Mossline",[
+    from+" has invited you to join "+org+" on Mossline, to work on its maps together.",
+    "",
+    "Sign in with this email address to accept:",url,"",
+    "If you weren't expecting this, you can ignore it."
+  ].join("\n"),"invite",url);
+}

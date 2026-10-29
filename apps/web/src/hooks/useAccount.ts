@@ -8,11 +8,11 @@ import { useCallback, useEffect, useState } from "react";
  * browser storage beyond the session cookie.
  */
 export type SignInMethods = { microsoft: boolean; google: boolean; email: boolean };
-export type AccountUser = { name: string; email: string; canPublish: boolean };
+export type AccountUser = { name: string; email: string; canPublish: boolean; operator?: boolean };
 export type AccountState =
   | { status: "loading" }
   | { status: "off" }
-  | { status: "ready"; signIn: SignInMethods; user: AccountUser | null; sharedMaps: boolean };
+  | { status: "ready"; signIn: SignInMethods; user: AccountUser | null; sharedMaps: boolean; plans: boolean; openSignUp: boolean; price: string };
 
 export type OwnedPublication = { slug: string; title: string; nodes: number; edges: number; revision: number; createdAt: string; updatedAt: string };
 
@@ -22,8 +22,10 @@ export function useAccount(enabled = true) {
     if (!enabled) { setState({ status: "off" }); return; }
     try {
       const r = await fetch("/api/publications/status", { cache: "no-store", credentials: "same-origin" });
-      const data = await r.json() as { enabled?: boolean; signIn?: SignInMethods; user?: AccountUser | null; sharedMaps?: boolean };
-      setState(data.enabled && data.signIn ? { status: "ready", signIn: data.signIn, user: data.user ?? null, sharedMaps: !!data.sharedMaps } : { status: "off" });
+      const data = await r.json() as { enabled?: boolean; signIn?: SignInMethods; user?: AccountUser | null; sharedMaps?: boolean;
+        plans?: boolean; openSignUp?: boolean; price?: string };
+      setState(data.enabled && data.signIn ? { status: "ready", signIn: data.signIn, user: data.user ?? null, sharedMaps: !!data.sharedMaps,
+        plans: !!data.plans, openSignUp: !!data.openSignUp, price: data.price ?? "" } : { status: "off" });
     } catch { setState({ status: "off" }); }
   }, [enabled]);
   useEffect(() => { void refresh(); }, [refresh]);
@@ -52,6 +54,7 @@ export const account = {
       { method: "POST", body: JSON.stringify({ provider, callbackURL: safeReturnPath(next), errorCallbackURL: "/sign-in" }) });
     if (data.url) window.location.assign(data.url);
   },
+  setName: (name: string) => call<unknown>("/api/auth/update-user", { method: "POST", body: JSON.stringify({ name }) }),
   signOut: () => call<unknown>("/api/auth/sign-out", { method: "POST", body: "{}" }),
   deleteAccount: () => call<unknown>("/api/auth/delete-user", { method: "POST", body: "{}" }),
   publications: () => call<{ publications: OwnedPublication[] }>("/api/publications").then(d => d.publications),
@@ -63,3 +66,29 @@ export const account = {
   claim: (slug: string, managementKey: string) => call<{ slug: string }>("/api/publications/claim",
     { method: "POST", body: JSON.stringify({ slug, managementKey }) })
 };
+
+// ---- Organisations and plans ------------------------------------------------------
+export type Limits = { publications: number | null; savedMaps: number | null; peoplePerMap: number | null; uploadBytes: number | null };
+export type Usage = { plan: "free" | "organisation"; limits: Limits; publications: number; savedMaps: number; org: { id: string; name: string } | null };
+export type Org = { id: string; name: string; role: "admin" | "member"; plan: "free" | "organisation"; planUntil: string | null;
+  planSource: string | null; joinDomain: string | null; billing: boolean };
+export type OrgMember = { userId: string; name: string; email: string; role: "admin" | "member"; joined: string };
+export type OrgState = { org: Org | null; members: OrgMember[]; invites: { email: string; role: "admin" | "member" }[];
+  joinable: { id: string; name: string; how: "invited" | "domain"; role: "admin" | "member" }[]; usage: Usage; canCreate: boolean;
+  plans: boolean; billing: boolean; price: string; domain: string | null };
+const send = (method: string, body?: unknown) => ({ method, body: body === undefined ? undefined : JSON.stringify(body) });
+export const orgs = {
+  get: () => call<OrgState>("/api/org"),
+  create: (name: string) => call<{ org: Org }>("/api/org", send("POST", { name })),
+  update: (changes: { name?: string; openToDomain?: boolean }) => call<{ org: Org }>("/api/org", send("PATCH", changes)),
+  join: (orgId: string) => call<{ org: Org }>("/api/org/join", send("POST", { orgId })),
+  leave: () => call<{ result: string }>("/api/org/leave", send("POST", {})),
+  invite: (email: string, role: "admin" | "member") => call<{ emailed: boolean }>("/api/org/invites", send("POST", { email, role })),
+  cancelInvite: (email: string) => call<unknown>("/api/org/invites?email=" + encodeURIComponent(email), send("DELETE")),
+  setRole: (userId: string, role: "admin" | "member") => call<unknown>("/api/org/members", send("PATCH", { userId, role })),
+  remove: (userId: string) => call<unknown>("/api/org/members?userId=" + encodeURIComponent(userId), send("DELETE")),
+  checkout: () => call<{ url: string }>("/api/billing/checkout", send("POST", {})),
+  portal: () => call<{ url: string }>("/api/billing/portal", send("POST", {}))
+};
+/** "2 of 3", or just "2" when there's no limit. */
+export const ofLimit = (used: number, limit: number | null) => limit === null ? used.toLocaleString("en-GB") : used.toLocaleString("en-GB") + " of " + limit.toLocaleString("en-GB");

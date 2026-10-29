@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useAtlasTheme } from "../atlas/theme";
 import { ThemeButton, Wordmark } from "../atlas/Wordmark";
+import { PolicyLinks } from "./PolicyLinks";
 
 /** The plain page frame for signing in and account settings. */
 export function AccountShell({ title, children }: { title: string; children: ReactNode }) {
@@ -14,5 +15,6 @@ export function AccountShell({ title, children }: { title: string; children: Rea
       <div className="ml-home-header-actions"><ThemeButton theme={theme} onChange={setTheme}/></div>
     </header>
     <div className="ml-account-body">{children}</div>
+    <footer className="ml-account-foot"><PolicyLinks/></footer>
   </main>;
 }

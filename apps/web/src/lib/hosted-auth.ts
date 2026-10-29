@@ -25,7 +25,7 @@ export function isHostedConfigured(env:Env=process.env):boolean{
     !!env.MOSSLINE_DATABASE_URL &&
     (env.MOSSLINE_AUTH_SECRET?.length??0)>=32 &&
     !!env.MOSSLINE_BASE_URL &&
-    publisherRules(env).length>0 &&
+    (publisherRules(env).length>0||env.MOSSLINE_OPEN_SIGNUP==="true") &&
     (methods.microsoft||methods.google||methods.email);
 }
 
@@ -55,6 +55,12 @@ export function mayPublish(email:string|null|undefined,rules:string[]=publisherR
   if(at<1||at===address.length-1)return false;
   const domain=address.slice(at);
   return rules.some(rule=>rule==="*"||rule===address||(rule.startsWith("@")&&rule===domain));
+}
+/** May have an account of their own: anyone, with open sign-up; otherwise the publishers list. */
+export function mayCreate(email:string|null|undefined,env:Env=process.env):boolean{
+  const address=(email??"").trim().toLowerCase();
+  if(env.MOSSLINE_OPEN_SIGNUP==="true")return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address);
+  return mayPublish(address,publisherRules(env));
 }
 /** New publications per account in any 24 hours. */
 export function dailyPublishLimit(env:Env=process.env):number{

@@ -67,6 +67,8 @@ export function SignIn({ next, error }: { next: string; error: string }) {
         </form>}
       </div>)}
 
+      {state.status === "ready" && !state.user && !sent && <p className="ml-small">By continuing, you agree to the{" "}
+        <a href="/legal/terms">terms of service</a> and <a href="/legal/privacy">privacy notice</a>.</p>}
       <p className="ml-small ml-account-privacy">Mossline keeps your name, your email address, and the maps you publish or save to your account.
         Nothing else is kept with your account, and there's no password. Delete your account at any time and those maps go with it.</p>
       <a className="ml-small" href={back}>← Back to Mossline</a>

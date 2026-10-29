@@ -63,3 +63,7 @@ other people's maps stay in those maps, with the name they were made under.
 - Reviews (confirmed suggestions) and saved views are not shared yet; they
   stay in each browser.
 - Changes arrive by polling every ten seconds, not instantly.
+
+## Plans and policies
+
+Where plans are on, the free and organisation limits apply here too: see [PLANS.md](PLANS.md). Running a public Mossline: [OPERATING.md](OPERATING.md).

@@ -29,8 +29,13 @@ export async function requireRole(request:Request,mapId:string,{write,needs}:{wr
   return {user,role};
 }
 
+export class UploadTooLarge extends Error{
+  constructor(readonly size:number,readonly limit:number){
+    super("This map is too large to keep in an account ("+(size/1e6).toFixed(1)+" MB compressed; the limit is "+(limit/1e6).toFixed(0)+" MB).");
+  }
+}
 /** Reads a gzip-compressed {title, graph} upload and checks it is a whole, valid map. */
-export async function readMapUpload(request:Request):Promise<{title:string;graph:GraphDocument;packed:Buffer}>{
+export async function readMapUpload(request:Request,maxBytes=SHARED_MAP_MAX_BYTES):Promise<{title:string;graph:GraphDocument;packed:Buffer}>{
   const reader=request.body?.getReader();
   if(!reader)throw Error("Missing map");
   const chunks:Uint8Array[]=[];let size=0;
@@ -39,7 +44,7 @@ export async function readMapUpload(request:Request):Promise<{title:string;graph
       const {done,value}=await reader.read();
       if(done)break;
       size+=value.byteLength;
-      if(size>SHARED_MAP_MAX_BYTES)throw Error("This map is too large to save to an account ("+Math.round(size/1e6)+" MB compressed; the limit is "+SHARED_MAP_MAX_BYTES/1e6+" MB).");
+      if(size>maxBytes)throw new UploadTooLarge(size,maxBytes);
       chunks.push(value);
     }
   }finally{void reader.cancel().catch(()=>{});}

@@ -1,6 +1,8 @@
 import {apiResult} from "../../../../lib/hosted-response";
 import {isHostedConfigured,isSharedMapsConfigured,signInMethods} from "../../../../lib/hosted-auth";
 import {currentUser} from "../../../../lib/auth";
+import {isOperator} from "../../../../lib/hosted-guard";
+import {openSignUp,planPrice,plansEnabled} from "../../../../lib/plans";
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
 
@@ -10,5 +12,6 @@ export async function GET(request:Request){
   let user=null;
   try{user=await currentUser(request);}catch{/* shown as signed out */}
   return apiResult({enabled:true,signIn:signInMethods(),sharedMaps:isSharedMapsConfigured(),
-    user:user?{name:user.name,email:user.email,canPublish:user.canPublish}:null});
+    plans:plansEnabled(),openSignUp:openSignUp(),price:planPrice(),
+    user:user?{name:user.name,email:user.email,canPublish:user.canPublish,operator:isOperator(user.email)}:null});
 }

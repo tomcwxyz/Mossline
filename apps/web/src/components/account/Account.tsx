@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { account, useAccount, type OwnedPublication } from "../../hooks/useAccount";
+import { account, ofLimit, orgs, useAccount, type OrgState, type OwnedPublication } from "../../hooks/useAccount";
 import { AccountShell } from "./AccountShell";
 
 const count = (n: number, word: string) => n.toLocaleString("en-GB") + " " + word + (n === 1 ? "" : "s");
@@ -18,6 +18,10 @@ export function Account() {
   const [claimKey, setClaimKey] = useState("");
   const [deleteOk, setDeleteOk] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [org, setOrg] = useState<OrgState | null>(null);
+  const [name, setName] = useState("");
+  useEffect(() => { setName(user?.name ?? ""); }, [user?.name]);
+  useEffect(() => { if (user) orgs.get().then(setOrg).catch(() => setOrg(null)); }, [user]);
 
   const load = useCallback(async () => {
     try { setMaps(await account.publications()); } catch (e) { setProblem(e instanceof Error ? e.message : "Couldn't load your maps."); }
@@ -47,7 +51,7 @@ export function Account() {
       {state.status === "loading" && <p className="ml-small" role="status">Checking…</p>}
       {state.status === "off" && <p className="ml-account-note">Accounts aren&apos;t switched on for this Mossline.</p>}
       {state.status === "ready" && !user && <div className="ml-account-note">
-        <p>You&apos;re not signed in. You only need an account to publish maps online.</p>
+        <p>You&apos;re not signed in. You only need an account to publish maps or work on them with others.</p>
         <a className="ml-solid ml-account-button" href="/sign-in?next=/account">Sign in</a>
       </div>}
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
@@ -55,9 +59,30 @@ export function Account() {
 
       {user && <>
         <dl className="ml-account-who">
-          {user.name && <div><dt>Name</dt><dd>{user.name}</dd></div>}
           <div><dt>Email</dt><dd>{user.email}</dd></div>
+          {org && <div><dt>Plan</dt><dd>{org.org ? (org.org.plan === "organisation" ? "Organisation" : "Free") + " · " + org.org.name : "Free"}</dd></div>}
         </dl>
+        <form className="ml-edit-form" aria-label="Your name" onSubmit={(e: FormEvent) => {
+          e.preventDefault(); void run(async () => { await account.setName(name.trim()); await refresh(); setNotice("Name saved. It's what others see on your changes and shared maps."); });
+        }}>
+          <div className="ml-edit-row">
+            <label className="ml-edit-field"><span>Your name <small>shown on your changes and to people you share with</small></span>
+              <input value={name} maxLength={80} onChange={e => setName(e.target.value)} autoComplete="name"/></label>
+            <button type="submit" className="ml-quiet ml-share-invite" disabled={busy || !name.trim() || name.trim() === user.name}>Save name</button>
+          </div>
+        </form>
+        {org && <section className="ml-account-section" aria-labelledby="org-summary">
+          <h2 id="org-summary">{org.org ? org.org.name : "Organisation"}</h2>
+          {org.org ? <p className="ml-small">You&apos;re {org.org.role === "admin" ? "an admin" : "a member"}.
+            {org.plans && <> Published maps: {ofLimit(org.usage.publications, org.usage.limits.publications)} · maps kept:
+              {" "}{ofLimit(org.usage.savedMaps, org.usage.limits.savedMaps)}.</>}</p>
+            : <p className="ml-small">{org.joinable.length ? "You've been invited to " + org.joinable.map(j => j.name).join(", ") + "."
+              : "Work on maps together, and keep them when people move on."}
+              {org.plans && <> On the free plan: {ofLimit(org.usage.publications, org.usage.limits.publications)} published maps,
+                {" "}{ofLimit(org.usage.savedMaps, org.usage.limits.savedMaps)} kept in your account.</>}</p>}
+          <a className="ml-quiet ml-account-button" href="/organisation">{org.org ? "Manage the organisation" : org.joinable.length ? "See invitations" : "Start or join an organisation"}</a>
+        </section>}
+        {user.operator && <p className="ml-small"><a href="/admin">Running Mossline ↗</a></p>}
         {!user.canPublish && <p className="ml-account-note">This account can open maps people have shared with it, from
           Mossline&apos;s front page. It can&apos;t publish maps or save its own. Ask whoever runs this Mossline if that&apos;s a mistake.</p>}
 

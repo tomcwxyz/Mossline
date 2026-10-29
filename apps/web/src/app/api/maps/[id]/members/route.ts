@@ -1,7 +1,9 @@
 import {apiResult} from "../../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../../lib/hosted-auth";
 import {canSendMail,sendInvitation} from "../../../../../lib/auth-mail";
-import {listMembers,mapInfo,removeMember,setMember} from "../../../../../lib/shared-maps-db";
+import {listMembers,mapInfo,memberCountOf,removeMember,setMember} from "../../../../../lib/shared-maps-db";
+import {usageFor} from "../../../../../lib/orgs-db";
+import {limitMessage} from "../../../../../lib/plans";
 import {requireRole} from "../../../../../lib/shared-maps-http";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -26,6 +28,10 @@ export async function POST(request:Request,context:Ctx){
   if(!EMAIL.test(email))return apiResult({error:"Give an email address"},400);
   if(email===access.user.email.toLowerCase())return apiResult({error:"That's you: you own this map"},400);
   try{
+    const usage=await usageFor(access.user.id);
+    const already=(await listMembers(id)).some(m=>m.email===email);
+    if(!already&&await memberCountOf(id)>=usage.limits.peoplePerMap)
+      return apiResult({error:limitMessage("peoplePerMap",usage.plan,usage.limits.peoplePerMap),limit:"peoplePerMap"},403);
     const isNew=await setMember(id,email,role,access.user.id);
     let emailed=false;
     if(isNew&&canSendMail()){
