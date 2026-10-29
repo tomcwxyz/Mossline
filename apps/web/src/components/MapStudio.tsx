@@ -38,6 +38,7 @@ import {saveGeneralGraph,shouldStoreGeneralGraph}
 import {MAX_LOCAL_MAPS,type SharedLink} from "../lib/map-library";
 import {sharedMaps,SharedMapError,type SharedMapSummary} from "../lib/shared-maps-client";
 import {AccountMaps} from "./AccountMaps";
+import {HostedFooter} from "./account/HostedFooter";
 import {useLocalMapLibrary} from "../hooks/useLocalMapLibrary";
 import type {ColumnMapping} from "@mossline/graph-core";
 import demo from "../../../../data/demo.json";
@@ -661,6 +662,7 @@ export function MapStudio() {
       onRecovery={()=>{window.location.href="/recover";}}
       accountMaps={<AccountMaps have={new Set(localMaps.flatMap(m=>m.shared?[m.shared.id]:[]))} busy={openingShared}
         onOpen={m=>void openSharedMap(m.id,m)}/>}/>
+    <HostedFooter/>
   </main>;
 
   return <main className={"shell mossline-studio"+

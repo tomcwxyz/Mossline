@@ -1,6 +1,7 @@
 import {apiResult,noStoreHeaders} from "../../../../../lib/hosted-response";
 import {readSource,replaceSource} from "../../../../../lib/shared-maps-db";
-import {readMapUpload,requireRole} from "../../../../../lib/shared-maps-http";
+import {readMapUpload,requireRole,UploadTooLarge} from "../../../../../lib/shared-maps-http";
+import {usageFor} from "../../../../../lib/orgs-db";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 type Ctx={params:Promise<{id:string}>};
@@ -26,8 +27,8 @@ export async function PUT(request:Request,context:Ctx){
   const expected=Number(new URL(request.url).searchParams.get("version"));
   if(!Number.isSafeInteger(expected)||expected<1)return apiResult({error:"Say which version you're replacing"},400);
   let upload;
-  try{upload=await readMapUpload(request);}
-  catch(e){return apiResult({error:e instanceof Error?e.message:"The map couldn't be read."},400);}
+  try{upload=await readMapUpload(request,(await usageFor(access.user.id)).limits.uploadBytes);}
+  catch(e){return apiResult({error:e instanceof Error?e.message:"The map couldn't be read."},e instanceof UploadTooLarge?413:400);}
   try{
     const version=await replaceSource(id,access.user.id,expected,upload.title,upload.packed,
       {nodes:upload.graph.nodes.length,edges:upload.graph.edges.length});

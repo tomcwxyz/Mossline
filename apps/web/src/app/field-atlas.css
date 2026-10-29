@@ -1092,3 +1092,44 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 }
 .ml-start-account-hint a { text-decoration: underline; text-underline-offset: 2px; }
 .ml-start-maps + .ml-start-maps { margin-top: 16px; }
+
+/* ---- Policies, pricing, organisations ------------------------------------------ */
+.ml-account-foot { padding: 0 clamp(16px, 4vw, 48px) 32px; display: flex; justify-content: center; }
+.ml-policy-links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12.5px; justify-content: center; }
+.ml-atlas .ml-policy-links a { color: var(--ml-muted); text-decoration: underline; text-underline-offset: 2px; }
+.ml-atlas .ml-account-card a:not(.ml-account-button), .ml-atlas .ml-legal-body a { text-decoration: underline; text-underline-offset: 2px; }
+.ml-legal { width: 100%; max-width: 1040px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; align-items: start; }
+.ml-legal-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; position: sticky; top: 16px; }
+.ml-legal-nav a { display: block; padding: 7px 10px; border-radius: 6px; font-size: 13.5px; color: var(--ml-ink); text-decoration: none; }
+.ml-legal-nav a:hover { background: var(--ml-sunken); }
+.ml-legal-nav a[aria-current="page"] { background: var(--ml-sunken); font-weight: 600; }
+.ml-legal-body { min-width: 0; font-size: 15px; line-height: 1.65; color: var(--ml-text-2); max-width: 70ch; }
+.ml-atlas .ml-legal-body h1 { font: 400 clamp(30px, 4vw, 42px)/1.08 var(--ml-serif); letter-spacing: -0.015em; margin: 0 0 8px; color: var(--ml-ink); }
+.ml-atlas .ml-legal-body h2 { font: 500 22px/1.25 var(--ml-serif); margin: 32px 0 8px; color: var(--ml-ink); }
+.ml-legal-body p, .ml-legal-body ul { margin: 0 0 12px; }
+.ml-legal-body li { margin: 4px 0; }
+.ml-legal-body strong { color: var(--ml-ink); }
+.ml-legal-body table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 13.5px; display: block; overflow-x: auto; }
+.ml-legal-body th, .ml-legal-body td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--ml-rule); }
+.ml-legal-body th { font-weight: 600; color: var(--ml-ink); background: var(--ml-sunken); }
+.ml-legal-body code { font: 12.5px var(--ml-mono); background: var(--ml-sunken); padding: 1px 4px; border-radius: 3px; }
+.ml-pricing-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.ml-pricing-plan { display: grid; gap: 10px; align-content: start; padding: 20px; border: 1px solid var(--ml-border-strong); border-radius: var(--ml-radius-md); background: var(--ml-surface); }
+.ml-pricing-plan.is-featured { border-color: var(--ml-moss); box-shadow: 0 0 0 1px var(--ml-moss); }
+.ml-atlas .ml-pricing-plan h2 { font: 500 22px/1.2 var(--ml-serif); margin: 0; display: block; }
+.ml-pricing-price { font: 400 30px/1.1 var(--ml-serif); color: var(--ml-ink); }
+.ml-pricing-plan ul, .ml-pricing-notes ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.45; }
+.ml-pricing-notes { display: grid; gap: 8px; }
+.ml-atlas .ml-pricing-notes h2 { display: block; }
+.ml-plan-box { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--ml-border); border-radius: var(--ml-radius-sm); background: var(--ml-surface); font-size: 13.5px; }
+.ml-plan-usage { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 0; }
+.ml-plan-usage dt { font-size: 11.5px; font-weight: 600; color: var(--ml-muted); }
+.ml-plan-usage dd { margin: 2px 0 0; font: 15px var(--ml-mono); color: var(--ml-ink); }
+@media (max-width: 720px) {
+  .ml-legal { grid-template-columns: 1fr; gap: 16px; }
+  .ml-legal-nav ul { position: static; display: flex; flex-wrap: wrap; gap: 4px; }
+  .ml-legal-nav a { border: 1px solid var(--ml-border); }
+  .ml-pricing-plans { grid-template-columns: 1fr; }
+}
+.ml-home-foot { gap: 18px; flex-wrap: wrap; align-items: center; }
+.ml-atlas .ml-home-foot a { color: var(--ml-muted); text-decoration: underline; text-underline-offset: 2px; }

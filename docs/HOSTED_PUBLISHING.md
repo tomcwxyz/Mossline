@@ -127,3 +127,7 @@ people use.** CI starts Postgres for this.
 `MOSSLINE_PUBLISHERS=*` lets anyone with an email address publish. Before doing
 that, add abuse reporting and takedown, monitoring, a published privacy notice
 and retention policy, and terms of use.
+
+## Plans and policies
+
+Where plans are on, the free and organisation limits apply here too: see [PLANS.md](PLANS.md). Running a public Mossline: [OPERATING.md](OPERATING.md).

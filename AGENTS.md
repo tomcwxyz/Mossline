@@ -22,6 +22,7 @@ Mossline is a question-centred, open-source platform for navigating networks and
 8. Work on feature branches; review diffs before merging.
 9. Changes people make in Mossline are edit-list entries applied over imported records (`graph-core/src/edits.ts`). Never write them into imported data; keep the receipt and the previous value.
 10. Accounts exist to publish and to share maps. Keep only name and email; never store provider tokens, photos, IPs or browser details on accounts or sessions. Everything else must keep working signed out, and a map goes to the server only when its owner chooses and confirms. See `docs/HOSTED_PUBLISHING.md` and `docs/SHARED_MAPS.md`.
+11. Plan limits are checked on the server, never only in the browser, and reaching a limit or a plan ending never deletes anything. Policies live in `apps/web/src/content/legal/`; never state a fact about the operator there that isn't filled from settings. See `docs/PLANS.md` and `docs/OPERATING.md`.
 
 ## Verify before merge
 

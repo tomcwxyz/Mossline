@@ -27,6 +27,14 @@ jobs:
     env:
       MOSSLINE_HOSTED_PUBLISHING_ENABLED: "true"
       MOSSLINE_SHARED_MAPS_ENABLED: "true"
+      MOSSLINE_PLANS_ENABLED: "true"
+      MOSSLINE_ADMINS: operator@example.net
+      MOSSLINE_OPERATOR_NAME: Mossline CI
+      MOSSLINE_OPERATOR_EMAIL: ci@example.net
+      # Test values only: enough to accept signed webhook events. Nothing contacts Stripe in CI.
+      MOSSLINE_STRIPE_SECRET_KEY: ci-placeholder-not-a-key
+      MOSSLINE_STRIPE_PRICE_ID: ci-placeholder-price
+      MOSSLINE_STRIPE_WEBHOOK_SECRET: ci-placeholder-webhook-secret
       MOSSLINE_DATABASE_URL: postgres://mossline:mossline@127.0.0.1:5432/mossline_ci
       MOSSLINE_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
       MOSSLINE_BASE_URL: http://127.0.0.1:3000

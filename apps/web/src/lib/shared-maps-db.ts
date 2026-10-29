@@ -17,12 +17,17 @@ const iso=(v:Date|string)=>new Date(v).toISOString();
 
 /** Who this account is on a map, if anyone. Invitations are by email address. */
 export async function roleOn(mapId:string,user:{id:string;email:string}):Promise<MapRole|null>{
-  const {rows}=await db().query<{owner_id:string;role:string|null}>(`SELECT m.owner_id, mm.role
+  const {rows}=await db().query<{owner_id:string;role:string|null;org_role:string|null}>(`SELECT m.owner_id, mm.role, om.role AS org_role
     FROM mossline_maps m LEFT JOIN mossline_map_members mm ON mm.map_id=m.id AND mm.email=$2
-    WHERE m.id=$1`,[mapId,user.email.toLowerCase()]);
+    LEFT JOIN mossline_org_members om ON om.org_id=m.org_id AND om.user_id=$3
+    WHERE m.id=$1`,[mapId,user.email.toLowerCase(),user.id]);
   if(!rows.length)return null;
-  if(rows[0].owner_id===user.id)return "owner";
-  return rows[0].role==="editor"||rows[0].role==="viewer"?rows[0].role:null;
+  const r=rows[0];
+  if(r.owner_id===user.id)return "owner";
+  // Everyone in the map's organisation can open and change it; its admins can also manage who else has it.
+  if(r.org_role==="admin")return "owner";
+  if(r.org_role==="member")return "editor";
+  return r.role==="editor"||r.role==="viewer"?r.role:null;
 }
 export const canEdit=(role:MapRole|null)=>role==="owner"||role==="editor";
 
@@ -36,21 +41,22 @@ export async function isInvited(email:string):Promise<boolean>{
 export async function listMaps(user:{id:string;email:string}):Promise<SharedMapSummary[]>{
   const {rows}=await db().query<{id:string;title:string;owner_id:string;role:string|null;owner:string;source_nodes:number;
     source_edges:number;source_version:number;members:string;updated_at:Date}>(`
-    SELECT m.id, m.title, m.owner_id, mm.role, coalesce(nullif(u.name,''),u.email) AS owner, m.source_nodes, m.source_edges,
+    SELECT m.id, m.title, m.owner_id, coalesce(CASE om.role WHEN 'admin' THEN 'owner' WHEN 'member' THEN 'editor' END, mm.role) AS role, coalesce(nullif(u.name,''),u.email) AS owner, m.source_nodes, m.source_edges,
       m.source_version, (SELECT count(*) FROM mossline_map_members x WHERE x.map_id=m.id) AS members,
       greatest(m.updated_at, coalesce((SELECT max(e.updated_at) FROM mossline_map_edits e WHERE e.map_id=m.id), m.updated_at)) AS updated_at
     FROM mossline_maps m JOIN mossline_users u ON u.id=m.owner_id
     LEFT JOIN mossline_map_members mm ON mm.map_id=m.id AND mm.email=$2
-    WHERE m.owner_id=$1 OR mm.email IS NOT NULL
+    LEFT JOIN mossline_org_members om ON om.org_id=m.org_id AND om.user_id=$1
+    WHERE m.owner_id=$1 OR mm.email IS NOT NULL OR om.user_id IS NOT NULL
     ORDER BY updated_at DESC LIMIT 200`,[user.id,user.email.toLowerCase()]);
   return rows.map(r=>({id:r.id,title:r.title,role:r.owner_id===user.id?"owner":(r.role as MapRole),owner:r.owner,
     nodes:r.source_nodes,edges:r.source_edges,sourceVersion:r.source_version,members:Number(r.members),updatedAt:iso(r.updated_at)}));
 }
 
-export async function createMap(ownerId:string,title:string,source:Buffer,counts:{nodes:number;edges:number}):Promise<string>{
+export async function createMap(ownerId:string,title:string,source:Buffer,counts:{nodes:number;edges:number},orgId:string|null=null):Promise<string>{
   const id=randomUUID();
-  await db().query(`INSERT INTO mossline_maps (id,owner_id,title,source,source_nodes,source_edges,source_updated_by)
-    VALUES ($1,$2,$3,$4,$5,$6,$2)`,[id,ownerId,title,source,counts.nodes,counts.edges]);
+  await db().query(`INSERT INTO mossline_maps (id,owner_id,title,source,source_nodes,source_edges,source_updated_by,org_id)
+    VALUES ($1,$2,$3,$4,$5,$6,$2,$7)`,[id,ownerId,title,source,counts.nodes,counts.edges,orgId]);
   return id;
 }
 
@@ -77,10 +83,15 @@ export async function replaceSource(mapId:string,userId:string,expected:number,t
 }
 
 export async function deleteMap(mapId:string,ownerId:string):Promise<boolean>{
-  const {rowCount}=await db().query(`DELETE FROM mossline_maps WHERE id=$1 AND owner_id=$2`,[mapId,ownerId]);
+  const {rowCount}=await db().query(`DELETE FROM mossline_maps WHERE id=$1 AND (owner_id=$2 OR org_id IN
+    (SELECT org_id FROM mossline_org_members WHERE user_id=$2 AND role='admin'))`,[mapId,ownerId]);
   return rowCount===1;
 }
 
+export async function memberCountOf(mapId:string):Promise<number>{
+  const {rows}=await db().query<{n:string}>(`SELECT count(*) AS n FROM mossline_map_members WHERE map_id=$1`,[mapId]);
+  return Number(rows[0].n);
+}
 export async function listMembers(mapId:string):Promise<MapMember[]>{
   const {rows}=await db().query<{email:string;role:"editor"|"viewer";name:string|null}>(`SELECT mm.email, mm.role, u.name
     FROM mossline_map_members mm LEFT JOIN mossline_users u ON u.email=mm.email
