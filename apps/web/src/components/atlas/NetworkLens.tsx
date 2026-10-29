@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode, type StoryMark } from "@mossline/graph-core";
-import { arrowPath, calloutPath, numberAt, ringPath, type Point } from "./marginalia";
+import type { Point } from "./marginalia";
+import { MarkLayer, placeMarks, type StoryPin } from "./MarkLayer";
 import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
@@ -28,6 +29,8 @@ type Props = {
   linkKey?: string;
   /** A story step: the author's marks, and the records to bring into view (zooming in if need be). */
   marks?: StoryMark[];
+  /** Story pictures pinned to records. */
+  pins?: StoryPin[];
   frame?: string[];
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
   frameKey?: string;
@@ -47,7 +50,7 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, frame, frameKey, sketch = false }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, frame, frameKey, sketch = false }: Props) {
   const sketched = sketch && mode === "themes";
   const filterId = "ml-wc-" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
@@ -60,6 +63,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   /** The author's marks, redrawn as the camera moves. */
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
+  const pinsRef = useRef(pins); pinsRef.current = pins;
   const aliasRef = useRef(alias); aliasRef.current = alias;
   const sigmaRef = useRef<SigmaType | null>(null);
   const graphRef = useRef<GraphType | null>(null);
@@ -395,26 +399,12 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   }
   /** Places each of the author's marks against the records it's anchored to; marks whose records aren't drawn are hidden. */
   function drawMarks() {
-    const renderer = sigmaRef.current, svg = markLayer.current;
-    if (!renderer || !svg) return;
-    const at = (id: string): Point | null => {
+    const renderer = sigmaRef.current;
+    if (!renderer) return;
+    placeMarks(markLayer.current, marksRef.current, pinsRef.current, id => {
       const d = renderer.getNodeDisplayData(aliasRef.current?.get(id) ?? id);
-      return d && !(d as { hidden?: boolean }).hidden ? renderer.framedGraphToViewport(d) : null;
-    };
-    const bounds = { width: svg.clientWidth || 800, height: svg.clientHeight || 600 };
-    for (const g of Array.from(svg.children) as SVGGElement[]) {
-      const mark = marksRef.current?.find(m => m.id === g.dataset.mark);
-      const points = mark ? mark.targets.map(at) : [];
-      if (!mark || !points.length || points.some(p => !p)) { g.style.display = "none"; continue; }
-      g.style.display = "";
-      const pts = points as Point[];
-      const [line, extra, circle, text] = Array.from(g.children) as [SVGPathElement, SVGPathElement, SVGCircleElement, SVGTextElement];
-      const place = (p: Point, anchor = "middle") => { text.setAttribute("x", String(p.x)); text.setAttribute("y", String(p.y)); text.setAttribute("text-anchor", anchor); };
-      if (mark.kind === "ring") { const r = ringPath(pts, mark.id); line.setAttribute("d", r.d); extra.setAttribute("d", ""); place(r.top); }
-      else if (mark.kind === "arrow") { const a = arrowPath(pts[0], pts[1], mark.id); line.setAttribute("d", a.d); extra.setAttribute("d", a.head); place({ x: a.mid.x, y: a.mid.y - 8 }); }
-      else if (mark.kind === "callout") { const c = calloutPath(pts[0], mark.id, bounds); line.setAttribute("d", c.d); extra.setAttribute("d", ""); place(c.label, c.anchor); }
-      else { const n = numberAt(pts[0]); line.setAttribute("d", ""); extra.setAttribute("d", ""); circle.setAttribute("cx", String(n.x)); circle.setAttribute("cy", String(n.y)); place({ x: n.x, y: n.y + 4.5 }); }
-    }
+      return d && !(d as { hidden?: boolean }).hidden ? renderer.framedGraphToViewport(d) as Point : null;
+    });
   }
   /** Home view; a phone-width canvas has no side cards, so it can sit closer. */
   const home = () => {
@@ -477,7 +467,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, route, status, built, frame?.join("|"), frameKey]);
   // New marks: draw them straight away, then on every camera move.
-  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, built]);
+  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, built]);
   // Area names are placed on Sigma's render; place them as soon as they arrive.
   useEffect(() => { syncOverlay(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [areas, built]);
 
@@ -525,13 +515,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     <div ref={container} className="ml-sigma-viewport" role="img"
       aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
     <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
-    {!!marks?.length && <svg ref={markLayer} className="ml-marks" aria-hidden="true">
-      {marks.map(m => <g key={m.id + ":" + m.targets.join(",")} data-mark={m.id} className={"ml-mark ml-mark--" + m.kind} style={{ display: "none" }}>
-        <path className="ml-mark-line"/><path className="ml-mark-line"/>
-        {m.kind === "number" ? <circle className="ml-mark-line" r={11}/> : <circle r={0}/>}
-        <text className="ml-mark-text">{m.kind === "number" ? m.n : m.text ?? ""}</text>
-      </g>)}
-    </svg>}
+    <MarkLayer ref={markLayer} marks={marks} pins={pins}/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
       {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
         <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records{a.kind === "suggested" ? " · suggested" : ""}</small>

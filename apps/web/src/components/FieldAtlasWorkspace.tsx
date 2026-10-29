@@ -10,6 +10,7 @@ import {
   type GraphDocument, type GraphEdge, type NodeType, stepRecords, type Story, type StoryMark, type StoryView
 } from "@mossline/graph-core";
 import { useStories } from "../hooks/useStories";
+import type { StoryPin } from "./atlas/MarkLayer";
 import { MARK_NEEDS, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { useMapEdits } from "../hooks/useMapEdits";
@@ -364,17 +365,22 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   // A mark is finished once it has the records it needs (a ring when the author says so).
   useEffect(() => {
     if (!markPick || !story || !step || markPick.kind === "ring" || markPick.targets.length < MARK_NEEDS[markPick.kind]) return;
-    changeStory({ ...story, steps: story.steps.map(s => s.id === step.id ? { ...s, marks: [...s.marks, makeMark(markPick, s)] } : s) });
+    const pick = markPick;
+    changeStory({ ...story, steps: story.steps.map(s => s.id !== step.id ? s : pick.kind === "pin"
+      ? { ...s, media: s.media.map(m => m.id === pick.mediaId && m.kind === "image" ? { ...m, record: pick.targets[0] } : m) }
+      : { ...s, marks: [...s.marks, makeMark({ ...pick, kind: pick.kind }, s)] }) });
     setMarkPick(null);
   }, [markPick, story, step, changeStory]);
   const finishRing = () => {
     if (markPick?.kind === "ring" && markPick.targets.length && story && step)
-      changeStory({ ...story, steps: story.steps.map(s => s.id === step.id ? { ...s, marks: [...s.marks, makeMark(markPick, s)] } : s) });
+      changeStory({ ...story, steps: story.steps.map(s => s.id === step.id ? { ...s, marks: [...s.marks, makeMark({ ...markPick, kind: "ring" }, s)] } : s) });
     setMarkPick(null);
   };
   useEffect(() => { if (storyMode !== "edit") setMarkPick(null); }, [storyMode, stepIndex]);
   const storyMarks: StoryMark[] | undefined = step ? [...step.marks,
     ...(markPick?.targets.length ? [{ id: "picking", kind: "ring" as const, targets: markPick.targets }] : [])] : undefined;
+  const storyPins: StoryPin[] | undefined = step ? step.media.flatMap(m => m.kind === "image" && m.record
+    ? [{ id: m.id, record: m.record, src: m.src, alt: m.alt }] : []) : undefined;
   const storyFrame = step && (storyMode === "read" || storyMode === "present") ? stepRecords(step) : undefined;
   const reading = !!story && (storyMode === "read" || storyMode === "present");
   const exitStory = () => { if (storyMode === "present") setStoryMode(presentFrom.current); else setStoryMode(readOnly ? null : "edit"); };
@@ -579,9 +585,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
               selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}
-              marks={storyMarks} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
+              marks={storyMarks} pins={storyPins} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
+              unplaced={unplaced} onBrowse={() => setBrowse(true)}
+              marks={storyMarks} pins={storyPins} frame={storyFrame} frameKey={storyMode ?? ""}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}

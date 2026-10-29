@@ -41,7 +41,9 @@ export const storyMediaSchema = z.discriminatedUnion("kind", [
     licence: z.string().max(120).optional(),
     /** Recognisable people in it agreed to it being used. */
     people: z.enum(["none", "consented", "unknown"]).default("unknown"),
-    caption: z.string().max(400).optional()
+    caption: z.string().max(400).optional(),
+    /** Pinned beside a record on the map while its step is shown. */
+    record: id.optional()
   }).strict(),
   z.object({
     id, kind: z.literal("quote"), text: z.string().min(1).max(1200),
@@ -101,7 +103,7 @@ export function stepRecords(step: StoryStep): string[] {
   if (step.view.record) ids.add(step.view.record);
   if (step.view.funder) ids.add(step.view.funder);
   for (const m of step.marks) for (const t of m.targets) ids.add(t);
-  for (const m of step.media) if (m.kind === "quote" && m.record) ids.add(m.record);
+  for (const m of step.media) if (m.record) ids.add(m.record);
   return [...ids];
 }
 

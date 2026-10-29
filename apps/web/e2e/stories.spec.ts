@@ -20,7 +20,7 @@ async function openExample(page:Page){
 async function choose(page:Page,name:string){
   await page.locator(".ml-search input").fill(name);
   await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list button").first().click();
+  await page.locator(".ml-browse-list").getByRole("button",{name:new RegExp("^"+name)}).first().click();
   await page.getByRole("button",{name:"Close list"}).click();
   await page.locator(".ml-search-clear").click();
 }
@@ -170,4 +170,40 @@ test("a published story opens on the story, and the map can still be explored",a
   await expect(reader).toHaveCount(0);
   await expect(published.getByRole("button",{name:"Read the story"})).toBeVisible();
   await axe(published);
+});
+
+test("on the Map lens, marks sit on places and pictures are pinned beside records",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Or try an example network/i}).click();
+  await page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:/^Map/}).click();
+  await page.locator(".ml-dataset summary").click();
+  await page.getByRole("button",{name:/^Stories/}).click();
+  const editor=page.getByRole("complementary",{name:"Writing a story"});
+  await editor.getByLabel("New story").fill("Along the Tyne");
+  await editor.getByRole("button",{name:"Start a story"}).click();
+  await editor.getByRole("button",{name:"Add a step from this view"}).click();
+  await editor.getByLabel("Heading").fill("Two towns");
+  await expect(editor).toContainText("On the Map, marks show for records that have a place.");
+  await editor.getByRole("group",{name:"Draw a mark"}).getByRole("button",{name:"Ring"}).click();
+  await choose(page,"Hexham");
+  await choose(page,"Newcastle");
+  await page.locator(".ml-pick-banner").getByRole("button",{name:"Finish"}).click();
+  await expect(page.locator(".ml-map .ml-marks .ml-mark--ring")).toBeVisible();
+
+  // A picture pinned beside a record shows as a postcard on the map.
+  await editor.locator("input[type=file]").setInputFiles({name:"bridge.png",mimeType:"image/png",buffer:PNG});
+  await editor.getByRole("button",{name:"Pin beside a record on the map…"}).click();
+  await expect(page.locator(".ml-pick-banner")).toContainText("Click the record to pin the picture beside.");
+  await choose(page,"Newcastle");
+  await expect(editor.locator(".ml-story-pin")).toContainText("Pinned beside Newcastle");
+  await expect(page.locator(".ml-map .ml-pin")).toBeVisible();
+  await editor.getByLabel("Description for people who can't see it").fill("A bridge over a river");
+  await editor.getByLabel("Recognisable people").selectOption("none");
+
+  // Presenting frames the step's places, with marks and the pin.
+  await editor.getByRole("button",{name:"Present"}).click();
+  await expect(page.locator(".ml-story-card h2")).toHaveText("Two towns");
+  await expect(page.locator(".ml-map .ml-mark--ring")).toBeVisible();
+  await expect(page.locator(".ml-map .ml-pin")).toBeVisible();
+  await axe(page);
 });

@@ -1251,3 +1251,10 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-network.is-sketched .ml-area-label--suggested span { font-style: normal; }
 .ml-style-switch { display: grid; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ml-border); }
 .ml-style-switch > span { font-size: 11.5px; font-weight: 600; color: var(--ml-muted); }
+/* A story picture pinned beside a record: a small postcard tucked into the map. */
+.ml-pin-line { stroke-width: 1.4; stroke-dasharray: 3 3; }
+.ml-pin-frame { fill: var(--ml-surface); stroke: var(--ml-border-strong); stroke-width: 1; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .18)); }
+.ml-map .ml-marks { z-index: 4; }
+.ml-story-pin { display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
+.ml-story-pin .ml-link-button { padding: 0; }
+.ml-atlas--reading .ml-map-cards { display: none; }

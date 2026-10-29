@@ -8,17 +8,18 @@ import {
 import { prepareImage } from "../../lib/story-store";
 
 /** Choosing records on the map for a mark: what's being drawn, and what's been picked so far. */
-export type MarkPick = { kind: StoryMark["kind"]; targets: string[] };
-export const MARK_NEEDS: Record<StoryMark["kind"], number> = { ring: 0, callout: 1, arrow: 2, number: 1 };
+export type MarkPick = { kind: StoryMark["kind"] | "pin"; targets: string[]; mediaId?: string };
+export const MARK_NEEDS: Record<MarkPick["kind"], number> = { ring: 0, callout: 1, arrow: 2, number: 1, pin: 1 };
 const MARK_NAMES: Record<StoryMark["kind"], string> = { ring: "Ring", callout: "Note", arrow: "Arrow", number: "Number" };
 const MARK_HELP: Record<StoryMark["kind"], string> = {
   ring: "Click each record to ring, then Finish.", callout: "Click the record the note is about.",
   arrow: "Click the record the arrow starts from, then the one it points to.", number: "Click the record to number."
 };
-export const markPrompt = (p: MarkPick) => p.kind === "arrow" && p.targets.length === 1 ? "Now click the record the arrow points to." : MARK_HELP[p.kind];
+export const markPrompt = (p: MarkPick) => p.kind === "pin" ? "Click the record to pin the picture beside."
+  : p.kind === "arrow" && p.targets.length === 1 ? "Now click the record the arrow points to." : MARK_HELP[p.kind];
 
 /** Builds a finished mark from picked records. */
-export function makeMark(pick: MarkPick, step: StoryStep): StoryMark {
+export function makeMark(pick: MarkPick & { kind: StoryMark["kind"] }, step: StoryStep): StoryMark {
   const id = storyId("mark:");
   if (pick.kind === "ring") return { id, kind: "ring", targets: pick.targets.slice(0, 200) };
   if (pick.kind === "callout") return { id, kind: "callout", targets: [pick.targets[0]], text: "Note" };
@@ -165,7 +166,9 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
             aria-pressed={picking?.kind === k} disabled={step.marks.length >= 40}
             onClick={() => onPick(picking?.kind === k ? null : { kind: k, targets: [] })}>{MARK_NAMES[k]}</button>)}
         </div>
-        {step.view.lens !== "network" && step.view.lens !== "themes" && <p className="ml-small">Marks show on the Network and Themes lenses.</p>}
+        {(step.view.lens === "funding" || step.view.lens === "timeline")
+          ? <p className="ml-small">Marks show on the Network, Themes and Map lenses.</p>
+          : step.view.lens === "map" && <p className="ml-small">On the Map, marks show for records that have a place.</p>}
         {step.marks.length > 0 && <ul className="ml-story-marks">{step.marks.map(m => <li key={m.id}>
           <span className="ml-story-mark-kind">{MARK_NAMES[m.kind]}{m.kind === "number" ? " " + m.n : ""}</span>
           <small>{m.targets.map(labelOf).join(m.kind === "arrow" ? " → " : ", ")}</small>
@@ -198,6 +201,11 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
               <label className="ml-edit-field"><span>Licence <small>optional</small></span>
                 <input value={m.licence ?? ""} maxLength={120} placeholder="e.g. CC BY 4.0" onChange={e => putMedia(m.id, { licence: e.target.value || undefined })}/></label>
             </div>
+            <p className="ml-small ml-story-pin">{m.record
+              ? <>Pinned beside <strong>{labelOf(m.record)}</strong> on the map. <button type="button" className="ml-link-button"
+                  onClick={() => putMedia(m.id, { record: undefined })}>Unpin</button></>
+              : <button type="button" className="ml-link-button" aria-pressed={picking?.mediaId === m.id}
+                  onClick={() => onPick(picking?.mediaId === m.id ? null : { kind: "pin", targets: [], mediaId: m.id })}>Pin beside a record on the map…</button>}</p>
             <label className="ml-edit-field"><span>Recognisable people</span>
               <select value={m.people} onChange={e => putMedia(m.id, { people: e.target.value as "none" | "consented" | "unknown" })}>
                 <option value="unknown">Choose…</option>
