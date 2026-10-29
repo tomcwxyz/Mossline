@@ -1,3 +1,4 @@
+import {reportError} from "../../../lib/report";
 import {apiResult} from "../../../lib/hosted-response";
 import {createMap,listMaps} from "../../../lib/shared-maps-db";
 import {readMapUpload,requireAccount,UploadTooLarge} from "../../../lib/shared-maps-http";
@@ -11,7 +12,7 @@ export async function GET(request:Request){
   const user=await requireAccount(request,{write:false});
   if(user instanceof Response)return user;
   try{return apiResult({maps:await listMaps(user),canCreate:user.canPublish,usage:await usageFor(user.id)});}
-  catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  catch(error){reportError("maps",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }
 
 /** Saves a whole map to this account. Only people on the publishers list can. */
@@ -20,7 +21,7 @@ export async function POST(request:Request){
   if(user instanceof Response)return user;
   if(!user.canPublish)return apiResult({error:"This account can open maps shared with it, but can't save its own"},403);
   let usage;
-  try{usage=await usageFor(user.id);}catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  try{usage=await usageFor(user.id);}catch(error){reportError("maps",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
   if(usage.savedMaps>=usage.limits.savedMaps)
     return apiResult({error:limitMessage("savedMaps",usage.plan,usage.limits.savedMaps),limit:"savedMaps"},403);
   let upload;
@@ -33,5 +34,5 @@ export async function POST(request:Request){
   try{
     const id=await createMap(user.id,upload.title,upload.packed,{nodes:upload.graph.nodes.length,edges:upload.graph.edges.length},usage.org?.id??null);
     return apiResult({id,sourceVersion:1},201);
-  }catch{return apiResult({error:"Couldn't save the map. Check the database migration and connection."},503);}
+  }catch(error){reportError("maps",error);return apiResult({error:"Couldn't save the map. Check the database migration and connection."},503);}
 }

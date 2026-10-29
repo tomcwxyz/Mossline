@@ -10,11 +10,11 @@ import nodemailer from "nodemailer";
 let transport:nodemailer.Transporter|null=null;
 export const canSendMail=()=>!!(process.env.MOSSLINE_EMAIL_FROM&&(process.env.MOSSLINE_SMTP_URL||process.env.MOSSLINE_TEST_MAIL_DIR));
 
-async function send(to:string,subject:string,text:string,kind:"sign-in"|"invite",testLine:string){
+async function send(to:string,subject:string,text:string,kind:"sign-in"|"invite"|"email-change"|"notice",testLine:string){
   const testDir=process.env.MOSSLINE_TEST_MAIL_DIR;
   if(testDir&&!process.env.MOSSLINE_SMTP_URL){
     await mkdir(testDir,{recursive:true});
-    const name=to.toLowerCase().replace(/[^a-z0-9@._-]/g,"_")+(kind==="invite"?".invite":"")+".txt";
+    const name=to.toLowerCase().replace(/[^a-z0-9@._-]/g,"_")+(kind==="sign-in"?"":"."+kind)+".txt";
     await writeFile(join(testDir,name),testLine+"\n");
     return;
   }
@@ -46,4 +46,15 @@ export async function sendOrgInvitation(to:string,from:string,org:string,url:str
     "Sign in with this email address to accept:",url,"",
     "If you weren't expecting this, you can ignore it."
   ].join("\n"),"invite",url);
+}
+
+export async function sendEmailChange(to:string,url:string):Promise<void>{
+  await send(to,"Confirm your new email address for Mossline",[
+    "Someone signed in to Mossline asked to use this address for their account.",
+    "If it was you, confirm it here. The link works once and expires in an hour:","",url,"",
+    "If it wasn't you, ignore this email and nothing changes."
+  ].join("\n"),"email-change",url);
+}
+export async function sendNotice(to:string,subject:string,lines:string[]):Promise<void>{
+  await send(to,subject,lines.join("\n"),"notice",lines.join(" "));
 }

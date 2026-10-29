@@ -55,6 +55,8 @@ export const account = {
     if (data.url) window.location.assign(data.url);
   },
   setName: (name: string) => call<unknown>("/api/auth/update-user", { method: "POST", body: JSON.stringify({ name }) }),
+  changeEmail: (email: string) => call<{ sent: boolean }>("/api/account/email", { method: "POST", body: JSON.stringify({ email }) }),
+  signOutEverywhere: () => call<unknown>("/api/auth/revoke-sessions", { method: "POST", body: "{}" }),
   signOut: () => call<unknown>("/api/auth/sign-out", { method: "POST", body: "{}" }),
   deleteAccount: () => call<unknown>("/api/auth/delete-user", { method: "POST", body: "{}" }),
   publications: () => call<{ publications: OwnedPublication[] }>("/api/publications").then(d => d.publications),

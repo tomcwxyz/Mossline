@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {requireSignedIn} from "../../../../lib/hosted-guard";
 import {billingEnabled,portalUrl} from "../../../../lib/billing";
@@ -16,5 +17,5 @@ export async function POST(request:Request){
     const customer=await stripeCustomerOf(org.id);
     if(!customer)return apiResult({error:"This organisation hasn't paid by card yet"},404);
     return apiResult({url:await portalUrl(customer,process.env.MOSSLINE_BASE_URL!)});
-  }catch{return apiResult({error:"Couldn't reach the payment service. Try again in a moment."},502);}
+  }catch(error){reportError("billing/portal",error);return apiResult({error:"Couldn't reach the payment service. Try again in a moment."},502);}
 }

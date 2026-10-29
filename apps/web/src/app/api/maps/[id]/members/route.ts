@@ -1,3 +1,4 @@
+import {reportError} from "../../../../../lib/report";
 import {apiResult} from "../../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../../lib/hosted-auth";
 import {canSendMail,sendInvitation} from "../../../../../lib/auth-mail";
@@ -40,7 +41,7 @@ export async function POST(request:Request,context:Ctx){
       try{await sendInvitation(email,access.user.name||access.user.email,info?.title??"a map",role,url);emailed=true;}catch{/* the link still works */}
     }
     return apiResult({members:await listMembers(id),emailed},isNew?201:200);
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]/members",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }
 
 /** The owner removes someone, or a member leaves. */
@@ -54,5 +55,5 @@ export async function DELETE(request:Request,context:Ctx){
   try{
     await removeMember(id,email);
     return apiResult({members:self?[]:await listMembers(id)});
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]/members",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }

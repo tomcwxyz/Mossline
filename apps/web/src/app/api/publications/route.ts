@@ -1,3 +1,4 @@
+import {reportError} from "../../../lib/report";
 import {parseHostedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../lib/hosted-response";
 import {createPublication,listOwned,publishedToday} from "../../../lib/hosted-db";
@@ -13,7 +14,7 @@ export async function GET(request:Request){
   const user=await requirePublisher(request,{write:false});
   if(user instanceof Response)return user;
   try{return apiResult({publications:await listOwned(user.id),usage:await usageFor(user.id)});}
-  catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+  catch(error){reportError("publications",error);return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
 
 /** Publishes one reviewed, reduced snapshot under the signed-in account. */
@@ -38,7 +39,8 @@ export async function POST(request:Request){
       return apiResult({error:limitMessage("publications",usage.plan,usage.limits.publications),limit:"publications"},403);
     const publication=await createPublication(makePublicationId(),user.id,snapshot,usage.org?.id??null);
     return apiResult({slug:publication.slug,revision:publication.revision},201);
-  }catch{
+  }catch(error){
+    reportError("publications",error);
     return apiResult({error:"Could not publish. Check the database migration and connection."},503);
   }
 }

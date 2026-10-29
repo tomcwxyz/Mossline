@@ -1,4 +1,5 @@
 import {createHash, randomBytes} from "node:crypto";
+import {isDisposable} from "./disposable";
 
 type Env=Record<string,string|undefined>;
 export const PUBLICATION_SLUG=/^[A-Za-z0-9_-]{16,32}$/;
@@ -59,7 +60,7 @@ export function mayPublish(email:string|null|undefined,rules:string[]=publisherR
 /** May have an account of their own: anyone, with open sign-up; otherwise the publishers list. */
 export function mayCreate(email:string|null|undefined,env:Env=process.env):boolean{
   const address=(email??"").trim().toLowerCase();
-  if(env.MOSSLINE_OPEN_SIGNUP==="true")return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address);
+  if(env.MOSSLINE_OPEN_SIGNUP==="true")return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)&&!isDisposable(address);
   return mayPublish(address,publisherRules(env));
 }
 /** New publications per account in any 24 hours. */

@@ -15,7 +15,8 @@
     "mcp": "npm run start --workspace @mossline/mcp",
     "test": "tsx --test packages/graph-core/test/*.test.ts apps/web/test/*.test.ts",
     "typecheck": "tsc -p packages/graph-core/tsconfig.json --noEmit && tsc -p apps/mcp/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "db:migrate": "npm run db:migrate --workspace @mossline/web --"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",

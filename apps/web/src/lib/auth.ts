@@ -7,6 +7,8 @@ import {isHostedConfigured, mayCreate, signInMethods} from "./hosted-auth";
 import {forgetMemberships, isInvited} from "./shared-maps-db";
 import {handOverEverything, isInvitedToOrg} from "./orgs-db";
 import {TERMS_VERSION} from "./legal";
+import {tooManyLinks} from "./abuse";
+import {reportError} from "./report";
 
 /**
  * Who may have an account: anyone with open sign-up, otherwise the publishers
@@ -106,8 +108,11 @@ function makeAuth(){
     hooks:{
       // An address that can't publish gets the same reply as one that can, and nothing is stored for it.
       before:createAuthMiddleware(async ctx=>{
-        if(ctx.path==="/sign-in/magic-link"&&!await mayHaveAccount(typeof ctx.body?.email==="string"?ctx.body.email:""))
-          return ctx.json({status:true});
+        if(ctx.path!=="/sign-in/magic-link")return;
+        const email=typeof ctx.body?.email==="string"?ctx.body.email:"";
+        if(!await mayHaveAccount(email))return ctx.json({status:true});
+        // One address gets a handful of links an hour, however many places ask: stops anyone flooding someone's inbox.
+        try{ if(await tooManyLinks(email))return ctx.json({status:true}); }catch(error){ reportError("sign-in link limit",error); }
       })
     },
     onAPIError:{errorURL:"/sign-in"},
@@ -123,7 +128,12 @@ function makeAuth(){
         }},
         update:{before:async data=>({data:"image" in data?{...data,image:null}:data})}
       },
-      session:{create:{before:async session=>({data:{...session,ipAddress:null,userAgent:null}})}},
+      session:{create:{before:async session=>{
+        // Signing in counts as using the account, so inactive-account clean-up leaves it alone.
+        try{await pool().query("UPDATE mossline_users SET last_active_at=now(), inactivity_warned_at=NULL WHERE id=$1",[session.userId]);}
+        catch(error){reportError("last active",error);}
+        return {data:{...session,ipAddress:null,userAgent:null}};
+      }}},
       account:{
         create:{before:async account=>({data:{...account,accessToken:null,refreshToken:null,idToken:null,
           accessTokenExpiresAt:null,refreshTokenExpiresAt:null}})},

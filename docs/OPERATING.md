@@ -40,6 +40,8 @@ The sub-processors page reads these. Use the providers' legal entity names and w
 - [ ] **Write a short data protection impact assessment.** Organisations' maps can name many people, so it's worth recording the risks and the safeguards (most of them are already in `docs/HOSTED_PUBLISHING.md` and `docs/SHARED_MAPS.md`).
 - [ ] **Keep a record of processing.** The privacy notice's table is most of it.
 - [ ] **Test payments end to end** in Stripe's test mode (`docs/PLANS.md`).
+- [ ] **Run the database migrations** with `npm run db:migrate`, and schedule housekeeping (below).
+- [ ] **Set up the health check and alerts** (below).
 - [ ] **Have the policies reviewed.** Then set `TERMS_VERSION` in `apps/web/src/lib/legal.ts` to the date they take effect.
 
 ## Handling things
@@ -56,9 +58,10 @@ Keep a simple log: date received, acknowledged, what was done, outcome.
 
 ### Requests about someone's own information
 
-Access, correction, deletion and objection requests get a reply within one month. Most people can help themselves:
+Access, correction, deletion and objection requests get a reply within one month. Most people can help themselves on **Your account**:
 
-- changing their name on **Your account**;
+- downloading everything held about them;
+- changing their name or email address;
 - unpublishing and deleting maps;
 - deleting the account.
 
@@ -77,7 +80,7 @@ Follow `/legal/acceptable-use`:
 
 If personal data is lost, exposed or changed without permission:
 
-- **Contain it.** For example, rotate `MOSSLINE_AUTH_SECRET` to sign everyone out, or revoke keys.
+- **Contain it.** For example, rotate `MOSSLINE_AUTH_SECRET` to sign everyone out, or revoke keys. Someone worried about their own account can use **Sign out everywhere**.
 - **Tell the ICO within 72 hours** unless it's unlikely to put anyone at risk.
 - **Tell the people affected** if it's likely to put them at high risk.
 - **Tell affected organisations' admins within 48 hours**, as the data processing agreement promises.
@@ -95,17 +98,41 @@ Email every organisation's admins at least 30 days before adding or replacing a 
 
 ### Keeping to the retention promises
 
-The service does most of this itself:
+`/api/cron/housekeeping` does this every day once scheduled:
 
-- sign-in links expire after 10 minutes;
-- sessions after 30 days;
-- unpublished maps are deleted at once.
+- clears expired sessions, sign-in links, email-change links and rate-limit records;
+- forgets payment events after 90 days;
+- emails accounts unused for three years, then deletes them 30 days later if they still haven't signed in.
 
-These need doing by hand, until they're automated:
+What they made for an organisation passes to another of its admins. Without email set up, nobody can be warned, so nobody is deleted.
 
-- [ ] **Each quarter:** email accounts unused for three years, and delete them if they don't sign in within 30 days.
+**Schedule it.** Set `MOSSLINE_CRON_SECRET` (or Vercel's `CRON_SECRET`) to a long random value, then either:
+
+- **on Vercel,** add a cron job for `/api/cron/housekeeping`, e.g. daily at 03:17. Vercel sends the secret itself;
+- **anywhere else,** run daily: `curl -fsS -H "Authorization: Bearer $MOSSLINE_CRON_SECRET" https://<site>/api/cron/housekeeping`.
+
+By hand:
+
 - [ ] **Each year:** delete support emails more than two years after the conversation ended.
 - [ ] **Keep payment records for six years**, for HMRC. Stripe keeps its own copy.
+
+## Watching it
+
+- **Health check.** Point an uptime monitor at `/api/health`. It returns 200 when Mossline can reach its database and the migrations are up to date, and 503 otherwise.
+- **Alerts.** Set `MOSSLINE_ALERT_WEBHOOK` to a Slack, Discord or ntfy webhook to hear about server errors: failed payments handling, database trouble, housekeeping failures. At most one alert per kind of failure every ten minutes. Errors are also written to the server log as one JSON line each.
+- **Restoring from a backup.** Rehearse it once before launch and once a year:
+  1. Restore yesterday's backup into a new branch or database.
+  2. Point a preview deployment at it.
+  3. Sign in and open a shared map.
+  4. Note how long it took.
+
+  The privacy notice promises backups, so check they actually come back.
+
+## Releasing a new version
+
+1. Run `npm run db:migrate` against the live database **before** the new code goes live. Migrations only add things, so the old code keeps working meanwhile.
+2. Deploy.
+3. Check `/api/health`.
 
 ## VAT
 

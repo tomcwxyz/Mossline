@@ -1,3 +1,4 @@
+import {reportError} from "../../../../../lib/report";
 import {editSchema} from "@mossline/graph-core";
 import {apiResult} from "../../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../../lib/hosted-auth";
@@ -15,7 +16,7 @@ export async function GET(request:Request,context:Ctx){
   if(access instanceof Response)return access;
   const since=Math.max(0,Number(new URL(request.url).searchParams.get("since"))||0);
   try{return apiResult(await editsSince(id,since));}
-  catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  catch(error){reportError("maps/[id]/edits",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }
 
 /**
@@ -38,7 +39,7 @@ export async function POST(request:Request,context:Ctx){
   try{
     await addEdits(id,access.user.id,entries.map(e=>({...e,by,at})));
     return apiResult(await editsSince(id,Math.max(0,Number(new URL(request.url).searchParams.get("since"))||0)));
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]/edits",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }
 
 /** Undo or redo one change, for everyone. */
@@ -55,5 +56,5 @@ export async function PATCH(request:Request,context:Ctx){
   try{
     if(!await setEditUndone(id,editId,undone))return apiResult({error:"Not found"},404);
     return apiResult({ok:true});
-  }catch{return apiResult({error:"Shared maps are temporarily unavailable"},503);}
+  }catch(error){reportError("maps/[id]/edits",error);return apiResult({error:"Shared maps are temporarily unavailable"},503);}
 }

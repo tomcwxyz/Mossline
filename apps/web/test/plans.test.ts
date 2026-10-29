@@ -61,3 +61,15 @@ test("policies are filled in from the operator's settings, and unset details sta
  assert.equal(fillPolicy("{{name}}",{MOSSLINE_OPERATOR_NAME:"<b>A & B</b>"}),"&lt;b&gt;A &amp; B&lt;/b&gt;");
  assert.match(fillPolicy("{{vat_statement}}",{...env,MOSSLINE_OPERATOR_VAT_NUMBER:"GB123"}),/exclude VAT.*GB123/);
 });
+
+test("the health check knows the newest migration",async()=>{
+ const {readdirSync}=await import("node:fs");
+ const {LATEST_MIGRATION}=await import("../src/lib/migrations");
+ const files=readdirSync(new URL("../migrations",import.meta.url)).filter(f=>f.endsWith(".sql")).sort();
+ assert.equal(LATEST_MIGRATION,files[files.length-1]);
+});
+
+test("throwaway mail services can't open accounts when anyone can sign up",()=>{
+ assert.equal(mayCreate("someone@mailinator.com",{MOSSLINE_OPEN_SIGNUP:"true"}),false);
+ assert.equal(mayCreate("someone@allotments.org.uk",{MOSSLINE_OPEN_SIGNUP:"true"}),true);
+});

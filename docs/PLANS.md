@@ -62,9 +62,4 @@ How the plan follows the subscription:
 
 ## Database
 
-Apply the migrations in order, by hand, on every deployment, whichever features it uses:
-
-1. `20261021_hosted_publications.sql`
-2. `20261027_accounts.sql`
-3. `20261029_shared_maps.sql`
-4. `20261029_organisations_and_plans.sql`
+Run `npm run db:migrate` with `MOSSLINE_DATABASE_URL` set, on every deployment, whichever features it uses. It applies the files in `apps/web/migrations` that haven't run yet, in order, and records each one in `mossline_migrations`. `npm run db:migrate -- --check` lists what's pending, and exits with an error if anything is. Never edit a migration that has run: add a new one.

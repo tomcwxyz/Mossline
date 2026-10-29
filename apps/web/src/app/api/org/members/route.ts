@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {apiResult} from "../../../../lib/hosted-response";
 import {readJsonBody} from "../../../../lib/hosted-auth";
 import {requireSignedIn} from "../../../../lib/hosted-guard";
@@ -17,7 +18,7 @@ export async function PATCH(request:Request){
     if(!org||org.role!=="admin")return apiResult({error:"Only an organisation's admins can do that"},403);
     if(!await setRole(org.id,userId,role))return apiResult({error:"An organisation needs at least one admin"},409);
     return apiResult(await members(org.id));
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org/members",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }
 
 /** Admins remove someone. What they made stays with the organisation. */
@@ -32,5 +33,5 @@ export async function DELETE(request:Request){
     const result=await leave(org.id,userId);
     if(result==="not-member")return apiResult({error:"They're not in this organisation"},404);
     return apiResult(await members(org.id));
-  }catch{return apiResult({error:"Organisations are temporarily unavailable"},503);}
+  }catch(error){reportError("org/members",error);return apiResult({error:"Organisations are temporarily unavailable"},503);}
 }
