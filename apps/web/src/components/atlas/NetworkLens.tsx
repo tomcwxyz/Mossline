@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode, type StoryMark } from "@mossline/graph-core";
 import { arrowPath, calloutPath, numberAt, ringPath, type Point } from "./marginalia";
+import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
 
@@ -30,6 +31,8 @@ type Props = {
   frame?: string[];
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
   frameKey?: string;
+  /** The Sketched style (a trial): watercolour washes and handwritten names. Themes only, for now. */
+  sketch?: boolean;
 };
 /** People who ask for less motion get cuts instead of camera moves. */
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -44,7 +47,9 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, frame, frameKey }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, frame, frameKey, sketch = false }: Props) {
+  const sketched = sketch && mode === "themes";
+  const filterId = "ml-wc-" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
   const stage = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
@@ -185,7 +190,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         const [[{ default: Sigma, DEFAULT_STYLES }, { default: Graph },
           { layerDashed, sdfCircle, sdfSquare, sdfDiamond, sdfTriangle, pathCurved, pathLine, extremityArrow }], placed] = await Promise.all([
           Promise.all([import("sigma"), import("graphology"), import("sigma/rendering")]), layout]);
-        try { await document.fonts.load('500 12px "IBM Plex Sans"'); } catch { /* fall back to system font */ }
+        try { await document.fonts.load(sketched ? '400 13px "' + SKETCH_FONT + '"' : '500 12px "IBM Plex Sans"'); } catch { /* fall back to system font */ }
         if (cancelled || !container.current) return;
         LAYOUTS.set(cacheKey, placed);
         if (LAYOUTS.size > 6) LAYOUTS.delete(LAYOUTS.keys().next().value!);
@@ -230,7 +235,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
           primitives: {
             nodes: {
               shapes: [sdfCircle(), sdfSquare({ cornerRadius: 0.18 }), sdfDiamond(), sdfTriangle()],
-              label: { font: { family: "IBM Plex Sans", weight: "500" }, color: palette.label, margin: 4 }
+              label: { font: sketched ? { family: SKETCH_FONT, weight: "400" } : { family: "IBM Plex Sans", weight: "500" }, color: palette.label, margin: 4 }
             },
             edges: {
               // Curves read better, but cost more to draw; large maps get straight lines.
@@ -242,7 +247,8 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
           styles: {
             edges: [DEFAULT_STYLES.edges, { head: { attribute: "head" }, tail: { attribute: "tail" } }],
             nodes: [DEFAULT_STYLES.nodes, {
-              shape: { attribute: "nodeShape" }, labelColor: palette.label, labelSize: 12,
+              shape: { attribute: "nodeShape" }, labelColor: palette.label, labelSize: sketched ? 15 : 12,
+              labelFont: sketched ? SKETCH_FONT : "IBM Plex Sans",
               labelBackgroundColor: palette.labelPlate, labelBackgroundPadding: 2,
               backdropColor: isDark ? "#1A2822" : "#FFFFFF", backdropShadowColor: "rgba(0,0,0,0.25)"
             }]
@@ -310,7 +316,8 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         focus.current = { selected: null, neighbours: new Set(), pencil: new Set(), route: null,
           routeNodes: new Set(), routeEdges: new Set(), labelled: new Set() };
         lastFocus.current = "|";
-        setWash(graph.nodes.length <= 80 ? [] : terrain(placed.washed));
+        // Sketched areas are washes of their own, so the contours step aside.
+        setWash(graph.nodes.length <= 80 || sketched ? [] : terrain(placed.washed));
         setAreas(placed.areas);
         setStatus("ready");
         setBuilt(v => v + 1);
@@ -327,7 +334,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     // The renderer is rebuilt when the records, lens mode or palette change;
     // a palette change reuses the cached layout.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signature, mode, theme, groupKey, linkKey]);
+  }, [signature, mode, theme, groupKey, linkKey, sketched]);
 
   /** Selection and route labels are always shown, but never on top of each
    *  other: the selected record first, then the best-connected neighbours. */
@@ -482,10 +489,33 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     else void c.animate(home(), { duration: 350 });
   };
   const suggestions = graph.edges.length - recorded;
-  return <section ref={stage} className={"ml-network ml-network--" + mode}
+  return <section ref={stage} className={"ml-network ml-network--" + mode + (sketched ? " is-sketched" : "")}
     aria-label={mode === "themes" ? "Records grouped by " + (suggested ? "suggested topics" : groupName.toLowerCase()) : "Complete Sigma network"}>
     <svg className="ml-wash" aria-hidden="true">
+      {sketched && <defs>
+        {/* Watercolour: the edge of each wash is pushed about by paper-like noise; the rim pools darker. */}
+        <filter id={filterId} x="-25%" y="-25%" width="150%" height="150%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves={3} seed={7} result="grain"/>
+          <feDisplacementMap in="SourceGraphic" in2="grain" scale={5} xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <filter id={filterId + "r"} x="-25%" y="-25%" width="150%" height="150%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves={3} seed={7} result="grain"/>
+          <feDisplacementMap in="SourceGraphic" in2="grain" scale={5} xChannelSelector="R" yChannelSelector="G" result="moved"/>
+          <feGaussianBlur in="moved" stdDeviation={0.9}/>
+        </filter>
+      </defs>}
       <g ref={washGroup}>
+        {sketched && areas.filter(a => a.r).map((a, i) => {
+          const pigment = PIGMENTS[theme][i % PIGMENTS[theme].length], r = a.r! * 1.04;
+          const night = theme === "night";
+          return <g key={a.id} className="ml-watercolour">
+            <path d={blobPath(a.x, a.y, r, a.id)} filter={`url(#${filterId})`} style={{ fill: pigment, fillOpacity: night ? 0.15 : 0.13 }}/>
+            <path d={blobPath(a.x + r * 0.05, a.y - r * 0.04, r * 0.82, a.id + "+")} filter={`url(#${filterId})`}
+              style={{ fill: pigment, fillOpacity: night ? 0.09 : 0.08 }}/>
+            <path d={blobPath(a.x, a.y, r, a.id)} filter={`url(#${filterId}r)`}
+              style={{ fill: "none", stroke: pigment, strokeOpacity: night ? 0.35 : 0.42, strokeWidth: Math.max(0.6, r * 0.035) }}/>
+          </g>;
+        })}
         {wash.map(c => <path key={c.level} d={c.d} vectorEffect="non-scaling-stroke"
           style={{ fill: palette.wash, fillOpacity: theme === "night" ? 0.05 : 0.045,
             stroke: palette.washLine, strokeOpacity: c.level === 1 ? 0.5 : 0.12 + 0.2 * c.level / Math.max(1, wash.length),

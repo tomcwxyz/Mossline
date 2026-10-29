@@ -16,7 +16,7 @@ In order. The design notes say what each involves and what's still to decide.
 2. **Hand-drawn styling** ([design notes](design/HAND_DRAWN.md)): a Sketched option beside Clean.
    - Inked, gently wobbling lines; watercolour washes; a handwriting face for labels; a paper texture.
    - Ink, pencil and wash keep their meaning; the wobble is fixed per record, not random each time.
-   - [ ] Prove the look in Themes on a small map.
+   - [x] Prove the look in Themes: watercolour washes, handwritten names, paper grain (a trial switch in the groups card).
    - [ ] Sketched Sigma programs with a size fallback.
    - [ ] Clean/Sketched switch, and the author's choice for published maps and stories (story marks are already drawn by hand).
    - [ ] Inked basemap for the Map lens; hand-drawn charts.
