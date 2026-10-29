@@ -21,10 +21,11 @@ export async function exportAccount(userId:string){
   for(const m of maps){
     const edits=await q<{entry:unknown;undone:boolean}>(`SELECT entry,undone FROM mossline_map_edits WHERE map_id=$1 ORDER BY seq`,[m.id]);
     const members=await q<{email:string;role:string}>(`SELECT email,role FROM mossline_map_members WHERE map_id=$1`,[m.id]);
+    const stories=await q<{story:unknown}>(`SELECT story FROM mossline_map_stories WHERE map_id=$1 ORDER BY created_at`,[m.id]);
     let graph:unknown=null;
     try{graph=(JSON.parse(gunzipSync(m.source).toString("utf8")) as {graph:unknown}).graph;}catch{/* left out if unreadable */}
     mapsOut.push({id:m.id,title:m.title,created:m.created_at,updated:m.updated_at,sharedWith:members,
-      graph,changes:edits.map(e=>({...(e.entry as object),undone:e.undone}))});
+      graph,changes:edits.map(e=>({...(e.entry as object),undone:e.undone})),stories:stories.map(s=>s.story)});
   }
   const sharedWithMe=await q<{title:string;role:string}>(`SELECT m.title,mm.role FROM mossline_map_members mm
     JOIN mossline_maps m ON m.id=mm.map_id WHERE mm.email=$1`,[user.email]);

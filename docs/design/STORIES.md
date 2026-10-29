@@ -93,7 +93,7 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 - **Pictures and quotes.** Uploaded pictures are shrunk to 1,600 pixels across and kept in the browser (IndexedDB) with the story. A picture needs a description (alt text) and an answer about recognisable people before the story can be published; a missing credit is a note, not a block. A quote needs the person's agreement, ticked by the author.
 - **Writing.** *Stories…* in the map's menu. A step is added from the map as it is; *Use the map as it is now* updates it. Marks are made by clicking records on the map, or choosing them from *Browse records* (keyboard). A checklist shows what blocks publishing and what's worth a look.
 - **Reading.** A column of steps beside the pinned map, which follows the step a third of the way down the column. On a phone, one step at a time on a card over the map. **Presenting** is the card, larger, with ← → and Esc. The map frames each step's records, clear of the card; with reduced motion, it cuts instead of moving.
-- **Where stories live.** In the browser, with the map (by its saved ID). They don't yet travel with shared maps; the editor says so.
+- **Where stories live.** In the browser, with the map (by its saved ID). On a shared map, on the server with the map: editors write, viewers read and present, and a clash keeps both versions (see `docs/SHARED_MAPS.md`).
 - **Publishing.** Choose a story in *Publish online*. The page opens on the story, with *Explore the map* to leave it. Because steps use filters, the whole map is published with a story, not just what's drawn now, after the same review. Pictures go inside the published copy, within the 4 MB a publication can carry; object storage for larger media comes with audio and video.
 
 ## Still to settle
@@ -103,7 +103,6 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 
 ## Next
 
-- Stories shared with shared maps, so a team can write them together.
 - Audio with transcripts, captioned video, and drawn areas on the Map lens.
 - Freehand marks, once shapes have been used for a while.
 - Readers responding, as pencil.
