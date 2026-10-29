@@ -1234,3 +1234,20 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
   .ml-atlas--reading .ml-canvas { height: calc(100dvh - var(--ml-header-h)); }
 }
 @media (prefers-reduced-motion: reduce) { .ml-story-section { transition: none; } }
+
+/* ---- Sketched style (trial, Themes lens) ------------------------------------------
+   Watercolour washes are drawn in NetworkLens; here, the handwriting and the paper.
+   The grain sits under the drawing only: names keep their paper-coloured halo. */
+.ml-network.is-sketched {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+[data-theme="night"] .ml-network.is-sketched, .ml-atlas[data-theme="night"] .ml-network.is-sketched {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .9 0 0 0 0 .85 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.ml-network.is-sketched .ml-area-label span {
+  font: 400 19px/1.1 "Kalam", var(--ml-serif); letter-spacing: 0; text-transform: none; transform: rotate(-1.5deg);
+}
+.ml-network.is-sketched .ml-area-label small { font: 400 12.5px "Kalam", var(--ml-sans); color: var(--ml-muted); }
+.ml-network.is-sketched .ml-area-label--suggested span { font-style: normal; }
+.ml-style-switch { display: grid; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ml-border); }
+.ml-style-switch > span { font-size: 11.5px; font-weight: 600; color: var(--ml-muted); }

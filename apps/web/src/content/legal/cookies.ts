@@ -20,7 +20,7 @@ Mossline keeps the maps you work on in your browser's local storage and IndexedD
 - your maps, their changes and your reviews;
 - your saved views;
 - your stories, with their pictures;
-- your choice of day or night colours;
+- your choice of day or night colours, and of drawing style;
 - the name you put on changes.
 
 You can clear all of this by clearing site data for {{site}} in your browser settings. Export anything you want to keep first.

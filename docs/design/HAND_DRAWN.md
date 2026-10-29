@@ -1,6 +1,19 @@
 # Hand-drawn styling: design notes
 
-**Status: on the roadmap, not built.** A second way of drawing maps, alongside the current clean atlas style: a field notebook rather than a printed atlas.
+**Status: step 1 built as a trial (October 2026), in the Themes lens.** A second way of drawing maps, alongside the current clean atlas style: a field notebook rather than a printed atlas.
+
+## The trial so far
+
+In Themes, the groups card has **Drawing · trial: Clean / Sketched**, remembered on the device.
+
+- **Watercolour washes.** Each area is a wobbly wash: two layers of one pigment, with a darker, pooled rim. The edges are pushed about by an SVG noise filter. The outline is seeded from the area's ID, so it's the same every time. Pigments come from a small muted set; they tell areas apart and mean nothing more. The density contours step aside.
+- **Handwriting.** Record and area names in Kalam (SIL Open Font Licence, served locally), at 15px for records and 19px for area names, which keep their paper-coloured halo and plate.
+- **Paper.** A faint grain under the drawing, generated, not an image. Names sit on their own plates or halos, never on the grain.
+- **Not yet:** record marks and links are still drawn cleanly (that's step 2, in Sigma's programs). The Network, Map, Funding and Timeline lenses aren't affected.
+
+The code is in `components/atlas/sketch.ts` (style switch, pigments, wash outline) and `NetworkLens.tsx` (the washes, the filter and the label font).
+
+Things to check with people before going further: whether the handwriting stays readable at small sizes and on a phone; whether the washes read as areas rather than as data; and whether night colours need their own pigments.
 
 ## Why
 

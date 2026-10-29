@@ -17,6 +17,7 @@ import { ChangeList, QuickEntry, RecordCreator, type EditingApi } from "./atlas/
 import { FollowConnection } from "./FollowConnection";
 import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
 import { useAtlasTheme } from "./atlas/theme";
+import { useAtlasStyle } from "./atlas/sketch";
 import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
@@ -285,6 +286,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   }, [grouping, drawn]);
   // One Night/Day choice for every lens and page, remembered on this device.
   const [activeTheme, chooseTheme] = useAtlasTheme();
+  const [drawingStyle, chooseStyle] = useAtlasStyle();
   const activeThemeRef = useRef(activeTheme); activeThemeRef.current = activeTheme;
   const byLabel = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
   // ---- Kinds of link, signs and feedback loops -----------------------------------
@@ -577,7 +579,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
               selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}
-              marks={storyMarks} frame={storyFrame} frameKey={storyMode ?? ""}/>}
+              marks={storyMarks} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
@@ -599,6 +601,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
                 <span>{name}</span><b>{count}</b></button></li>)}</ol>
             {groupCounts.length > 12 && <p className="ml-small">{groupCounts.length - 12} more in the filter above.</p>}
             {groupCounts.length === 0 && <p className="ml-small">Nothing in this view can be grouped this way. Try another grouping.</p>}
+            <div className="ml-style-switch"><span id="ml-style-label">Drawing · trial</span>
+              <div className="ml-segmented" role="group" aria-labelledby="ml-style-label">
+                {(["clean", "sketched"] as const).map(v => <button key={v} type="button" aria-pressed={drawingStyle === v}
+                  onClick={() => chooseStyle(v)}>{v === "clean" ? "Clean" : "Sketched"}</button>)}
+              </div></div>
           </aside>}
 
           {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && !reading && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
