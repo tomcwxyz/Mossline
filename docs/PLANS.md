@@ -62,4 +62,4 @@ How the plan follows the subscription:
 
 ## Database
 
-Run `npm run db:migrate` with `MOSSLINE_DATABASE_URL` set, on every deployment, whichever features it uses. It applies the files in `apps/web/migrations` that haven't run yet, in order, and records each one in `mossline_migrations`. `npm run db:migrate -- --check` lists what's pending, and exits with an error if anything is. Never edit a migration that has run: add a new one.
+Migrations run on every deployment, whichever features it uses. On Vercel, production builds apply them automatically (see `docs/OPERATING.md`, "Releasing a new version"); elsewhere, run `npm run db:migrate` with `MOSSLINE_DATABASE_URL` set. It applies the files in `apps/web/migrations` that haven't run yet, in order, and records each one in `mossline_migrations`. `npm run db:migrate -- --check` lists what's pending, and exits with an error if anything is. Never edit a migration that has run: add a new one.

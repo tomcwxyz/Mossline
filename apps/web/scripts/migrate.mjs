@@ -22,7 +22,12 @@ if(!url){console.error("Set MOSSLINE_DATABASE_URL first.");process.exit(2);}
 const check=process.argv.includes("--check");
 const client=new pg.Client({connectionString:url});
 await client.connect();
+// One runner at a time: two deployments building together wait for each other.
+// (A pooled connection in transaction mode can't hold this lock; give the
+// runner a direct one, e.g. MOSSLINE_MIGRATION_DATABASE_URL on Vercel.)
+const LOCK=7307715410;
 try{
+  await client.query("SELECT pg_advisory_lock($1)",[LOCK]);
   await client.query(`CREATE TABLE IF NOT EXISTS mossline_migrations (
     name TEXT PRIMARY KEY, checksum CHAR(64) NOT NULL, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())`);
   const done=new Map((await client.query("SELECT name, checksum FROM mossline_migrations")).rows.map(r=>[r.name,r.checksum]));
@@ -54,4 +59,7 @@ try{
     }
     if(!pending.length)console.log("Up to date.");
   }
-}finally{await client.end();}
+}finally{
+  await client.query("SELECT pg_advisory_unlock($1)",[LOCK]).catch(()=>{});
+  await client.end();
+}
