@@ -7,7 +7,8 @@ import nodemailer from "nodemailer";
  * any mail provider works. MOSSLINE_TEST_MAIL_DIR writes them to files
  * instead: for automated tests only, never on a deployment people use.
  */
-let transport:nodemailer.Transporter|null=null;
+type Transport={sendMail(message:{from:string;to:string;subject:string;text:string}):Promise<unknown>};
+let transport:Transport|null=null;
 export const canSendMail=()=>!!(process.env.MOSSLINE_EMAIL_FROM&&(process.env.MOSSLINE_SMTP_URL||process.env.MOSSLINE_TEST_MAIL_DIR));
 
 async function send(to:string,subject:string,text:string,kind:"sign-in"|"invite"|"email-change"|"notice",testLine:string){
