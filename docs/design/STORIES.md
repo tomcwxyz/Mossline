@@ -1,6 +1,6 @@
 # Stories: design notes
 
-**Status: next on the roadmap, not built.** These notes set out what a story is, how media and annotation fit, and what to settle before building.
+**Status: first release built (October 2026).** These notes set out what a story is, how media and annotation fit, and what's still to come. "What the first release does" below says what was built and how; the rest is the longer plan.
 
 Stories answer a different need from the atlas. The atlas lets someone explore; a story lets an author *walk someone through* what a map shows, in order, in their own words. The Pudding's visual essays are the reference for the feel ("immersive on a basic level"). Data for Action's "maps as conversations" is the reference for the purpose: a map people can see themselves in, talk about, and add to.
 
@@ -80,21 +80,30 @@ A conversation map invites responses: "is this your experience?", "add a place t
 ## Storage and publishing
 
 - **Where stories live.** Stories are kept with their map: in the browser, in a shared map, or in an organisation.
-- **What publishing includes.** A published story contains only the records, links and media its steps use, after the same item-by-item review as publishing a map. Large stories are fine, since published maps already hold whole maps.
+- **What publishing includes.** The map, the story and its media, after the same item-by-item review as publishing a map. (The first release publishes the whole map with a story, since steps use filters; see below.)
 - **How the published page works.** Published stories open in the atlas's read-only mode, with the story column added.
 
-## To settle before building
+## What the first release does
 
-1. **Narrative length.** Is a story mainly short (5–15 steps) or sometimes long-form? This decides whether text supports headings, footnotes and inline media, or stays deliberately simple.
-2. **Drawing tools.** Freehand pencil marks (more expressive, harder to anchor) or shape-based marks only (rings, arrows, areas)? Suggest shapes first, freehand later.
-3. **Media hosting for the hosted service.** Which S3-compatible store and region, and the per-plan storage limits.
-4. **Taking part in the first release, or later?** Suggest later, after the reading experience is right.
-5. **Map my Patch.** Link it, or build responses natively?
+Decided: stories are mostly short; marks are shapes first, freehand later; readers responding comes later.
 
-## Suggested first release
+- **Model.** `packages/graph-core/src/stories.ts`. A story is up to 60 steps. Each step has the atlas's view state (lens, record, search, group, filters, dates, loop), a heading, short text, up to six pictures or quotes and up to 40 marks. Everything points at records by ID.
+- **Text.** A deliberately small, safe subset: paragraphs, line breaks, `**bold**`, `*italic*` and `[links](https://…)`. Everything else is shown as typed, so a published story can't carry markup or scripts.
+- **Marks.** Ring (any number of records), note (one record, with text), arrow (two records) and number. Drawn over the Network and Themes lenses in the marginalia colour (`--ml-margin`), in a loose hand. The wobble is seeded from the mark's ID, so it stays still as the map moves. Marks are placed against records each frame, so they follow zoom and layout; a mark whose records aren't drawn is hidden.
+- **Pictures and quotes.** Uploaded pictures are shrunk to 1,600 pixels across and kept in the browser (IndexedDB) with the story. A picture needs a description (alt text) and an answer about recognisable people before the story can be published; a missing credit is a note, not a block. A quote needs the person's agreement, ticked by the author.
+- **Writing.** *Stories…* in the map's menu. A step is added from the map as it is; *Use the map as it is now* updates it. Marks are made by clicking records on the map, or choosing them from *Browse records* (keyboard). A checklist shows what blocks publishing and what's worth a look.
+- **Reading.** A column of steps beside the pinned map, which follows the step a third of the way down the column. On a phone, one step at a time on a card over the map. **Presenting** is the card, larger, with ← → and Esc. The map frames each step's records, clear of the card; with reduced motion, it cuts instead of moving.
+- **Where stories live.** In the browser, with the map (by its saved ID). They don't yet travel with shared maps; the editor says so.
+- **Publishing.** Choose a story in *Publish online*. The page opens on the story, with *Explore the map* to leave it. Because steps use filters, the whole map is published with a story, not just what's drawn now, after the same review. Pictures go inside the published copy, within the 4 MB a publication can carry; object storage for larger media comes with audio and video.
 
-- Steps from saved views, with text, images (with alt text and credit), quotes, and shape annotations: callout, ring, arrow, number.
-- Scrolling and presenting modes, with reduced motion.
-- Publishing with item-by-item review.
+## Still to settle
 
-Then audio and video, drawn areas, and responses.
+1. **Media hosting for the hosted service.** Which S3-compatible store and region, and the per-plan storage limits.
+2. **Map my Patch.** Link it, or build responses natively?
+
+## Next
+
+- Stories shared with shared maps, so a team can write them together.
+- Audio with transcripts, captioned video, and drawn areas on the Map lens.
+- Freehand marks, once shapes have been used for a while.
+- Readers responding, as pencil.

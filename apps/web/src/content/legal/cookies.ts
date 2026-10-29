@@ -19,6 +19,7 @@ Mossline keeps the maps you work on in your browser's local storage and IndexedD
 
 - your maps, their changes and your reviews;
 - your saved views;
+- your stories, with their pictures;
 - your choice of day or night colours;
 - the name you put on changes.
 

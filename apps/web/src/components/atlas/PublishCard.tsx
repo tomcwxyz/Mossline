@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createPublishedSnapshot, HOSTED_LIMITS, type GraphDocument, type PublishedSnapshot } from "@mossline/graph-core";
+import { createPublishedSnapshot, HOSTED_LIMITS, storyProblems, type GraphDocument, type HostedSnapshot, type Story } from "@mossline/graph-core";
 import { account, useAccount, type OwnedPublication } from "../../hooks/useAccount";
 
 /** What one upload can carry; a whole map normally fits. Long review lists are cut on screen only. */
@@ -13,7 +13,15 @@ const megabytes = (n: number) => (n / 1_000_000).toLocaleString("en-GB", { maxim
  * item by item, put online under the signed-in account. Updating replaces an
  * earlier publication of yours at the same link.
  */
-export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocument; title: string; mapId?: string; onClose: () => void }) {
+export function PublishCard({ graph: drawn, whole, stories = [], initialStory = "", title, mapId, onClose }: {
+  graph: GraphDocument; title: string; mapId?: string; onClose: () => void;
+  /** The whole map, published instead of what's drawn when a story goes with it, so every step can show its view. */
+  whole?: GraphDocument; stories?: Story[]; initialStory?: string;
+}) {
+  const [storyChoice, setStoryChoice] = useState(stories.some(s => s.id === initialStory) ? initialStory : "");
+  const story = stories.find(s => s.id === storyChoice) ?? null;
+  const graph = story && whole ? whole : drawn;
+  const storyBlocks = useMemo(() => story ? storyProblems(story, graph).filter(p => p.severity === "block") : [], [story, graph]);
   const { state } = useAccount();
   const user = state.status === "ready" ? state.user : null;
   const [mine, setMine] = useState<OwnedPublication[] | null>(null);
@@ -35,8 +43,10 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
 
   const recorded = useMemo(() => ({ ...graph, edges: graph.edges.filter(e => !e.inferred) }), [graph]);
   const tooBig = recorded.nodes.length > MAX_RECORDS || recorded.edges.length > MAX_LINKS;
-  const prepared = useMemo((): { snapshot: PublishedSnapshot | null; error: string } => {
+  const prepared = useMemo((): { snapshot: HostedSnapshot | null; error: string } => {
     if (!recorded.nodes.length) return { snapshot: null, error: "Nothing is drawn, so there's nothing to publish." };
+    if (storyBlocks.length) return { snapshot: null, error: "The story isn't ready to publish: " + storyBlocks[0].message +
+      (storyBlocks.length > 1 ? " (and " + (storyBlocks.length - 1) + " more in the story's checklist)" : "") };
     if (tooBig) return { snapshot: null, error: "" };
     if (!name.trim()) return { snapshot: null, error: "Give the map a title." };
     try {
@@ -44,13 +54,14 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
         illustrated: false, title: name, includeDescriptions: descriptions, includeImages: images }, new Date(), HOSTED_LIMITS);
       // A map with recorded places opens on the map; one without opens on the network.
       const placed = make("atlas");
-      const snapshot = placed.nodes.some(n => n.properties) ? placed : make("landscape");
+      const plain: HostedSnapshot = placed.nodes.some(n => n.properties) ? placed : make("landscape");
+      const snapshot: HostedSnapshot = story ? { ...plain, story } : plain;
       const bytes = new TextEncoder().encode(JSON.stringify({ snapshot })).length;
       if (bytes > MAX_BYTES) return { snapshot: null, error: "This view comes to " + megabytes(bytes) + ", more than the " +
-        megabytes(MAX_BYTES) + " one upload can carry." + (descriptions ? " Leave out descriptions, or" : "") + " narrow it down with search or the filters first." };
+        megabytes(MAX_BYTES) + " one upload can carry." + (story ? " Use fewer or smaller pictures in the story, or" : descriptions ? " Leave out descriptions, or" : "") + (story ? " leave the story out." : " narrow it down with search or the filters first.") };
       return { snapshot, error: "" };
     } catch { return { snapshot: null, error: "Some records can't be published as they are (a name or description is too long)." }; }
-  }, [recorded, tooBig, name, descriptions, images]);
+  }, [recorded, tooBig, name, descriptions, images, story, storyBlocks]);
   useEffect(() => { setChecked(false); setDone(null); }, [prepared.snapshot, target]);
 
   const snapshot = prepared.snapshot;
@@ -101,6 +112,12 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
         </select></label>}
       <label className="ml-edit-field"><span>Title</span>
         <input value={name} maxLength={120} onChange={e => setName(e.target.value)}/></label>
+      {stories.length > 0 && <label className="ml-edit-field"><span>Story</span>
+        <select value={storyChoice} onChange={e => setStoryChoice(e.target.value)}>
+          <option value="">No story, just the map</option>
+          {stories.map(s => <option key={s.id} value={s.id}>“{s.title}” · {s.steps.length} {s.steps.length === 1 ? "step" : "steps"}</option>)}
+        </select>
+        {story && <small>The page opens on the story. The whole map goes with it, not just what&apos;s drawn now, so each step can show its view.</small>}</label>}
 
       {tooBig ? <p className="ml-publish-limit" role="status">This view has {recorded.nodes.length.toLocaleString("en-GB")} records
         and {recorded.edges.length.toLocaleString("en-GB")} recorded links. A published map holds up to {MAX_RECORDS.toLocaleString("en-GB")}
@@ -119,7 +136,7 @@ export function PublishCard({ graph, title, mapId, onClose }: { graph: GraphDocu
         <details className="ml-publish-review">
           <summary>Check everything that will be public</summary>
           <p className="ml-small">Names, types and links{snapshot.nodes.some(n => n.properties) ? ", plus map locations" : ""}
-            {descriptions ? ", descriptions" : ""}{images ? ", picture addresses" : ""}.</p>
+            {descriptions ? ", descriptions" : ""}{images ? ", picture addresses" : ""}{story ? ", and the story with its pictures and quotes" : ""}.</p>
           <ul tabIndex={0} aria-label="Records to publish">{snapshot.nodes.slice(0, SHOW).map(n => <li key={n.id}>{n.label} <small>{n.type}</small>
             {n.description && <small> · {n.description}</small>}</li>)}</ul>
           <ul tabIndex={0} aria-label="Links to publish">{snapshot.edges.slice(0, SHOW).map(e => <li key={e.id}>{labelOf.get(e.source)} {e.direction === "directed" ? "→" : "–"}
