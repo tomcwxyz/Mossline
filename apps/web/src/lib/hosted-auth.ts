@@ -30,9 +30,21 @@ export function isHostedConfigured(env:Env=process.env):boolean{
 }
 
 /**
+ * Shared maps keep whole maps (every imported field) on this server, so a
+ * deployment turns them on separately, on top of publishing.
+ */
+export function isSharedMapsConfigured(env:Env=process.env):boolean{
+  return isHostedConfigured(env)&&env.MOSSLINE_SHARED_MAPS_ENABLED==="true";
+}
+/** Compressed upload of a whole map; the unpacked map may be larger. */
+export const SHARED_MAP_MAX_BYTES=4_000_000;
+export const SHARED_MAP_MAX_UNPACKED=60_000_000;
+
+/**
  * Who may have an account and publish: full addresses (tom@example.org),
- * whole domains (@example.org) or "*" for anyone. Accounts exist only to
- * publish, so the same list governs both.
+ * whole domains (@example.org) or "*" for anyone. They can also save maps
+ * to their account and share them. People they invite to a map can sign in
+ * too, to open it, but can't publish or share maps of their own.
  */
 export function publisherRules(env:Env=process.env):string[]{
   return (env.MOSSLINE_PUBLISHERS??"").split(/[,\s]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);

@@ -20,6 +20,8 @@ import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
 import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
 import { PublishCard } from "./atlas/PublishCard";
+import { ShareMapCard } from "./atlas/ShareMapCard";
+import type { SharedLink } from "../lib/map-library";
 import { useAccount } from "../hooks/useAccount";
 import { LINK_INKS, SIGN_INKS, TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 
@@ -32,7 +34,7 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
@@ -40,6 +42,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   message?: string; onMessageShown?: () => void;
   /** A published copy: explore only. No editing, reviews, data menus or publishing, and nothing read from this browser's storage. */
   readOnly?: boolean;
+  /** This map's copy in a Mossline account, if it has one; onSharedChange records saving, leaving or deleting it. */
+  shared?: SharedLink; onSharedChange?: (link: SharedLink | undefined) => void;
+  /** Fetch the newer imported records someone added to this shared map. */
+  onSharedRefresh?: () => void;
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -62,7 +68,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const sourceGraph = fullSource ?? imported;
   const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
   // ---- Changes made here sit beside the imported records ---------------------
-  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly);
+  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly, shared);
+  const viewOnly = readOnly || shared?.role === "viewer";
   const editedMap = useMemo(() => applyEdits(sourceGraph, edits.layer), [sourceGraph, edits.layer]);
   const workingGraph = editedMap.graph;
 
@@ -156,7 +163,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const menuRef = useRef<HTMLDetailsElement>(null);
   const shareRef = useRef<HTMLDetailsElement>(null);
   const [publishOpen, setPublishOpen] = useState(false);
-  const publishing = useAccount(!readOnly).state.status === "ready";
+  const accountState = useAccount(!readOnly).state;
+  const publishing = accountState.status === "ready";
+  const sharing = accountState.status === "ready" && accountState.sharedMaps;
+  const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("lens");
@@ -386,7 +396,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         </summary>
         <div className="ml-menu" role="group" aria-label="Map and data">
           <button type="button" onClick={() => { closeMenu(); onBack(); }}>All maps</button>
-          <button type="button" onClick={() => { closeMenu(); onImport(); }}>Add data…</button>
+          {!viewOnly && <button type="button" onClick={() => { closeMenu(); onImport(); }}>Add data…</button>}
+          {(sharing || shared) && <button type="button" onClick={() => { closeMenu(); setPublishOpen(false); setShareOpen(true); }}>
+            {shared ? "Sharing…" : "Save to your account…"}</button>}
           <hr/>
           <p className="ml-menu-note">Reviewer confirmations are stored separately from your source records.</p>
           <button type="button" onClick={() => { closeMenu(); exportAnnotations(); }} disabled={!annotations.entries.length}>
@@ -411,8 +423,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           : <kbd aria-hidden="true">/</kbd>}
       </label>
       <div className="ml-header-actions">
-        <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>
-        {!readOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+        {shared ? <button type="button" className={"ml-local ml-shared-badge is-" + edits.status.state} onClick={() => { setPublishOpen(false); setShareOpen(true); }}
+          title={edits.status.state === "offline" ? edits.status.message : "Who has this map"}>
+          <i aria-hidden="true"/><span className="ml-shared-text">{edits.status.state === "offline" ? "Shared · offline" : edits.status.state === "syncing" ? "Shared · updating" : "Shared"}
+          {shared.role === "viewer" ? " · view only" : ""}</span></button>
+          : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
+        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
           onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); }}>
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
@@ -427,7 +443,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               .catch(() => setNotice("Copy the address from your browser.")); }}>Copy view link</button>
             <p className="ml-menu-note">Opens this view for someone with the same data in their browser.</p>
             {publishing && <><hr/>
-              <button type="button" onClick={() => { closeShare(); setPublishOpen(true); }}>Publish online…</button>
+              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>Publish online…</button>
               <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
           </div>
         </details>}
@@ -594,7 +610,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             Click the record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to.
             <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
 
+          {shareOpen && !readOnly && <ShareMapCard graph={sourceGraph} mapId={mapId} shared={shared} account={accountState}
+            status={edits.status} onLinked={link => onSharedChange?.(link)} onClose={() => setShareOpen(false)}/>}
           {publishOpen && <PublishCard graph={result.graph} title={imported.title} mapId={mapId} onClose={() => setPublishOpen(false)}/>}
+          {shared && edits.remoteSource > shared.sourceVersion && <div className="ml-banner ml-pick-banner" role="status">
+            Someone has added data to this map.
+            <button type="button" onClick={() => onSharedRefresh?.()}>Get it</button></div>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
         {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}

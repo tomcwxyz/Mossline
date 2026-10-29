@@ -4,6 +4,20 @@ import {magicLink} from "better-auth/plugins/magic-link";
 import {pool} from "./db";
 import {sendSignInLink} from "./auth-mail";
 import {isHostedConfigured, mayPublish, signInMethods} from "./hosted-auth";
+import {forgetMemberships, isInvited} from "./shared-maps-db";
+
+/**
+ * Publishers, plus anyone invited to a shared map, may have an account. Someone
+ * who already has one can always sign in, if only to delete it.
+ */
+async function mayHaveAccount(email:string):Promise<boolean>{
+  if(mayPublish(email))return true;
+  try{
+    if(await isInvited(email))return true;
+    const {rows}=await pool().query("SELECT 1 FROM mossline_users WHERE email=$1",[email.trim().toLowerCase()]);
+    return rows.length>0;
+  }catch{return false;}
+}
 
 /**
  * Accounts exist so a published map belongs to someone. Mossline keeps the
@@ -40,12 +54,13 @@ function makeAuth(){
       expiresIn:10*60,
       storeToken:"hashed",
       // Say the same thing whoever asks, so the form can't be used to find out who has an account.
-      sendMagicLink:async({email,url})=>{ if(mayPublish(email))await sendSignInLink(email,url); }
+      sendMagicLink:async({email,url})=>{ if(await mayHaveAccount(email))await sendSignInLink(email,url); }
     })]:[],
     user:{
       modelName:"mossline_users",
       fields:snake({name:"name",email:"email",emailVerified:"email_verified",image:"image",createdAt:"created_at",updatedAt:"updated_at"}),
-      deleteUser:{enabled:true}
+      // Owned maps and publications go with the account (database cascade); invitations to others' maps are dropped.
+      deleteUser:{enabled:true,afterDelete:async user=>{ await forgetMemberships(user.email); }}
     },
     session:{
       modelName:"mossline_sessions",
@@ -77,7 +92,7 @@ function makeAuth(){
     hooks:{
       // An address that can't publish gets the same reply as one that can, and nothing is stored for it.
       before:createAuthMiddleware(async ctx=>{
-        if(ctx.path==="/sign-in/magic-link"&&!mayPublish(typeof ctx.body?.email==="string"?ctx.body.email:""))
+        if(ctx.path==="/sign-in/magic-link"&&!await mayHaveAccount(typeof ctx.body?.email==="string"?ctx.body.email:""))
           return ctx.json({status:true});
       })
     },
@@ -87,7 +102,7 @@ function makeAuth(){
         create:{before:async user=>{
           // The publishers list is only as good as the address, so it must be one the provider has verified
           // (Microsoft: add the verified_primary_email optional claim; see docs/HOSTED_PUBLISHING.md).
-          if(!user.emailVerified||!mayPublish(user.email))
+          if(!user.emailVerified||!await mayHaveAccount(user.email))
             throw new APIError("FORBIDDEN",{message:"This address can't publish from Mossline."});
           return {data:{...user,image:null}};
         }},

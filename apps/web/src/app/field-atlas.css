@@ -1067,3 +1067,28 @@ details.ml-account-section summary { cursor: pointer; }
 .ml-dataset--static { display: grid; gap: 1px; max-width: 360px; }
 .ml-dataset--static strong { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ml-dataset--static small { font: 11px var(--ml-mono); color: var(--ml-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---- Shared maps --------------------------------------------------------------- */
+.ml-start-badge { font: 500 10.5px var(--ml-mono); font-style: normal; letter-spacing: .02em; margin-left: 8px; padding: 1px 6px;
+  border: 1px solid var(--ml-border-strong); border-radius: 4px; color: var(--ml-muted); vertical-align: 2px; }
+.ml-start-account-hint { font-size: 13px; color: var(--ml-muted); margin: -8px 0 28px; }
+button.ml-shared-badge { border: 1px solid var(--ml-border); background: var(--ml-surface); border-radius: 999px; padding: 4px 10px; color: var(--ml-ink); }
+button.ml-shared-badge:hover { border-color: var(--ml-ink); }
+.ml-shared-badge i { background: var(--ml-moss); }
+.ml-shared-badge.is-syncing i { background: var(--ml-subtle); }
+.ml-shared-badge.is-offline i { background: var(--ml-danger); }
+.ml-share-sync { color: var(--ml-subtle); }
+.ml-share-people ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; }
+.ml-share-people li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--ml-rule); }
+.ml-share-people li > span { display: grid; gap: 1px; min-width: 0; }
+.ml-share-people strong { font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.ml-share-people small { font-size: 11.5px; color: var(--ml-subtle); overflow-wrap: anywhere; }
+.ml-share-invite { align-self: end; }
+/* The shared badge stays visible at every width; on a phone it shrinks to its dot. */
+@media (max-width: 1280px) { .ml-atlas .ml-local.ml-shared-badge { display: flex; } }
+@media (max-width: 720px) {
+  .ml-shared-badge .ml-shared-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  button.ml-shared-badge { padding: 0; width: 32px; height: 32px; justify-content: center; }
+}
+.ml-start-account-hint a { text-decoration: underline; text-underline-offset: 2px; }
+.ml-start-maps + .ml-start-maps { margin-top: 16px; }

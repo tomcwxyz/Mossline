@@ -1,5 +1,5 @@
 import {apiResult} from "../../../../lib/hosted-response";
-import {isHostedConfigured,signInMethods} from "../../../../lib/hosted-auth";
+import {isHostedConfigured,isSharedMapsConfigured,signInMethods} from "../../../../lib/hosted-auth";
 import {currentUser} from "../../../../lib/auth";
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
@@ -9,6 +9,6 @@ export async function GET(request:Request){
   if(!isHostedConfigured())return apiResult({enabled:false});
   let user=null;
   try{user=await currentUser(request);}catch{/* shown as signed out */}
-  return apiResult({enabled:true,signIn:signInMethods(),
+  return apiResult({enabled:true,signIn:signInMethods(),sharedMaps:isSharedMapsConfigured(),
     user:user?{name:user.name,email:user.email,canPublish:user.canPublish}:null});
 }

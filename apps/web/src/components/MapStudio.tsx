@@ -35,7 +35,9 @@ import { PFT_VISUAL_EXAMPLE } from "../data/pft-visual-example";
 import { PftVisualShowcase } from "./PftVisualShowcase";
 import {saveGeneralGraph,shouldStoreGeneralGraph}
   from "../lib/general-map-store";
-import {MAX_LOCAL_MAPS} from "../lib/map-library";
+import {MAX_LOCAL_MAPS,type SharedLink} from "../lib/map-library";
+import {sharedMaps,SharedMapError,type SharedMapSummary} from "../lib/shared-maps-client";
+import {AccountMaps} from "./AccountMaps";
 import {useLocalMapLibrary} from "../hooks/useLocalMapLibrary";
 import type {ColumnMapping} from "@mossline/graph-core";
 import demo from "../../../../data/demo.json";
@@ -144,7 +146,7 @@ export function MapStudio() {
 
   const {hasSavedMapLibrary,localMaps,oversizedSavedMaps,savedMapBackupMade,
     setSavedMapBackupMade,activeMapId,updateGraph,createNewMap,
-    applyFundingProjection,selectLocalMap,resetOversizedCache}=useLocalMapLibrary({
+    applyFundingProjection,selectLocalMap,resetOversizedCache,setShared}=useLocalMapLibrary({
       initialGraph:ORIGINAL,setGraph,resetExplorer,setNotice,onMapSelected:closeImport
     });
   const fileRef = useRef<HTMLInputElement>(null);
@@ -165,6 +167,63 @@ export function MapStudio() {
     window.history.replaceState(null,"",window.location.pathname);
     void selectLocalMap(id);setFieldAtlasOpen(true);setExperienceSpace("studio");
   },[localMaps,selectLocalMap]);
+
+  // ---- Maps kept in an account ------------------------------------------------
+  const [openingShared,setOpeningShared]=useState("");
+  /** Brings a shared map into this browser (or reopens the copy already here). */
+  async function openSharedMap(id:string,known?:SharedMapSummary){
+    const here=localMaps.find(m=>m.shared?.id===id);
+    if(here){void selectLocalMap(here.id);setFieldAtlasOpen(true);setExperienceSpace("studio");return;}
+    if(localMaps.length>=MAX_LOCAL_MAPS){setNotice("This browser already holds "+MAX_LOCAL_MAPS+" maps. Export and remove one to open another.");return;}
+    setOpeningShared(id);
+    try{
+      const role=known?.role??(await sharedMaps.info(id)).role;
+      const {graph:next,version}=await sharedMaps.source(id);
+      let storageId:string|undefined;
+      if(shouldStoreGeneralGraph(next)){storageId=crypto.randomUUID();await saveGeneralGraph(storageId,next);}
+      if(createNewMap(next,undefined,undefined,storageId,{id,role,sourceVersion:version})){
+        setFieldAtlasOpen(true);setExperienceSpace("studio");
+        setAtlasMessage("Opened ‘"+next.title+"’ from "+(role==="owner"?"your account":"a shared map")+". Changes made here reach everyone with it.");
+      }
+    }catch(error){
+      if(error instanceof SharedMapError&&error.status===401){window.location.href="/sign-in?next="+encodeURIComponent("/?map="+id);return;}
+      setNotice(error instanceof SharedMapError&&error.status===404?"That map isn't shared with this account. Check you signed in with the address it was shared with.":
+        error instanceof Error?error.message:"Couldn't open the shared map.");
+    }finally{setOpeningShared("");}
+  }
+  // "/?map=<id>" is the link people are sent: open that shared map.
+  const sharedLinkHandled=useRef(false);
+  useEffect(()=>{
+    if(sharedLinkHandled.current||!localMaps.length)return;
+    const id=new URLSearchParams(window.location.search).get("map");
+    if(!id||!/^[0-9a-f-]{36}$/.test(id))return;
+    sharedLinkHandled.current=true;
+    window.history.replaceState(null,"",window.location.pathname);
+    void openSharedMap(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[localMaps]);
+  const activeShared=localMaps.find(item=>item.id===activeMapId)?.shared;
+  // On opening a shared map, fetch newer imported records if someone added data since.
+  const checkedShared=useRef("");
+  async function refreshShared(link:SharedLink,announce=true){
+      try{
+        const info=await sharedMaps.info(link.id);
+        if(info.sourceVersion>link.sourceVersion){
+          const {graph:next,version}=await sharedMaps.source(link.id);
+          const current=localMaps.find(m=>m.id===activeMapId);
+          let storageId=current?.generalDatasetId;
+          if(shouldStoreGeneralGraph(next)){storageId??=crypto.randomUUID();await saveGeneralGraph(storageId,next);}
+          if(updateGraph(next,storageId,{...link,role:info.role,sourceVersion:version})&&announce)
+            setAtlasMessage("Updated with data someone else added to this map.");
+        }else if(info.role!==link.role&&activeMapId)setShared(activeMapId,{...link,role:info.role});
+      }catch{/* offline or no longer shared: the copy here still works */}
+  }
+  useEffect(()=>{
+    if(!activeShared||experienceSpace!=="studio"||checkedShared.current===activeMapId+":"+activeShared.sourceVersion)return;
+    checkedShared.current=activeMapId+":"+activeShared.sourceVersion;
+    void refreshShared(activeShared);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[activeShared,activeMapId,experienceSpace]);
 
   const activeFundingMap=localMaps.find(item=>item.id===activeMapId);
   const fullFundingView=view==="landscape"&&!!activeFundingMap?.fundingDatasetId;
@@ -484,6 +543,16 @@ export function MapStudio() {
       }
       const ok=target==="new"?createNewMap(proposed,undefined,undefined,storageId):updateGraph(proposed,storageId);
       if(!ok)return "Could not save in this browser's storage. Export a backup of your maps, then try again.";
+      // Data added to a shared map goes to everyone with it.
+      if(target==="add"&&activeShared&&activeShared.role!=="viewer"&&activeMapId){
+        try{
+          const r=await sharedMaps.replaceSource(activeShared.id,activeShared.sourceVersion,proposed.title,proposed);
+          setShared(activeMapId,{...activeShared,sourceVersion:r.sourceVersion});
+          summary+=" Everyone with this map gets it too.";
+        }catch(error){
+          summary+=" It's in this browser, but didn't reach the shared copy: "+(error instanceof Error?error.message:"try again later.");
+        }
+      }
     }catch(error){
       return error instanceof Error?error.message:"Could not save in this browser's storage.";
     }
@@ -541,6 +610,8 @@ export function MapStudio() {
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
       <FieldAtlasWorkspace key={graphKey} graph={graph} message={atlasMessage} onMessageShown={clearAtlasMessage} mapId={activeMapId ?? undefined}
+        shared={activeShared} onSharedChange={(link:SharedLink|undefined)=>{if(activeMapId)setShared(activeMapId,link);}}
+        onSharedRefresh={()=>{if(activeShared)void refreshShared(activeShared);}}
         datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
         onBack={()=>setExperienceSpace("home")}
         onImport={()=>setAddData({from:"atlas",intent:"general"})}
@@ -572,7 +643,7 @@ export function MapStudio() {
     <StartScreen maps={(hasSavedMapLibrary?localMaps:[]).map(m=>({id:m.id,title:m.title,
       nodes:m.sourceCounts?.nodes??m.graph.nodes.length,
       edges:m.sourceCounts?.edges??m.graph.edges.length,
-      updatedAt:m.createdAt,funding:!!m.fundingDatasetId,
+      updatedAt:m.createdAt,funding:!!m.fundingDatasetId,badge:m.shared?"Shared":undefined,
       summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
         " grants in complete dataset":undefined}))}
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
@@ -587,7 +658,9 @@ export function MapStudio() {
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
-      onRecovery={()=>{window.location.href="/recover";}}/>
+      onRecovery={()=>{window.location.href="/recover";}}
+      accountMaps={<AccountMaps have={new Set(localMaps.flatMap(m=>m.shared?[m.shared.id]:[]))} busy={openingShared}
+        onOpen={m=>void openSharedMap(m.id,m)}/>}/>
   </main>;
 
   return <main className={"shell mossline-studio"+
