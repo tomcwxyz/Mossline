@@ -31,6 +31,8 @@
   --ml-on-moss: #FFFFFF;
   --ml-link: #2F5F86;
   --ml-focus: #2F5F86;
+  /* The author's notes on a story: marginalia, never data */
+  --ml-margin: #8A4A1C;
   /* Grammar */
   --ml-pencil: #7A7E76;
   --ml-wash: #6E8C55;
@@ -94,6 +96,7 @@
   --ml-on-moss: #0F1915;
   --ml-link: #9CC3E4;
   --ml-focus: #A9C98A;
+  --ml-margin: #E8B27C;
   --ml-pencil: #9FAE9F;
   --ml-wash: #A9C98A;
   --ml-organisation: #93C27E;
@@ -955,6 +958,13 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
 .ml-key:has(.ml-key-links) { max-width: min(460px, calc(100% - 28px)); }
 .ml-key-links ul { max-height: 132px; }
 .ml-sign-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+/* Marginalia: the author's marks on a story map. Their own colour, never ink or pencil. */
+.ml-marks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; }
+.ml-mark-line { fill: none; stroke: var(--ml-margin); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ml-mark--number circle.ml-mark-line { fill: var(--ml-paper, #fff); }
+.ml-mark-text { fill: var(--ml-margin); font-family: var(--ml-serif, "Newsreader", Georgia, serif); font-style: italic; font-size: 15px;
+  paint-order: stroke; stroke: var(--ml-paper, #fff); stroke-width: 4px; stroke-linejoin: round; }
+.ml-mark--number .ml-mark-text { font-style: normal; font-weight: 600; font-size: 13px; text-anchor: middle; stroke-width: 0; }
 .ml-sign--map { position: absolute; left: 0; top: 0; margin: 0; width: 18px; height: 18px; font-size: 12px; box-shadow: 0 0 0 2px var(--ml-paper); }
 
 /* ---- Editing a map ----------------------------------------------------------- */
@@ -1133,3 +1143,94 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 }
 .ml-home-foot { gap: 18px; flex-wrap: wrap; align-items: center; }
 .ml-atlas .ml-home-foot a { color: var(--ml-muted); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---- Stories --------------------------------------------------------------------- */
+.ml-story-editor { width: 360px; }
+.ml-story-editor-head { display: flex; align-items: center; gap: 8px; }
+.ml-story-editor-head .ml-unplaced-head { flex: 1; }
+.ml-story-close { width: 28px; height: 28px; padding: 0; font-size: 16px; line-height: 1; }
+.ml-story-editor.is-closed .ml-story-close { display: none; }
+.ml-story-spacer { flex: 1; }
+.ml-story-label { font-size: 11px !important; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ml-muted); margin: 4px 0 0 !important; }
+.ml-story-list, .ml-story-steps ol, .ml-story-marks, .ml-story-problems ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.ml-story-list button, .ml-story-steps ol button { width: 100%; display: flex; align-items: baseline; gap: 9px; border: 0; background: none;
+  padding: 7px 8px; border-radius: 6px; text-align: left; font-size: 13px; color: var(--ml-ink); }
+.ml-story-list button { justify-content: space-between; }
+.ml-story-list small { color: var(--ml-subtle); font-size: 11.5px; }
+.ml-story-list button:hover, .ml-story-steps ol button:hover, .ml-story-steps ol button[aria-current="step"] { background: var(--ml-sunken); }
+.ml-story-steps ol button[aria-current="step"] { font-weight: 600; }
+.ml-story-steps ol b { font: 12px var(--ml-mono); color: var(--ml-margin); min-width: 16px; }
+.ml-story-steps ol span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ml-story-steps { display: grid; gap: 8px; }
+.ml-story-step-edit { display: grid; gap: 9px; padding-top: 10px; border-top: 1px solid var(--ml-border); }
+.ml-story-view { font-style: italic; }
+.ml-story-marks li { display: grid; grid-template-columns: auto 1fr auto; gap: 3px 8px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--ml-border); font-size: 12.5px; }
+.ml-story-marks small { color: var(--ml-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ml-story-marks input { grid-column: 1 / -1; min-height: 32px; padding: 4px 8px; border: 1px solid var(--ml-border-strong); border-radius: var(--ml-radius-sm);
+  background: var(--ml-surface); color: var(--ml-ink); font: 13px var(--ml-sans); }
+.ml-story-marks .ml-link-button { grid-column: 3; grid-row: 1; padding: 0; }
+.ml-story-mark-kind { font: italic 600 13px var(--ml-serif); color: var(--ml-margin); }
+.ml-story-media-edit { flex: none; }
+.ml-story-thumb { max-width: 100%; max-height: 140px; object-fit: contain; border-radius: 6px; justify-self: start; }
+.ml-story-check { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; }
+.ml-story-check input { margin-top: 2px; }
+.ml-story-error { color: var(--ml-danger) !important; }
+.ml-story-problems { display: grid; gap: 4px; padding-top: 10px; border-top: 1px solid var(--ml-border); }
+.ml-story-problems li { font-size: 12.5px; padding-left: 14px; position: relative; color: var(--ml-muted); }
+.ml-story-problems li::before { content: ""; position: absolute; left: 0; top: 6px; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--ml-subtle); }
+.ml-story-problems li.is-block { color: var(--ml-ink); }
+.ml-story-problems li.is-block::before { background: var(--ml-danger); border-color: var(--ml-danger); }
+.ml-story-problems .ml-link-button { padding: 0; text-align: left; color: inherit; font-size: inherit; }
+
+/* Reading: a column of steps beside the map. */
+.ml-inspector--story { padding: 0; display: flex; flex-direction: column; }
+.ml-story-reader { flex: 1; overflow: auto; padding: 28px 26px 40vh; scroll-padding-top: 24px; }
+.ml-story-reader:focus-visible { outline: 2px solid var(--ml-margin); outline-offset: -2px; }
+.ml-story-kicker { font-size: 11px !important; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ml-margin); }
+.ml-story-reader-head { display: grid; gap: 10px; padding-bottom: 22px; margin-bottom: 8px; border-bottom: 1px solid var(--ml-border); }
+.ml-story-reader-head h1 { font: 500 32px/1.08 var(--ml-serif); letter-spacing: -0.4px; }
+.ml-story-reader-head .ml-link-button { padding: 0; }
+.ml-story-section { display: grid; gap: 12px; padding: 26px 0; border-bottom: 1px solid var(--ml-border); opacity: .55; transition: opacity .3s; }
+.ml-story-section.is-current { opacity: 1; }
+.ml-story-section h2, .ml-story-card h2 { font: 500 22px/1.2 var(--ml-serif); display: flex; gap: 10px; align-items: baseline; }
+.ml-story-num { font: italic 600 15px var(--ml-serif); color: var(--ml-margin); border: 1.5px solid var(--ml-margin); border-radius: 50%;
+  width: 26px; height: 26px; flex: none; display: inline-grid; place-items: center; transform: translateY(-2px); }
+.ml-story-text { display: grid; gap: 10px; font-size: 15px; line-height: 1.6; color: var(--ml-ink); }
+.ml-story-text a { color: var(--ml-moss-ink, var(--ml-ink)); text-decoration: underline; }
+.ml-story-figure { margin: 0; display: grid; gap: 6px; }
+.ml-story-figure img { width: 100%; height: auto; border-radius: var(--ml-radius-sm); border: 1px solid var(--ml-border); }
+.ml-story-figure figcaption { font: italic 13px/1.45 var(--ml-serif); color: var(--ml-muted); }
+.ml-story-figure figcaption small { font: 11.5px var(--ml-sans); font-style: normal; color: var(--ml-subtle); }
+.ml-story-quote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--ml-margin); display: grid; gap: 6px; }
+.ml-story-quote p { font: italic 17px/1.5 var(--ml-serif); }
+.ml-story-quote footer { font-size: 12.5px; color: var(--ml-muted); }
+.ml-story-end { padding: 28px 0; display: grid; gap: 12px; justify-items: start; }
+.ml-story-end p { color: var(--ml-muted); font: italic 15px var(--ml-serif); }
+.ml-atlas--reading .ml-tools, .ml-atlas--reading .ml-timestrip { display: none; }
+
+/* One step at a time, over the map. */
+.ml-story-card { position: absolute; z-index: 14; left: 18px; bottom: 18px; width: min(440px, calc(100% - 36px)); max-height: calc(100% - 36px);
+  display: flex; flex-direction: column; gap: 10px; padding: 16px 18px 14px; border: 1px solid var(--ml-border); border-radius: var(--ml-radius-lg);
+  background: var(--ml-overlay); box-shadow: var(--ml-shadow); backdrop-filter: blur(8px); }
+.ml-story-card h2:focus { outline: none; }
+.ml-story-card-body { overflow: auto; display: grid; gap: 12px; min-height: 0; }
+.ml-story-card .ml-story-figure img { max-height: 32vh; object-fit: contain; }
+.ml-story-nav { display: flex; align-items: center; gap: 10px; padding-top: 8px; border-top: 1px solid var(--ml-border); }
+.ml-story-dots { flex: 1; display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; }
+.ml-story-dots i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--ml-margin); }
+.ml-story-dots i.is-on { background: var(--ml-margin); }
+.ml-story-keys { font: 11px var(--ml-mono); color: var(--ml-subtle); }
+.ml-story-card.is-presenting { width: min(520px, calc(100% - 36px)); }
+.ml-story-card.is-presenting h2 { font-size: 28px; }
+.ml-story-card.is-presenting .ml-story-text { font-size: 17px; }
+.ml-atlas--presenting .ml-body { grid-template-columns: minmax(0, 1fr); }
+.ml-atlas--presenting .ml-inspector, .ml-atlas--presenting .ml-tools, .ml-atlas--presenting .ml-timestrip,
+.ml-atlas--presenting .ml-story-editor { display: none; }
+@media (max-width: 720px) {
+  .ml-story-editor { left: 10px; right: 10px; width: auto; top: 60px; max-height: calc(100% - 80px); }
+  .ml-story-card { left: 10px; right: 10px; bottom: 10px; width: auto; max-height: 62%; }
+  .ml-atlas--reading .ml-inspector { display: none; }
+  .ml-atlas--reading .ml-body { grid-template-columns: minmax(0, 1fr); }
+  .ml-atlas--reading .ml-canvas { height: calc(100dvh - var(--ml-header-h)); }
+}
+@media (prefers-reduced-motion: reduce) { .ml-story-section { transition: none; } }

@@ -3,6 +3,7 @@ import { parseGraphDocument, nodeTypeSchema, type GraphDocument } from "./schema
 import { nodeStyleSchema, type NodeStyleOverride } from "./perspectives";
 import { readAtlasLocation } from "./geography";
 import { edgePolarity } from "./systems";
+import { storySchema, type Story } from "./stories";
 
 /** A snapshot is deliberately much smaller than the source graph: no source URLs,
  * import provenance, arbitrary custom properties, private metadata or evidence payloads.
@@ -39,7 +40,7 @@ const sharedStyleSchema=nodeStyleSchema;
 export const LINK_LIMITS={records:150,links:300} as const;
 export const HOSTED_LIMITS={records:20_000,links:60_000} as const;
 export type SnapshotLimits={records:number;links:number};
-const snapshotSchema=(limits:SnapshotLimits)=>z.object({
+const snapshotSchema=(limits:SnapshotLimits,withStory=false)=>z.object({
   format:z.literal("mossline-shared-view"),
   version:z.literal(1),
   title:z.string().trim().min(1).max(120),
@@ -56,7 +57,9 @@ const snapshotSchema=(limits:SnapshotLimits)=>z.object({
   positions:z.record(z.string().min(1).max(200),z.object({
     x:z.number().finite().min(-1000000).max(1000000),
     y:z.number().finite().min(-1000000).max(1000000)
-  }).strict()).optional()
+  }).strict()).optional(),
+  /** A story told over the map. Only copies stored on a server carry one: pictures make it too big for a link. */
+  story:withStory?storySchema.optional():z.never().optional()
 }).strict().superRefine((data,ctx)=>{
   const ids=new Set<string>();
   data.nodes.forEach((node,index)=>{
@@ -76,8 +79,10 @@ const snapshotSchema=(limits:SnapshotLimits)=>z.object({
   }
 });
 export const publishedSnapshotSchema=snapshotSchema(LINK_LIMITS);
-export const hostedSnapshotSchema=snapshotSchema(HOSTED_LIMITS);
-export type PublishedSnapshot=z.infer<typeof publishedSnapshotSchema>;
+export const hostedSnapshotSchema=snapshotSchema(HOSTED_LIMITS,true);
+export type PublishedSnapshot=Omit<z.infer<typeof publishedSnapshotSchema>,"story">;
+/** A copy stored on a server: the same, and perhaps a story. */
+export type HostedSnapshot=PublishedSnapshot&{story?:Story};
 export type PublishSettings={
   view:PublishedSnapshot["view"];
   layout:PublishedSnapshot["layout"];
@@ -134,8 +139,8 @@ export function createPublishedSnapshot(graph:GraphDocument,settings:PublishSett
 export const parsePublishedSnapshot=(value:unknown):PublishedSnapshot=>
   publishedSnapshotSchema.parse(value);
 /** A copy stored on a Mossline server: same fields, room for whole maps. */
-export const parseHostedSnapshot=(value:unknown):PublishedSnapshot=>
-  hostedSnapshotSchema.parse(value);
+export const parseHostedSnapshot=(value:unknown):HostedSnapshot=>
+  hostedSnapshotSchema.parse(value) as HostedSnapshot;
 export function sharedSnapshotGraph(snapshot:PublishedSnapshot):GraphDocument {
   return parseGraphDocument({version:1,title:snapshot.title,description:snapshot.introduction??"",
     nodes:snapshot.nodes,edges:snapshot.edges.map(({polarity,...edge})=>polarity?{...edge,properties:{polarity}}:edge)});

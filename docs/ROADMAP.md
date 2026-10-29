@@ -8,7 +8,9 @@ In order. The design notes say what each involves and what's still to decide.
    - Consent, credit and alt text travel with every item of media.
    - Annotations anchored to records and places, drawn as the author's "marginalia", never mistaken for data.
    - Read by scrolling or presented step by step; published with item-by-item review.
-   - [ ] First release: steps, text, images, quotes, shape annotations, scrolling and presenting, publishing.
+   - [x] First release: steps, text, images, quotes, shape annotations (ring, note, arrow, number), scrolling and presenting, publishing.
+   - [ ] Stories travel with shared maps, so people working on a map can write them together.
+   - [ ] Marks on the Map lens (places), and pictures pinned to a record or place.
    - [ ] Audio with transcripts, captioned video, drawn areas on the map.
    - [ ] Readers responding (as pencil, reviewed by the author or organisation), or a link with Map my Patch.
 2. **Hand-drawn styling** ([design notes](design/HAND_DRAWN.md)): a Sketched option beside Clean.
@@ -16,7 +18,7 @@ In order. The design notes say what each involves and what's still to decide.
    - Ink, pencil and wash keep their meaning; the wobble is fixed per record, not random each time.
    - [ ] Prove the look in Themes on a small map.
    - [ ] Sketched Sigma programs with a size fallback.
-   - [ ] Clean/Sketched switch, and the author's choice for published maps and stories.
+   - [ ] Clean/Sketched switch, and the author's choice for published maps and stories (story marks are already drawn by hand).
    - [ ] Inked basemap for the Map lens; hand-drawn charts.
 3. **Conversation maps.** Areas drawn by residents on the Map lens, comments on places and records, and quick contributions from people without accounts (or via Map my Patch).
 4. **Field notes (experiment).** A layer for sensory and observational mapping: what was noticed, where, how strongly, along a walk. Drawn as rings and contours on a sketched map. Separate from records and links.

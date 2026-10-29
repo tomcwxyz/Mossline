@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode } from "@mossline/graph-core";
+import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode, type StoryMark } from "@mossline/graph-core";
+import { arrowPath, calloutPath, numberAt, ringPath, type Point } from "./marginalia";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
 
@@ -24,7 +25,14 @@ type Props = {
   /** Colour of a recorded link (by kind or by sign), or null for plain ink; linkKey changes when the rule does. */
   linkColour?: (edge: GraphEdge) => string | null;
   linkKey?: string;
+  /** A story step: the author's marks, and the records to bring into view (zooming in if need be). */
+  marks?: StoryMark[];
+  frame?: string[];
+  /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
+  frameKey?: string;
 };
+/** People who ask for less motion get cuts instead of camera moves. */
+const reducedMotion = () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 type SigmaType = import("sigma").default;
 /** Home framing: a little zoomed out so chips, key and caption do not cover
  *  records. Themes also leaves room for the tag list on the left. */
@@ -36,7 +44,7 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "" }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, frame, frameKey }: Props) {
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
   const stage = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
@@ -44,6 +52,10 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   const areaLayer = useRef<HTMLDivElement>(null);
   /** "+" and "−" badges on the links in focus: signs drawn as HTML so they stay legible. */
   const signLayer = useRef<HTMLDivElement>(null);
+  /** The author's marks, redrawn as the camera moves. */
+  const markLayer = useRef<SVGSVGElement>(null);
+  const marksRef = useRef(marks); marksRef.current = marks;
+  const aliasRef = useRef(alias); aliasRef.current = alias;
   const sigmaRef = useRef<SigmaType | null>(null);
   const graphRef = useRef<GraphType | null>(null);
   const pick = useRef(onPick); pick.current = onPick;
@@ -88,6 +100,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       const pa = renderer.framedGraphToViewport(a), pb = renderer.framedGraphToViewport(b);
       el.style.transform = `translate(${Math.round((pa.x + pb.x) / 2 - 9)}px, ${Math.round((pa.y + pb.y) / 2 - 9)}px)`;
     }
+    drawMarks();
     const layer = areaLayer.current;
     if (!layer) return;
     const ratio = renderer.getCamera().ratio;
@@ -373,6 +386,29 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     };
     planLabels(); // refreshes the renderer once with the new focus
   }
+  /** Places each of the author's marks against the records it's anchored to; marks whose records aren't drawn are hidden. */
+  function drawMarks() {
+    const renderer = sigmaRef.current, svg = markLayer.current;
+    if (!renderer || !svg) return;
+    const at = (id: string): Point | null => {
+      const d = renderer.getNodeDisplayData(aliasRef.current?.get(id) ?? id);
+      return d && !(d as { hidden?: boolean }).hidden ? renderer.framedGraphToViewport(d) : null;
+    };
+    const bounds = { width: svg.clientWidth || 800, height: svg.clientHeight || 600 };
+    for (const g of Array.from(svg.children) as SVGGElement[]) {
+      const mark = marksRef.current?.find(m => m.id === g.dataset.mark);
+      const points = mark ? mark.targets.map(at) : [];
+      if (!mark || !points.length || points.some(p => !p)) { g.style.display = "none"; continue; }
+      g.style.display = "";
+      const pts = points as Point[];
+      const [line, extra, circle, text] = Array.from(g.children) as [SVGPathElement, SVGPathElement, SVGCircleElement, SVGTextElement];
+      const place = (p: Point, anchor = "middle") => { text.setAttribute("x", String(p.x)); text.setAttribute("y", String(p.y)); text.setAttribute("text-anchor", anchor); };
+      if (mark.kind === "ring") { const r = ringPath(pts, mark.id); line.setAttribute("d", r.d); extra.setAttribute("d", ""); place(r.top); }
+      else if (mark.kind === "arrow") { const a = arrowPath(pts[0], pts[1], mark.id); line.setAttribute("d", a.d); extra.setAttribute("d", a.head); place({ x: a.mid.x, y: a.mid.y - 8 }); }
+      else if (mark.kind === "callout") { const c = calloutPath(pts[0], mark.id, bounds); line.setAttribute("d", c.d); extra.setAttribute("d", ""); place(c.label, c.anchor); }
+      else { const n = numberAt(pts[0]); line.setAttribute("d", ""); extra.setAttribute("d", ""); circle.setAttribute("cx", String(n.x)); circle.setAttribute("cy", String(n.y)); place({ x: n.x, y: n.y + 4.5 }); }
+    }
+  }
   /** Home view; a phone-width canvas has no side cards, so it can sit closer. */
   const home = () => {
     const f = FRAMES[mode];
@@ -388,9 +424,15 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     const renderer = sigmaRef.current, data = graphRef.current;
     // Closing a route returns to the home view it was framed from.
     const routed = Boolean(route?.nodeIds.length);
-    if (hadRoute.current && !routed && !selectedId && renderer) void renderer.getCamera().animate(home(), { duration: 350 });
+    if (hadRoute.current && !routed && !selectedId && !frame && renderer) void renderer.getCamera().animate(home(), { duration: 350 });
     hadRoute.current = routed;
-    const target = route?.nodeIds.length ? route.nodeIds : selectedId ? [selectedId] : [];
+    const framed = (frame ?? []).map(id => alias?.get(id) ?? id).filter(id => data?.hasNode(id));
+    const target = route?.nodeIds.length ? route.nodeIds : [...new Set([...framed, ...(selectedId ? [selectedId] : [])])];
+    // A story step with nothing to point at shows the whole map.
+    if (frame && !target.length && renderer && status === "ready") {
+      if (reducedMotion()) renderer.getCamera().setState(home()); else void renderer.getCamera().animate(home(), { duration: 600 });
+      return;
+    }
     if (!renderer || !data || !target.length || status !== "ready") return;
     const rect = container.current?.getBoundingClientRect();
     if (!rect) return;
@@ -398,26 +440,37 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     // on wide screens, where it sits over the left of the canvas.
     const dock = route?.nodeIds.length && rect.width > 860 ? 480 : 0;
     const free = { left: dock + 40, right: rect.width - 70, top: 70, bottom: rect.height - (rect.width > 860 ? 100 : 40) };
+    // A story card over the map: beside it on wide screens, above it on narrow ones.
+    const card = container.current?.closest(".ml-canvas")?.querySelector(".ml-story-card")?.getBoundingClientRect();
+    if (card) {
+      if (rect.width > 860) free.left = Math.max(free.left, card.right - rect.left + 30);
+      else free.bottom = Math.min(free.bottom, card.top - rect.top - 16);
+    }
     const points = target.map(id => renderer.getNodeDisplayData(id)).filter(Boolean)
       .map(d => renderer.framedGraphToViewport(d as { x: number; y: number }));
     if (!points.length) return;
     const minX = Math.min(...points.map(p => p.x)), maxX = Math.max(...points.map(p => p.x));
     const minY = Math.min(...points.map(p => p.y)), maxY = Math.max(...points.map(p => p.y));
     const inside = minX >= free.left && maxX <= free.right && minY >= free.top && maxY <= free.bottom;
-    if (inside) return;
-    // Zoom out just enough to fit (never in), then centre the group in the free area.
+    if (inside && !frame) return;
+    // Exploring: zoom out just enough to fit (never in). In a story, frame the step's records snugly, in or out.
     const cam = renderer.getCamera(), state = cam.getState();
-    const fit = Math.max((maxX - minX) / Math.max(free.right - free.left, 1), (maxY - minY) / Math.max(free.bottom - free.top, 1));
-    const ratio = Math.min(state.ratio * Math.max(fit, 1), 4);
+    const fit = Math.max((maxX - minX + (frame ? 160 : 0)) / Math.max(free.right - free.left, 1),
+      (maxY - minY + (frame ? 140 : 0)) / Math.max(free.bottom - free.top, 1));
+    const ratio = frame ? Math.min(Math.max(state.ratio * fit, target.length === 1 ? Math.min(state.ratio, 0.5) : 0.12), 4)
+      : Math.min(state.ratio * Math.max(fit, 1), 4);
     const centre = renderer.viewportToFramedGraph({ x: (minX + maxX) / 2, y: (minY + maxY) / 2 });
     const middle = renderer.viewportToFramedGraph({ x: rect.width / 2, y: rect.height / 2 });
     const aim = renderer.viewportToFramedGraph({ x: (free.left + free.right) / 2, y: (free.top + free.bottom) / 2 });
     const k = ratio / state.ratio;
     // Where the group's centre would sit after zooming about the current view centre.
     const gx = middle.x + (centre.x - middle.x), gy = middle.y + (centre.y - middle.y);
-    void cam.animate({ x: gx - (aim.x - middle.x) * k, y: gy - (aim.y - middle.y) * k, ratio }, { duration: 450 });
+    const next = { x: gx - (aim.x - middle.x) * k, y: gy - (aim.y - middle.y) * k, ratio };
+    if (reducedMotion()) cam.setState(next); else void cam.animate(next, { duration: frame ? 700 : 450 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, route, status, built]);
+  }, [selectedId, route, status, built, frame?.join("|"), frameKey]);
+  // New marks: draw them straight away, then on every camera move.
+  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, built]);
   // Area names are placed on Sigma's render; place them as soon as they arrive.
   useEffect(() => { syncOverlay(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [areas, built]);
 
@@ -442,6 +495,13 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     <div ref={container} className="ml-sigma-viewport" role="img"
       aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
     <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
+    {!!marks?.length && <svg ref={markLayer} className="ml-marks" aria-hidden="true">
+      {marks.map(m => <g key={m.id + ":" + m.targets.join(",")} data-mark={m.id} className={"ml-mark ml-mark--" + m.kind} style={{ display: "none" }}>
+        <path className="ml-mark-line"/><path className="ml-mark-line"/>
+        {m.kind === "number" ? <circle className="ml-mark-line" r={11}/> : <circle r={0}/>}
+        <text className="ml-mark-text">{m.kind === "number" ? m.n : m.text ?? ""}</text>
+      </g>)}
+    </svg>}
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
       {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
         <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records{a.kind === "suggested" ? " · suggested" : ""}</small>

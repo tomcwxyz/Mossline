@@ -26,7 +26,7 @@ Two exceptions happen only if you choose them:
 | A short-lived count of sign-in attempts, keyed on your network address | To stop people guessing or flooding sign-in | Legitimate interests (security) | About a minute |
 | A scrambled (hashed) copy of addresses that asked for sign-in links | To stop anyone flooding an inbox with sign-in emails | Legitimate interests (security) | One day |
 | When you last signed in | To know which accounts are unused (see below) | Legitimate interests | Until you delete your account |
-| Maps you publish | To show them at their link | Contract | Until you unpublish them or delete your account |
+| Maps you publish, and any story published with them (its words, pictures and quotes) | To show them at their link | Contract | Until you unpublish them or delete your account |
 | Maps you keep in your account, their changes, and who you shared them with | To let you and the people you choose open and change them | Contract | Until you or your organisation delete them, or you delete your account |
 | Your organisation, your role in it, and invitations | To run the organisation | Contract | Until you leave, or the organisation is closed |
 | Plan and payment records: what was paid, when, and the reference our payment provider gives us | To provide the plan, and because tax law requires it | Contract; legal obligation | Six years after the payment |
