@@ -10,7 +10,7 @@ In order. The design notes say what each involves and what's still to decide.
    - Read by scrolling or presented step by step; published with item-by-item review.
    - [x] First release: steps, text, images, quotes, shape annotations (ring, note, arrow, number), scrolling and presenting, publishing.
    - [x] Stories travel with shared maps, so people working on a map can write them together.
-   - [ ] Marks on the Map lens (places), and pictures pinned to a record or place.
+   - [x] Marks on the Map lens (places), and pictures pinned to a record or place.
    - [ ] Audio with transcripts, captioned video, drawn areas on the map.
    - [ ] Readers responding (as pencil, reviewed by the author or organisation), or a link with Map my Patch.
 2. **Hand-drawn styling** ([design notes](design/HAND_DRAWN.md)): a Sketched option beside Clean.

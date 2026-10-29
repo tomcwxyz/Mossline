@@ -89,7 +89,8 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 
 - **Model.** `packages/graph-core/src/stories.ts`. A story is up to 60 steps. Each step has the atlas's view state (lens, record, search, group, filters, dates, loop), a heading, short text, up to six pictures or quotes and up to 40 marks. Everything points at records by ID.
 - **Text.** A deliberately small, safe subset: paragraphs, line breaks, `**bold**`, `*italic*` and `[links](https://…)`. Everything else is shown as typed, so a published story can't carry markup or scripts.
-- **Marks.** Ring (any number of records), note (one record, with text), arrow (two records) and number. Drawn over the Network and Themes lenses in the marginalia colour (`--ml-margin`), in a loose hand. The wobble is seeded from the mark's ID, so it stays still as the map moves. Marks are placed against records each frame, so they follow zoom and layout; a mark whose records aren't drawn is hidden.
+- **Marks.** Ring (any number of records), note (one record, with text), arrow (two records) and number. Drawn over the Network, Themes and Map lenses (on the Map, for records with a place) in the marginalia colour (`--ml-margin`), in a loose hand. The wobble is seeded from the mark's ID, so it stays still as the map moves. Marks are placed against records each frame, so they follow zoom and layout; a mark whose records aren't drawn is hidden.
+- **Pinned pictures.** A picture can be pinned beside a record: while its step is shown, it appears as a small postcard next to that record on the Network, Themes or Map lens, as well as in the text.
 - **Pictures and quotes.** Uploaded pictures are shrunk to 1,600 pixels across and kept in the browser (IndexedDB) with the story. A picture needs a description (alt text) and an answer about recognisable people before the story can be published; a missing credit is a note, not a block. A quote needs the person's agreement, ticked by the author.
 - **Writing.** *Stories…* in the map's menu. A step is added from the map as it is; *Use the map as it is now* updates it. Marks are made by clicking records on the map, or choosing them from *Browse records* (keyboard). A checklist shows what blocks publishing and what's worth a look.
 - **Reading.** A column of steps beside the pinned map, which follows the step a third of the way down the column. On a phone, one step at a time on a card over the map. **Presenting** is the card, larger, with ← → and Esc. The map frames each step's records, clear of the card; with reduced motion, it cuts instead of moving.
@@ -103,6 +104,6 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 
 ## Next
 
-- Audio with transcripts, captioned video, and drawn areas on the Map lens.
+- Audio with transcripts, captioned video, and drawn areas on the Map lens (marks on places are done).
 - Freehand marks, once shapes have been used for a while.
 - Readers responding, as pencil.
