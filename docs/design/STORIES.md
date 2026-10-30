@@ -85,6 +85,7 @@ A conversation map invites responses: "is this your experience?", "add a place t
 - **On a phone,** the step card folds down to its buttons (*Hide text*) to look at the map.
 - **Links to a step.** A published story keeps the current step in its address (`?step=3`), and *Copy a link to this step* gives one to send.
 - **Writing.** A step's view is shown as chips: a selection, search or filter left over from exploring can be removed with ×. Steps can be duplicated. Pictures can be dropped onto a step or pasted, several at once.
+- **Embedding.** A published story (or map) can be put on another website: *Embed* on its page gives the code. See `docs/HOSTED_PUBLISHING.md`.
 - **Where stories live.** Stories are kept with their map: in the browser, in a shared map, or in an organisation.
 - **What publishing includes.** The map, the story and its media, after the same item-by-item review as publishing a map. (The first release publishes the whole map with a story, since steps use filters; see below.)
 - **How the published page works.** Published stories open in the atlas's read-only mode, with the story column added.

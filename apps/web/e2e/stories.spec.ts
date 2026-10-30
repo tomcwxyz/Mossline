@@ -2,6 +2,8 @@ import {test,expect,type Page} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {readFile,rm} from "node:fs/promises";
 import {join} from "node:path";
+import {createServer} from "node:http";
+import type {AddressInfo} from "node:net";
 
 const axe=async(page:Page)=>expect((await new AxeBuilder({page}).include(".ml-atlas")
   .withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze()).violations).toEqual([]);
@@ -208,6 +210,27 @@ test("a published story opens on the story, and the map can still be explored",a
   await expect(reader.getByRole("button",{name:"Copy a link to this step"})).toBeVisible();
   await expect(published.getByRole("button",{name:"Edit",exact:true})).toHaveCount(0);
   await axe(published);
+  // Embedding: the code, a frame that works on another page, and every other page still refusing to be framed.
+  await published.getByRole("button",{name:"Embed"}).click();
+  const code=await published.getByLabel("Embed code").inputValue();
+  expect(code).toContain("/p/"+slug+"/embed");
+  const embedHeaders=(await published.request.get("/p/"+slug+"/embed")).headers();
+  expect(embedHeaders["content-security-policy"]).toBe("frame-ancestors *");
+  expect(embedHeaders["x-frame-options"]).toBeUndefined();
+  const pageHeaders=(await published.request.get("/p/"+slug)).headers();
+  expect(pageHeaders["content-security-policy"]).toBe("frame-ancestors 'self'");
+  expect(pageHeaders["x-frame-options"]).toBe("SAMEORIGIN");
+  const host=await page.context().newPage();
+  // A page on another site, served by the test from its own little web server.
+  const site=createServer((_q,r)=>{r.setHeader("content-type","text/html");r.end(`<h1>Someone's website</h1>${code}`);});
+  await new Promise<void>(done=>site.listen(0,"127.0.0.1",()=>done()));
+  await host.goto("http://localhost:"+(site.address() as AddressInfo).port+"/");
+  const framed=host.frameLocator("iframe");
+  await expect(framed.locator(".ml-story-reader h1")).toHaveText("A short tour");
+  await expect(framed.getByRole("link",{name:"Open full page ↗"})).toHaveAttribute("target","_blank");
+  await host.close(); site.close();
+  await published.getByRole("button",{name:"Close embed"}).click();
+
   await reader.getByRole("button",{name:"Explore the map"}).first().click();
   await expect(reader).toHaveCount(0);
   await expect(published.getByRole("button",{name:"Read the story"})).toBeVisible();
