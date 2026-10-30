@@ -88,6 +88,7 @@ A conversation map invites responses: "is this your experience?", "add a place t
 - **Embedding.** A published story (or map) can be put on another website: *Embed* on its page gives the code. See `docs/HOSTED_PUBLISHING.md`.
 - **Link previews.** A shared link to a published story shows its title, introduction and cover (or a small drawn network). See `docs/HOSTED_PUBLISHING.md`.
 - **Print or PDF.** *Print* (writing) or *Print or PDF* (reading) shows each step in turn, takes a picture of the map as it's shown (marks, spotlight and names included), then opens the browser's print dialog. The layout has the cover, then a page per step with its map, words, pictures, quotes and credits, ready for paper or *Save as PDF*. Steps on the Funding and Timeline lenses print without a map picture for now, and say so.
+- **Audio.** A step can have short audio clips: an MP3, M4A, OGG or WebM file up to 2 MB, a recording made in the browser (up to three minutes, at speech quality), or an https link. Every clip needs a transcript, and the author's confirmation that everyone heard agreed, before the story can be published. Readers get a player, who's speaking, and the transcript; printed stories carry the transcript. Clips are kept whole, not re-encoded, so a link suits anything long.
 - **Where stories live.** Stories are kept with their map: in the browser, in a shared map, or in an organisation.
 - **What publishing includes.** The map, the story and its media, after the same item-by-item review as publishing a map. (The first release publishes the whole map with a story, since steps use filters; see below.)
 - **How the published page works.** Published stories open in the atlas's read-only mode, with the story column added.
@@ -122,6 +123,6 @@ Decided: stories are mostly short; marks are shapes first, freehand later; reade
 
 ## Next
 
-- Audio with transcripts, captioned video, and drawn areas on the Map lens (marks on places are done).
+- Captioned video, and drawn areas on the Map lens (audio and marks on places are done).
 - Freehand marks, once shapes have been used for a while.
 - Readers responding, as pencil.
