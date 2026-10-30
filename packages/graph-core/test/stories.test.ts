@@ -75,3 +75,13 @@ test("a cover picture is held to the same standard as any other",()=>{
   assert.equal(storyProblems(parseStory(story)).filter(p=>p.severity==="block").length,0);
   assert.throws(()=>parseStory({...story,cover:{...story.cover,src:"http://example.org/insecure.jpg"}}));
 });
+
+test("an audio clip needs a transcript and the agreement of the people heard",()=>{
+  const step=newStep({lens:"network"},"Listen");
+  step.media.push({id:"au",kind:"audio",src:"data:audio/webm;codecs=opus;base64,GkXfo0AgQoaBAUL3gQFC8oEEQvOBCEKC",transcript:"",who:"",consent:false});
+  const story=parseStory({...newStory("Voices"),steps:[step]});
+  const blocks=storyProblems(story).filter(p=>p.severity==="block").map(p=>p.message);
+  assert.deepEqual(blocks,["Step 1: an audio clip needs a transcript, for people who can't hear it.","Step 1: confirm the people heard agreed to the recording being used."]);
+  assert.throws(()=>parseStory({...story,steps:[{...step,media:[{...step.media[0],src:"data:text/html;base64,PHNjcmlwdD4="}]}]}));
+  assert.throws(()=>parseStory({...story,steps:[{...step,media:[{...step.media[0],src:"http://example.org/a.mp3"}]}]}));
+});

@@ -17,6 +17,11 @@ const httpsOrData = z.string().max(3_000_000).refine(v => {
   try { const u = new URL(v); return u.protocol === "https:" && !u.username && !u.password; } catch { return false; }
 }, "Images must be uploaded, or an https link");
 
+const httpsOrAudio = z.string().max(3_000_000).refine(v => {
+  if (/^data:audio\/(mpeg|mp4|ogg|webm|aac|x-m4a);(codecs=[a-z0-9.]+;)?base64,[A-Za-z0-9+/=]+$/.test(v)) return true;
+  try { const u = new URL(v); return u.protocol === "https:" && !u.username && !u.password; } catch { return false; }
+}, "Audio must be uploaded, recorded, or an https link");
+
 /** What the map shows at a step: the same state the atlas keeps in its address. */
 export const storyViewSchema = z.object({
   lens: z.enum(["network", "map", "themes", "funding", "timeline"]),
@@ -50,6 +55,17 @@ export const storyMediaSchema = z.discriminatedUnion("kind", [
     who: z.string().max(200),
     /** The person agreed to be quoted: required to publish. */
     consent: z.boolean(),
+    record: id.optional()
+  }).strict(),
+  z.object({
+    id, kind: z.literal("audio"), src: httpsOrAudio,
+    title: z.string().max(140).optional(),
+    /** Everything said, for people who can't hear it and for search: required to publish. */
+    transcript: z.string().max(20_000),
+    who: z.string().max(200),
+    /** The people heard agreed to it being used: required to publish. */
+    consent: z.boolean(),
+    credit: z.string().max(200).optional(),
     record: id.optional()
   }).strict()
 ]);
@@ -160,6 +176,10 @@ export function storyProblems(story: Story, graph?: GraphDocument): StoryProblem
         if (!m.alt.trim()) problems.push({ stepId: step.id, severity: "block", message: where + ": an image needs a description for people who can't see it." });
         if (m.people === "unknown") problems.push({ stepId: step.id, severity: "block", message: where + ": say whether recognisable people in an image agreed to it being used." });
         if (!m.credit?.trim()) problems.push({ stepId: step.id, severity: "note", message: where + ": an image has no credit." });
+      } else if (m.kind === "audio") {
+        if (!m.transcript.trim()) problems.push({ stepId: step.id, severity: "block", message: where + ": an audio clip needs a transcript, for people who can't hear it." });
+        if (!m.consent) problems.push({ stepId: step.id, severity: "block", message: where + ": confirm " + (m.who.trim() || "the people heard") + " agreed to the recording being used." });
+        if (!m.who.trim()) problems.push({ stepId: step.id, severity: "note", message: where + ": an audio clip doesn't say who's speaking." });
       } else {
         if (!m.consent) problems.push({ stepId: step.id, severity: "block", message: where + ": confirm " + (m.who.trim() || "the person quoted") + " agreed to be quoted." });
         if (!m.who.trim()) problems.push({ stepId: step.id, severity: "note", message: where + ": a quote has no attribution." });

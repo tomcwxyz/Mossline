@@ -89,6 +89,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
   };
   const [dropping, setDropping] = useState(false);
   const [linking, setLinking] = useState(false);
+  const [addingAudio, setAddingAudio] = useState(false);
   async function addImages(files: File[]) {
     if (!step) return;
     setImageError("");
@@ -226,11 +227,15 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
             onClick={() => setLinking(v => !v)}>Picture from a link…</button>
           <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() =>
             putStep({ media: [...step.media, { id: storyId("media:"), kind: "quote", text: "", who: "", consent: false }] })}>Add a quote</button>
+          <button type="button" className="ml-quiet" disabled={step.media.length >= 6} aria-expanded={addingAudio}
+            onClick={() => setAddingAudio(v => !v)}>Add audio…</button>
           <input ref={fileRef} hidden type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose pictures"
             onChange={e => { const files = [...(e.currentTarget.files ?? [])]; if (files.length) void addImages(files); e.currentTarget.value = ""; }}/>
         </div>
         {linking && <PictureLink onAdd={src => { setLinking(false);
           putStep({ media: [...step.media, { id: storyId("media:"), kind: "image", src, alt: "", people: "unknown" }] }); }}/>}
+        {addingAudio && <AudioAdder onAdd={src => { setAddingAudio(false);
+          putStep({ media: [...step.media, { id: storyId("media:"), kind: "audio", src, transcript: "", who: "", consent: false }] }); }}/>}
         {imageError && <p className="ml-small ml-story-error" role="alert">{imageError}</p>}
         {step.media.map(m => <div key={m.id} className="ml-edit-form ml-edit-form--inline ml-story-media-edit">
           {m.kind === "image" ? <>
@@ -257,6 +262,18 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
                 <option value="unknown">Choose…</option>
                 <option value="none">Nobody recognisable</option>
                 <option value="consented">They agreed to it being used</option></select></label>
+          </> : m.kind === "audio" ? <>
+            <audio controls preload="metadata" src={m.src} className="ml-story-audio"/>
+            <label className="ml-edit-field"><span>Title <small>optional</small></span>
+              <input value={m.title ?? ""} maxLength={140} onChange={e => putMedia(m.id, { title: e.target.value || undefined })}/></label>
+            <label className="ml-edit-field"><span>Transcript <small>everything said, for people who can&apos;t hear it</small></span>
+              <textarea rows={4} value={m.transcript} maxLength={20000} onChange={e => putMedia(m.id, { transcript: e.target.value })}/></label>
+            <label className="ml-edit-field"><span>Who&apos;s speaking</span>
+              <input value={m.who} maxLength={200} placeholder="Name, role, or a description they chose" onChange={e => putMedia(m.id, { who: e.target.value })}/></label>
+            <label className="ml-edit-field"><span>Credit <small>optional</small></span>
+              <input value={m.credit ?? ""} maxLength={200} placeholder="Who recorded it" onChange={e => putMedia(m.id, { credit: e.target.value || undefined })}/></label>
+            <label className="ml-story-check"><input type="checkbox" checked={m.consent} onChange={e => putMedia(m.id, { consent: e.target.checked })}/>
+              Everyone heard agreed to the recording being used here</label>
           </> : <>
             <label className="ml-edit-field"><span>Quote</span>
               <textarea rows={3} value={m.text} maxLength={1200} onChange={e => putMedia(m.id, { text: e.target.value })}/></label>
@@ -266,7 +283,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
               They agreed to be quoted, attributed this way</label>
           </>}
           <button type="button" className="ml-link-button ml-edit-remove" onClick={() => putStep({ media: step.media.filter(x => x.id !== m.id) })}>
-            Remove {m.kind === "image" ? "picture" : "quote"}</button>
+            Remove {m.kind === "image" ? "picture" : m.kind === "audio" ? "audio" : "quote"}</button>
         </div>)}
 
         <div className="ml-edit-actions">
@@ -339,7 +356,83 @@ function Picture({ src, alt, caption, credit, licence, className = "ml-story-fig
 function Media({ media }: { media: StoryMedia[] }) {
   return <>{media.map(m => m.kind === "image"
     ? <Picture key={m.id} src={m.src} alt={m.alt} caption={m.caption} credit={m.credit} licence={m.licence}/>
+    : m.kind === "audio" ? <figure key={m.id} className="ml-story-figure ml-story-listen">
+      {m.title && <p className="ml-story-listen-title">{m.title}</p>}
+      <audio controls preload="none" src={m.src}/>
+      <figcaption>{[m.who, m.credit].filter(Boolean).join(" · ")}</figcaption>
+      <details className="ml-story-transcript"><summary>Transcript</summary><p>{m.transcript}</p></details>
+    </figure>
     : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}</>;
+}
+
+/**
+ * Adding audio: a short file, a recording made here, or an https link. Clips
+ * are kept whole (no re-encoding), so long ones make a story heavy to keep
+ * and publish: a link suits anything over a couple of minutes.
+ */
+const AUDIO_MAX = 2_000_000;
+/** A data URL in the plain form stories accept: data:audio/<type>[;codecs=…];base64,… */
+const tidyAudioUrl = (url: string) => url.replace(/^data:audio\/([a-z0-9-]+)([^,]*),/i, (_m, type: string, params: string) => {
+  const codecs = params.split(";").find(p => p.startsWith("codecs="));
+  return "data:audio/" + (type === "x-m4a" ? "mp4" : type.toLowerCase()) + ";" + (codecs ? codecs.toLowerCase() + ";" : "") + "base64,";
+});
+function AudioAdder({ onAdd }: { onAdd: (src: string) => void }) {
+  const file = useRef<HTMLInputElement>(null);
+  const [problem, setProblem] = useState("");
+  const [url, setUrl] = useState("");
+  const [recording, setRecording] = useState<{ stop: () => void; started: number } | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    if (!recording) return;
+    const t = window.setInterval(() => {
+      const s = Math.floor((Date.now() - recording.started) / 1000);
+      setElapsed(s);
+      if (s >= 180) recording.stop(); // three minutes at most
+    }, 250);
+    return () => window.clearInterval(t);
+  }, [recording]);
+  const asDataUrl = (blob: Blob) => new Promise<string>((done, fail) => {
+    const r = new FileReader(); r.onload = () => done(tidyAudioUrl(String(r.result))); r.onerror = () => fail(r.error); r.readAsDataURL(blob);
+  });
+  async function take(blob: Blob) {
+    setProblem("");
+    if (!/^audio\/(mpeg|mp4|ogg|webm|aac|x-m4a)/.test(blob.type)) { setProblem("Use an MP3, M4A, OGG or WebM audio file."); return; }
+    if (blob.size > AUDIO_MAX) { setProblem("That clip is " + (blob.size / 1e6).toFixed(1) + " MB; the limit is 2 MB. Shorten it, or add it by a link."); return; }
+    try { onAdd(await asDataUrl(blob)); } catch { setProblem("Couldn't read that clip."); }
+  }
+  async function record() {
+    setProblem("");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const type = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4"].find(t => MediaRecorder.isTypeSupported(t)) ?? "";
+      const rec = new MediaRecorder(stream, { mimeType: type || undefined, audioBitsPerSecond: 32_000 });
+      const parts: Blob[] = [];
+      rec.ondataavailable = e => parts.push(e.data);
+      rec.onstop = () => { stream.getTracks().forEach(t => t.stop()); setRecording(null); void take(new Blob(parts, { type: rec.mimeType.split(";")[0] })); };
+      rec.start();
+      setElapsed(0);
+      setRecording({ stop: () => { if (rec.state !== "inactive") rec.stop(); }, started: Date.now() });
+    } catch { setProblem("Couldn't use the microphone. Check the browser has permission."); }
+  }
+  return <div className="ml-edit-form ml-edit-form--inline ml-story-audio-add">
+    <div className="ml-edit-bar">
+      <button type="button" className="ml-quiet" onClick={() => file.current?.click()} disabled={!!recording}>Choose a file…</button>
+      {recording
+        ? <button type="button" className="ml-solid" onClick={recording.stop}>Stop recording · {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}</button>
+        : typeof MediaRecorder !== "undefined" && <button type="button" className="ml-quiet" onClick={() => void record()}>Record…</button>}
+    </div>
+    <input ref={file} hidden type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/webm,audio/aac,audio/x-m4a,.m4a,.mp3" aria-label="Choose an audio file"
+      onChange={e => { const f = e.currentTarget.files?.[0]; e.currentTarget.value = ""; if (f) void take(f); }}/>
+    <form className="ml-story-audio-link" onSubmit={e => { e.preventDefault();
+      try { const u = new URL(url.trim()); if (u.protocol !== "https:" || u.username || u.password) throw Error(); onAdd(u.toString()); }
+      catch { setProblem("Use the clip's full web address, starting https://"); } }}>
+      <label className="ml-edit-field"><span>Or a link to the clip</span>
+        <input type="url" value={url} placeholder="https://…" onChange={e => { setUrl(e.target.value); setProblem(""); }}/></label>
+      <button type="submit" className="ml-quiet">Add</button>
+    </form>
+    {problem && <p className="ml-small ml-story-error" role="alert">{problem}</p>}
+    <p className="ml-small">Up to 2 MB uploaded, or three minutes recorded here. Keep clips short: they&apos;re kept whole, and go with the story when it&apos;s published. Every clip needs a transcript.</p>
+  </div>;
 }
 
 /** Adding a picture by its web address: only https, and the editor says where it will be fetched from. */
@@ -561,7 +654,10 @@ export function StoryPrint({ story, pictures, labelOf, link, mapTitle }: {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={m.src} alt={m.alt} referrerPolicy="no-referrer"/>
         {(m.caption || creditLine(m)) && <figcaption>{m.caption}{m.caption && creditLine(m) ? " · " : ""}{creditLine(m)}</figcaption>}
-      </figure> : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}
+      </figure> : m.kind === "audio" ? <blockquote key={m.id} className="ml-story-quote ml-print-audio">
+        <p className="ml-print-audio-head">Audio{m.title ? ": " + m.title : ""} · transcript</p><p>{m.transcript}</p>
+        {(m.who || m.credit) && <footer>— {[m.who, m.credit].filter(Boolean).join(" · ")}</footer>}</blockquote>
+      : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}
     </section>)}
     <footer className="ml-print-foot">Made with Mossline{link ? " · " + link : ""}</footer>
   </article>, document.body);

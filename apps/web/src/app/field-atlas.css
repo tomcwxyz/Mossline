@@ -1326,3 +1326,12 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
   .ml-print-foot { margin-top: 14pt; font-size: 8.5pt; color: #4A5049; }
   .ml-print a { color: inherit; }
 }
+/* Audio in stories: a player, who's speaking, and the transcript. */
+.ml-story-listen { display: grid; gap: 6px; padding: 10px 12px; border-radius: var(--ml-radius-sm); background: var(--ml-sunken); }
+.ml-story-listen audio, .ml-story-audio { width: 100%; }
+.ml-story-listen-title { font: 500 14px var(--ml-sans); }
+.ml-story-transcript summary { cursor: pointer; font-size: 13px; color: var(--ml-muted); }
+.ml-story-transcript p { margin-top: 6px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
+.ml-story-audio-link { display: flex; gap: 8px; align-items: end; }
+.ml-story-audio-link .ml-edit-field { flex: 1; }
+@media print { .ml-print-audio-head { font: 600 8.5pt "IBM Plex Sans", sans-serif !important; letter-spacing: .1em; text-transform: uppercase; color: #8A4A1C; } }

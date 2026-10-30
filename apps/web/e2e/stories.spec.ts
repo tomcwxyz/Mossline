@@ -74,6 +74,16 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await editor.getByLabel(/They agreed to be quoted/).check();
   await expect(checklist.locator(".is-block")).toHaveCount(0);
 
+  // An audio clip, with its transcript and the speakers' agreement.
+  await editor.getByRole("button",{name:"Add audio…"}).click();
+  await editor.getByLabel("Choose an audio file").setInputFiles({name:"voice.mp3",mimeType:"audio/mpeg",buffer:Buffer.from("ID3fictional-clip-bytes")});
+  await expect(editor.locator(".ml-story-audio")).toBeAttached();
+  await expect(checklist).toContainText("an audio clip needs a transcript");
+  await editor.getByLabel(/^Transcript/).fill("We cook on Thursdays. Anyone can come.");
+  await editor.getByLabel("Who's speaking").fill("A volunteer cook");
+  await editor.getByLabel(/Everyone heard agreed/).check();
+  await expect(checklist.locator(".is-block")).toHaveCount(0);
+
   // A cover picture, held to the same standard; and a picture from a link, which says where it comes from.
   const cover=editor.locator(".ml-story-cover-edit");
   await cover.locator("input[type=file]").setInputFiles({name:"cover.png",mimeType:"image/png",buffer:PNG});
@@ -99,6 +109,8 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await expect(reader.getByRole("link",{name:"the method"})).toHaveAttribute("rel",/noopener/);
   await expect(reader.getByRole("img",{name:"A shared kitchen with people cooking"})).toBeVisible();
   await expect(reader.locator("blockquote")).toContainText("A volunteer cook");
+  await reader.locator(".ml-story-transcript summary").click();
+  await expect(reader.locator(".ml-story-transcript")).toContainText("We cook on Thursdays.");
   await axe(page);
   await reader.getByRole("heading",{name:/Where skills come in/}).scrollIntoViewIfNeeded();
   await expect(page.locator(".ml-story-section.is-current h2")).toContainText("Where skills come in");
@@ -133,6 +145,7 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await expect(page.locator(".ml-print-map img")).toHaveCount(2);
   expect(await page.locator(".ml-print-map img").first().getAttribute("src")).toMatch(/^data:image\/jpeg;base64,/);
   await expect(page.locator(".ml-print")).toContainText("A volunteer cook");
+  await expect(page.locator(".ml-print .ml-print-audio")).toContainText("We cook on Thursdays.");
   await expect(page.locator(".ml-print")).toHaveCount(0);
   await expect(page.locator(".ml-story-reader")).toBeVisible();
 
