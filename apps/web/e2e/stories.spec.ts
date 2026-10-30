@@ -59,6 +59,13 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   // Drawn on the map in the author's colour, anchored to the records.
   await expect(page.locator(".ml-marks .ml-mark--ring")).toBeVisible();
   await expect(page.locator(".ml-marks .ml-mark--callout text")).toHaveText("Where it shows");
+  // New stories draw clean marks; the author can choose hand-drawn instead.
+  await expect(page.locator(".ml-marks.ml-marks--clean")).toBeVisible();
+  const markStyle=editor.getByRole("group",{name:"Marks on the map"});
+  await expect(markStyle.getByRole("button",{name:"Clean"})).toHaveAttribute("aria-pressed","true");
+  await markStyle.getByRole("button",{name:"Hand-drawn"}).click();
+  await expect(page.locator(".ml-marks.ml-marks--hand")).toBeVisible();
+  await markStyle.getByRole("button",{name:"Clean"}).click();
 
   // A picture and a quote: both hold publishing until described and agreed.
   await editor.getByLabel("Choose pictures").setInputFiles({name:"kitchen.png",mimeType:"image/png",buffer:PNG});

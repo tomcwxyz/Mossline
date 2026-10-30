@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   isRecorded, placedCoordinates, type FundingFlow, type GraphDocument, type GraphNode, type StoryMark
 } from "@mossline/graph-core";
-import { MarkLayer, placeMarks, type StoryPin } from "./MarkLayer";
+import { MarkLayer, placeMarks, type MarkStyle, type StoryPin } from "./MarkLayer";
 import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
@@ -21,6 +21,8 @@ type Props = {
   onBrowse: () => void;
   /** A story step: the author's marks and pinned pictures, and the records to bring into view. */
   marks?: StoryMark[]; pins?: StoryPin[]; frame?: string[];
+  /** How the story's marks are drawn. */
+  markStyle?: MarkStyle;
   /** A story step's records: they stand out, and the rest of the map fades. */
   spotlight?: string[];
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
@@ -93,7 +95,7 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, frame, frameKey, spotlight }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -587,7 +589,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     map.fitBounds([[w, s], [e, n]], { padding: pad, maxZoom: 10, duration });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frame?.join("|"), frameKey, status, located]);
-  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, status, located]);
+  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, markStyle, status, located]);
 
   // Printing a story pictures this lens: the map's canvas is copied as soon as it's drawn.
   const statusRef = useRef(status); statusRef.current = status;
@@ -611,7 +613,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   return <section className="ml-map" aria-label="Map of records with source coordinates">
     <div ref={container} className="ml-map-canvas"/>
     <div ref={gratLabels} className="ml-graticule-labels" aria-hidden="true"/>
-    <MarkLayer ref={markLayer} marks={marks} pins={pins}/>
+    <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
       <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>

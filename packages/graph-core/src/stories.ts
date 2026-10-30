@@ -103,6 +103,8 @@ export const storySchema = z.object({
   title: z.string().min(1).max(140),
   intro: z.string().max(2000).default(""),
   cover: storyCoverSchema.optional(),
+  /** How the marks are drawn: "clean" (precise, for reports and presentations) or "hand" (loose, notebook-like). Older stories are hand-drawn. */
+  style: z.enum(["clean", "hand"]).optional(),
   steps: z.array(storyStepSchema).max(60),
   updatedAt: z.string()
 }).strict();
@@ -119,8 +121,10 @@ export const isLinkedPicture = (src: string) => src.startsWith("https://");
 let counter = 0;
 export const storyId = (prefix: string) => prefix + Date.now().toString(36) + (counter++).toString(36) + Math.random().toString(36).slice(2, 6);
 export function newStory(title: string, now = new Date()): Story {
-  return { kind: "mossline-story", version: 1, id: storyId("story:"), title: title.trim() || "Untitled story", intro: "", steps: [], updatedAt: now.toISOString() };
+  return { kind: "mossline-story", version: 1, id: storyId("story:"), title: title.trim() || "Untitled story", intro: "", style: "clean", steps: [], updatedAt: now.toISOString() };
 }
+/** How a story's marks are drawn. */
+export const markStyleOf = (story: Pick<Story, "style">) => story.style ?? "hand";
 export function newStep(view: StoryView, title = ""): StoryStep {
   return { id: storyId("step:"), title, text: "", view, media: [], marks: [] };
 }
