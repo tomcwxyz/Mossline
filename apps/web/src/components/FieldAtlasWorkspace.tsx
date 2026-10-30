@@ -419,6 +419,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     if (!reading || !story) return;
     const listener = (e: globalThis.KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      // A picture open full size has the keys (Esc closes it, not the story).
+      if (document.querySelector("dialog.ml-lightbox[open]")) return;
       if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); if (coverRef.current) setCover(false); else setStepIndex(i => Math.min(i + 1, story.steps.length - 1)); }
       if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); setCover(false); setStepIndex(i => Math.max(i - 1, 0)); }
       if (e.key === "Escape" && storyMode === "present") setStoryMode(presentFrom.current);

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  describeStep, newStep, storyId, storyProblems, storyTextToHtml,
+  describeStep, isLinkedPicture, newStep, storyId, storyProblems, storyTextToHtml, type StoryCover,
   type GraphDocument, type Story, type StoryMark, type StoryMedia, type StoryStep, type StoryView
 } from "@mossline/graph-core";
 import { prepareImage } from "../../lib/story-store";
@@ -85,6 +85,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
     put({ steps }); onStep(to);
   };
   const [dropping, setDropping] = useState(false);
+  const [linking, setLinking] = useState(false);
   async function addImages(files: File[]) {
     if (!step) return;
     setImageError("");
@@ -150,6 +151,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <input value={story.title} maxLength={140} onChange={e => put({ title: e.target.value })}/></label>
       <label className="ml-edit-field"><span>Introduction <small>optional</small></span>
         <textarea rows={2} value={story.intro} maxLength={2000} onChange={e => put({ intro: e.target.value })}/></label>
+      <CoverEditor cover={story.cover} onChange={cover => put({ cover })}/>
 
       <div className="ml-story-steps">
         <p className="ml-story-label">Steps</p>
@@ -215,16 +217,21 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <div className="ml-edit-bar">
           <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() => fileRef.current?.click()}
             title="Or drop a picture onto the step, or paste one">Add a picture…</button>
+          <button type="button" className="ml-quiet" disabled={step.media.length >= 6} aria-expanded={linking}
+            onClick={() => setLinking(v => !v)}>Picture from a link…</button>
           <button type="button" className="ml-quiet" disabled={step.media.length >= 6} onClick={() =>
             putStep({ media: [...step.media, { id: storyId("media:"), kind: "quote", text: "", who: "", consent: false }] })}>Add a quote</button>
           <input ref={fileRef} hidden type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose pictures"
             onChange={e => { const files = [...(e.currentTarget.files ?? [])]; if (files.length) void addImages(files); e.currentTarget.value = ""; }}/>
         </div>
+        {linking && <PictureLink onAdd={src => { setLinking(false);
+          putStep({ media: [...step.media, { id: storyId("media:"), kind: "image", src, alt: "", people: "unknown" }] }); }}/>}
         {imageError && <p className="ml-small ml-story-error" role="alert">{imageError}</p>}
         {step.media.map(m => <div key={m.id} className="ml-edit-form ml-edit-form--inline ml-story-media-edit">
           {m.kind === "image" ? <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={m.src} alt="" className="ml-story-thumb"/>
+            <img src={m.src} alt="" className="ml-story-thumb" referrerPolicy="no-referrer"/>
+            {isLinkedPicture(m.src) && <p className="ml-small">Shown from {hostOf(m.src)}: readers&apos; browsers fetch it from there.</p>}
             <label className="ml-edit-field"><span>Description for people who can&apos;t see it</span>
               <input value={m.alt} maxLength={400} onChange={e => putMedia(m.id, { alt: e.target.value })}/></label>
             <label className="ml-edit-field"><span>Caption <small>optional</small></span>
@@ -299,13 +306,88 @@ function Html({ text, className }: { text: string; className?: string }) {
   // storyTextToHtml escapes everything first; only its own small set of tags gets through.
   return text.trim() ? <div className={className} dangerouslySetInnerHTML={{ __html: storyTextToHtml(text) }}/> : null;
 }
+const hostOf = (src: string) => { try { return new URL(src).hostname; } catch { return "another site"; } };
+const creditLine = (p: { credit?: string; licence?: string }) => [p.credit, p.licence].filter(Boolean).join(" · ");
+
+/** A picture that opens full size. Linked pictures are fetched without saying which page they're on. */
+function Picture({ src, alt, caption, credit, licence, className = "ml-story-figure" }: {
+  src: string; alt: string; caption?: string; credit?: string; licence?: string; className?: string;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const credits = creditLine({ credit, licence });
+  return <figure className={className}>
+    <button type="button" className="ml-story-zoom" onClick={() => dialog.current?.showModal()} aria-label={"Show full size: " + (alt || "picture")}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} loading="lazy" referrerPolicy="no-referrer"/>
+    </button>
+    {(caption || credits) && <figcaption>{caption}{caption && credits ? " " : ""}{credits && <small>{credits}</small>}</figcaption>}
+    <dialog ref={dialog} className="ml-lightbox" aria-label={alt || "Picture"} onClick={e => { if (e.target === e.currentTarget) dialog.current?.close(); }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} referrerPolicy="no-referrer"/>
+      <div className="ml-lightbox-foot">
+        <p>{caption}{caption && credits ? " · " : ""}{credits}</p>
+        <button type="button" className="ml-solid" onClick={() => dialog.current?.close()} autoFocus>Close</button>
+      </div>
+    </dialog>
+  </figure>;
+}
 function Media({ media }: { media: StoryMedia[] }) {
-  return <>{media.map(m => m.kind === "image" ? <figure key={m.id} className="ml-story-figure">
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img src={m.src} alt={m.alt} loading="lazy"/>
-    {(m.caption || m.credit || m.licence) && <figcaption>{m.caption}{m.caption && (m.credit || m.licence) ? " " : ""}
-      {(m.credit || m.licence) && <small>{[m.credit, m.licence].filter(Boolean).join(" · ")}</small>}</figcaption>}
-  </figure> : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}</>;
+  return <>{media.map(m => m.kind === "image"
+    ? <Picture key={m.id} src={m.src} alt={m.alt} caption={m.caption} credit={m.credit} licence={m.licence}/>
+    : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}</>;
+}
+
+/** Adding a picture by its web address: only https, and the editor says where it will be fetched from. */
+function PictureLink({ onAdd }: { onAdd: (src: string) => void }) {
+  const [url, setUrl] = useState("");
+  const [problem, setProblem] = useState("");
+  return <form className="ml-edit-form ml-edit-form--inline" onSubmit={e => {
+    e.preventDefault();
+    try { const u = new URL(url.trim()); if (u.protocol !== "https:" || u.username || u.password) throw Error(); onAdd(u.toString()); setUrl(""); }
+    catch { setProblem("Use a picture's full web address, starting https://"); }
+  }}>
+    <label className="ml-edit-field"><span>Picture&apos;s web address</span>
+      <input type="url" value={url} placeholder="https://…" onChange={e => { setUrl(e.target.value); setProblem(""); }}/></label>
+    {problem && <p className="ml-small ml-story-error" role="alert">{problem}</p>}
+    <p className="ml-small">Good for large photos: nothing is uploaded. Readers&apos; browsers fetch it from that site, which can see they did, and it disappears if the site removes it.</p>
+    <div className="ml-edit-actions"><button type="submit" className="ml-quiet">Add picture</button></div>
+  </form>;
+}
+
+/** The story's cover picture: uploaded, or from a link, with the same description, credit and consent as any picture. */
+function CoverEditor({ cover, onChange }: { cover?: StoryCover; onChange: (c: StoryCover | undefined) => void }) {
+  const file = useRef<HTMLInputElement>(null);
+  const [linking, setLinking] = useState(false);
+  const [problem, setProblem] = useState("");
+  const set = (src: string) => { setProblem(""); setLinking(false); onChange({ src, alt: cover?.alt ?? "", credit: cover?.credit, licence: cover?.licence, people: cover?.people ?? "unknown" }); };
+  return <div className="ml-story-cover-edit">
+    <p className="ml-story-label">Cover picture <small>optional</small></p>
+    {cover ? <div className="ml-edit-form ml-edit-form--inline">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={cover.src} alt="" className="ml-story-thumb" referrerPolicy="no-referrer"/>
+      <label className="ml-edit-field"><span>Description for people who can&apos;t see it</span>
+        <input value={cover.alt} maxLength={400} onChange={e => onChange({ ...cover, alt: e.target.value })}/></label>
+      <div className="ml-edit-row">
+        <label className="ml-edit-field"><span>Credit</span>
+          <input value={cover.credit ?? ""} maxLength={200} onChange={e => onChange({ ...cover, credit: e.target.value || undefined })}/></label>
+        <label className="ml-edit-field"><span>Licence <small>optional</small></span>
+          <input value={cover.licence ?? ""} maxLength={120} onChange={e => onChange({ ...cover, licence: e.target.value || undefined })}/></label>
+      </div>
+      <label className="ml-edit-field"><span>Recognisable people</span>
+        <select value={cover.people} onChange={e => onChange({ ...cover, people: e.target.value as StoryCover["people"] })}>
+          <option value="unknown">Choose…</option><option value="none">Nobody recognisable</option>
+          <option value="consented">They agreed to it being used</option></select></label>
+      <button type="button" className="ml-link-button ml-edit-remove" onClick={() => onChange(undefined)}>Remove cover</button>
+    </div> : <div className="ml-edit-bar">
+      <button type="button" className="ml-quiet" onClick={() => file.current?.click()}>Upload…</button>
+      <button type="button" className="ml-quiet" aria-expanded={linking} onClick={() => setLinking(v => !v)}>From a link…</button>
+    </div>}
+    <input ref={file} hidden type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose a cover picture"
+      onChange={e => { const f = e.currentTarget.files?.[0]; e.currentTarget.value = "";
+        if (f) prepareImage(f).then(set).catch(err => setProblem(err instanceof Error ? err.message : "Couldn't add that picture.")); }}/>
+    {linking && !cover && <PictureLink onAdd={set}/>}
+    {problem && <p className="ml-small ml-story-error" role="alert">{problem}</p>}
+  </div>;
 }
 
 /**
@@ -355,6 +437,8 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
 
   return <div className="ml-story-reader" ref={column} tabIndex={0} aria-label={"Story: " + story.title}>
     <header className="ml-story-reader-head">
+      {story.cover && <Picture src={story.cover.src} alt={story.cover.alt} credit={story.cover.credit} licence={story.cover.licence}
+        className="ml-story-figure ml-story-cover-picture"/>}
       <p className="ml-story-kicker">A story about this map</p>
       <h1>{story.title}</h1>
       <Html text={story.intro} className="ml-story-text"/>
@@ -403,6 +487,8 @@ export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, present
   if (!s) return null;
   if (cover) return <section className={"ml-story-card ml-story-cover" + (presenting ? " is-presenting" : "")} aria-label={"Story: " + story.title}>
     <p className="ml-story-kicker">A story about this map · {story.steps.length} {story.steps.length === 1 ? "step" : "steps"}</p>
+    {story.cover && <Picture src={story.cover.src} alt={story.cover.alt} credit={story.cover.credit} licence={story.cover.licence}
+      className="ml-story-figure ml-story-cover-picture"/>}
     <h2 ref={head} tabIndex={-1} className="ml-story-cover-title">{story.title}</h2>
     {story.intro.trim() && <div className="ml-story-card-body" tabIndex={0}><Html text={story.intro} className="ml-story-text"/></div>}
     <nav className="ml-story-nav" aria-label="Story steps">
