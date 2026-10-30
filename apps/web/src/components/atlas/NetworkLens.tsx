@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode, type StoryMark } from "@mossline/graph-core";
 import type { Point } from "./marginalia";
 import { MarkLayer, placeMarks, type StoryPin } from "./MarkLayer";
+import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
@@ -38,7 +39,7 @@ type Props = {
   sketch?: boolean;
 };
 /** People who ask for less motion get cuts instead of camera moves. */
-const reducedMotion = () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+const reducedMotion = () => motion.still || (typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 type SigmaType = import("sigma").default;
 /** Home framing: a little zoomed out so chips, key and caption do not cover
  *  records. Themes also leaves room for the tag list on the left. */
@@ -62,6 +63,8 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   const signLayer = useRef<HTMLDivElement>(null);
   /** The author's marks, redrawn as the camera moves. */
   const markLayer = useRef<SVGSVGElement>(null);
+  /** Which mode the current drawing was built for. */
+  const builtFor = useRef<string | null>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
   const aliasRef = useRef(alias); aliasRef.current = alias;
@@ -325,6 +328,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         // Sketched areas are washes of their own, so the contours step aside.
         setWash(graph.nodes.length <= 80 || sketched ? [] : terrain(placed.washed));
         setAreas(placed.areas);
+        builtFor.current = mode;
         setStatus("ready");
         setBuilt(v => v + 1);
       } catch {
@@ -470,6 +474,17 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   }, [selectedId, route, status, built, frame?.join("|"), frameKey]);
   // New marks: draw them straight away, then on every camera move.
   useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, built]);
+  // Printing a story pictures this lens: its canvases are copied straight after Sigma draws them.
+  const statusRef = useRef(status); statusRef.current = status;
+  // Ready means drawn for this mode (a mode change rebuilds the drawing). While printing, cameras cut, so it's also still.
+  useEffect(() => registerLens({ lens: mode, ready: () => statusRef.current === "ready" && builtFor.current === mode,
+    copyCanvases: () => new Promise(resolve => {
+      const renderer = sigmaRef.current, box = container.current;
+      if (!renderer || !box) { resolve(new Map()); return; }
+      const once = () => { renderer.off("afterRender", once); resolve(copyCanvases(box)); };
+      renderer.on("afterRender", once);
+      renderer.refresh();
+    }) }), [mode]);
   // Area names are placed on Sigma's render; place them as soon as they arrive.
   useEffect(() => { syncOverlay(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [areas, built]);
 

@@ -124,6 +124,18 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await page.keyboard.press("Escape");
   await expect(card).toHaveCount(0);
 
+  // Printing pictures each step's map, lays the story out for paper, and comes back to where it was.
+  await page.evaluate(()=>{ const w=window as unknown as {printed:number}; w.printed=0;
+    window.print=()=>{ w.printed++; setTimeout(()=>window.dispatchEvent(new Event("afterprint")),500); }; });
+  await page.locator(".ml-story-reader").getByRole("button",{name:"Print or PDF"}).click();
+  await page.waitForFunction(()=>(window as unknown as {printed:number}).printed>0,undefined,{timeout:60_000});
+  await expect(page.locator(".ml-print-step")).toHaveCount(2);
+  await expect(page.locator(".ml-print-map img")).toHaveCount(2);
+  expect(await page.locator(".ml-print-map img").first().getAttribute("src")).toMatch(/^data:image\/jpeg;base64,/);
+  await expect(page.locator(".ml-print")).toContainText("A volunteer cook");
+  await expect(page.locator(".ml-print")).toHaveCount(0);
+  await expect(page.locator(".ml-story-reader")).toBeVisible();
+
   // Kept in this browser with the map.
   await page.getByRole("button",{name:"Back to writing"}).first().click();
   await page.reload();

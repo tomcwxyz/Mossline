@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   describeStep, isLinkedPicture, newStep, storyId, storyProblems, storyTextToHtml, type StoryCover,
   type GraphDocument, type Story, type StoryMark, type StoryMedia, type StoryStep, type StoryView
 } from "@mossline/graph-core";
 import { prepareImage } from "../../lib/story-store";
+import { motion } from "./snapshot";
 
 /** Choosing records on the map for a mark: what's being drawn, and what's been picked so far. */
 export type MarkPick = { kind: StoryMark["kind"] | "pin"; targets: string[]; mediaId?: string };
@@ -55,7 +57,7 @@ const viewSummary = (v: StoryView, labelOf: (id: string) => string) => {
 
 // ---- Writing a story ---------------------------------------------------------------
 export function StoryEditor({ stories, story, graph, stepIndex, labelOf, captureView, picking, onPick, onStep, onChange, onCreate,
-  onOpen, onDelete, onRead, onPresent, onClose, onSave, canWrite = true, shared = false, local = [], onMoveLocal }: {
+  onOpen, onDelete, onRead, onPresent, onClose, onSave, canWrite = true, shared = false, local = [], onMoveLocal, onPrint }: {
   stories: Story[]; story: Story | null; graph: GraphDocument; stepIndex: number; labelOf: (id: string) => string;
   captureView: () => StoryView; picking: MarkPick | null; onPick: (p: MarkPick | null) => void;
   onStep: (i: number) => void; onChange: (s: Story) => void; onCreate: (title: string) => void;
@@ -66,6 +68,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
   canWrite?: boolean;
   /** Kept with a shared map, and this browser's stories for it that aren't there yet. */
   shared?: boolean; local?: Story[]; onMoveLocal?: () => void;
+  onPrint?: () => void;
 }) {
   const [newTitle, setNewTitle] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -134,6 +137,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <span className="ml-story-spacer"/>
         <button type="button" className="ml-quiet" onClick={onRead} disabled={!story.steps.length}>Read</button>
         <button type="button" className="ml-quiet" onClick={onPresent} disabled={!story.steps.length}>Present</button>
+        {onPrint && <button type="button" className="ml-quiet" onClick={onPrint} disabled={!story.steps.length}>Print</button>}
       </div>
       {story.steps.length > 0 && <div className="ml-story-steps"><ol>{story.steps.map((s, i) => <li key={s.id}>
         <button type="button" aria-current={i === stepIndex ? "step" : undefined} onClick={() => onStep(i)}>
@@ -146,6 +150,7 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <span className="ml-story-spacer"/>
         <button type="button" className="ml-quiet" onClick={onRead} disabled={!story.steps.length}>Read</button>
         <button type="button" className="ml-quiet" onClick={onPresent} disabled={!story.steps.length}>Present</button>
+        {onPrint && <button type="button" className="ml-quiet" onClick={onPrint} disabled={!story.steps.length}>Print</button>}
       </div>
       <label className="ml-edit-field"><span>Title</span>
         <input value={story.title} maxLength={140} onChange={e => put({ title: e.target.value })}/></label>
@@ -395,11 +400,13 @@ function CoverEditor({ cover, onChange }: { cover?: StoryCover; onChange: (c: St
  * in the middle of the column. Every step can also be reached with the buttons
  * or the arrow keys.
  */
-export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPresent, labelOf, onCopyStep }: {
+export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPresent, labelOf, onCopyStep, onPrint }: {
   story: Story; stepIndex: number; onStep: (i: number) => void; onExit: () => void; exitLabel: string; onPresent: () => void;
   labelOf: (id: string) => string;
   /** Published stories: copy a link that opens on this step. */
   onCopyStep?: (i: number) => void;
+  /** Lays the story out for paper or PDF. */
+  onPrint?: () => void;
 }) {
   const column = useRef<HTMLDivElement>(null);
   const fromScroll = useRef(false);
@@ -412,9 +419,10 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
     if (!root) return;
     let timer = 0;
     const check = () => {
-      const wait = quietUntil.current - Date.now();
+      // Scrolling done for someone (a button, a key, a link) isn't them choosing a step:
+      // a short story's column may not be able to scroll the step all the way up.
+      if (Date.now() < quietUntil.current) return;
       window.clearTimeout(timer);
-      if (wait > 0) { timer = window.setTimeout(check, wait + 20); return; }
       const line = root.getBoundingClientRect().top + root.clientHeight * 0.38;
       let current = 0;
       root.querySelectorAll<HTMLElement>("[data-step]").forEach(el => { if (el.getBoundingClientRect().top <= line) current = Number(el.dataset.step); });
@@ -428,7 +436,7 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
     if (fromScroll.current) { fromScroll.current = false; return; }
     const root = column.current;
     if (!root) return;
-    const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const still = motion.still || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     quietUntil.current = Date.now() + (still ? 150 : 900);
     const el = stepIndex > 0 ? root.querySelector<HTMLElement>(`[data-step="${stepIndex}"]`) : null;
     if (el) el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
@@ -444,6 +452,7 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
       <Html text={story.intro} className="ml-story-text"/>
       <div className="ml-edit-actions">
         <button type="button" className="ml-quiet" onClick={onPresent}>Present</button>
+        {onPrint && <button type="button" className="ml-quiet" onClick={onPrint}>Print or PDF</button>}
         <button type="button" className="ml-link-button" onClick={onExit}>{exitLabel}</button>
       </div>
     </header>
@@ -519,4 +528,41 @@ export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, present
     </nav>
     {presenting && <p className="ml-story-keys">← → to move · Esc to stop</p>}
   </section>;
+}
+
+/**
+ * A story laid out for paper or PDF: the cover, then each step with a
+ * picture of the map as it was shown, its words, pictures and quotes, and
+ * every credit. Only shown when printing.
+ */
+export function StoryPrint({ story, pictures, labelOf, link, mapTitle }: {
+  story: Story; pictures: (string | null)[]; labelOf: (id: string) => string; link?: string; mapTitle: string;
+}) {
+  return createPortal(<article className="ml-print" aria-hidden="true">
+    <header className="ml-print-head">
+      {story.cover && <figure className="ml-print-cover">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={story.cover.src} alt={story.cover.alt} referrerPolicy="no-referrer"/>
+        {creditLine(story.cover) && <figcaption>{creditLine(story.cover)}</figcaption>}
+      </figure>}
+      <p className="ml-story-kicker">A story about {mapTitle}</p>
+      <h1>{story.title}</h1>
+      <Html text={story.intro} className="ml-story-text"/>
+    </header>
+    {story.steps.map((s, i) => <section key={s.id} className="ml-print-step">
+      <h2><span className="ml-story-num">{i + 1}</span>{s.title || "Step " + (i + 1)}</h2>
+      {pictures[i] ? <figure className="ml-print-map">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={pictures[i]!} alt={"The map at step " + (i + 1)}/>
+        <figcaption>{describeStep(s, labelOf) || "The map at this step."}</figcaption>
+      </figure> : <p className="ml-print-note">This step shows the {s.view.lens} lens{link ? "; open the story online to see it" : ""}.</p>}
+      <Html text={s.text} className="ml-story-text"/>
+      {s.media.map(m => m.kind === "image" ? <figure key={m.id} className="ml-print-picture">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={m.src} alt={m.alt} referrerPolicy="no-referrer"/>
+        {(m.caption || creditLine(m)) && <figcaption>{m.caption}{m.caption && creditLine(m) ? " · " : ""}{creditLine(m)}</figcaption>}
+      </figure> : <blockquote key={m.id} className="ml-story-quote"><p>{m.text}</p>{m.who && <footer>— {m.who}</footer>}</blockquote>)}
+    </section>)}
+    <footer className="ml-print-foot">Made with Mossline{link ? " · " + link : ""}</footer>
+  </article>, document.body);
 }
