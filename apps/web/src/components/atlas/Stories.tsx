@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  describeStep, isLinkedPicture, newStep, storyId, storyProblems, storyTextToHtml, type StoryCover,
+  describeStep, isLinkedPicture, markStyleOf, newStep, storyId, storyProblems, storyTextToHtml, type StoryCover,
   type GraphDocument, type Story, type StoryMark, type StoryMedia, type StoryStep, type StoryView
 } from "@mossline/graph-core";
 import { prepareImage } from "../../lib/story-store";
@@ -157,6 +157,11 @@ export function StoryEditor({ stories, story, graph, stepIndex, labelOf, capture
         <input value={story.title} maxLength={140} onChange={e => put({ title: e.target.value })}/></label>
       <label className="ml-edit-field"><span>Introduction <small>optional</small></span>
         <textarea rows={2} value={story.intro} maxLength={2000} onChange={e => put({ intro: e.target.value })}/></label>
+      <div className="ml-story-style"><span className="ml-story-label" id="ml-story-style-label">Marks on the map</span>
+        <div className="ml-segmented" role="group" aria-labelledby="ml-story-style-label">
+          {([["clean", "Clean"], ["hand", "Hand-drawn"]] as const).map(([v, text]) =>
+            <button key={v} type="button" aria-pressed={markStyleOf(story) === v} onClick={() => put({ style: v })}>{text}</button>)}
+        </div></div>
       <CoverEditor cover={story.cover} onChange={cover => put({ cover })}/>
 
       <div className="ml-story-steps">
@@ -536,7 +541,7 @@ export function StoryReader({ story, stepIndex, onStep, onExit, exitLabel, onPre
     else root.scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
   }, [stepIndex]);
 
-  return <div className="ml-story-reader" ref={column} tabIndex={0} aria-label={"Story: " + story.title}>
+  return <div className={"ml-story-reader ml-story--" + markStyleOf(story)} ref={column} tabIndex={0} aria-label={"Story: " + story.title}>
     <header className="ml-story-reader-head">
       {story.cover && <Picture src={story.cover.src} alt={story.cover.alt} credit={story.cover.credit} licence={story.cover.licence}
         className="ml-story-figure ml-story-cover-picture"/>}
@@ -600,7 +605,7 @@ export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, present
     </nav>
     {presenting && <p className="ml-story-keys">→ to begin · Esc to stop</p>}
   </section>;
-  return <section className={"ml-story-card" + (presenting ? " is-presenting" : "") + (folded ? " is-folded" : "")} aria-label={"Story: " + story.title}>
+  return <section className={"ml-story-card ml-story--" + markStyleOf(story) + (presenting ? " is-presenting" : "") + (folded ? " is-folded" : "")} aria-label={"Story: " + story.title}>
     <div className="ml-story-card-top">
       <p className="ml-story-kicker">{story.title} · {stepIndex + 1} of {story.steps.length}</p>
       {!presenting && <button type="button" className="ml-link-button ml-story-fold" aria-expanded={!folded} onClick={() => setFolded(v => !v)}>
@@ -631,7 +636,7 @@ export function StoryCard({ story, stepIndex, onStep, onExit, exitLabel, present
 export function StoryPrint({ story, pictures, labelOf, link, mapTitle }: {
   story: Story; pictures: (string | null)[]; labelOf: (id: string) => string; link?: string; mapTitle: string;
 }) {
-  return createPortal(<article className="ml-print" aria-hidden="true">
+  return createPortal(<article className={"ml-print ml-story--" + markStyleOf(story)} aria-hidden="true">
     <header className="ml-print-head">
       {story.cover && <figure className="ml-print-cover">
         {/* eslint-disable-next-line @next/next/no-img-element */}

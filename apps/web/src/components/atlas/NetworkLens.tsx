@@ -3,7 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { edgePolarity, isRecorded, type GraphDocument, type GraphEdge, type GraphNode, type StoryMark } from "@mossline/graph-core";
 import type { Point } from "./marginalia";
-import { MarkLayer, placeMarks, type StoryPin } from "./MarkLayer";
+import { MarkLayer, placeMarks, type MarkStyle, type StoryPin } from "./MarkLayer";
 import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
@@ -32,6 +32,8 @@ type Props = {
   marks?: StoryMark[];
   /** Story pictures pinned to records. */
   pins?: StoryPin[];
+  /** How the story's marks are drawn. */
+  markStyle?: MarkStyle;
   frame?: string[];
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
   frameKey?: string;
@@ -51,7 +53,7 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, frame, frameKey, sketch = false }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, markStyle, frame, frameKey, sketch = false }: Props) {
   const sketched = sketch && mode === "themes";
   const filterId = "ml-wc-" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
@@ -473,7 +475,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, route, status, built, frame?.join("|"), frameKey]);
   // New marks: draw them straight away, then on every camera move.
-  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, built]);
+  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, markStyle, built]);
   // Printing a story pictures this lens: its canvases are copied straight after Sigma draws them.
   const statusRef = useRef(status); statusRef.current = status;
   // Ready means drawn for this mode (a mode change rebuilds the drawing). While printing, cameras cut, so it's also still.
@@ -532,7 +534,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     <div ref={container} className="ml-sigma-viewport" role="img"
       aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
     <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
-    <MarkLayer ref={markLayer} marks={marks} pins={pins}/>
+    <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
       {areas.map(a => <div key={a.id} className={"ml-area-label ml-area-label--" + a.kind} data-x={a.x} data-y={a.y} data-r={a.r ?? 0}>
         <span>{a.label}</span><small>{a.count.toLocaleString("en-GB")} records{a.kind === "suggested" ? " · suggested" : ""}</small>

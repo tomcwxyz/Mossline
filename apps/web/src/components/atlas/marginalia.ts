@@ -71,3 +71,36 @@ export function calloutPath(p: Point, seed: string, bounds: { width: number; hei
 
 /** Where a circled number sits: just above and left of its record. */
 export const numberAt = (p: Point): Point => ({ x: p.x - 17, y: p.y - 17 });
+
+// ---- Clean marks: the same anchors, drawn precisely ----------------------------------
+
+/** A smooth ellipse around some points, with even room all round. */
+export function cleanRingPath(points: Point[]): { d: string; top: Point } {
+  const xs = points.map(p => p.x), ys = points.map(p => p.y);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  let rx = Math.max(...points.map(p => Math.abs(p.x - cx))) * 1.12 + 22;
+  let ry = Math.max(...points.map(p => Math.abs(p.y - cy))) * 1.12 + 20;
+  // Never a sliver: records in a line still get a ring you can see round them.
+  rx = Math.max(rx, ry * 0.6); ry = Math.max(ry, rx * 0.6);
+  return { d: `M${f(cx - rx)} ${f(cy)} A${f(rx)} ${f(ry)} 0 1 0 ${f(cx + rx)} ${f(cy)} A${f(rx)} ${f(ry)} 0 1 0 ${f(cx - rx)} ${f(cy)}Z`,
+    top: { x: cx, y: cy - ry - 9 } };
+}
+/** A straight arrow, stopping short of both records. */
+export function cleanArrowPath(a: Point, b: Point): { d: string; head: string; mid: Point } {
+  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+  const ux = (b.x - a.x) / len, uy = (b.y - a.y) / len, gap = Math.min(15, len / 4), size = 9;
+  const s = { x: a.x + ux * gap, y: a.y + uy * gap }, e = { x: b.x - ux * gap, y: b.y - uy * gap };
+  const left = { x: e.x - ux * size - uy * size * 0.6, y: e.y - uy * size + ux * size * 0.6 };
+  const right = { x: e.x - ux * size + uy * size * 0.6, y: e.y - uy * size - ux * size * 0.6 };
+  return { d: `M${f(s.x)} ${f(s.y)} L${f(e.x - ux * size * 0.6)} ${f(e.y - uy * size * 0.6)}`,
+    head: `M${f(left.x)} ${f(left.y)} L${f(e.x)} ${f(e.y)} L${f(right.x)} ${f(right.y)}Z`,
+    mid: { x: (s.x + e.x) / 2, y: (s.y + e.y) / 2 } };
+}
+/** A note set off from a record: a straight leader with a short elbow, the label at its end. */
+export function cleanCalloutPath(p: Point, bounds: { width: number; height: number }): { d: string; label: Point; anchor: "start" | "end" } {
+  const right = p.x < bounds.width - 220, up = p.y > 110;
+  const dx = right ? 1 : -1, dy = up ? -1 : 1;
+  const knee = { x: p.x + dx * 46, y: p.y + dy * 46 }, end = { x: knee.x + dx * 18, y: knee.y };
+  return { d: `M${f(p.x + dx * 7)} ${f(p.y + dy * 7)} L${f(knee.x)} ${f(knee.y)} L${f(end.x)} ${f(end.y)}`,
+    label: { x: end.x + dx * 6, y: end.y + 4.5 }, anchor: right ? "start" : "end" };
+}

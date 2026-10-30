@@ -7,7 +7,7 @@ import {
   applyEdits, toKumuWorkbook,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
-  type GraphDocument, type GraphEdge, type NodeType, stepRecords, type Story, type StoryMark, type StoryView
+  type GraphDocument, type GraphEdge, type NodeType, markStyleOf, stepRecords, type Story, type StoryMark, type StoryView
 } from "@mossline/graph-core";
 import { useStories } from "../hooks/useStories";
 import type { StoryPin } from "./atlas/MarkLayer";
@@ -665,10 +665,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
               selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord} onUnavailable={onUnavailable}
-              marks={storyMarks} pins={storyPins} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
+              marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               unplaced={unplaced} onBrowse={() => setBrowse(true)}
-              marks={storyMarks} pins={storyPins} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
+              marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}

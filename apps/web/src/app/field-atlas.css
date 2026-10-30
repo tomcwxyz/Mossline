@@ -1335,3 +1335,13 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-story-audio-link { display: flex; gap: 8px; align-items: end; }
 .ml-story-audio-link .ml-edit-field { flex: 1; }
 @media print { .ml-print-audio-head { font: 600 8.5pt "IBM Plex Sans", sans-serif !important; letter-spacing: .1em; text-transform: uppercase; color: #8A4A1C; } }
+/* Clean marks: the author's notes drawn precisely, for reports and presentations. */
+.ml-marks--clean .ml-mark-line { stroke-width: 2; }
+.ml-marks--clean .ml-mark--arrow path + path { fill: var(--ml-margin); }
+.ml-marks--clean .ml-mark-text { font: 600 12.5px var(--ml-sans); letter-spacing: .01em; stroke-width: 5px; }
+.ml-marks--clean .ml-mark--number circle.ml-mark-line { fill: var(--ml-margin); stroke: var(--ml-surface); stroke-width: 2; }
+.ml-marks--clean .ml-mark--number .ml-mark-text { fill: var(--ml-surface); font: 700 11.5px var(--ml-sans); stroke-width: 0; }
+.ml-marks--clean .ml-pin-line { stroke-dasharray: none; stroke-width: 1.2; }
+.ml-marks--clean .ml-pin-frame { rx: 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .14)); }
+.ml-story--clean .ml-story-num { font: 600 12.5px var(--ml-sans); }
+.ml-story-style { display: grid; gap: 4px; }

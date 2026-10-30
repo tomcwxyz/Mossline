@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {newStory,newStep,parseStory,parseGraphDocument,storyProblems,storyTextToHtml,stepRecords,describeStep,createPublishedSnapshot,parseHostedSnapshot,parsePublishedSnapshot,HOSTED_LIMITS} from "../src/index.ts";
+import {newStory,newStep,parseStory,parseGraphDocument,storyProblems,storyTextToHtml,stepRecords,describeStep,markStyleOf,createPublishedSnapshot,parseHostedSnapshot,parsePublishedSnapshot,HOSTED_LIMITS} from "../src/index.ts";
 
 const graph=parseGraphDocument({version:1,title:"Map",nodes:[{id:"a",label:"Allotments",type:"project"},{id:"b",label:"Food bank",type:"organisation"}],edges:[]});
 
@@ -84,4 +84,11 @@ test("an audio clip needs a transcript and the agreement of the people heard",()
   assert.deepEqual(blocks,["Step 1: an audio clip needs a transcript, for people who can't hear it.","Step 1: confirm the people heard agreed to the recording being used."]);
   assert.throws(()=>parseStory({...story,steps:[{...step,media:[{...step.media[0],src:"data:text/html;base64,PHNjcmlwdD4="}]}]}));
   assert.throws(()=>parseStory({...story,steps:[{...step,media:[{...step.media[0],src:"http://example.org/a.mp3"}]}]}));
+});
+
+test("new stories draw clean marks; stories from before the choice stay hand-drawn",()=>{
+  assert.equal(markStyleOf(newStory("New")),"clean");
+  const {style:_drop,...older}=newStory("Older");
+  assert.equal(markStyleOf(parseStory(older)),"hand");
+  assert.throws(()=>parseStory({...newStory("x"),style:"wobbly"}));
 });
