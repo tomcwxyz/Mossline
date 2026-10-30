@@ -87,6 +87,7 @@ A conversation map invites responses: "is this your experience?", "add a place t
 - **Writing.** A step's view is shown as chips: a selection, search or filter left over from exploring can be removed with ×. Steps can be duplicated. Pictures can be dropped onto a step or pasted, several at once.
 - **Embedding.** A published story (or map) can be put on another website: *Embed* on its page gives the code. See `docs/HOSTED_PUBLISHING.md`.
 - **Link previews.** A shared link to a published story shows its title, introduction and cover (or a small drawn network). See `docs/HOSTED_PUBLISHING.md`.
+- **Print or PDF.** *Print* (writing) or *Print or PDF* (reading) shows each step in turn, takes a picture of the map as it's shown (marks, spotlight and names included), then opens the browser's print dialog. The layout has the cover, then a page per step with its map, words, pictures, quotes and credits, ready for paper or *Save as PDF*. Steps on the Funding and Timeline lenses print without a map picture for now, and say so.
 - **Where stories live.** Stories are kept with their map: in the browser, in a shared map, or in an organisation.
 - **What publishing includes.** The map, the story and its media, after the same item-by-item review as publishing a map. (The first release publishes the whole map with a story, since steps use filters; see below.)
 - **How the published page works.** Published stories open in the atlas's read-only mode, with the story column added.

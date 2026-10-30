@@ -6,6 +6,7 @@ import {
   isRecorded, placedCoordinates, type FundingFlow, type GraphDocument, type GraphNode, type StoryMark
 } from "@mossline/graph-core";
 import { MarkLayer, placeMarks, type StoryPin } from "./MarkLayer";
+import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
 
@@ -25,7 +26,7 @@ type Props = {
   /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
   frameKey?: string;
 };
-const stillPlease = () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+const stillPlease = () => motion.still || (typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 type MapType = import("maplibre-gl").Map;
 type MarkerType = import("maplibre-gl").Marker;
 type Geometry = { type: "Point"; coordinates: number[] } | { type: "LineString"; coordinates: number[][] } | { type: "Polygon"; coordinates: number[][][] };
@@ -587,6 +588,16 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frame?.join("|"), frameKey, status, located]);
   useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, status, located]);
+
+  // Printing a story pictures this lens: the map's canvas is copied as soon as it's drawn.
+  const statusRef = useRef(status); statusRef.current = status;
+  useEffect(() => registerLens({ lens: "map", ready: () => statusRef.current === "ready" && !!mapRef.current?.loaded() && !mapRef.current.isMoving(),
+    copyCanvases: () => new Promise(resolve => {
+      const map = mapRef.current, box = container.current;
+      if (!map || !box) { resolve(new Map()); return; }
+      map.once("render", () => resolve(copyCanvases(box)));
+      map.triggerRepaint();
+    }) }), []);
 
   const zoom = (action: "in" | "out" | "fit") => {
     const map = mapRef.current;

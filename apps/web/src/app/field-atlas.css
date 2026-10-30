@@ -1300,3 +1300,29 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-atlas--embedded .ml-header { min-height: 0; }
 .ml-atlas--embedded .ml-search, .ml-atlas--embedded .ml-local, .ml-atlas--embedded .ml-dataset small { display: none; }
 @media (max-width: 720px) { .ml-embed-card { left: 10px; right: 10px; width: auto; } }
+
+/* ---- A story on paper ------------------------------------------------------------- */
+.ml-print { display: none; }
+@media print {
+  @page { size: A4; margin: 16mm 15mm; }
+  body > *:not(.ml-print) { display: none !important; }
+  body { background: #fff !important; }
+  .ml-print { display: block; color: #1E2622; font: 11pt/1.5 "IBM Plex Sans", sans-serif; }
+  .ml-print h1 { font: 500 26pt/1.1 "Newsreader", Georgia, serif; margin: 4pt 0 10pt; }
+  .ml-print h2 { font: 500 16pt/1.2 "Newsreader", Georgia, serif; display: flex; gap: 8pt; align-items: baseline; margin: 0 0 8pt; }
+  .ml-print .ml-story-kicker { color: #8A4A1C; font-size: 8.5pt; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+  .ml-print .ml-story-num { color: #8A4A1C; border-color: #8A4A1C; }
+  .ml-print-head { margin-bottom: 14pt; }
+  .ml-print-cover img { width: 100%; max-height: 90mm; object-fit: cover; }
+  .ml-print figure { margin: 0 0 8pt; break-inside: avoid; }
+  .ml-print figcaption { font: italic 9pt/1.4 "Newsreader", Georgia, serif; color: #4A5049; margin-top: 3pt; }
+  .ml-print-step { break-before: page; }
+  .ml-print-map img { width: 100%; border: 0.5pt solid #C9CCC2; }
+  .ml-print-picture img { max-width: 100%; max-height: 85mm; }
+  .ml-print .ml-story-text { display: grid; gap: 6pt; margin-bottom: 8pt; }
+  .ml-print .ml-story-quote { border-left: 2pt solid #8A4A1C; padding-left: 9pt; margin: 6pt 0; break-inside: avoid; }
+  .ml-print .ml-story-quote p { font: italic 12pt/1.45 "Newsreader", Georgia, serif; }
+  .ml-print-note { color: #4A5049; font-style: italic; }
+  .ml-print-foot { margin-top: 14pt; font-size: 8.5pt; color: #4A5049; }
+  .ml-print a { color: inherit; }
+}

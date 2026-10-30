@@ -11,7 +11,8 @@ import {
 } from "@mossline/graph-core";
 import { useStories } from "../hooks/useStories";
 import type { StoryPin } from "./atlas/MarkLayer";
-import { MARK_NEEDS, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
+import { motion, pictureOf, settled } from "./atlas/snapshot";
+import { MARK_NEEDS, StoryPrint, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { useMapEdits } from "../hooks/useMapEdits";
 import { ChangeList, QuickEntry, RecordCreator, type EditingApi } from "./atlas/Editing";
@@ -403,6 +404,37 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     if (reading && !coverShown) url.searchParams.set("step", String(stepIndex + 1)); else url.searchParams.delete("step");
     window.history.replaceState(window.history.state, "", url.toString());
   }, [readOnly, publishedStory, reading, coverShown, stepIndex, urlReady, lens, selectedId]);
+  // ---- Printing a story: each step's view, pictured in turn, then the browser's print dialog ----
+  const [printing, setPrinting] = useState<null | { done: number; pictures: (string | null)[]; ready: boolean }>(null);
+  async function printStory() {
+    if (!story || printing) return;
+    flushStory();
+    const before = { mode: storyMode, index: stepIndex };
+    motion.still = true; setCover(false); setStoryMode("read");
+    const pictures: (string | null)[] = [];
+    try {
+      for (let i = 0; i < story.steps.length; i++) {
+        setPrinting({ done: i, pictures: [...pictures], ready: false });
+        setStepIndex(i);
+        await settled(story.steps[i].view.lens);
+        const lens = story.steps[i].view.lens;
+        const section = lens === "network" || lens === "themes" || lens === "map"
+          ? document.querySelector<HTMLElement>(".ml-canvas > .ml-network, .ml-canvas > .ml-map") : null;
+        pictures.push(section ? await pictureOf(section).catch(() => null) : null);
+      }
+    } finally { motion.still = false; }
+    setPrinting({ done: story.steps.length, pictures, ready: true });
+    setStepIndex(before.index); setStoryMode(before.mode);
+  }
+  useEffect(() => {
+    if (!printing?.ready) return;
+    let cancelled = false;
+    const done = () => setPrinting(null);
+    // Pictures in the print layout load first, so the dialog never prints blanks.
+    void Promise.all(Array.from(document.querySelectorAll<HTMLImageElement>(".ml-print img")).map(img => img.decode().catch(() => {})))
+      .then(() => { if (cancelled) return; window.addEventListener("afterprint", done, { once: true }); window.print(); });
+    return () => { cancelled = true; window.removeEventListener("afterprint", done); };
+  }, [printing?.ready]);
   const fullPage = () => window.location.origin + (published ? "/p/" + published.slug : window.location.pathname);
   const embedded = !!published?.embedded;
   const [embedOpen, setEmbedOpen] = useState(false);
@@ -752,7 +784,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             onCreate={title => { const s = storyStore.create(title); setStoryId(s.id); setStepIndex(0); }}
             onOpen={id => { setStoryId(id); setStepIndex(0); }}
             onDelete={id => { storyStore.remove(id); setStoryId(null); }}
-            onRead={() => startStory("read", "edit")}
+            onRead={() => startStory("read", "edit")} onPrint={() => void printStory()}
             onPresent={() => startStory("present", "edit")}
             onClose={() => { flushStory(); setStoryMode(null); }} onSave={flushStory}/>}
           {markPick && <div className="ml-banner ml-pick-banner" role="status">
@@ -774,6 +806,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {shared && edits.remoteSource > shared.sourceVersion && <div className="ml-banner ml-pick-banner" role="status">
             Someone has added data to this map.
             <button type="button" onClick={() => onSharedRefresh?.()}>Get it</button></div>}
+          {printing && !printing.ready && <div className="ml-banner ml-pick-banner" role="status">
+            Preparing to print: picturing step {printing.done + 1} of {story?.steps.length ?? 0}…</div>}
           {embedOpen && published && <EmbedCard slug={published.slug} title={imported.title} story={!!publishedStory} onClose={() => setEmbedOpen(false)}/>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
@@ -783,7 +817,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
 
       {reading && story && storyMode === "read" && !narrow ? <aside className="ml-inspector ml-inspector--story" aria-label="Story">
         <StoryReader story={story} stepIndex={stepIndex} onStep={goToStep} onExit={exitStory} exitLabel={exitLabel}
-          onPresent={() => startStory("present", "read")} labelOf={labelOf} onCopyStep={readOnly ? copyStepLink : undefined}/>
+          onPresent={() => startStory("present", "read")} labelOf={labelOf} onCopyStep={readOnly ? copyStepLink : undefined}
+          onPrint={() => void printStory()}/>
       </aside> :
       <aside className="ml-inspector" aria-label="Selected record">
         {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
@@ -795,6 +830,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
       </aside>}
     </section>
+    {printing?.ready && story && <StoryPrint story={story} pictures={printing.pictures} labelOf={labelOf} mapTitle={imported.title}
+      link={published ? (typeof window === "undefined" ? "" : window.location.origin) + "/p/" + published.slug : undefined}/>}
     <div className="ml-announcer" role="status" aria-live="polite">
       {selected ? selected.label + ", " + selected.type + ", " + (degree.get(selected.id) ?? 0) + " recorded links" : ""}
     </div>
