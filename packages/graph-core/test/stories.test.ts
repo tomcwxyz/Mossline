@@ -64,3 +64,14 @@ test("a step's marks and pinned pictures can be read out in words",()=>{
     "an arrow from Allotments to Food bank; number 1 on Allotments; a picture beside Allotments (Raised beds).");
   assert.equal(describeStep(newStep({lens:"map"}),id=>id),"");
 });
+
+test("a cover picture is held to the same standard as any other",()=>{
+  const story={...newStory("With a cover"),steps:[newStep({lens:"network"},"One")],
+    cover:{src:"https://example.org/cover.jpg",alt:"",people:"unknown" as "none"|"consented"|"unknown"}};
+  const messages=storyProblems(parseStory(story)).filter(p=>p.severity==="block").map(p=>p.message);
+  assert.equal(messages.length,2);
+  assert.match(messages[0],/cover picture needs a description/);
+  story.cover={...story.cover,alt:"A field",people:"none"};
+  assert.equal(storyProblems(parseStory(story)).filter(p=>p.severity==="block").length,0);
+  assert.throws(()=>parseStory({...story,cover:{...story.cover,src:"http://example.org/insecure.jpg"}}));
+});

@@ -54,6 +54,13 @@ export const storyMediaSchema = z.discriminatedUnion("kind", [
   }).strict()
 ]);
 
+/** A story's cover: shown on its title card and at the top of the reading column. */
+export const storyCoverSchema = z.object({
+  src: httpsOrData, alt: z.string().max(400),
+  credit: z.string().max(200).optional(), licence: z.string().max(120).optional(),
+  people: z.enum(["none", "consented", "unknown"]).default("unknown")
+}).strict();
+
 /** Marks drawn on the map, anchored to records. */
 export const storyMarkSchema = z.discriminatedUnion("kind", [
   z.object({ id, kind: z.literal("ring"), targets: z.array(id).min(1).max(200), text: z.string().max(80).optional() }).strict(),
@@ -79,6 +86,7 @@ export const storySchema = z.object({
   id,
   title: z.string().min(1).max(140),
   intro: z.string().max(2000).default(""),
+  cover: storyCoverSchema.optional(),
   steps: z.array(storyStepSchema).max(60),
   updatedAt: z.string()
 }).strict();
@@ -88,6 +96,9 @@ export type StoryStep = z.infer<typeof storyStepSchema>;
 export type StoryView = z.infer<typeof storyViewSchema>;
 export type StoryMedia = z.infer<typeof storyMediaSchema>;
 export type StoryMark = z.infer<typeof storyMarkSchema>;
+export type StoryCover = z.infer<typeof storyCoverSchema>;
+/** Whether a picture is a link to another site (its readers' browsers fetch it from there) rather than uploaded. */
+export const isLinkedPicture = (src: string) => src.startsWith("https://");
 
 let counter = 0;
 export const storyId = (prefix: string) => prefix + Date.now().toString(36) + (counter++).toString(36) + Math.random().toString(36).slice(2, 6);
@@ -136,6 +147,11 @@ export function storyProblems(story: Story, graph?: GraphDocument): StoryProblem
   const problems: StoryProblem[] = [];
   const known = graph ? new Set(graph.nodes.map(n => n.id)) : null;
   if (!story.steps.length) problems.push({ stepId: null, severity: "block", message: "Add at least one step." });
+  if (story.cover) {
+    if (!story.cover.alt.trim()) problems.push({ stepId: null, severity: "block", message: "The cover picture needs a description for people who can't see it." });
+    if (story.cover.people === "unknown") problems.push({ stepId: null, severity: "block", message: "Say whether recognisable people in the cover picture agreed to it being used." });
+    if (!story.cover.credit?.trim()) problems.push({ stepId: null, severity: "note", message: "The cover picture has no credit." });
+  }
   story.steps.forEach((step, i) => {
     const where = "Step " + (i + 1);
     if (!step.title.trim() && !step.text.trim()) problems.push({ stepId: step.id, severity: "note", message: where + " has no words yet." });

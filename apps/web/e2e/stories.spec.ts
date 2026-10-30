@@ -59,8 +59,8 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await expect(page.locator(".ml-marks .ml-mark--callout text")).toHaveText("Where it shows");
 
   // A picture and a quote: both hold publishing until described and agreed.
-  await editor.locator("input[type=file]").setInputFiles({name:"kitchen.png",mimeType:"image/png",buffer:PNG});
-  await expect(editor.locator(".ml-story-thumb")).toBeVisible();
+  await editor.getByLabel("Choose pictures").setInputFiles({name:"kitchen.png",mimeType:"image/png",buffer:PNG});
+  await expect(editor.locator(".ml-story-media-edit .ml-story-thumb")).toBeVisible();
   await editor.getByRole("button",{name:"Add a quote"}).click();
   await editor.getByLabel("Quote",{exact:true}).fill("We started cooking together and kept going.");
   await editor.getByLabel("Who said it").fill("A volunteer cook");
@@ -71,6 +71,22 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await editor.getByLabel("Credit").fill("Example Kitchen Group");
   await editor.getByLabel(/They agreed to be quoted/).check();
   await expect(checklist.locator(".is-block")).toHaveCount(0);
+
+  // A cover picture, held to the same standard; and a picture from a link, which says where it comes from.
+  const cover=editor.locator(".ml-story-cover-edit");
+  await cover.locator("input[type=file]").setInputFiles({name:"cover.png",mimeType:"image/png",buffer:PNG});
+  await expect(checklist).toContainText("The cover picture needs a description");
+  await cover.getByLabel("Description for people who can't see it").fill("A kitchen table");
+  await cover.getByLabel("Recognisable people").selectOption("none");
+  await expect(checklist.locator(".is-block")).toHaveCount(0);
+  await editor.getByRole("button",{name:"Picture from a link…"}).click();
+  await editor.getByLabel("Picture's web address").fill("http://example.org/plot.jpg");
+  await editor.getByRole("button",{name:"Add picture"}).click();
+  await expect(editor.getByRole("alert")).toContainText("starting https://");
+  await editor.getByLabel("Picture's web address").fill("https://example.org/plot.jpg");
+  await editor.getByRole("button",{name:"Add picture"}).click();
+  await expect(editor).toContainText("Shown from example.org");
+  await editor.locator(".ml-story-media-edit").last().getByRole("button",{name:"Remove picture"}).click();
   await axe(page);
 
   // Reading: a column of steps beside the map, which follows along.
@@ -96,6 +112,13 @@ test("a story: steps from views, words, a picture, a quote and marks; read, pres
   await page.keyboard.press("ArrowRight");
   await expect(card.locator("h2")).toHaveText("Where skills come in");
   await expect(page.locator(".ml-marks .ml-mark--ring")).toBeVisible();
+  // A picture opens full size; Esc closes it, not the presentation.
+  await card.getByRole("button",{name:"Show full size: A shared kitchen with people cooking"}).click();
+  const big=page.locator("dialog.ml-lightbox[open]");
+  await expect(big).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(big).toHaveCount(0);
+  await expect(card).toHaveClass(/is-presenting/);
   await page.keyboard.press("Escape");
   await expect(card).toHaveCount(0);
 
@@ -216,7 +239,7 @@ test("on the Map lens, marks sit on places and pictures are pinned beside record
   await expect(page.locator(".ml-map .ml-marks .ml-mark--ring")).toBeVisible();
 
   // A picture pinned beside a record shows as a postcard on the map.
-  await editor.locator("input[type=file]").setInputFiles({name:"bridge.png",mimeType:"image/png",buffer:PNG});
+  await editor.getByLabel("Choose pictures").setInputFiles({name:"bridge.png",mimeType:"image/png",buffer:PNG});
   await editor.getByRole("button",{name:"Pin beside a record on the map…"}).click();
   await expect(page.locator(".ml-pick-banner")).toContainText("Click the record to pin the picture beside.");
   await choose(page,"Newcastle");
