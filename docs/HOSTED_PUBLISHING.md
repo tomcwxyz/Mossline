@@ -141,3 +141,12 @@ A published map or story can be put on another website. On its page, **Embed** g
   - every page sends `Content-Security-Policy: frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN`, so no other site can frame Mossline (clickjacking);
   - only `/p/<slug>/embed` sends `frame-ancestors *`.
 - **Unpublishing** removes the embed too: the frame shows "not found".
+
+## Link previews
+
+When a published map or story's link is shared (in chat, email or on social media), it shows a preview card. The card has the title, a line about it (the story's introduction, or the map's size), and a picture.
+
+- **The picture** is drawn by `app/p/[slug]/opengraph-image.tsx`. It uses the story's cover if it was uploaded, or otherwise a small drawing of a network with a pencil ring. A cover that is only a link to another site isn't fetched for the card.
+- **Fonts** are read from `apps/web/assets/og/` (Newsreader and IBM Plex Sans, SIL Open Font Licence, licences alongside).
+- Published pages still ask search engines not to index them; previews are for links people choose to share.
+- Set `MOSSLINE_BASE_URL` so preview pictures point at the site's own address.

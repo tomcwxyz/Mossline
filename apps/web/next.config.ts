@@ -7,6 +7,8 @@ import type { NextConfig } from "next";
 const EMBED = "/p/:slug/embed";
 const nextConfig: NextConfig = {
   transpilePackages: ["@mossline/graph-core"],
+  // Link preview pictures read their fonts from disk at run time.
+  outputFileTracingIncludes: { "/p/[slug]/opengraph-image": ["./assets/og/**"] },
   async headers() {
     return [
       { source: "/((?!p/[^/]+/embed).*)", headers: [
