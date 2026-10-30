@@ -210,6 +210,17 @@ test("a published story opens on the story, and the map can still be explored",a
   await expect(reader.getByRole("button",{name:"Copy a link to this step"})).toBeVisible();
   await expect(published.getByRole("button",{name:"Edit",exact:true})).toHaveCount(0);
   await axe(published);
+  // A shared link shows the story's title and a picture.
+  const html=await (await published.request.get("/p/"+slug)).text();
+  expect(html).toContain('<meta property="og:title" content="A short tour"');
+  expect(html).toContain('<meta name="twitter:card" content="summary_large_image"');
+  const ogImage=/<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
+  expect(ogImage).toBeTruthy();
+  const picture=await published.request.get(new URL(ogImage!).pathname+new URL(ogImage!).search);
+  expect(picture.status()).toBe(200);
+  expect(picture.headers()["content-type"]).toBe("image/png");
+  expect((await picture.body()).length).toBeGreaterThan(10_000);
+
   // Embedding: the code, a frame that works on another page, and every other page still refusing to be framed.
   await published.getByRole("button",{name:"Embed"}).click();
   const code=await published.getByLabel("Embed code").inputValue();
