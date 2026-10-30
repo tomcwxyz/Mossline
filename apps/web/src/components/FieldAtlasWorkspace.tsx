@@ -38,7 +38,7 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
@@ -52,6 +52,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   onSharedRefresh?: () => void;
   /** A published story to open with: the page starts reading it. */
   story?: Story;
+  /** A published copy: its address, and whether it's embedded in another site. */
+  published?: { slug: string; embedded: boolean };
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -401,8 +403,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     if (reading && !coverShown) url.searchParams.set("step", String(stepIndex + 1)); else url.searchParams.delete("step");
     window.history.replaceState(window.history.state, "", url.toString());
   }, [readOnly, publishedStory, reading, coverShown, stepIndex, urlReady, lens, selectedId]);
+  const fullPage = () => window.location.origin + (published ? "/p/" + published.slug : window.location.pathname);
+  const embedded = !!published?.embedded;
+  const [embedOpen, setEmbedOpen] = useState(false);
   const copyStepLink = (i: number) => {
-    const url = window.location.origin + window.location.pathname + "?step=" + (i + 1);
+    const url = fullPage() + "?step=" + (i + 1);
     void navigator.clipboard?.writeText(url).then(() => setNotice("Link to step " + (i + 1) + " copied.")).catch(() => setNotice("Copy the address from your browser."));
   };
   /** A step's records stand out: the rest of the map fades, and the links between them are drawn. */
@@ -491,15 +496,22 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
   const closeShare = () => { if (shareRef.current) shareRef.current.open = false; };
 
-  return <main className={"ml-atlas" + (storyMode === "present" ? " ml-atlas--presenting" : "") + (reading ? " ml-atlas--reading" : "") + (storyMode === "edit" ? " ml-atlas--writing" : "")}
+  return <main className={"ml-atlas" + (storyMode === "present" ? " ml-atlas--presenting" : "") + (reading ? " ml-atlas--reading" : "") + (storyMode === "edit" ? " ml-atlas--writing" : "") + (embedded ? " ml-atlas--embedded" : "")}
     data-theme={activeTheme} data-lens={lens}>
     <header className="ml-header">
+      {embedded ? <a className="ml-wordmark" href={"/p/" + (published?.slug ?? "") + (reading ? "?step=" + (stepIndex + 1) : "")} target="_blank" rel="noopener"
+        aria-label="Open this in Mossline (new tab)">
+        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
+          <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
+          <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
+        <span>Mossline</span>
+      </a> :
       <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossline — all maps">
         <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
           <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
           <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
         <span>Mossline</span>
-      </button>
+      </button>}
       {readOnly ? <div className="ml-dataset ml-dataset--static">
         <strong>{imported.title}</strong>
         <small>{graph.nodes.length.toLocaleString("en-GB")} records · {recordedTotal.toLocaleString("en-GB")} recorded links · published copy</small>
@@ -551,8 +563,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
         {readOnly && story && !storyMode && <button type="button" className="ml-quiet" onClick={() => { setStepIndex(0); startStory("read", "read"); }}>Read the story</button>}
-        {readOnly ? <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.origin + window.location.pathname)
-          .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button> :
+        {embedded ? <a className="ml-solid ml-account-button" href={"/p/" + (published?.slug ?? "") + (reading ? "?step=" + (stepIndex + 1) : "")} target="_blank" rel="noopener">
+          Open full page ↗</a> : readOnly ? <>
+          {published && <button type="button" className="ml-quiet" aria-expanded={embedOpen} onClick={() => setEmbedOpen(v => !v)}>Embed</button>}
+          <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(fullPage())
+          .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button></> :
         <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
@@ -759,6 +774,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {shared && edits.remoteSource > shared.sourceVersion && <div className="ml-banner ml-pick-banner" role="status">
             Someone has added data to this map.
             <button type="button" onClick={() => onSharedRefresh?.()}>Get it</button></div>}
+          {embedOpen && published && <EmbedCard slug={published.slug} title={imported.title} story={!!publishedStory} onClose={() => setEmbedOpen(false)}/>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
         {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}
@@ -783,4 +799,27 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       {selected ? selected.label + ", " + selected.type + ", " + (degree.get(selected.id) ?? 0) + " recorded links" : ""}
     </div>
   </main>;
+}
+
+/** The code to put a published map or story on another website. */
+export function EmbedCard({ slug, title, story, onClose }: { slug: string; title: string; story: boolean; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+  const [height, setHeight] = useState(640);
+  const code = `<iframe src="${typeof window === "undefined" ? "" : window.location.origin}/p/${slug}/embed" title="${title.replace(/[<>"&]/g, "")}" ` +
+    `width="100%" height="${height}" style="border:0;border-radius:8px" loading="lazy" allow="fullscreen"></iframe>`;
+  return <aside className="ml-overlay-card ml-embed-card" aria-label="Embed on a website">
+    <div className="ml-unplaced-head"><strong>Embed on a website</strong>
+      <button type="button" className="ml-link-button" onClick={onClose} aria-label="Close embed">×</button></div>
+    <p className="ml-small">Paste this where your website builder accepts an HTML embed. {story ? "It opens on the story; " : ""}readers can open the full page from it.</p>
+    <label className="ml-edit-field"><span>Height</span>
+      <select value={height} onChange={e => setHeight(Number(e.target.value))}>
+        <option value={480}>Short (480 pixels)</option><option value={640}>Medium (640 pixels)</option><option value={820}>Tall (820 pixels)</option>
+      </select></label>
+    <textarea className="ml-embed-code" readOnly rows={4} value={code} aria-label="Embed code" onFocus={e => e.currentTarget.select()}/>
+    <div className="ml-edit-actions">
+      <button type="button" className="ml-solid" onClick={() => void navigator.clipboard?.writeText(code).then(() => setCopied(true)).catch(() => {})}>
+        {copied ? "Copied" : "Copy code"}</button>
+    </div>
+    <p className="ml-small">The embedded page sets no cookies and keeps nothing in readers&apos; browsers.</p>
+  </aside>;
 }

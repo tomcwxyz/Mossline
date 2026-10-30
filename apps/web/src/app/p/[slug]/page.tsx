@@ -15,5 +15,5 @@ export default async function HostedPage({params}:{params:Promise<{slug:string}>
     <h1>Map temporarily unavailable</h1><p>We could not load this publication.</p>
   </main>;}
   if(!publication)notFound();
-  return <PublishedAtlas snapshot={publication.snapshot}/>;
+  return <PublishedAtlas snapshot={publication.snapshot} slug={slug}/>;
 }

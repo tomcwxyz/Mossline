@@ -131,3 +131,13 @@ and retention policy, and terms of use.
 ## Plans and policies
 
 Where plans are on, the free and organisation limits apply here too: see [PLANS.md](PLANS.md). Running a public Mossline: [OPERATING.md](OPERATING.md).
+
+## Embedding on other websites
+
+A published map or story can be put on another website. On its page, **Embed** gives an `<iframe>` pointing at `/p/<slug>/embed`, with a choice of height.
+
+- **The embed view** is the same read-only atlas with a slim header. It opens on the story, if there is one. *Open full page ↗* opens it in a new tab. It sets no cookies and keeps nothing in readers' browsers.
+- **Framing rules** (`apps/web/next.config.ts`):
+  - every page sends `Content-Security-Policy: frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN`, so no other site can frame Mossline (clickjacking);
+  - only `/p/<slug>/embed` sends `frame-ancestors *`.
+- **Unpublishing** removes the embed too: the frame shows "not found".
