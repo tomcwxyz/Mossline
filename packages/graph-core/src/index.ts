@@ -41,6 +41,7 @@ export * from "./graph-render-geometry";
 export * from "./field-atlas";
 export * from "./field-atlas-annotations";
 export * from "./sources";
+export * from "./sources/the-list";
 export * from "./groupings";
 export * from "./grant-links";
 export * from "./systems";
