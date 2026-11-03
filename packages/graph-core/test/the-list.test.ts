@@ -59,3 +59,14 @@ test("invalid source URLs and missing dates cannot invent citations or years", (
 test("no public evidence means no atlas, rather than silently showing an empty success", () => {
   assert.throws(() => theListChangesToGraph([{ ...example, status: "pending" }]), /No approved or confirmed/);
 });
+
+
+test("published changes without summaries are retained and clearly labelled", () => {
+  const { graph, count, skipped } = theListChangesToGraph([{
+    ...example, description: "", additional_details: "", change_type: "Reopened"
+  }]);
+  assert.equal(count, 1); assert.equal(skipped, 0);
+  const change = graph.nodes.find(n => n.id.startsWith("the-list:change:"))!;
+  assert.match(change.description ?? "", /No public summary supplied/);
+  assert.match(String(change.properties?.["Public summary"]), /Missing/);
+});
