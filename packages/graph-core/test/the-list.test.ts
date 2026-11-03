@@ -70,3 +70,13 @@ test("published changes without summaries are retained and clearly labelled", ()
   assert.match(change.description ?? "", /No public summary supplied/);
   assert.match(String(change.properties?.["Public summary"]), /Missing/);
 });
+
+test("a submission timestamp is not represented as the date the funding policy changed", () => {
+  const { graph } = theListChangesToGraph([{
+    ...example, date_of_change: null, submitted_at: "2026-11-03T18:00:00Z"
+  }]);
+  const change = graph.nodes.find(n => n.id.startsWith("the-list:change:"))!;
+  assert.equal(change.properties?.Date, undefined);
+  assert.equal(change.properties?.["Submitted to The List"], "2026-11-03");
+  assert.equal(recordedYear(graph.edges.find(e => e.type === "has a published change")!), null);
+});
