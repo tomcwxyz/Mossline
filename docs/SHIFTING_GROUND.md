@@ -15,7 +15,7 @@ Opening this again imports a **new snapshot**. It does not silently change maps,
 - Each change keeps its The List URL, reported date, change type, original evidence URL (where supplied), and a receipt carrying The List's stable change ID. Stable funder IDs prevent accidental name-based merges.
 - Only published approved/confirmed records appear. Private context, contact details, reviewer identities and admin watch hits are not loaded.
 - A funder's office address or constituency is **not** a location of funding impact. This adapter does not geocode these and does not plot made-up locations.
-- Timeline dates belong only to recorded funder-change events, not to categorical links. The Funding lens has no grant awards until actual award data are added separately.
+- Timeline dates belong only to recorded funder-change events with an explicit date of change. A submission timestamp is recorded separately but **never** treated as the date a funding policy changed. Categorical links remain undated. The Funding lens has no grant awards until actual award data are added separately.
 - A rise in recorded changes may reflect **improved monitoring and reporting**, not a population-wide rise in changed funding behaviour.
 
 ## Data reuse and attribution
