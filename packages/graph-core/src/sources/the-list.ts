@@ -62,7 +62,7 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
     if (!id || !/^[a-zA-Z0-9_-]{8,100}$/.test(id) || !["approved", "confirmed"].includes(status) || !description) {
       skipped++; continue;
     }
-    const funder = c.funder && typeof c.funder === "object" ? c.funder : {};
+    const funder: ListFunder = c.funder && typeof c.funder === "object" ? c.funder : {};
     const funderId = clean(funder.id ?? c.funder_id, 100);
     const funderName = clean(funder.name ?? c.funder_name, 250);
     const changeType = clean(c.change_type, 120) || "Not classified";
