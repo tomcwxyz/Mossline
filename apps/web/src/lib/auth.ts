@@ -3,7 +3,27 @@ import {APIError, createAuthMiddleware} from "better-auth/api";
 import {magicLink} from "better-auth/plugins/magic-link";
 import {pool} from "./db";
 import {sendSignInLink} from "./auth-mail";
-import {isHostedConfigured, mayPublish, signInMethods} from "./hosted-auth";
+import {isHostedConfigured, mayCreate, signInMethods} from "./hosted-auth";
+import {forgetMemberships, isInvited} from "./shared-maps-db";
+import {handOverEverything, isInvitedToOrg} from "./orgs-db";
+import {TERMS_VERSION} from "./legal";
+import {tooManyLinks} from "./abuse";
+import {reportError} from "./report";
+
+/**
+ * Who may have an account: anyone with open sign-up, otherwise the publishers
+ * list; plus anyone invited to a shared map or an organisation. Someone who
+ * already has one can always sign in, if only to delete it.
+ */
+async function mayHaveAccount(email:string):Promise<boolean>{
+  if(mayCreate(email))return true;
+  try{
+    if(await isInvited(email))return true;
+    if(await isInvitedToOrg(email))return true;
+    const {rows}=await pool().query("SELECT 1 FROM mossline_users WHERE email=$1",[email.trim().toLowerCase()]);
+    return rows.length>0;
+  }catch{return false;}
+}
 
 /**
  * Accounts exist so a published map belongs to someone. Mossline keeps the
@@ -39,13 +59,24 @@ function makeAuth(){
     plugins:methods.email?[magicLink({
       expiresIn:10*60,
       storeToken:"hashed",
+      // Automated tests sign in many people from one address in a few minutes; people never do.
+      ...(process.env.MOSSLINE_TEST_MAIL_DIR&&!process.env.MOSSLINE_SMTP_URL?{rateLimit:{window:60,max:100}}:{}),
       // Say the same thing whoever asks, so the form can't be used to find out who has an account.
-      sendMagicLink:async({email,url})=>{ if(mayPublish(email))await sendSignInLink(email,url); }
+      sendMagicLink:async({email,url})=>{ if(await mayHaveAccount(email))await sendSignInLink(email,url); }
     })]:[],
     user:{
       modelName:"mossline_users",
       fields:snake({name:"name",email:"email",emailVerified:"email_verified",image:"image",createdAt:"created_at",updatedAt:"updated_at"}),
-      deleteUser:{enabled:true}
+      // Which terms someone agreed to by creating the account, and when.
+      additionalFields:{
+        termsVersion:{type:"string",required:false,input:false,fieldName:"terms_version"},
+        termsAcceptedAt:{type:"date",required:false,input:false,fieldName:"terms_accepted_at"}
+      },
+      // An organisation's maps pass to another of its admins; the rest of what the account owns goes with it
+      // (database cascade), and its invitations to others' maps are dropped.
+      deleteUser:{enabled:true,
+        beforeDelete:async user=>{ await handOverEverything(user.id); },
+        afterDelete:async user=>{ await forgetMemberships(user.email); }}
     },
     session:{
       modelName:"mossline_sessions",
@@ -77,8 +108,11 @@ function makeAuth(){
     hooks:{
       // An address that can't publish gets the same reply as one that can, and nothing is stored for it.
       before:createAuthMiddleware(async ctx=>{
-        if(ctx.path==="/sign-in/magic-link"&&!mayPublish(typeof ctx.body?.email==="string"?ctx.body.email:""))
-          return ctx.json({status:true});
+        if(ctx.path!=="/sign-in/magic-link")return;
+        const email=typeof ctx.body?.email==="string"?ctx.body.email:"";
+        if(!await mayHaveAccount(email))return ctx.json({status:true});
+        // One address gets a handful of links an hour, however many places ask: stops anyone flooding someone's inbox.
+        try{ if(await tooManyLinks(email))return ctx.json({status:true}); }catch(error){ reportError("sign-in link limit",error); }
       })
     },
     onAPIError:{errorURL:"/sign-in"},
@@ -87,13 +121,19 @@ function makeAuth(){
         create:{before:async user=>{
           // The publishers list is only as good as the address, so it must be one the provider has verified
           // (Microsoft: add the verified_primary_email optional claim; see docs/HOSTED_PUBLISHING.md).
-          if(!user.emailVerified||!mayPublish(user.email))
+          if(!user.emailVerified||!await mayHaveAccount(user.email))
             throw new APIError("FORBIDDEN",{message:"This address can't publish from Mossline."});
-          return {data:{...user,image:null}};
+          // Signing in for the first time, after being shown the terms and privacy notice, creates the account.
+          return {data:{...user,image:null,termsVersion:TERMS_VERSION,termsAcceptedAt:new Date()}};
         }},
         update:{before:async data=>({data:"image" in data?{...data,image:null}:data})}
       },
-      session:{create:{before:async session=>({data:{...session,ipAddress:null,userAgent:null}})}},
+      session:{create:{before:async session=>{
+        // Signing in counts as using the account, so inactive-account clean-up leaves it alone.
+        try{await pool().query("UPDATE mossline_users SET last_active_at=now(), inactivity_warned_at=NULL WHERE id=$1",[session.userId]);}
+        catch(error){reportError("last active",error);}
+        return {data:{...session,ipAddress:null,userAgent:null}};
+      }}},
       account:{
         create:{before:async account=>({data:{...account,accessToken:null,refreshToken:null,idToken:null,
           accessTokenExpiresAt:null,refreshTokenExpiresAt:null}})},
@@ -120,5 +160,10 @@ export async function currentUser(request:Request):Promise<SignedIn|null>{
   const session=await auth.api.getSession({headers:request.headers});
   if(!session)return null;
   const {id,name,email}=session.user;
-  return {id,name,email,canPublish:mayPublish(email)};
+  // Members of an organisation publish and keep maps under it, whoever let them in.
+  let inOrg=false;
+  if(!mayCreate(email)){
+    try{inOrg=(await pool().query("SELECT 1 FROM mossline_org_members WHERE user_id=$1",[id])).rows.length>0;}catch{/* treated as not */}
+  }
+  return {id,name,email,canPublish:mayCreate(email)||inOrg};
 }

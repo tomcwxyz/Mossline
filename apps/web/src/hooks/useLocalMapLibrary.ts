@@ -7,7 +7,7 @@ import {MAP_LIBRARY_STORAGE_KEY,LEGACY_GRAPH_STORAGE_KEY}
   from "../lib/browser-storage-keys";
 import {loadGeneralGraph,generalMapCounts} from "../lib/general-map-store";
 import {MAX_AUTO_RESTORE_CHARS,MAX_LOCAL_MAPS,readStoredMapLibrary,
-  serialiseMapLibrary,type LocalMap} from "../lib/map-library";
+  serialiseMapLibrary,type LocalMap,type SharedLink} from "../lib/map-library";
 
 export type LocalMapLibraryOptions={
   initialGraph:GraphDocument;
@@ -110,10 +110,13 @@ export function useLocalMapLibrary({
     }
   }
 
-  function updateGraph(next:GraphDocument,generalDatasetId?:string):boolean{
+  /** `shared` replaces the map's link to its account copy, e.g. after fetching a newer version. */
+  function updateGraph(next:GraphDocument,generalDatasetId?:string,shared?:SharedLink):boolean{
     const current=localMaps.find(x=>x.id===activeMapId);
+    const link=shared??current?.shared;
     const entry:LocalMap=current?
       {id:current.id,createdAt:current.createdAt,title:next.title,graph:next,
+        ...(link?{shared:link}:{}),
         ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})}:
       {id:crypto.randomUUID(),title:next.title,createdAt:Date.now(),graph:next,
         ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
@@ -121,15 +124,30 @@ export function useLocalMapLibrary({
     return persistMapLibrary(updated,entry);
   }
   function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
-    fundingDatasetId?:string,generalDatasetId?:string):boolean{
+    fundingDatasetId?:string,generalDatasetId?:string,shared?:SharedLink):boolean{
     if(localMaps.length>=MAX_LOCAL_MAPS){
       setNotice("This browser has eight maps. Export one before creating another.");
       return false;
     }
     const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),
       title:next.title,graph:next,fundingAnalysis,fundingDatasetId,
+      ...(shared?{shared}:{}),
       ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};
     return persistMapLibrary([...localMaps,entry],entry);
+  }
+  /** Links (or unlinks) a map in this browser to its copy in a Mossline account, without reopening it. */
+  function setShared(id:string,shared:SharedLink|undefined):boolean{
+    if(oversizedSavedMaps)return false;
+    const maps=localMaps.map(m=>{
+      if(m.id!==id)return m;
+      const {shared:_old,...rest}=m;
+      return shared?{...rest,shared}:rest;
+    });
+    try{
+      window.localStorage.setItem(MAP_LIBRARY_STORAGE_KEY,JSON.stringify(serialiseMapLibrary(maps,activeMapId??id)));
+      setLocalMaps(maps);
+      return true;
+    }catch{return false;}
   }
   function applyFundingProjection(next:GraphDocument):boolean{
     const current=localMaps.find(m=>m.id===activeMapId);
@@ -169,6 +187,6 @@ export function useLocalMapLibrary({
   return {
     hasSavedMapLibrary,localMaps,oversizedSavedMaps,
     savedMapBackupMade,setSavedMapBackupMade,activeMapId,
-    updateGraph,createNewMap,applyFundingProjection,selectLocalMap,resetOversizedCache
+    updateGraph,createNewMap,applyFundingProjection,selectLocalMap,resetOversizedCache,setShared
   };
 }

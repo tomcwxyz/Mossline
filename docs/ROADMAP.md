@@ -1,5 +1,35 @@
 # Roadmap
 
+## Next (agreed October 2026)
+In order. The design notes say what each involves and what's still to decide.
+
+1. **Stories, with media and annotation** ([design notes](design/STORIES.md)).
+   - Steps built from saved views, each with words, images, quotes and later audio and video.
+   - Consent, credit and alt text travel with every item of media.
+   - Annotations anchored to records and places, drawn as the author's "marginalia", never mistaken for data.
+   - Read by scrolling or presented step by step; published with item-by-item review.
+   - [x] First release: steps, text, images, quotes, shape annotations (ring, note, arrow, number), scrolling and presenting, publishing.
+   - [x] Stories travel with shared maps, so people working on a map can write them together.
+   - [x] Marks on the Map lens (places), and pictures pinned to a record or place.
+   - [x] Audio with transcripts (upload, record or link).
+   - [x] Embedding, link previews, and printing or saving as PDF.
+   - [ ] Captioned video, drawn areas on the map.
+   - [ ] Readers responding (as pencil, reviewed by the author or organisation), or a link with Map my Patch.
+2. **Hand-drawn styling** ([design notes](design/HAND_DRAWN.md)): a Sketched option beside Clean.
+   - Inked, gently wobbling lines; watercolour washes; a handwriting face for labels; a paper texture.
+   - Ink, pencil and wash keep their meaning; the wobble is fixed per record, not random each time.
+   - [x] Prove the look in Themes: watercolour washes, handwritten names, paper grain (a trial switch in the groups card).
+   - [ ] Sketched Sigma programs with a size fallback.
+   - [ ] Clean/Sketched switch, and the author's choice for published maps and stories (story marks are already drawn by hand).
+   - [ ] Inked basemap for the Map lens; hand-drawn charts.
+3. **Conversation maps.** Areas drawn by residents on the Map lens, comments on places and records, and quick contributions from people without accounts (or via Map my Patch).
+4. **Field notes (experiment).** A layer for sensory and observational mapping: what was noticed, where, how strongly, along a walk. Drawn as rings and contours on a sketched map. Separate from records and links.
+5. **Accounts, later.**
+   - [ ] Several organisations per person.
+   - [ ] Moving a map between your own account and an organisation.
+   - [ ] Private published links.
+   - [ ] Reviews and saved views shared with shared maps.
+
 ## Alpha 0.1: local vertical slice
 - [x] Next.js + Cytoscape explorer.
 - [x] Validated portable graph model and queries.
@@ -268,7 +298,9 @@ Deliberately excluded initially: simulations, causal loops and automatic agent w
 - [ ] Preview browser/mobile QA and independent public domain without Vercel preview SSO.
 - [ ] Rate limiting, audit trail, abuse reporting, automatic expiry and operational monitoring.
 - [x] Real user accounts for publishing: Microsoft, Google or email link; maps belong to accounts (October 2026).
-- [ ] Team roles, invitations and restricted/private publications.
+- [x] Shared maps: save to an account, invite editors or viewers, changes sync between browsers (October 2026).
+- [x] Organisations, free and organisation plans, Stripe billing, policies and an operator page (October 2026).
+- [ ] Restricted/private publications; several organisations per person.
 
 
 ## Alpha 1.9 — funding landscapes and potential thematic connections

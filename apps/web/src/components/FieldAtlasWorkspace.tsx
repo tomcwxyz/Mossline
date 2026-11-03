@@ -7,19 +7,26 @@ import {
   applyEdits, toKumuWorkbook,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
-  type GraphDocument, type GraphEdge, type NodeType
+  type GraphDocument, type GraphEdge, type NodeType, markStyleOf, stepRecords, type Story, type StoryMark, type StoryView
 } from "@mossline/graph-core";
+import { useStories } from "../hooks/useStories";
+import type { StoryPin } from "./atlas/MarkLayer";
+import { motion, pictureOf, settled } from "./atlas/snapshot";
+import { MARK_NEEDS, StoryPrint, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { useMapEdits } from "../hooks/useMapEdits";
 import { ChangeList, QuickEntry, RecordCreator, type EditingApi } from "./atlas/Editing";
 import { FollowConnection } from "./FollowConnection";
 import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
 import { useAtlasTheme } from "./atlas/theme";
+import { useAtlasStyle } from "./atlas/sketch";
 import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
 import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
 import { PublishCard } from "./atlas/PublishCard";
+import { ShareMapCard } from "./atlas/ShareMapCard";
+import type { SharedLink } from "../lib/map-library";
 import { useAccount } from "../hooks/useAccount";
 import { LINK_INKS, SIGN_INKS, TYPE_PLURAL, type AtlasTheme } from "./atlas/palette";
 
@@ -32,7 +39,7 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
@@ -40,6 +47,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   message?: string; onMessageShown?: () => void;
   /** A published copy: explore only. No editing, reviews, data menus or publishing, and nothing read from this browser's storage. */
   readOnly?: boolean;
+  /** This map's copy in a Mossline account, if it has one; onSharedChange records saving, leaving or deleting it. */
+  shared?: SharedLink; onSharedChange?: (link: SharedLink | undefined) => void;
+  /** Fetch the newer imported records someone added to this shared map. */
+  onSharedRefresh?: () => void;
+  /** A published story to open with: the page starts reading it. */
+  story?: Story;
+  /** A published copy: its address, and whether it's embedded in another site. */
+  published?: { slug: string; embedded: boolean };
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -62,7 +77,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const sourceGraph = fullSource ?? imported;
   const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
   // ---- Changes made here sit beside the imported records ---------------------
-  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly);
+  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly, shared);
+  const viewOnly = readOnly || shared?.role === "viewer";
   const editedMap = useMemo(() => applyEdits(sourceGraph, edits.layer), [sourceGraph, edits.layer]);
   const workingGraph = editedMap.graph;
 
@@ -156,7 +172,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const menuRef = useRef<HTMLDetailsElement>(null);
   const shareRef = useRef<HTMLDetailsElement>(null);
   const [publishOpen, setPublishOpen] = useState(false);
-  const publishing = useAccount(!readOnly).state.status === "ready";
+  const accountState = useAccount(!readOnly).state;
+  const publishing = accountState.status === "ready";
+  const sharing = accountState.status === "ready" && accountState.sharedMaps;
+  const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("lens");
@@ -271,6 +290,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   }, [grouping, drawn]);
   // One Night/Day choice for every lens and page, remembered on this device.
   const [activeTheme, chooseTheme] = useAtlasTheme();
+  const [drawingStyle, chooseStyle] = useAtlasStyle();
   const activeThemeRef = useRef(activeTheme); activeThemeRef.current = activeTheme;
   const byLabel = useMemo(() => new Map(graph.nodes.map(n => [n.id, n.label])), [graph]);
   // ---- Kinds of link, signs and feedback loops -----------------------------------
@@ -310,6 +330,144 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setTrail(next);
     if (next) setLens(current => current === "network" || current === "map" ? current : "network");
   }, []);
+  // ---- Stories ------------------------------------------------------------------
+  // Kept in this browser with the map (by its saved ID, or by its data for maps that aren't saved).
+  const storyKey = mapId ?? graphKey;
+  const [storyId, setStoryId] = useState<string | null>(publishedStory?.id ?? null);
+  const [storyMode, setStoryMode] = useState<null | "edit" | "read" | "present">(publishedStory ? "read" : null);
+  const presentFrom = useRef<"edit" | "read">("read");
+  const [stepIndex, setStepIndex] = useState(0);
+  const [markPick, setMarkPick] = useState<MarkPick | null>(null);
+  const markPickRef = useRef(markPick); markPickRef.current = markPick;
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const q = window.matchMedia("(max-width: 720px)"); const on = () => setNarrow(q.matches);
+    on(); q.addEventListener("change", on); return () => q.removeEventListener("change", on);
+  }, []);
+  const storyStore = useStories({ storeKey: storyKey, sharedId: shared?.id, readOnly, published: publishedStory,
+    active: storyMode !== null, onNotice: setNotice });
+  const { stories, change: changeStory, flush: flushStory } = storyStore;
+  const story = stories.find(s => s.id === storyId) ?? null;
+  const step = story && storyMode ? story.steps[Math.min(stepIndex, story.steps.length - 1)] ?? null : null;
+  const captureView = (): StoryView => ({ lens,
+    ...(selectedId ? { record: selectedId } : {}), ...(search ? { q: search.slice(0, 200) } : {}), ...(theme ? { theme } : {}),
+    ...(groupChoice ? { group: groupChoice } : {}), ...(region ? { region } : {}), ...(funderId ? { funder: funderId } : {}),
+    ...(type ? { type } : {}), ...(range.from !== null ? { from: range.from } : {}), ...(range.to !== null ? { to: range.to } : {}),
+    ...(loopId ? { loop: loopId } : {}) });
+  /** Shows a step's view of the map. */
+  const viewKey = step ? step.id + JSON.stringify(step.view) : "";
+  useEffect(() => {
+    if (!step) return;
+    const v = step.view;
+    setLens(v.lens); setSelectedId(v.record ?? null); setSearch(v.q ?? ""); setTheme(v.theme ?? "");
+    setGroupChoice(v.group && ["tags", "topics", "programme", "funder", "place"].includes(v.group) ? v.group as GroupingKind : null);
+    setRegion(v.region ?? ""); setFunderId(v.funder ?? ""); setType(v.type && v.type in TYPE_PLURAL ? v.type as NodeType : null);
+    setRange({ from: v.from ?? null, to: v.to ?? null }); setLoopId(v.loop ?? null); setTrail(null); setRouteFromId(null); setBrowse(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewKey]);
+  // A mark is finished once it has the records it needs (a ring when the author says so).
+  useEffect(() => {
+    if (!markPick || !story || !step || markPick.kind === "ring" || markPick.targets.length < MARK_NEEDS[markPick.kind]) return;
+    const pick = markPick;
+    changeStory({ ...story, steps: story.steps.map(s => s.id !== step.id ? s : pick.kind === "pin"
+      ? { ...s, media: s.media.map(m => m.id === pick.mediaId && m.kind === "image" ? { ...m, record: pick.targets[0] } : m) }
+      : { ...s, marks: [...s.marks, makeMark({ ...pick, kind: pick.kind }, s)] }) });
+    setMarkPick(null);
+  }, [markPick, story, step, changeStory]);
+  const finishRing = () => {
+    if (markPick?.kind === "ring" && markPick.targets.length && story && step)
+      changeStory({ ...story, steps: story.steps.map(s => s.id === step.id ? { ...s, marks: [...s.marks, makeMark({ ...markPick, kind: "ring" }, s)] } : s) });
+    setMarkPick(null);
+  };
+  useEffect(() => { if (storyMode !== "edit") setMarkPick(null); }, [storyMode, stepIndex]);
+  const storyMarks: StoryMark[] | undefined = step ? [...step.marks,
+    ...(markPick?.targets.length ? [{ id: "picking", kind: "ring" as const, targets: markPick.targets }] : [])] : undefined;
+  const storyPins: StoryPin[] | undefined = step ? step.media.flatMap(m => m.kind === "image" && m.record
+    ? [{ id: m.id, record: m.record, src: m.src, alt: m.alt }] : []) : undefined;
+  const storyFrame = step && (storyMode === "read" || storyMode === "present") ? stepRecords(step) : undefined;
+  const reading = !!story && (storyMode === "read" || storyMode === "present");
+  // A title card opens presenting, and reading on a phone; any move past it begins the story.
+  const [cover, setCover] = useState(!!publishedStory);
+  const goToStep = useCallback((i: number) => { setCover(false); setStepIndex(i); }, []);
+  /** The title card only shows where a card does: presenting, or reading on a phone. */
+  const coverShown = cover && (storyMode === "present" || narrow);
+  const startStory = (mode: "read" | "present", from: "edit" | "read") => { presentFrom.current = from; setCover(true); setStoryMode(mode); };
+  // The step a published story is on is part of its address, so a link can open on it.
+  useEffect(() => {
+    if (!readOnly || !publishedStory) return;
+    const n = Number(new URLSearchParams(window.location.search).get("step"));
+    if (Number.isInteger(n) && n >= 1 && n <= publishedStory.steps.length) { setStepIndex(n - 1); if (n > 1) setCover(false); }
+  }, [readOnly, publishedStory]);
+  useEffect(() => {
+    if (!readOnly || !publishedStory || !urlReady) return;
+    const url = new URL(window.location.href);
+    if (reading && !coverShown) url.searchParams.set("step", String(stepIndex + 1)); else url.searchParams.delete("step");
+    window.history.replaceState(window.history.state, "", url.toString());
+  }, [readOnly, publishedStory, reading, coverShown, stepIndex, urlReady, lens, selectedId]);
+  // ---- Printing a story: each step's view, pictured in turn, then the browser's print dialog ----
+  const [printing, setPrinting] = useState<null | { done: number; pictures: (string | null)[]; ready: boolean }>(null);
+  async function printStory() {
+    if (!story || printing) return;
+    flushStory();
+    const before = { mode: storyMode, index: stepIndex };
+    motion.still = true; setCover(false); setStoryMode("read");
+    const pictures: (string | null)[] = [];
+    try {
+      for (let i = 0; i < story.steps.length; i++) {
+        setPrinting({ done: i, pictures: [...pictures], ready: false });
+        setStepIndex(i);
+        await settled(story.steps[i].view.lens);
+        const lens = story.steps[i].view.lens;
+        const section = lens === "network" || lens === "themes" || lens === "map"
+          ? document.querySelector<HTMLElement>(".ml-canvas > .ml-network, .ml-canvas > .ml-map") : null;
+        pictures.push(section ? await pictureOf(section).catch(() => null) : null);
+      }
+    } finally { motion.still = false; }
+    setPrinting({ done: story.steps.length, pictures, ready: true });
+    setStepIndex(before.index); setStoryMode(before.mode);
+  }
+  useEffect(() => {
+    if (!printing?.ready) return;
+    let cancelled = false;
+    const done = () => setPrinting(null);
+    // Pictures in the print layout load first, so the dialog never prints blanks.
+    void Promise.all(Array.from(document.querySelectorAll<HTMLImageElement>(".ml-print img")).map(img => img.decode().catch(() => {})))
+      .then(() => { if (cancelled) return; window.addEventListener("afterprint", done, { once: true }); window.print(); });
+    return () => { cancelled = true; window.removeEventListener("afterprint", done); };
+  }, [printing?.ready]);
+  const fullPage = () => window.location.origin + (published ? "/p/" + published.slug : window.location.pathname);
+  const embedded = !!published?.embedded;
+  const [embedOpen, setEmbedOpen] = useState(false);
+  const copyStepLink = (i: number) => {
+    const url = fullPage() + "?step=" + (i + 1);
+    void navigator.clipboard?.writeText(url).then(() => setNotice("Link to step " + (i + 1) + " copied.")).catch(() => setNotice("Copy the address from your browser."));
+  };
+  /** A step's records stand out: the rest of the map fades, and the links between them are drawn. */
+  const spotlight: AtlasRoute | null = useMemo(() => {
+    if (!step || !reading || step.fade === false || step.view.loop) return null;
+    const present = new Set(drawn.nodes.map(n => n.id));
+    const ids = new Set(stepRecords(step).map(id => alias?.get(id) ?? id).filter(id => present.has(id)));
+    if (ids.size < 2) return null;
+    return { nodeIds: [...ids], edgeIds: drawn.edges.filter(e => isRecorded(e) && ids.has(e.source) && ids.has(e.target)).map(e => e.id) };
+  }, [step, reading, drawn, alias]);
+  const exitStory = () => { if (storyMode === "present") setStoryMode(presentFrom.current); else setStoryMode(readOnly ? null : "edit"); };
+  const exitLabel = storyMode === "present" ? "Stop presenting" : readOnly ? "Explore the map" : "Back to writing";
+  useEffect(() => {
+    if (!reading || !story) return;
+    const listener = (e: globalThis.KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      // A picture open full size has the keys (Esc closes it, not the story).
+      if (document.querySelector("dialog.ml-lightbox[open]")) return;
+      if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); if (coverRef.current) setCover(false); else setStepIndex(i => Math.min(i + 1, story.steps.length - 1)); }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); setCover(false); setStepIndex(i => Math.max(i - 1, 0)); }
+      if (e.key === "Escape" && storyMode === "present") setStoryMode(presentFrom.current);
+    };
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
+  }, [reading, story, storyMode]);
+  const coverRef = useRef(coverShown); coverRef.current = coverShown;
+  const openStories = () => { setEditMode(false); setKeyOpen(false); setPickingFrom(null); setPublishOpen(false); setShareOpen(false); setStoryMode("edit"); };
+
   // ---- Editing ------------------------------------------------------------------
   const [editMode, setEditMode] = useState(false);
   const [editTab, setEditTab] = useState<"add" | "quick" | "changes">("add");
@@ -319,6 +477,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const [picked, setPicked] = useState<string | null>(null);
   const pickingRef = useRef(pickingFrom); pickingRef.current = pickingFrom;
   const pickRecord = useCallback((id: string | null) => {
+    if (markPickRef.current) {
+      if (id) setMarkPick(p => p && !p.targets.includes(id) ? { ...p, targets: [...p.targets, id] } : p);
+      return;
+    }
     const from = pickingRef.current;
     if (from) {
       if (id && id !== from) { setPicked(id); setPickingFrom(null); setSelectedId(from); }
@@ -366,14 +528,22 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
   const closeShare = () => { if (shareRef.current) shareRef.current.open = false; };
 
-  return <main className="ml-atlas" data-theme={activeTheme} data-lens={lens}>
+  return <main className={"ml-atlas" + (storyMode === "present" ? " ml-atlas--presenting" : "") + (reading ? " ml-atlas--reading" : "") + (storyMode === "edit" ? " ml-atlas--writing" : "") + (embedded ? " ml-atlas--embedded" : "")}
+    data-theme={activeTheme} data-lens={lens}>
     <header className="ml-header">
+      {embedded ? <a className="ml-wordmark" href={"/p/" + (published?.slug ?? "") + (reading ? "?step=" + (stepIndex + 1) : "")} target="_blank" rel="noopener"
+        aria-label="Open this in Mossline (new tab)">
+        <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
+          <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
+          <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
+        <span>Mossline</span>
+      </a> :
       <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossline — all maps">
         <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
           <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
           <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
         <span>Mossline</span>
-      </button>
+      </button>}
       {readOnly ? <div className="ml-dataset ml-dataset--static">
         <strong>{imported.title}</strong>
         <small>{graph.nodes.length.toLocaleString("en-GB")} records · {recordedTotal.toLocaleString("en-GB")} recorded links · published copy</small>
@@ -386,7 +556,10 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         </summary>
         <div className="ml-menu" role="group" aria-label="Map and data">
           <button type="button" onClick={() => { closeMenu(); onBack(); }}>All maps</button>
-          <button type="button" onClick={() => { closeMenu(); onImport(); }}>Add data…</button>
+          {!viewOnly && <button type="button" onClick={() => { closeMenu(); onImport(); }}>Add data…</button>}
+          <button type="button" onClick={() => { closeMenu(); openStories(); }}>Stories{stories.length ? " · " + stories.length : ""}…</button>
+          {(sharing || shared) && <button type="button" onClick={() => { closeMenu(); setPublishOpen(false); setShareOpen(true); }}>
+            {shared ? "Sharing…" : "Save to your account…"}</button>}
           <hr/>
           <p className="ml-menu-note">Reviewer confirmations are stored separately from your source records.</p>
           <button type="button" onClick={() => { closeMenu(); exportAnnotations(); }} disabled={!annotations.entries.length}>
@@ -411,14 +584,22 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           : <kbd aria-hidden="true">/</kbd>}
       </label>
       <div className="ml-header-actions">
-        <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>
-        {!readOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
-          onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); }}>
+        {shared ? <button type="button" className={"ml-local ml-shared-badge is-" + edits.status.state} onClick={() => { setPublishOpen(false); setShareOpen(true); }}
+          title={edits.status.state === "offline" ? edits.status.message : "Who has this map"}>
+          <i aria-hidden="true"/><span className="ml-shared-text">{edits.status.state === "offline" ? "Shared · offline" : edits.status.state === "syncing" ? "Shared · updating" : "Shared"}
+          {shared.role === "viewer" ? " · view only" : ""}</span></button>
+          : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
+        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+          onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); setStoryMode(null); }}>
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
           aria-label={activeTheme === "night" ? "Use day colours" : "Use night colours"}>{activeTheme === "night" ? "Day" : "Night"}</button>
-        {readOnly ? <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(window.location.origin + window.location.pathname)
-          .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button> :
+        {readOnly && story && !storyMode && <button type="button" className="ml-quiet" onClick={() => { setStepIndex(0); startStory("read", "read"); }}>Read the story</button>}
+        {embedded ? <a className="ml-solid ml-account-button" href={"/p/" + (published?.slug ?? "") + (reading ? "?step=" + (stepIndex + 1) : "")} target="_blank" rel="noopener">
+          Open full page ↗</a> : readOnly ? <>
+          {published && <button type="button" className="ml-quiet" aria-expanded={embedOpen} onClick={() => setEmbedOpen(v => !v)}>Embed</button>}
+          <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(fullPage())
+          .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button></> :
         <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
@@ -427,7 +608,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               .catch(() => setNotice("Copy the address from your browser.")); }}>Copy view link</button>
             <p className="ml-menu-note">Opens this view for someone with the same data in their browser.</p>
             {publishing && <><hr/>
-              <button type="button" onClick={() => { closeShare(); setPublishOpen(true); }}>Publish online…</button>
+              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>Publish online…</button>
               <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
           </div>
         </details>}
@@ -483,9 +664,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             {(lens === "network" || lens === "themes") && <NetworkLens graph={drawn} mode={lens} theme={activeTheme}
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
-              selectedId={selectedId} route={lens === "network" ? route : null} onPick={pickRecord} onUnavailable={onUnavailable}/>}
+              selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord} onUnavailable={onUnavailable}
+              marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              unplaced={unplaced} onBrowse={() => setBrowse(true)}/>}
+              unplaced={unplaced} onBrowse={() => setBrowse(true)}
+              marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
@@ -493,7 +676,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               selectedId={selectedId} onPick={pickRecord}/>}
           </>}
 
-          {lens === "themes" && result.graph.nodes.length > 0 && <aside className={"ml-overlay-card ml-tag-card" + (grouping?.suggested ? " is-suggested" : "")}
+          {lens === "themes" && result.graph.nodes.length > 0 && !storyMode && <aside className={"ml-overlay-card ml-tag-card" + (grouping?.suggested ? " is-suggested" : "")}
             aria-label="Groups">
             <label className="ml-group-by"><span>Group by</span>
               <select value={groupKind} onChange={e => chooseGroup(e.target.value as GroupingKind)}>
@@ -505,9 +688,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
                 <span>{name}</span><b>{count}</b></button></li>)}</ol>
             {groupCounts.length > 12 && <p className="ml-small">{groupCounts.length - 12} more in the filter above.</p>}
             {groupCounts.length === 0 && <p className="ml-small">Nothing in this view can be grouped this way. Try another grouping.</p>}
+            <div className="ml-style-switch"><span id="ml-style-label">Drawing · trial</span>
+              <div className="ml-segmented" role="group" aria-labelledby="ml-style-label">
+                {(["clean", "sketched"] as const).map(v => <button key={v} type="button" aria-pressed={drawingStyle === v}
+                  onClick={() => chooseStyle(v)}>{v === "clean" ? "Clean" : "Sketched"}</button>)}
+              </div></div>
           </aside>}
 
-          {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
+          {canvasLens && lens !== "map" && result.graph.nodes.length > 0 && !reading && <div className={"ml-key" + (keyOpen ? "" : " ml-key--closed")}>
             <button type="button" className="ml-key-toggle" aria-expanded={keyOpen} onClick={() => setKeyOpen(v => !v)}>Key</button>
             {keyOpen && <div className="ml-key-body" aria-label="How to read this atlas">
               <ul className="ml-key-types">{typesPresent.filter(t => t !== "topic" && t !== "methodology").map(t =>
@@ -536,7 +724,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             </div>}
           </div>}
 
-          {lens === "network" && loopsFound.loops.length > 0 && !routeFromId && <aside className={"ml-overlay-card ml-loop-card" + (loopsOpen ? "" : " is-closed")} aria-label="Feedback loops">
+          {lens === "network" && loopsFound.loops.length > 0 && !routeFromId && !storyMode && <aside className={"ml-overlay-card ml-loop-card" + (loopsOpen ? "" : " is-closed")} aria-label="Feedback loops">
             <button type="button" className="ml-unplaced-head" aria-expanded={loopsOpen} onClick={() => setLoopsOpen(v => !v)}>
               <strong>Feedback loops · {loopsFound.loops.length}{loopsFound.truncated ? "+" : ""}</strong><span aria-hidden="true">{loopsOpen ? "–" : "+"}</span></button>
             {loopsOpen && <>
@@ -590,17 +778,48 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               <p className="ml-small">Select a record to change it or link it. Your files are never changed.</p>
             </>}
           </aside>}
+          {storyMode === "edit" && !readOnly && <StoryEditor stories={stories} story={story} graph={workingGraph} stepIndex={stepIndex}
+            labelOf={labelOf} captureView={captureView} picking={markPick} onPick={setMarkPick} onStep={setStepIndex} onChange={changeStory}
+            canWrite={storyStore.canWrite} shared={storyStore.shared} local={storyStore.local} onMoveLocal={() => void storyStore.moveLocal()}
+            onCreate={title => { const s = storyStore.create(title); setStoryId(s.id); setStepIndex(0); }}
+            onOpen={id => { setStoryId(id); setStepIndex(0); }}
+            onDelete={id => { storyStore.remove(id); setStoryId(null); }}
+            onRead={() => startStory("read", "edit")} onPrint={() => void printStory()}
+            onPresent={() => startStory("present", "edit")}
+            onClose={() => { flushStory(); setStoryMode(null); }} onSave={flushStory}/>}
+          {markPick && <div className="ml-banner ml-pick-banner" role="status">
+            {markPrompt(markPick)}{markPick.kind === "ring" && markPick.targets.length > 0 ? " " + markPick.targets.length + " chosen." : ""}
+            {" "}You can also choose from Browse records.
+            {markPick.kind === "ring" && <button type="button" disabled={!markPick.targets.length} onClick={finishRing}>Finish</button>}
+            <button type="button" onClick={() => setMarkPick(null)}>Cancel</button></div>}
+          {reading && story && (storyMode === "present" || narrow) && <StoryCard story={story} stepIndex={stepIndex} onStep={goToStep}
+            onExit={exitStory} exitLabel={exitLabel} presenting={storyMode === "present"} labelOf={labelOf}
+            cover={coverShown} onBegin={() => setCover(false)}/>}
           {pickingFrom && <div className="ml-banner ml-pick-banner" role="status">
             Click the record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to.
             <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
 
-          {publishOpen && <PublishCard graph={result.graph} title={imported.title} mapId={mapId} onClose={() => setPublishOpen(false)}/>}
+          {shareOpen && !readOnly && <ShareMapCard graph={sourceGraph} mapId={mapId} shared={shared} account={accountState}
+            status={edits.status} onLinked={link => onSharedChange?.(link)} onClose={() => setShareOpen(false)}/>}
+          {publishOpen && <PublishCard graph={result.graph} whole={workingGraph} stories={stories.filter(s => s.steps.length)}
+            initialStory={storyMode ? storyId ?? "" : ""} title={imported.title} mapId={mapId} onClose={() => setPublishOpen(false)}/>}
+          {shared && edits.remoteSource > shared.sourceVersion && <div className="ml-banner ml-pick-banner" role="status">
+            Someone has added data to this map.
+            <button type="button" onClick={() => onSharedRefresh?.()}>Get it</button></div>}
+          {printing && !printing.ready && <div className="ml-banner ml-pick-banner" role="status">
+            Preparing to print: picturing step {printing.done + 1} of {story?.steps.length ?? 0}…</div>}
+          {embedOpen && published && <EmbedCard slug={published.slug} title={imported.title} story={!!publishedStory} onClose={() => setEmbedOpen(false)}/>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
         {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}
           inView={result.recordedCount} theme={activeTheme}/>}
       </div>
 
+      {reading && story && storyMode === "read" && !narrow ? <aside className="ml-inspector ml-inspector--story" aria-label="Story">
+        <StoryReader story={story} stepIndex={stepIndex} onStep={goToStep} onExit={exitStory} exitLabel={exitLabel}
+          onPresent={() => startStory("present", "read")} labelOf={labelOf} onCopyStep={readOnly ? copyStepLink : undefined}
+          onPrint={() => void printStory()}/>
+      </aside> :
       <aside className="ml-inspector" aria-label="Selected record">
         {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
           aria-label="Clear selection">×</button>}
@@ -609,10 +828,35 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
           grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
-      </aside>
+      </aside>}
     </section>
+    {printing?.ready && story && <StoryPrint story={story} pictures={printing.pictures} labelOf={labelOf} mapTitle={imported.title}
+      link={published ? (typeof window === "undefined" ? "" : window.location.origin) + "/p/" + published.slug : undefined}/>}
     <div className="ml-announcer" role="status" aria-live="polite">
       {selected ? selected.label + ", " + selected.type + ", " + (degree.get(selected.id) ?? 0) + " recorded links" : ""}
     </div>
   </main>;
+}
+
+/** The code to put a published map or story on another website. */
+export function EmbedCard({ slug, title, story, onClose }: { slug: string; title: string; story: boolean; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+  const [height, setHeight] = useState(640);
+  const code = `<iframe src="${typeof window === "undefined" ? "" : window.location.origin}/p/${slug}/embed" title="${title.replace(/[<>"&]/g, "")}" ` +
+    `width="100%" height="${height}" style="border:0;border-radius:8px" loading="lazy" allow="fullscreen"></iframe>`;
+  return <aside className="ml-overlay-card ml-embed-card" aria-label="Embed on a website">
+    <div className="ml-unplaced-head"><strong>Embed on a website</strong>
+      <button type="button" className="ml-link-button" onClick={onClose} aria-label="Close embed">×</button></div>
+    <p className="ml-small">Paste this where your website builder accepts an HTML embed. {story ? "It opens on the story; " : ""}readers can open the full page from it.</p>
+    <label className="ml-edit-field"><span>Height</span>
+      <select value={height} onChange={e => setHeight(Number(e.target.value))}>
+        <option value={480}>Short (480 pixels)</option><option value={640}>Medium (640 pixels)</option><option value={820}>Tall (820 pixels)</option>
+      </select></label>
+    <textarea className="ml-embed-code" readOnly rows={4} value={code} aria-label="Embed code" onFocus={e => e.currentTarget.select()}/>
+    <div className="ml-edit-actions">
+      <button type="button" className="ml-solid" onClick={() => void navigator.clipboard?.writeText(code).then(() => setCopied(true)).catch(() => {})}>
+        {copied ? "Copied" : "Copy code"}</button>
+    </div>
+    <p className="ml-small">The embedded page sets no cookies and keeps nothing in readers&apos; browsers.</p>
+  </aside>;
 }

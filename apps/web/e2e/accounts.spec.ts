@@ -38,7 +38,7 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   await expect(card).toContainText("You'll need to sign in");
   await card.getByRole("link",{name:"Sign in to publish"}).click();
 
-  await expect(page.getByRole("heading",{name:"Sign in to publish"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Sign in to Mossline"})).toBeVisible();
   // Only the ways in this deployment has credentials for are offered.
   await expect(page.getByRole("button",{name:"Continue with Microsoft"})).toHaveCount(status.signIn.microsoft?1:0);
   await expect(page.getByRole("button",{name:"Continue with Google"})).toHaveCount(status.signIn.google?1:0);

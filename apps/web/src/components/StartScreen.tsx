@@ -1,6 +1,10 @@
 "use client";
 
-export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean;summary?:string};
+import type {ReactNode} from "react";
+
+export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean;summary?:string;
+  /** e.g. "Shared" for a map kept in an account. */
+  badge?:string};
 
 /** A small drawn atlas: wash, ink, pencil and the four record shapes, as the
  *  lenses draw them. Decorative; the real atlas is one click away. */
@@ -30,10 +34,12 @@ function AtlasSketch(){
 }
 
 export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunity,onSampleSheet,
-  onPft,onRecovery}:{
+  onPft,onRecovery,accountMaps}:{
   maps:StartMap[];onOpen:(id:string)=>void;onImport:()=>void;
   onFunding:()=>void;onExample:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
   onPft:()=>void;onRecovery:()=>void;
+  /** Maps in the signed-in account that aren't in this browser yet. */
+  accountMaps?:ReactNode;
 }){
   return <div className="ml-start">
     <section className="ml-start-hero">
@@ -86,7 +92,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunit
             <svg viewBox="0 0 26 26" aria-hidden="true" className="ml-start-map-mark"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
               <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
               <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
-            <span className="ml-start-map-name"><strong>{m.title}</strong>
+            <span className="ml-start-map-name"><strong>{m.title}{m.badge&&<em className="ml-start-badge">{m.badge}</em>}</strong>
               <small>{m.summary??(m.nodes.toLocaleString("en-GB")+(m.nodes===1?" record · ":" records · ")+
                 m.edges.toLocaleString("en-GB")+(m.edges===1?" link":" links"))}</small></span>
             <span aria-hidden="true" className="ml-start-arrow">→</span>
@@ -98,6 +104,8 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunit
         <button type="button" className="ml-link-button" onClick={onExample}>
           Open an example →</button></>}
     </section>
+
+    {accountMaps}
 
     <details className="studio-start-more ml-start-more">
       <summary>More ways to get started</summary>

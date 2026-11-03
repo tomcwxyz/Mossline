@@ -1,9 +1,9 @@
-import {parseHostedSnapshot, type PublishedSnapshot} from "@mossline/graph-core";
+import {parseHostedSnapshot, type HostedSnapshot} from "@mossline/graph-core";
 import {pool} from "./db";
 import {hashManagementKey, isHostedConfigured} from "./hosted-auth";
 
 type Row={slug:string;snapshot:unknown;revision:number;created_at:Date|string;updated_at:Date|string};
-export type HostedPublication={slug:string;snapshot:PublishedSnapshot;revision:number;updatedAt:string};
+export type HostedPublication={slug:string;snapshot:HostedSnapshot;revision:number;updatedAt:string};
 export type OwnedPublication={slug:string;title:string;nodes:number;edges:number;revision:number;
   createdAt:string;updatedAt:string};
 
@@ -30,19 +30,20 @@ export async function publishedToday(ownerId:string):Promise<number>{
   return Number(rows[0]?.n??0);
 }
 
-export async function createPublication(slug:string,ownerId:string,snapshot:PublishedSnapshot):Promise<HostedPublication>{
-  const {rows}=await db().query<Row>(`INSERT INTO mossline_publications (slug,owner_id,snapshot)
-    VALUES ($1,$2,$3::jsonb) RETURNING slug,snapshot,revision,created_at,updated_at`,
-    [slug,ownerId,JSON.stringify(snapshot)]);
+/** A member's publications belong to their organisation, so they stay when the member leaves. */
+export async function createPublication(slug:string,ownerId:string,snapshot:HostedSnapshot,orgId:string|null=null):Promise<HostedPublication>{
+  const {rows}=await db().query<Row>(`INSERT INTO mossline_publications (slug,owner_id,snapshot,org_id)
+    VALUES ($1,$2,$3::jsonb,$4) RETURNING slug,snapshot,revision,created_at,updated_at`,
+    [slug,ownerId,JSON.stringify(snapshot),orgId]);
   return parseRow(rows[0]);
 }
 
-/** Replaces the public copy only for its owner and only from the revision they last saw. */
-export async function updatePublication(slug:string,ownerId:string,revision:number,snapshot:PublishedSnapshot):
+/** Replaces the public copy only for its owner (or an admin of its organisation), only from the revision they last saw. */
+export async function updatePublication(slug:string,ownerId:string,revision:number,snapshot:HostedSnapshot):
   Promise<HostedPublication|null>{
   const {rows}=await db().query<Row>(`UPDATE mossline_publications
     SET snapshot=$1::jsonb, revision=revision+1, updated_at=now()
-    WHERE slug=$2 AND owner_id=$3 AND revision=$4 AND is_published=true
+    WHERE slug=$2 AND (owner_id=$3 OR org_id IN (SELECT org_id FROM mossline_org_members WHERE user_id=$3 AND role='admin')) AND revision=$4 AND is_published=true
     RETURNING slug,snapshot,revision,created_at,updated_at`,
     [JSON.stringify(snapshot),slug,ownerId,revision]);
   return rows.length?parseRow(rows[0]):null;
@@ -50,13 +51,14 @@ export async function updatePublication(slug:string,ownerId:string,revision:numb
 
 /** Unpublishing deletes the stored copy: nothing is kept once a map is withdrawn. */
 export async function unpublish(slug:string,ownerId:string):Promise<boolean>{
-  const {rowCount}=await db().query(`DELETE FROM mossline_publications WHERE slug=$1 AND owner_id=$2`,[slug,ownerId]);
+  const {rowCount}=await db().query(`DELETE FROM mossline_publications WHERE slug=$1 AND (owner_id=$2 OR org_id IN (SELECT org_id FROM mossline_org_members WHERE user_id=$2 AND role='admin'))`,[slug,ownerId]);
   return rowCount===1;
 }
 
 export async function listOwned(ownerId:string):Promise<OwnedPublication[]>{
   const {rows}=await db().query<Row>(`SELECT slug,snapshot,revision,created_at,updated_at
-    FROM mossline_publications WHERE owner_id=$1 AND is_published=true ORDER BY updated_at DESC LIMIT 200`,[ownerId]);
+    FROM mossline_publications WHERE (owner_id=$1 OR org_id IN (SELECT org_id FROM mossline_org_members WHERE user_id=$1))
+      AND is_published=true ORDER BY updated_at DESC LIMIT 200`,[ownerId]);
   return rows.map(row=>{
     const s=row.snapshot as {title?:unknown;nodes?:unknown[];edges?:unknown[]};
     return {slug:row.slug,title:typeof s.title==="string"?s.title:"Untitled map",

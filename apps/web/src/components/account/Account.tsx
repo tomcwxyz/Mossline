@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { account, useAccount, type OwnedPublication } from "../../hooks/useAccount";
+import { account, ofLimit, orgs, useAccount, type OrgState, type OwnedPublication } from "../../hooks/useAccount";
 import { AccountShell } from "./AccountShell";
 
 const count = (n: number, word: string) => n.toLocaleString("en-GB") + " " + word + (n === 1 ? "" : "s");
@@ -18,6 +18,26 @@ export function Account() {
   const [claimKey, setClaimKey] = useState("");
   const [deleteOk, setDeleteOk] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [org, setOrg] = useState<OrgState | null>(null);
+  const [name, setName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  // Coming back from an email-change link.
+  useEffect(() => {
+    const state = new URLSearchParams(window.location.search).get("email");
+    if (!state) return;
+    window.history.replaceState(null, "", "/account");
+    const say: Record<string, [string, boolean]> = {
+      changed: ["Your email address has changed. Use it to sign in from now on.", false],
+      expired: ["That link had expired. Ask for a new one below.", true],
+      taken: ["Another account started using that address in the meantime, so nothing changed.", true],
+      invalid: ["That link has already been used or isn't valid.", true],
+      failed: ["Something went wrong confirming that address. Try again.", true]
+    };
+    const [text, bad] = say[state] ?? say.invalid;
+    if (bad) setProblem(text); else setNotice(text);
+  }, []);
+  useEffect(() => { setName(user?.name ?? ""); }, [user?.name]);
+  useEffect(() => { if (user) orgs.get().then(setOrg).catch(() => setOrg(null)); }, [user]);
 
   const load = useCallback(async () => {
     try { setMaps(await account.publications()); } catch (e) { setProblem(e instanceof Error ? e.message : "Couldn't load your maps."); }
@@ -47,7 +67,7 @@ export function Account() {
       {state.status === "loading" && <p className="ml-small" role="status">Checking…</p>}
       {state.status === "off" && <p className="ml-account-note">Accounts aren&apos;t switched on for this Mossline.</p>}
       {state.status === "ready" && !user && <div className="ml-account-note">
-        <p>You&apos;re not signed in. You only need an account to publish maps online.</p>
+        <p>You&apos;re not signed in. You only need an account to publish maps or work on them with others.</p>
         <a className="ml-solid ml-account-button" href="/sign-in?next=/account">Sign in</a>
       </div>}
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
@@ -55,11 +75,32 @@ export function Account() {
 
       {user && <>
         <dl className="ml-account-who">
-          {user.name && <div><dt>Name</dt><dd>{user.name}</dd></div>}
           <div><dt>Email</dt><dd>{user.email}</dd></div>
+          {org && <div><dt>Plan</dt><dd>{org.org ? (org.org.plan === "organisation" ? "Organisation" : "Free") + " · " + org.org.name : "Free"}</dd></div>}
         </dl>
-        {!user.canPublish && <p className="ml-account-note">This address isn&apos;t set up to publish here any more.
-          Ask whoever runs this Mossline if that&apos;s a mistake. You can still delete your account below.</p>}
+        <form className="ml-edit-form" aria-label="Your name" onSubmit={(e: FormEvent) => {
+          e.preventDefault(); void run(async () => { await account.setName(name.trim()); await refresh(); setNotice("Name saved. It's what others see on your changes and shared maps."); });
+        }}>
+          <div className="ml-edit-row">
+            <label className="ml-edit-field"><span>Your name <small>shown on your changes and to people you share with</small></span>
+              <input value={name} maxLength={80} onChange={e => setName(e.target.value)} autoComplete="name"/></label>
+            <button type="submit" className="ml-quiet ml-share-invite" disabled={busy || !name.trim() || name.trim() === user.name}>Save name</button>
+          </div>
+        </form>
+        {org && <section className="ml-account-section" aria-labelledby="org-summary">
+          <h2 id="org-summary">{org.org ? org.org.name : "Organisation"}</h2>
+          {org.org ? <p className="ml-small">You&apos;re {org.org.role === "admin" ? "an admin" : "a member"}.
+            {org.plans && <> Published maps: {ofLimit(org.usage.publications, org.usage.limits.publications)} · maps kept:
+              {" "}{ofLimit(org.usage.savedMaps, org.usage.limits.savedMaps)}.</>}</p>
+            : <p className="ml-small">{org.joinable.length ? "You've been invited to " + org.joinable.map(j => j.name).join(", ") + "."
+              : "Work on maps together, and keep them when people move on."}
+              {org.plans && <> On the free plan: {ofLimit(org.usage.publications, org.usage.limits.publications)} published maps,
+                {" "}{ofLimit(org.usage.savedMaps, org.usage.limits.savedMaps)} kept in your account.</>}</p>}
+          <a className="ml-quiet ml-account-button" href="/organisation">{org.org ? "Manage the organisation" : org.joinable.length ? "See invitations" : "Start or join an organisation"}</a>
+        </section>}
+        {user.operator && <p className="ml-small"><a href="/admin">Running Mossline ↗</a></p>}
+        {!user.canPublish && <p className="ml-account-note">This account can open maps people have shared with it, from
+          Mossline&apos;s front page. It can&apos;t publish maps or save its own. Ask whoever runs this Mossline if that&apos;s a mistake.</p>}
 
         {user.canPublish && <section className="ml-account-section" aria-labelledby="maps-title">
           <h2 id="maps-title">Published maps</h2>
@@ -98,18 +139,39 @@ export function Account() {
           </form>
         </details>}
 
+        <section className="ml-account-section" aria-labelledby="data-title">
+          <h2 id="data-title">Your data</h2>
+          <p className="ml-small">Everything Mossline holds about you, in one file: your account, organisation, published maps,
+            maps kept in your account with their changes, and the changes you&apos;ve made to maps shared with you.</p>
+          <a className="ml-quiet ml-account-button" href="/api/account/export" download>Download your data</a>
+          <form className="ml-edit-form" aria-label="Change your email address" onSubmit={(e: FormEvent) => {
+            e.preventDefault(); void run(async () => { await account.changeEmail(newEmail.trim());
+              setNotice("Check " + newEmail.trim() + " for a link to confirm it. Your address changes only once you open it."); setNewEmail(""); });
+          }}>
+            <div className="ml-edit-row">
+              <label className="ml-edit-field"><span>Change email address <small>maps shared with you follow it</small></span>
+                <input type="email" required value={newEmail} onChange={e => setNewEmail(e.target.value)} autoComplete="email"/></label>
+              <button type="submit" className="ml-quiet ml-share-invite" disabled={busy || !newEmail.trim()}>Send a link</button>
+            </div>
+          </form>
+        </section>
+
         <section className="ml-account-section" aria-labelledby="leave-title">
           <h2 id="leave-title">Sign out or leave</h2>
           <div className="ml-edit-actions">
             <button type="button" className="ml-quiet" disabled={busy} onClick={() => void run(async () => {
               await account.signOut(); await refresh(); setMaps(null); setNotice("Signed out.");
             })}>Sign out</button>
+            <button type="button" className="ml-quiet" disabled={busy} onClick={() => void run(async () => {
+              await account.signOutEverywhere(); await refresh(); setMaps(null); setNotice("Signed out on every device, including this one.");
+            })}>Sign out everywhere</button>
           </div>
           <div className="ml-edit-confirm">
             <strong>Delete your account</strong>
             <p>This deletes your name and email address from Mossline and unpublishes
               {maps?.length === 1 ? " your published map" : maps?.length ? " your " + maps.length + " published maps" : " any maps you've published"}. Copies people have
-              already downloaded can&apos;t be recalled. Maps in your browser are not affected.</p>
+              already downloaded can&apos;t be recalled. Maps you&apos;ve saved to your account are deleted too, for everyone
+              you shared them with, and you leave maps others shared with you. Maps in your browser are not affected.</p>
             <label className="ml-check"><input type="checkbox" checked={deleteOk} onChange={e => setDeleteOk(e.target.checked)}/>
               {" "}I understand. Delete my account.</label>
             <button type="button" className="ml-danger ml-quiet ml-account-delete" disabled={!deleteOk || busy} onClick={() => void run(async () => {

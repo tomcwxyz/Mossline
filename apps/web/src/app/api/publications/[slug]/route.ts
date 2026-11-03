@@ -1,3 +1,4 @@
+import {reportError} from "../../../../lib/report";
 import {parseHostedSnapshot} from "@mossline/graph-core";
 import {apiResult} from "../../../../lib/hosted-response";
 import {getPublished,updatePublication,unpublish} from "../../../../lib/hosted-db";
@@ -19,7 +20,7 @@ export async function GET(_:Request,context:Ctx){
     if(!item)return apiResult({error:"Not found"},404);
     return apiResult({slug:item.slug,revision:item.revision,snapshot:item.snapshot,
       updatedAt:item.updatedAt});
-  }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+  }catch(error){reportError("publications/[slug]",error);return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
 /** Only the owning account can replace a publication, and only from the revision it last saw. */
 export async function PATCH(request:Request,context:Ctx){
@@ -41,7 +42,7 @@ export async function PATCH(request:Request,context:Ctx){
     const updated=await updatePublication(slug,user.id,revision,snapshot);
     if(!updated)return apiResult({error:"Not yours, withdrawn, or changed since you opened it"},409);
     return apiResult({slug:updated.slug,revision:updated.revision});
-  }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+  }catch(error){reportError("publications/[slug]",error);return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }
 /** Unpublishing deletes the stored copy. */
 export async function DELETE(request:Request,context:Ctx){
@@ -52,5 +53,5 @@ export async function DELETE(request:Request,context:Ctx){
   try {
     if(!await unpublish(slug,user.id))return apiResult({error:"Not found"},404);
     return apiResult({unpublished:true});
-  }catch{return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
+  }catch(error){reportError("publications/[slug]",error);return apiResult({error:"Hosted publishing temporarily unavailable"},503);}
 }

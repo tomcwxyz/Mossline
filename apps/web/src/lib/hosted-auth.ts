@@ -1,4 +1,5 @@
 import {createHash, randomBytes} from "node:crypto";
+import {isDisposable} from "./disposable";
 
 type Env=Record<string,string|undefined>;
 export const PUBLICATION_SLUG=/^[A-Za-z0-9_-]{16,32}$/;
@@ -25,14 +26,26 @@ export function isHostedConfigured(env:Env=process.env):boolean{
     !!env.MOSSLINE_DATABASE_URL &&
     (env.MOSSLINE_AUTH_SECRET?.length??0)>=32 &&
     !!env.MOSSLINE_BASE_URL &&
-    publisherRules(env).length>0 &&
+    (publisherRules(env).length>0||env.MOSSLINE_OPEN_SIGNUP==="true") &&
     (methods.microsoft||methods.google||methods.email);
 }
 
 /**
+ * Shared maps keep whole maps (every imported field) on this server, so a
+ * deployment turns them on separately, on top of publishing.
+ */
+export function isSharedMapsConfigured(env:Env=process.env):boolean{
+  return isHostedConfigured(env)&&env.MOSSLINE_SHARED_MAPS_ENABLED==="true";
+}
+/** Compressed upload of a whole map; the unpacked map may be larger. */
+export const SHARED_MAP_MAX_BYTES=4_000_000;
+export const SHARED_MAP_MAX_UNPACKED=60_000_000;
+
+/**
  * Who may have an account and publish: full addresses (tom@example.org),
- * whole domains (@example.org) or "*" for anyone. Accounts exist only to
- * publish, so the same list governs both.
+ * whole domains (@example.org) or "*" for anyone. They can also save maps
+ * to their account and share them. People they invite to a map can sign in
+ * too, to open it, but can't publish or share maps of their own.
  */
 export function publisherRules(env:Env=process.env):string[]{
   return (env.MOSSLINE_PUBLISHERS??"").split(/[,\s]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);
@@ -43,6 +56,12 @@ export function mayPublish(email:string|null|undefined,rules:string[]=publisherR
   if(at<1||at===address.length-1)return false;
   const domain=address.slice(at);
   return rules.some(rule=>rule==="*"||rule===address||(rule.startsWith("@")&&rule===domain));
+}
+/** May have an account of their own: anyone, with open sign-up; otherwise the publishers list. */
+export function mayCreate(email:string|null|undefined,env:Env=process.env):boolean{
+  const address=(email??"").trim().toLowerCase();
+  if(env.MOSSLINE_OPEN_SIGNUP==="true")return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)&&!isDisposable(address);
+  return mayPublish(address,publisherRules(env));
 }
 /** New publications per account in any 24 hours. */
 export function dailyPublishLimit(env:Env=process.env):number{

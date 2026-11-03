@@ -30,6 +30,9 @@ stops that account publishing at once; its maps stay up until unpublished.
 **Leaving:** *Your account → Delete account* removes the person and everything
 they published. Unpublishing a map deletes its stored copy.
 
+To let people save maps to their accounts and work on them together, see
+[SHARED_MAPS.md](SHARED_MAPS.md).
+
 ## Ways to sign in
 
 Each is switched on by giving it credentials. Use at least one.
@@ -124,3 +127,26 @@ people use.** CI starts Postgres for this.
 `MOSSLINE_PUBLISHERS=*` lets anyone with an email address publish. Before doing
 that, add abuse reporting and takedown, monitoring, a published privacy notice
 and retention policy, and terms of use.
+
+## Plans and policies
+
+Where plans are on, the free and organisation limits apply here too: see [PLANS.md](PLANS.md). Running a public Mossline: [OPERATING.md](OPERATING.md).
+
+## Embedding on other websites
+
+A published map or story can be put on another website. On its page, **Embed** gives an `<iframe>` pointing at `/p/<slug>/embed`, with a choice of height.
+
+- **The embed view** is the same read-only atlas with a slim header. It opens on the story, if there is one. *Open full page ↗* opens it in a new tab. It sets no cookies and keeps nothing in readers' browsers.
+- **Framing rules** (`apps/web/next.config.ts`):
+  - every page sends `Content-Security-Policy: frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN`, so no other site can frame Mossline (clickjacking);
+  - only `/p/<slug>/embed` sends `frame-ancestors *`.
+- **Unpublishing** removes the embed too: the frame shows "not found".
+
+## Link previews
+
+When a published map or story's link is shared (in chat, email or on social media), it shows a preview card. The card has the title, a line about it (the story's introduction, or the map's size), and a picture.
+
+- **The picture** is drawn by `app/p/[slug]/opengraph-image.tsx`. It uses the story's cover if it was uploaded, or otherwise a small drawing of a network with a pencil ring. A cover that is only a link to another site isn't fetched for the card.
+- **Fonts** are read from `apps/web/assets/og/` (Newsreader and IBM Plex Sans, SIL Open Font Licence, licences alongside).
+- Published pages still ask search engines not to index them; previews are for links people choose to share.
+- Set `MOSSLINE_BASE_URL` so preview pictures point at the site's own address.

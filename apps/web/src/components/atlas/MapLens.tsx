@@ -3,8 +3,10 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  isRecorded, placedCoordinates, type FundingFlow, type GraphDocument, type GraphNode
+  isRecorded, placedCoordinates, type FundingFlow, type GraphDocument, type GraphNode, type StoryMark
 } from "@mossline/graph-core";
+import { MarkLayer, placeMarks, type MarkStyle, type StoryPin } from "./MarkLayer";
+import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
 
@@ -17,7 +19,16 @@ type Props = {
   /** Records in view with no source coordinates: listed, never guessed. */
   unplaced: GraphNode[];
   onBrowse: () => void;
+  /** A story step: the author's marks and pinned pictures, and the records to bring into view. */
+  marks?: StoryMark[]; pins?: StoryPin[]; frame?: string[];
+  /** How the story's marks are drawn. */
+  markStyle?: MarkStyle;
+  /** A story step's records: they stand out, and the rest of the map fades. */
+  spotlight?: string[];
+  /** Changes when the space around the map changes (presenting, say), so the step is framed again. */
+  frameKey?: string;
 };
+const stillPlease = () => motion.still || (typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 type MapType = import("maplibre-gl").Map;
 type MarkerType = import("maplibre-gl").Marker;
 type Geometry = { type: "Point"; coordinates: number[] } | { type: "LineString"; coordinates: number[][] } | { type: "Polygon"; coordinates: number[][][] };
@@ -84,7 +95,20 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
+  const markLayer = useRef<SVGSVGElement>(null);
+  const marksRef = useRef(marks); marksRef.current = marks;
+  const pinsRef = useRef(pins); pinsRef.current = pins;
+  /** Places the story's marks on the map; records without a place have none to show. */
+  const drawMarks = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    placeMarks(markLayer.current, marksRef.current, pinsRef.current, id => {
+      const p = locatedRef.current.find(l => l.node.id === id);
+      return p ? map.project([p.lon, p.lat]) : null;
+    });
+  };
+  const drawRef = useRef(drawMarks); drawRef.current = drawMarks;
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapType | null>(null);
   const baseMarkers = useRef<{ marker: MarkerType; min: number; max: number; rank: number }[]>([]);
@@ -143,7 +167,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       const n = byId.get(id); const c = n ? placedCoordinates(n) : null;
       return c ? [c.lon, c.lat] as [number, number] : null;
     };
-    const focusSet = selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
+    const focusSet = spotlight?.length ? new Set(spotlight)
+      : selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
     const records = collection(located.map(({ node, lon, lat, approximate: approx }) => {
       const focus = !!focusSet?.has(node.id);
       const base = palette.types[node.type] ?? palette.types.other;
@@ -179,7 +204,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       }
     }
     return { records, arcs: collection(arcs), ego: collection(ego), hiddenArcs };
-  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId]);
+  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|")]);
 
   // ---- Build the map once per theme; data changes update sources in place --
   useEffect(() => {
@@ -272,6 +297,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           else hoverMarker.current.setLngLat(coords);
         });
         map.on("mouseout", () => { hoverMarker.current?.remove(); hoverMarker.current = null; });
+        map.on("render", () => drawRef.current());
         map.on("move", () => {
           cancelAnimationFrame(frame);
           frame = requestAnimationFrame(() => { placeGraticuleLabels(); placeInsetRect(); });
@@ -520,7 +546,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     const map = mapRef.current;
     // Reframe when the selection changes, or when filters change what it touches.
     const key = `${selectedId}|${located.length}|${myGrants.length}`;
-    if (!map || status !== "ready" || !selectedId || framed.current === key) return;
+    if (!map || status !== "ready" || !selectedId || framed.current === key || frame) return;
     framed.current = key;
     const ids = new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]);
     const pts = located.filter(p => ids.has(p.node.id));
@@ -538,9 +564,42 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   useEffect(() => {
     if (status !== "ready") return;
     if (selectedRef.current && located.some(p => p.node.id === selectedRef.current)) return;
+    if (frameRef.current) return;
     fit(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graph, status]);
+
+  // A story step brings its records into view, clear of the story card; with none placed, the whole map.
+  const frameRef = useRef(frame); frameRef.current = frame;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || status !== "ready" || !frame) return;
+    const ids = new Set(frame);
+    const pts = located.filter(p => ids.has(p.node.id));
+    const duration = stillPlease() ? 0 : 700;
+    if (!pts.length) { fit(!stillPlease()); return; }
+    const box = container.current?.getBoundingClientRect();
+    const card = container.current?.closest(".ml-canvas")?.querySelector(".ml-story-card")?.getBoundingClientRect();
+    const wide = (box?.width ?? 1000) > 860;
+    const pad = { top: 90, bottom: 80, left: 60, right: 90 };
+    if (card && box) { if (wide) pad.left = Math.max(pad.left, card.right - box.left + 40); else pad.bottom = Math.max(pad.bottom, box.bottom - card.top + 30); }
+    let w = 180, e = -180, s = 90, n = -90;
+    for (const p of pts) { w = Math.min(w, p.lon); e = Math.max(e, p.lon); s = Math.min(s, p.lat); n = Math.max(n, p.lat); }
+    if (w === e && s === n) { map.easeTo({ center: [w, s], zoom: Math.max(map.getZoom(), 9), padding: pad, duration }); return; }
+    map.fitBounds([[w, s], [e, n]], { padding: pad, maxZoom: 10, duration });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame?.join("|"), frameKey, status, located]);
+  useEffect(() => { drawMarks(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [marks, pins, markStyle, status, located]);
+
+  // Printing a story pictures this lens: the map's canvas is copied as soon as it's drawn.
+  const statusRef = useRef(status); statusRef.current = status;
+  useEffect(() => registerLens({ lens: "map", ready: () => statusRef.current === "ready" && !!mapRef.current?.loaded() && !mapRef.current.isMoving(),
+    copyCanvases: () => new Promise(resolve => {
+      const map = mapRef.current, box = container.current;
+      if (!map || !box) { resolve(new Map()); return; }
+      map.once("render", () => resolve(copyCanvases(box)));
+      map.triggerRepaint();
+    }) }), []);
 
   const zoom = (action: "in" | "out" | "fit") => {
     const map = mapRef.current;
@@ -554,6 +613,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   return <section className="ml-map" aria-label="Map of records with source coordinates">
     <div ref={container} className="ml-map-canvas"/>
     <div ref={gratLabels} className="ml-graticule-labels" aria-hidden="true"/>
+    <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
       <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>

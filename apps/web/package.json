@@ -5,13 +5,15 @@
   "scripts": {
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/copy-maplibre-worker.mjs",
+    "prebuild": "node scripts/copy-maplibre-worker.mjs && node scripts/migrate-on-deploy.mjs",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "db:migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/kalam": "5.3.0",
     "@fontsource/newsreader": "5.3.0",
     "@mossline/graph-core": "*",
     "better-auth": "^1.7.14",
@@ -23,8 +25,9 @@
     "graphology-communities-louvain": "2.0.2",
     "graphology-layout-forceatlas2": "0.10.1",
     "maplibre-gl": "6.15.0",
+    "marked": "^16.4.2",
     "next": "^16.4.0",
-    "nodemailer": "^8.0.11",
+    "nodemailer": "^10.3.1",
     "pg": "^8.23.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
