@@ -39,7 +39,7 @@ const shapeOf = (t: TableInfo, p: Plan): Shape => {
 };
 
 export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", onClose, onCommit, onLargeFunding }: {
-  base: GraphDocument | null; baseTitle: string; canAddToBase: boolean; startWith?: AddTarget; intent?: "general" | "funding";
+  base: GraphDocument | null; baseTitle: string; canAddToBase: boolean; startWith?: AddTarget; intent?: "general" | "funding" | "the-list";
   /** Saves the result; resolves to true, or to a message saying why it could not. */
   onClose: () => void; onCommit: (graph: GraphDocument, target: AddTarget, title: string, summary: string) => Promise<true | string>;
   onLargeFunding?: () => void;
@@ -121,6 +121,21 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       readFiles(files, title);
     } catch { setBusy(""); setError("Could not fetch the sample files."); }
   }
+  async function tryTheList() {
+    setBusy("Retrieving The List's published records…");
+    setError("");
+    try {
+      const response = await fetch("/api/sources/the-list", { cache: "no-store" });
+      const data = await response.json() as { graph?: GraphDocument; count?: number; error?: string; detail?: string };
+      if (!response.ok || !data.graph) throw Error(data.detail || data.error || "The List is unavailable.");
+      const file = new File([JSON.stringify(data.graph)], "the-list-published-changes.json", { type: "application/json" });
+      setTarget("new");
+      readFiles([file], "Shifting Ground · The List");
+    } catch (cause) {
+      setBusy("");
+      setError(cause instanceof Error ? cause.message : "Could not retrieve The List's public changes.");
+    }
+  }
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); readFiles(Array.from(event.dataTransfer.files)); };
 
   /* ---- 2. Plan ------------------------------------------------------------ */
@@ -197,11 +212,23 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
       {phase === "choose" && <section className="ml-add-choose" aria-labelledby="add-h">
         <div className="ml-add-intro">
-          <p className="ml-start-eyebrow">{intent === "funding" ? "Grants and funders" : "Your records, any shape"}</p>
-          <h1 id="add-h" ref={heading} tabIndex={-1}>{intent === "funding" ? "Bring in grants data" : "Bring in your data"}</h1>
-          <p className="ml-add-lede">Add one file or several at once. Mossline works out what each table is, joins them on registered
-            numbers and other identifiers, and shows you what will change before anything is saved.</p>
+          <p className="ml-start-eyebrow">{intent === "the-list" ? "A live source · The List" : intent === "funding" ? "Grants and funders" : "Your records, any shape"}</p>
+          <h1 id="add-h" ref={heading} tabIndex={-1}>{intent === "the-list" ? "Shifting Ground" : intent === "funding" ? "Bring in grants data" : "Bring in your data"}</h1>
+          <p className="ml-add-lede">{intent === "the-list"
+            ? "Explore approved or confirmed funding changes collected by The List. See funders, dates, classifications and original sources together, and review the complete map before saving it."
+            : "Add one file or several at once. Mossline works out what each table is, joins them on registered numbers and other identifiers, and shows you what will change before anything is saved."}</p>
         </div>
+        {intent === "the-list" && <section className="ml-add-try" aria-label="Import published funding changes">
+          <h2 className="ml-section-title">Shifting Ground · published funding changes</h2>
+          <p>Load the current public, reviewed changes from <a href="https://the-list.uk" target="_blank" rel="noreferrer">The List</a>.
+            Each change keeps its original publication and supporting evidence link where available.</p>
+          <button type="button" className="ml-primary" onClick={() => void tryTheList()} disabled={!!busy}>
+            Load public changes from The List →</button>
+          <p className="ml-small">© The List · CC BY-NC. This is an exploratory transformation, not a record of grants awarded,
+            proven impacts or funder collaboration. Changes in reporting coverage may affect apparent trends.</p>
+          <p className="ml-small">The public API is read via Mossline's server. Your saved atlas stays in your browser; import again to
+            get a fresh copy. No private submissions or personal contact details are included.</p>
+        </section>}
         <label className={"ml-add-drop" + (dragging ? " is-over" : "")} onDragOver={e => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)} onDrop={onDrop}>
           <input type="file" multiple accept=".csv,.tsv,.txt,.json,.xlsx,text/csv,application/json" className="ml-visually-hidden"
@@ -232,7 +259,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
         {intent === "funding" && onLargeFunding && <p className="ml-small ml-add-legacy">More than 100,000 grants in one file?
           <button type="button" className="ml-link-button" onClick={onLargeFunding}>Use the complete funding explorer</button></p>}
-        <p className="ml-start-privacy">Nothing is uploaded. Files are read on this device and saved only in this browser.</p>
+        <p className="ml-start-privacy">{intent === "the-list" ? "Public records are fetched through Mossline; the atlas you save stays in this browser." : "Nothing is uploaded. Files are read on this device and saved only in this browser."}</p>
       </section>}
 
       {phase === "plan" && <section className="ml-add-stack" aria-labelledby="plan-h">
