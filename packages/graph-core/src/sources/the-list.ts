@@ -19,11 +19,11 @@ const strings = (v: unknown): string[] => Array.isArray(v) ?
   [...new Set(v.filter(x => typeof x === "string").map(x => clean(x, 80)).filter(Boolean))].slice(0, 30) : [];
 const dateOnly = (v: unknown): string => {
   const value = clean(v, 35);
-  if (!/^\\d{4}-\\d{2}-\\d{2}(?:T|$)/.test(value)) return "";
+  if (!/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value)) return "";
   const day = value.slice(0, 10);
   return !Number.isNaN(Date.parse(day + "T00:00:00Z")) ? day : "";
 };
-const key = (value: string): string => encodeURIComponent(value.toLocaleLowerCase("en-GB").replace(/\\s+/g, " ").trim());
+const key = (value: string): string => encodeURIComponent(value.toLocaleLowerCase("en-GB").replace(/\s+/g, " ").trim());
 const receipt = (recordId: string, fields: Record<string, string>): SourceOrigin => ({
   system: "json", recordId, fileName: "The List — published changes",
   shape: "The List: approved or confirmed", fields
@@ -86,13 +86,13 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
       ...(funderName ? { Funder: funderName } : {})
     });
     if (!nodes.has(organisationId)) {
-      const charity = clean(funder.charity_number, 30).toUpperCase().replace(/\\s+/g, "");
+      const charity = clean(funder.charity_number, 30).toUpperCase().replace(/\s+/g, "");
       const orgId = clean(funder["360GivingOrgID"], 100);
       const identifiers = [...new Set([
         ...(orgId ? [orgId] : []),
         ...(charity.startsWith("SC") ? ["GB-SC-" + charity] :
           charity.startsWith("NIC") ? ["GB-NIC-" + charity] :
-          /^\\d{5,8}$/.test(charity) ? ["GB-CHC-" + charity] : [])
+          /^\d{5,8}$/.test(charity) ? ["GB-CHC-" + charity] : [])
       ])];
       nodes.set(organisationId, {
         id: organisationId,
