@@ -58,14 +58,18 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
     const c = raw as PublishedListChange;
     const id = clean(c.id, 100);
     const status = clean(c.status, 40).toLowerCase();
-    const description = clean(c.description, 4000);
-    if (!id || !/^[a-zA-Z0-9_-]{8,100}$/.test(id) || !["approved", "confirmed"].includes(status) || !description) {
+    const publicSummary = clean(c.description, 4000);
+    if (!id || !/^[a-zA-Z0-9_-]{8,100}$/.test(id) || !["approved", "confirmed"].includes(status)) {
       skipped++; continue;
     }
     const funder: ListFunder = c.funder && typeof c.funder === "object" ? c.funder : {};
     const funderId = clean(funder.id ?? c.funder_id, 100);
     const funderName = clean(funder.name ?? c.funder_name, 250);
     const changeType = clean(c.change_type, 120) || "Not classified";
+    // Historical published records sometimes lack a summary. Preserve them,
+    // visibly labelled as such, rather than inventing a description or dropping them.
+    const description = publicSummary || clean(c.additional_details, 4000) ||
+      "No public summary supplied for this " + changeType.toLowerCase() + " change.";
     const date = dateOnly(c.date_of_change) || dateOnly(c.submitted_at);
     const slug = clean(c.slug, 220);
     const recordUrl = /^[a-zA-Z0-9_-]+$/.test(slug) ?
@@ -110,13 +114,14 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
     nodes.set(changeId, {
       id: changeId,
       label: description.length > 105 ? description.slice(0, 102) + "…" : description,
-      description: [description, clean(c.additional_details, 4000)].filter(Boolean).join("\n\n"),
+      description: [description, ...(publicSummary ? [clean(c.additional_details, 4000)] : [])].filter(Boolean).join("\n\n"),
       type: "other",
       tags: [...new Set([changeType, ...causeAreas])],
       sourceUrl: recordUrl,
       origin: source, receipts: [source],
       properties: {
         "Record kind": "Published change in funding behaviour (not a grant award)",
+        "Public summary": publicSummary ? "Supplied by The List" : "Missing; label uses details or an explicit placeholder",
         "Change type": changeType, "The List ID": id, "The List record": recordUrl,
         ...(date ? { Date: date } : {}),
         ...(originalUrl ? { "Original evidence": originalUrl } : {}),
