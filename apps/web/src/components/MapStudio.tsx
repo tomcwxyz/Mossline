@@ -153,7 +153,7 @@ export function MapStudio() {
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
   /** The one way in for files: where it was opened from decides the default target and the return. */
-  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"}|null>(null);
+  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"|"the-list"}|null>(null);
   const [atlasMessage,setAtlasMessage]=useState("");
   const clearAtlasMessage=useCallback(()=>setAtlasMessage(""),[]);
 
@@ -650,6 +650,7 @@ export function MapStudio() {
       onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>setAddData({from:"home",intent:"general"})}
       onFunding={()=>setAddData({from:"home",intent:"funding"})}
+      onTheList={()=>setAddData({from:"home",intent:"the-list"})}
       onExample={()=>{
         // The atlas gets the worked food and farming example; the advanced
         // tools keep the small community network they were built around.
