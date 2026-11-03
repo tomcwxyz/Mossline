@@ -70,7 +70,8 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
     // visibly labelled as such, rather than inventing a description or dropping them.
     const description = publicSummary || clean(c.additional_details, 4000) ||
       "No public summary supplied for this " + changeType.toLowerCase() + " change.";
-    const date = dateOnly(c.date_of_change) || dateOnly(c.submitted_at);
+    const date = dateOnly(c.date_of_change);
+    const submitted = dateOnly(c.submitted_at);
     const slug = clean(c.slug, 220);
     const recordUrl = /^[a-zA-Z0-9_-]+$/.test(slug) ?
       LIST + "/changes/" + slug : LIST + "/changes/" + encodeURIComponent(id);
@@ -85,7 +86,8 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
     const source = receipt(id, {
       "The List record": recordUrl,
       "Change type": changeType,
-      ...(date ? { "Date (source)": date } : {}),
+      ...(date ? { "Change date (source)": date } : {}),
+      ...(submitted ? { "Submitted to The List": submitted } : {}),
       ...(originalUrl ? { "Original evidence": originalUrl } : {}),
       ...(funderName ? { Funder: funderName } : {})
     });
@@ -124,6 +126,7 @@ export function theListChangesToGraph(input: unknown): ListGraphResult {
         "Public summary": publicSummary ? "Supplied by The List" : "Missing; label uses details or an explicit placeholder",
         "Change type": changeType, "The List ID": id, "The List record": recordUrl,
         ...(date ? { Date: date } : {}),
+        ...(submitted ? { "Submitted to The List": submitted } : {}),
         ...(originalUrl ? { "Original evidence": originalUrl } : {}),
         "Affected organisation types (reported)": types.join("; "),
         "Affected organisation sizes (reported)": sizes.join("; "),
