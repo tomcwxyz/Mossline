@@ -33,10 +33,10 @@ function AtlasSketch(){
   </svg>;
 }
 
-export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunity,onSampleSheet,
+export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,onCommunity,onSampleSheet,
   onPft,onRecovery,accountMaps}:{
   maps:StartMap[];onOpen:(id:string)=>void;onImport:()=>void;
-  onFunding:()=>void;onExample:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
+  onFunding:()=>void;onTheList:()=>void;onExample:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
   onPft:()=>void;onRecovery:()=>void;
   /** Maps in the signed-in account that aren't in this browser yet. */
   accountMaps?:ReactNode;
@@ -62,6 +62,17 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onExample,onCommunit
               <rect x="17" y="17" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="M11 12Q20 12 21 17" className="ml-sk-arc"/></svg>
             <span><strong>Explore funding data</strong>
               <small>Grant awards, funders and recipients · complete source network</small></span>
+            <span aria-hidden="true" className="ml-start-arrow">→</span>
+          </button>
+          <button type="button" onClick={onTheList}>
+            <svg className="ml-start-icon" viewBox="0 0 28 28" aria-hidden="true">
+              <path d="M3 20L9 12L15 16L24 5" className="ml-sk-ink"/>
+              <circle cx="9" cy="12" r="3" className="ml-sk-funder"/>
+              <circle cx="15" cy="16" r="3" className="ml-sk-project"/>
+              <circle cx="24" cy="5" r="3" className="ml-sk-org"/>
+            </svg>
+            <span><strong>Shifting Ground · The List</strong>
+              <small>Explore published UK funding changes as a source-linked network</small></span>
             <span aria-hidden="true" className="ml-start-arrow">→</span>
           </button>
         </div>
