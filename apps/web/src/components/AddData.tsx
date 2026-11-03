@@ -218,7 +218,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             ? "Explore approved or confirmed funding changes collected by The List. See funders, dates, classifications and original sources together, and review the complete map before saving it."
             : "Add one file or several at once. Mossline works out what each table is, joins them on registered numbers and other identifiers, and shows you what will change before anything is saved."}</p>
         </div>
-        {intent === "the-list" && <section className="ml-add-try" aria-label="Import published funding changes">
+        {intent === "the-list" && <section className="ml-add-try ml-the-list-intro" aria-label="Import published funding changes">
           <h2 className="ml-section-title">Shifting Ground · published funding changes</h2>
           <p>Load the current public, reviewed changes from <a href="https://the-list.uk" target="_blank" rel="noreferrer">The List</a>.
             Each change keeps its original publication and supporting evidence link where available.</p>
