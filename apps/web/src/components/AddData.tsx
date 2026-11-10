@@ -163,7 +163,10 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   /* ---- 2. Plan ------------------------------------------------------------ */
   const update = (name: string, change: Partial<Plan>) => setPlans(p => ({ ...p, [name]: { ...p[name], ...change } }));
   const chosen = tables.filter(t => plans[t.name]?.include);
-  const anyRecords = chosen.some(t => plans[t.name].use === "records") || maps.some(m => m.include) || (target === "add" && !!base?.nodes.length);
+  // A links-only table cannot establish records at either end on a new map.
+  const anyRecords = chosen.some(t => plans[t.name].use === "records" &&
+    shapeOf(t, plans[t.name]).records.length > 0) ||
+    maps.some(m => m.include && m.nodes > 0) || (target === "add" && !!base?.nodes.length);
   function preview() {
     const baseGraph = target === "add" ? base : null;
     send({ kind: "apply", id: ++request.current, base: baseGraph, title: title.trim() || "New map", maps: maps.filter(m => m.include).map(m => m.file),
@@ -387,8 +390,10 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <button type="button" className="ml-primary" onClick={preview} disabled={!!busy || (!chosen.length && !maps.some(m => m.include)) || !anyRecords}>
             Check what this adds →</button>
         </div>
-        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">Mossy hasn't found a set of records to start from. Open the detailed settings and choose <strong>Add as records</strong> for a suitable table. 
-          Set at least one table to <strong>Add as records</strong>.</p>}
+        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">
+          Mossy has links but no records to connect them to. Add a table of the people, places or organisations
+          named in those links, or add these links to an existing map. A new map needs records before it can be created.
+        </p>}
       </section>}
 
       {phase === "review" && report && <section className="ml-add-stack" aria-labelledby="review-h">
