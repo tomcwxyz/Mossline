@@ -17,7 +17,8 @@ function recognisableSuggestion(table:TableInfo):boolean {
   const reading=table.matches[0];
   if(reading.builtIn)return true;
   if(reading.shape.records.some(record=>{
-    const field=record.label.match(/^\\{([^}|]+)(?:\\|[^}]+)?\\}$/)?.[1];
+    const label=record.label.trim();
+    const field=label.startsWith("{")&&label.endsWith("}")?label.slice(1,-1).split("|")[0]:"";
     return !!field && CLEAR_LABELS.has(normalise(field));
   }))return true;
   const headings=new Set(table.headings.map(normalise));
