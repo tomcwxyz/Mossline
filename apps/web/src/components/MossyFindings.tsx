@@ -13,7 +13,7 @@ export function MossyFindings({graph,onPick,onLens,onBrowse}:{
   const report=useMemo(()=>mossyOverview(graph),[graph]);
   // Lead with the strongest evidence for this particular dataset, not a fixed list.
   // The same source observation must never appear twice.
-  const lead=report.findings.find(item=>item.lens===report.recommended)??report.findings[0];
+  const lead=report.findings.find(item=>item.lens===report.recommended)??report.findings[0]!;
   const remaining=report.findings.filter(item=>item.id!==lead.id).slice(0,3);
   const explore=(item:typeof lead)=>{
     onLens(item.lens);
