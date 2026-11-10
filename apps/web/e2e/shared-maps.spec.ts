@@ -42,7 +42,7 @@ test("an owner shares a map; an invited editor's changes reach them, and undo re
   // Sam builds a map in their browser, then saves it to their account.
   const sam=await person(browser);
   await sam.goto("/");
-  await sam.getByRole("button",{name:/Map your own data/}).click();
+  await sam.getByRole("button",{name:/Add your data/}).click();
   await sam.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await sam.getByRole("button",{name:/Check what this adds/}).click();
   await sam.getByRole("button",{name:"Create the map"}).click();
@@ -71,7 +71,7 @@ test("an owner shares a map; an invited editor's changes reach them, and undo re
   const link=await mail(editor+".invite.txt");
   const ade=await person(browser);
   await ade.goto(link);
-  await expect(ade.getByRole("heading",{name:"Sign in to Mossline"})).toBeVisible();
+  await expect(ade.getByRole("heading",{name:"Sign in to Mossy"})).toBeVisible();
   await signIn(ade,editor);
   await expect(ade.locator(".ml-shared-badge")).toContainText("Shared");
   await expect(ade.locator(".ml-dataset")).toContainText("Invented systems map");

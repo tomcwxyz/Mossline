@@ -96,7 +96,7 @@ test("free limits, an organisation, an invited member, a plan by hand and a paym
   // The operator puts the organisation on the plan by hand (an invoice customer).
   test.skip(!operator,"No operator address configured");
   const op=await signedIn(browser,operator!,"/admin");
-  await expect(op.getByRole("heading",{name:"Running Mossline"})).toBeVisible();
+  await expect(op.getByRole("heading",{name:"Running Mossy"})).toBeVisible();
   const row=op.locator(".ml-account-maps li").filter({hasText:"Allotment Network "+stamp});
   await row.getByRole("button",{name:"Organisation plan"}).click();
   await expect(row.locator("small")).toContainText("Organisation plan");

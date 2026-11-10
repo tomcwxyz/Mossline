@@ -17,7 +17,7 @@ export function SignIn({ next, error }: { next: string; error: string }) {
   const [sent, setSent] = useState("");
   const [busy, setBusy] = useState<"" | "email" | "microsoft" | "google">("");
   const [problem, setProblem] = useState(error ? ERRORS[error.toLowerCase()] ??
-    "We couldn't sign you in. If your address isn't set up to publish here, ask whoever runs this Mossline to add it." : "");
+    "We couldn't sign you in. If your address isn't set up to publish here, ask whoever runs this Mossy to add it." : "");
 
   async function sendLink(event: FormEvent) {
     event.preventDefault();
@@ -36,14 +36,14 @@ export function SignIn({ next, error }: { next: string; error: string }) {
   return <AccountShell title="Sign in">
     <section className="ml-account-card" aria-labelledby="sign-in-title">
       <p className="ml-start-eyebrow">Your account</p>
-      <h1 id="sign-in-title">Sign in to Mossline</h1>
-      <p className="ml-add-lede">You only need an account to publish maps or work on them with other people. Everything else in Mossline works
+      <h1 id="sign-in-title">Sign in to Mossy</h1>
+      <p className="ml-add-lede">You only need an account to publish maps or work on them with other people. Everything else in Mossy works
         without one, and your maps stay in this browser unless you choose to save one to your account.</p>
 
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
 
       {state.status === "loading" && <p className="ml-small" role="status">Checking…</p>}
-      {state.status === "off" && <p className="ml-account-note">Accounts aren&apos;t switched on for this Mossline.
+      {state.status === "off" && <p className="ml-account-note">Accounts aren&apos;t switched on for this Mossy.
         Everything else works without one.</p>}
       {state.status === "ready" && state.user && <div className="ml-account-note" role="status">
         <p>You&apos;re signed in as <strong>{state.user.name || state.user.email}</strong>.</p>
@@ -69,9 +69,9 @@ export function SignIn({ next, error }: { next: string; error: string }) {
 
       {state.status === "ready" && !state.user && !sent && <p className="ml-small">By continuing, you agree to the{" "}
         <a href="/legal/terms">terms of service</a> and <a href="/legal/privacy">privacy notice</a>.</p>}
-      <p className="ml-small ml-account-privacy">Mossline keeps your name, your email address, and the maps you publish or save to your account.
+      <p className="ml-small ml-account-privacy">Mossy keeps your name, your email address, and the maps you publish or save to your account.
         Nothing else is kept with your account, and there's no password. Delete your account at any time and those maps go with it.</p>
-      <a className="ml-small" href={back}>← Back to Mossline</a>
+      <a className="ml-small" href={back}>← Back to Mossy</a>
     </section>
   </AccountShell>;
 }

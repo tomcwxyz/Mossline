@@ -1409,3 +1409,13 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-findings-list button {justify-self:start;border:0;background:none;color:var(--ml-link);padding:4px 0;font-weight:600;cursor:pointer;font-size:13px;}
 .ml-findings-gaps {display:grid;gap:5px;padding:12px;border:1px solid var(--ml-border);border-radius:8px;}
 .ml-findings-gaps strong {font-size:13px;}
+
+/* One guided import journey, with technical interpretations available on demand. */
+.ml-add-understanding {display:grid;gap:9px;}
+.ml-add-understanding-row {padding:15px 18px;border:1px solid var(--ml-border);border-radius:9px;background:var(--ml-surface);display:grid;gap:5px;}
+.ml-add-understanding-row strong {font-size:14px;}
+.ml-add-understanding-row span {font-size:13px;color:var(--ml-muted);line-height:1.45;}
+.ml-add-understanding-row em {font-style:normal;font-size:12px;color:var(--ml-margin);}
+.ml-add-adjust-toggle {justify-self:start;padding:6px 0;text-decoration:underline;text-underline-offset:4px;}
+.ml-add-knows {border:1px solid var(--ml-border);border-radius:8px;padding:12px;}
+.ml-add-knows > summary {cursor:pointer;font-size:13px;font-weight:600;}

@@ -11,14 +11,15 @@ const axe=(page:Page)=>new AxeBuilder({page}).include(".ml-add").withTags(["wcag
 
 test("one way in: grants, register and Kumu files join on identifiers into a new map",async({page})=>{
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await expect(page.getByRole("heading",{name:"Bring in your data"})).toBeVisible();
   expect((await axe(page)).violations).toEqual([]);
   await page.locator(".ml-add-drop input[type=file]").setInputFiles([
     file("360giving-grants.csv","text/csv"),file("publicextract.charity.txt"),
     file("publicextract.charity_classification.txt"),file("companies-house.csv","text/csv"),
     file("kumu-map.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")]);
-  await expect(page.getByRole("heading",{name:"What each file adds"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
+  await page.getByRole("button",{name:/Adjust how Mossy reads your files/}).click();
   const card=(name:string)=>page.locator(".ml-add-table").filter({has:page.getByText(name,{exact:true})});
   await expect(card("360giving-grants.csv").getByRole("combobox",{name:"Read as"})).toHaveValue("0");
   await expect(card("360giving-grants.csv").locator("select option:checked")).toHaveText("360Giving grants");
@@ -55,7 +56,7 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
 
 test("adding to the open map fills in records it already has",async({page})=>{
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.locator(".ml-add-drop input[type=file]").setInputFiles([file("360giving-grants.csv","text/csv")]);
   await page.getByLabel("Map name").fill("Grants only (test)");
   await page.getByRole("button",{name:/Check what this adds/}).click();
@@ -67,6 +68,7 @@ test("adding to the open map fills in records it already has",async({page})=>{
   await expect(page.locator(".ml-add-title")).toHaveText("Add data to Grants only (test)");
   await page.locator(".ml-add-drop input[type=file]").setInputFiles([file("companies-house.csv","text/csv")]);
   await expect(page.getByRole("radio",{name:/Add to Grants only \(test\)/})).toBeChecked();
+  await page.getByRole("button",{name:/Adjust how Mossy reads your files/}).click();
   await expect(page.getByRole("radio",{name:/Fill in/})).toBeChecked();
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await expect(page.locator(".ml-add-totals")).toContainText("2filled in");
@@ -84,7 +86,7 @@ test("a large grants file stays readable: grants as links, groupings, ranked fun
   execFileSync(process.execPath,[resolve(__dirname,"../../../data/generators/large-grants.mjs"),csv]);
   await page.setViewportSize({width:390,height:844});
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(csv);
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click({timeout:60_000});

@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 // The invented cause-and-effect map in apps/web/public/samples/kumu-systems-map.json.
 test("a systems map shows direction, signs, feedback loops and routes that follow the arrows",async({page})=>{
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click();

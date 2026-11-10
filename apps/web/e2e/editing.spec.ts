@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 test("a map can be built and changed in place, with receipts, undo and a Kumu export",async({page})=>{
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click();

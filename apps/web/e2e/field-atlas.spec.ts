@@ -135,7 +135,7 @@ test("Follow a connection uses recorded steps with source receipts, not inferred
 
 test("the front page uses the atlas identity and follows Night/Day",async({page})=>{
   await page.goto("/");
-  await expect(page.locator(".ml-home .ml-wordmark")).toContainText("Mossline");
+  await expect(page.locator(".ml-home .ml-wordmark")).toContainText("Mossy");
   await expect(page.getByRole("heading",{level:1})).toHaveText("See the relationships, not just the parts.");
   await page.getByRole("button",{name:"Use night colours"}).click();
   await expect(page.locator(".ml-home")).toHaveAttribute("data-theme","night");

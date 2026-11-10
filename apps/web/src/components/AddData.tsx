@@ -61,6 +61,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   const [consent, setConsent] = useState(false);
   const [exactNote, setExactNote] = useState("");
   const [dragging, setDragging] = useState(false);
+  // Only surface manual table configuration when the proposed interpretation is uncertain.
+  const [showTechnical,setShowTechnical]=useState(false);
   const pending = useRef<Map<number, (m: AddMessage) => void>>(new Map());
   const heading = useRef<HTMLHeadingElement>(null);
 
@@ -106,6 +108,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       }
       setTables(m.tables); setMaps(m.maps.map(x => ({ ...x, include: true }))); setProblems(m.problems);
       setPlans(next); setReport(null); setMerge(new Set());
+      setShowTechnical(m.tables.some(t=>!t.matches[0]?.builtIn||(t.matches[0]?.missing.length??0)>0) ||
+        (m.tables.length>0 && !Object.values(next).some(p=>p.use==="records") && !haveRecords));
       setTitle(t => name ?? (t || (m.tables[0]?.file.replace(/\.(csv|tsv|txt|json|xlsx)$/i, "").replace(/[_.-]+/g, " ") ?? m.maps[0]?.title ?? "New map")));
       if (m.tables.length || m.maps.length) setPhase("plan");
     });
@@ -239,7 +243,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <strong>Drop files here, or choose files</strong>
           <small>CSV, tab-separated text, Excel (.xlsx) or JSON · several at once is fine</small>
         </label>
-        <div className="ml-add-knows">
+        <details className="ml-add-knows">
+          <summary>Formats Mossy understands</summary>
           <h2 className="ml-section-title">Recognised straight away</h2>
           <ul>
             <li><TypeMark type="funder"/><span><strong>360Giving grants</strong><small>From GrantNav or a funder&rsquo;s own file, CSV or JSON</small></span></li>
@@ -250,7 +255,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           </ul>
           <p className="ml-small">Very large register files (hundreds of megabytes) are read in passes and only rows about your
             records are kept.</p>
-        </div>
+        </details>
         <div className="ml-add-try">
           <button type="button" className="ml-quiet" onClick={() => void trySamples()} disabled={!!busy}>Try it with sample files</button>
           <button type="button" className="ml-quiet" onClick={() => void trySamples(["kumu-systems-map.json"], "Invented systems map")} disabled={!!busy}>
@@ -264,10 +269,27 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
       {phase === "plan" && <section className="ml-add-stack" aria-labelledby="plan-h">
         <div className="ml-add-intro">
-          <h1 id="plan-h" ref={heading} tabIndex={-1}>What each file adds</h1>
-          <p className="ml-add-lede">Check how each table has been read. <strong>Add as records</strong> brings every row in.
-            <strong> Fill in</strong> only uses rows about records you already have, here or in your other files.</p>
+          <h1 id="plan-h" ref={heading} tabIndex={-1}>Here's how Mossy read your data</h1>
+          <p className="ml-add-lede">Mossy has proposed what each file contains. Review the summary, change anything that looks wrong, then see the actual records before saving.</p>
         </div>
+        <div className="ml-add-understanding" aria-label="How files were recognised">
+          {tables.map(t=>{
+            const plan=plans[t.name];
+            const match=t.matches[plan?.match??0];
+            return <div className="ml-add-understanding-row" key={t.name}>
+              <strong>{t.name}</strong>
+              <span>{match?.shape.each??"Mossy needs your help reading this table."}</span>
+              {(!match?.builtIn||match.missing.length>0)&&<em>Interpretation needs checking</em>}
+            </div>;
+          })}
+          {maps.map(m=><div className="ml-add-understanding-row" key={m.file}>
+            <strong>{m.title}</strong><span>{m.nodes} records and {m.edges} relationships in a Mossy map.</span>
+          </div>)}
+        </div>
+        <button className="ml-quiet ml-add-adjust-toggle" type="button" aria-expanded={showTechnical}
+          onClick={()=>setShowTechnical(v=>!v)}>
+          {showTechnical?"Hide detailed mapping settings":"Adjust how Mossy reads your files"} →
+        </button>
         {problems.length > 0 && <ul className="ml-add-problems">{problems.map(p => <li key={p.file}><strong>{p.file}</strong> {p.message}</li>)}</ul>}
         {maps.map(m => <article key={m.file} className="ml-add-table">
           <header><label className="ml-add-include"><input type="checkbox" checked={m.include}
@@ -275,7 +297,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             <span><strong>{m.title}</strong><small className="ml-mono">{m.file} · Mossy map · {count(m.nodes, "record")} · {count(m.edges, "link")}</small></span></label></header>
           <p className="ml-add-each">Its records and links are added as they are; anything already present is left alone.</p>
         </article>)}
-        {tables.map(t => {
+        {showTechnical && tables.map(t => {
           const plan = plans[t.name];
           if (!plan) return null;
           const match = t.matches[plan.match];
@@ -347,7 +369,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <button type="button" className="ml-primary" onClick={preview} disabled={!!busy || (!chosen.length && !maps.some(m => m.include)) || !anyRecords}>
             Check what this adds →</button>
         </div>
-        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right">Everything is set to fill in, and there are no records yet to fill in.
+        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">Mossy hasn't found a set of records to start from. Open the detailed settings and choose <strong>Add as records</strong> for a suitable table. 
           Set at least one table to <strong>Add as records</strong>.</p>}
       </section>}
 

@@ -25,7 +25,7 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   await rm(join(mailDir!,email+".txt"),{force:true});
 
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click();
@@ -38,7 +38,7 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   await expect(card).toContainText("You'll need to sign in");
   await card.getByRole("link",{name:"Sign in to publish"}).click();
 
-  await expect(page.getByRole("heading",{name:"Sign in to Mossline"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Sign in to Mossy"})).toBeVisible();
   // Only the ways in this deployment has credentials for are offered.
   await expect(page.getByRole("button",{name:"Continue with Microsoft"})).toHaveCount(status.signIn.microsoft?1:0);
   await expect(page.getByRole("button",{name:"Continue with Google"})).toHaveCount(status.signIn.google?1:0);

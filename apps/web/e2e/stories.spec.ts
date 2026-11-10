@@ -12,7 +12,7 @@ const PNG=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAAEElEQVR4n
 
 async function openExample(page:Page){
   await page.goto("/");
-  await page.getByRole("button",{name:/Map your own data/}).click();
+  await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click();

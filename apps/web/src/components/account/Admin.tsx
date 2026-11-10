@@ -20,7 +20,7 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 /**
- * For the people running this Mossline: who's on which plan, putting
+ * For the people running this Mossy: who's on which plan, putting
  * organisations on a plan by hand (paid by invoice), and taking down
  * published maps reported under the acceptable use policy.
  */
@@ -61,7 +61,7 @@ export function Admin() {
     <section className="ml-account-card ml-account-card--wide" aria-labelledby="admin-title">
       <p className="ml-start-eyebrow">Operator</p>
       <h1 id="admin-title">Running Mossy</h1>
-      {state.status === "ready" && !user?.operator && <p className="ml-account-note">This page is for the people running this Mossline.</p>}
+      {state.status === "ready" && !user?.operator && <p className="ml-account-note">This page is for the people running this Mossy.</p>}
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
       {data && <>
         <dl className="ml-plan-usage ml-admin-counts">

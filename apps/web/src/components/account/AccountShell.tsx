@@ -10,7 +10,7 @@ export function AccountShell({ title, children }: { title: string; children: Rea
   const [theme, setTheme] = useAtlasTheme();
   return <main className="ml-atlas ml-account" data-theme={theme}>
     <header className="ml-home-header">
-      <a href="/" className="ml-account-home" aria-label="Mossline — all maps"><Wordmark/></a>
+      <a href="/" className="ml-account-home" aria-label="Mossy — all maps"><Wordmark/></a>
       <span className="ml-add-title">{title}</span>
       <div className="ml-home-header-actions"><ThemeButton theme={theme} onChange={setTheme}/></div>
     </header>

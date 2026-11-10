@@ -48,7 +48,7 @@ test("stories travel with a shared map: moved in, written together, clashes keep
   // A story written before the map was shared.
   const sam=await person(browser);
   await sam.goto("/");
-  await sam.getByRole("button",{name:/Map your own data/}).click();
+  await sam.getByRole("button",{name:/Add your data/}).click();
   await sam.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await sam.getByRole("button",{name:/Check what this adds/}).click();
   await sam.getByRole("button",{name:"Create the map"}).click();
