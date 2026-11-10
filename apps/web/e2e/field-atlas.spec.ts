@@ -38,6 +38,26 @@ test("Field Atlas keeps selection and filters across five lenses and in the URL"
   await expect(page.locator(".ml-search input")).toBeFocused();
 });
 
+test("discoveries remain accessible after following an interesting record",async({page})=>{
+  await openExample(page);
+  const panel=page.getByLabel("What Mossy found");
+  await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+  await expect(panel.locator(".ml-findings-recommend h3")).toBeVisible();
+  await panel.locator(".ml-findings-recommend button").click();
+  await expect(page.locator(".ml-inspector h2")).toBeVisible();
+  await page.getByRole("button",{name:"Back to findings"}).click();
+  await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+});
+test("geography-first datasets lead with recorded mapped connections",async({page})=>{
+  await page.goto("/?example=after-dark");
+  const panel=page.getByLabel("What Mossy found");
+  await expect(panel.locator(".ml-findings-recommend")).toContainText("recorded relationships connect mapped places");
+  await expect(panel.locator(".ml-findings-list")).not.toContainText("A picture of where things happen");
+  await panel.locator(".ml-findings-recommend button").click();
+  await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}))
+    .toHaveAttribute("aria-current","page");
+});
+
 test("Network lens draws every record with named areas and the ink/pencil key",async({page})=>{
   await openExample(page);
   const stage=page.getByRole("region",{name:"Complete Sigma network"});
