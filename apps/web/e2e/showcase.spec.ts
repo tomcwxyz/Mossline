@@ -4,7 +4,7 @@ import {test,expect} from "@playwright/test";
 
 test("Showcase presents five explorable, downloadable fictional datasets",async({page})=>{
   await page.goto("/showcase");
-  await expect(page.getByRole("heading",{name:"Five ways to explore"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Five fictional worlds"})).toBeVisible();
   await expect(page.locator(".ml-start-example")).toHaveCount(5);
   await expect(page.locator(".ml-start-example-preview")).toHaveCount(5);
   const link=page.locator(".ml-start-example").filter({hasText:"After Dark"}).getByRole("link",{name:/Open in Mossy/});
@@ -26,10 +26,9 @@ test("The two raw CSVs for After Dark produce a usable, editable map",async({pag
     name,mimeType:"text/csv",buffer:readFileSync(resolve("apps/web/public/examples",name))
   }));
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(files);
-  await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
-  await expect(page.locator(".ml-add-understanding-row")).toHaveCount(2);
-  await page.getByRole("button",{name:/Check what this adds/}).click();
+  // Both CSVs are understood in one go; the user still approves the review.
   await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.locator(".ml-add-ledger li")).toHaveCount(2);
   await expect(page.locator(".ml-add-totals")).toContainText("334");
   await page.getByRole("button",{name:"Create the map"}).click();
   await expect(page.locator(".ml-dataset summary strong")).toContainText("after dark");
