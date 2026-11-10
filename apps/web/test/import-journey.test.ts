@@ -43,6 +43,13 @@ test("problems, missing shapes and ambiguous recognised readings keep the mappin
   assert.equal(canReviewDirectly(ambiguous,[],[],plan(ambiguous),false),false);
 });
 
+test("unlabelled metrics and headers without data still need interpretation",()=>{
+  const metrics=[table("measurements.csv","Month,Value\nJanuary,100\n")];
+  assert.equal(canReviewDirectly(metrics,[],[],plan(metrics),false),false);
+  const empty=[table("empty.csv","Name,Theme\n")];
+  assert.equal(canReviewDirectly(empty,[],[],plan(empty),false),false);
+});
+
 test("a valid standalone Mossy map can go straight to review; empty input cannot",()=>{
   const maps:MapFile[]=[{file:"atlas.json",title:"Atlas",nodes:2,edges:1}];
   assert.equal(canReviewDirectly([],maps,[],{},false),true);
