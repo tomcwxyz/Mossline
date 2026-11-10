@@ -1,8 +1,8 @@
-import {apiResult} from "../../lib/hosted-response";
-import {requirePublisher} from "../../lib/hosted-guard";
-import {readJsonBody,validPublicationId,isHostedConfigured} from "../../lib/hosted-auth";
-import {featuredShowcase,submitShowcase} from "../../lib/showcase-db";
-import {reportError} from "../../lib/report";
+import {apiResult} from "../../../lib/hosted-response";
+import {requirePublisher} from "../../../lib/hosted-guard";
+import {readJsonBody,validPublicationId,isHostedConfigured} from "../../../lib/hosted-auth";
+import {featuredShowcase,submitShowcase} from "../../../lib/showcase-db";
+import {reportError} from "../../../lib/report";
 import {z} from "zod";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
