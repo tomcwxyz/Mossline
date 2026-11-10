@@ -3,6 +3,29 @@ import type {UseMode} from "@mossline/graph-core";
 
 type ProposedPlan = Record<string,{include:boolean;use:UseMode}>;
 
+const CLEAR_LABELS = new Set([
+  "name","label","title","organisation","organisationname","organization","organizationname",
+  "charityname","companyname","project","projectname","person","personname","entity","entityname",
+  "venue","venuename","place","placename","location","locationname","activity","activityname",
+  "event","eventname","initiative","initiativename","programme","programmename","funder",
+  "fundername","recipient","recipientname"
+]);
+const normalise = (value:string) => value.toLowerCase().replace(/[^a-z0-9]/g,"");
+
+/** A guessed reading needs an intelligible name column, not just an arbitrary first field. */
+function recognisableSuggestion(table:TableInfo):boolean {
+  const reading=table.matches[0];
+  if(reading.builtIn)return true;
+  if(reading.shape.records.some(record=>{
+    const field=record.label.match(/^\\{([^}|]+)(?:\\|[^}]+)?\\}$/)?.[1];
+    return !!field && CLEAR_LABELS.has(normalise(field));
+  }))return true;
+  const headings=new Set(table.headings.map(normalise));
+  return reading.shape.links.length>0 &&
+    ["from","source","sourceentity","fromname"].some(h=>headings.has(h)) &&
+    ["to","target","targetentity","toname"].some(h=>headings.has(h));
+}
+
 /**
  * Simple imports can go straight to the *review*, not straight to saving.
  * Unreadable, incomplete or ambiguous input still gets the editable mapping step.
@@ -21,8 +44,9 @@ export function canReviewDirectly(
   if(!hasRecords)return false;
   return tables.every(t=>{
     const plan=plans[t.name],first=t.matches[0];
-    if(!plan?.include || !first || first.missing.length ||
-      (!first.shape.records.length && !first.shape.links.length))return false;
+    if(!plan?.include || !first || first.missing.length || t.rows===0 ||
+      (!first.shape.records.length && !first.shape.links.length) ||
+      !recognisableSuggestion(t))return false;
     // Two equally strong recognised interpretations need a person's choice.
     if(first.builtIn && t.matches.slice(1).some(m=>m.builtIn&&m.score===first.score))return false;
     if(t.large&&plan.use!=="fill")return false;
