@@ -7,7 +7,7 @@ test("Showcase presents five explorable, downloadable fictional datasets",async(
   await expect(page.getByRole("heading",{name:"Five fictional worlds"})).toBeVisible();
   await expect(page.locator(".ml-start-example")).toHaveCount(5);
   await expect(page.locator(".ml-start-example-preview")).toHaveCount(5);
-  const link=page.locator(".ml-start-example").filter({hasText:"After Dark"}).getByRole("link",{name:/Open in Mossy/});
+  const link=page.locator(".ml-start-example").filter({hasText:"After Dark"}).getByRole("link",{name:/Explore this geography view/});
   await link.click();
   await expect(page.locator(".ml-dataset summary strong")).toContainText("After Dark");
   await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}))
