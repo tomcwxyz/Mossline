@@ -107,7 +107,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         const fill = t.large || ALWAYS_FILL.has(id) || (register(t) && haveRecords);
         next[t.name] = { include: true, match: 0, use: fill ? "fill" : "records", labelColumn: "", type: "" };
       }
-      const proposedTitle = name ?? (title || (m.tables[0]?.file.replace(/\\.(csv|tsv|txt|json|xlsx)$/i, "").replace(/[_.-]+/g, " ") ?? m.maps[0]?.title ?? "New map"));
+      const proposedTitle = name ?? (title || (m.tables[0]?.file.replace(/\.(csv|tsv|txt|json|xlsx)$/i, "").replace(/[_.-]+/g, " ") ?? m.maps[0]?.title ?? "New map"));
       setTables(m.tables); setMaps(m.maps.map(x => ({ ...x, include: true }))); setProblems(m.problems);
       setPlans(next); setReport(null); setMerge(new Set()); setTitle(proposedTitle);
       setShowTechnical(m.tables.some(t=>!t.matches[0]?.builtIn||(t.matches[0]?.missing.length??0)>0) ||
