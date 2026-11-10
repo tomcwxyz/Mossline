@@ -9,6 +9,7 @@ import { MarkLayer, placeMarks, type MarkStyle, type StoryPin } from "./MarkLaye
 import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
+import { spatialConnections, SPATIAL_LINK_LIMIT } from "../../lib/spatial-connections";
 
 type Props = {
   graph: GraphDocument;
@@ -121,6 +122,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const [error, setError] = useState("");
   const [land, setLand] = useState<Land | null>(null);
   const [mode, setMode] = useState<"points" | "hexagons">("points");
+  const [connectionsMode,setConnectionsMode] = useState<"all"|"selected"|"off">("all");
+  const spatial=useMemo(()=>spatialConnections(graph),[graph]);
+  const displayed=useMemo(()=>spatial.links.slice(0,SPATIAL_LINK_LIMIT),[spatial]);
   const [view, setView] = useState({ inView: 0, grantsInView: 0 });
   const [narrow, setNarrow] = useState(false);
   const [unplacedOpen, setUnplacedOpen] = useState(true);
@@ -184,7 +188,22 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           shape: "mark-" + SHAPE[node.type] + (approx ? "-hollow" : ""), color, iconSize: px / 18, approx,
           sort: (focus ? 1000 : 0) + (degree.get(node.id) ?? 0) } };
     }));
-    const arcs: Feature[] = [], ego: Feature[] = [];
+    const arcs: Feature[] = [], ego: Feature[] = [], mappedLinks: Feature[] = [];
+    if(connectionsMode==="all"&&mode==="points"){
+      for(const link of displayed) mappedLinks.push({
+        type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
+        properties:{source:link.source,target:link.target,type:link.type,count:link.count}
+      });
+    }
+    // Always include all direct plotted neighbours when somebody selects a record,
+    // even if the overview is capped or currently in hexagon mode.
+    if(selectedId&&connectionsMode!=="off"){
+      for(const link of spatial.links) {
+        if(link.source!==selectedId&&link.target!==selectedId)continue;
+        ego.push({type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
+          properties:{source:link.source,target:link.target,type:link.type,count:link.count}});
+      }
+    }
     let hiddenArcs = 0;
     if (selectedNode) {
       const origin = coordsOf(selectedNode.id);
@@ -196,15 +215,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           const w = f.amount ? 0.7 + 3 * Math.sqrt(f.amount / max) : 1;
           arcs.push({ type: "Feature", geometry: { type: "LineString", coordinates: arc(origin, to) }, properties: { w } });
         }
-      } else if (origin) {
-        for (const id of neighbours) {
-          const to = coordsOf(id);
-          if (to) ego.push({ type: "Feature", geometry: { type: "LineString", coordinates: [origin, to] }, properties: {} });
-        }
-      }
-    }
-    return { records, arcs: collection(arcs), ego: collection(ego), hiddenArcs };
-  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|")]);
+      }   }
+    return { records, arcs: collection(arcs), ego: collection(ego), links:collection(mappedLinks), hiddenArcs };
+  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial, displayed, connectionsMode, mode]);
 
   // ---- Build the map once per theme; data changes update sources in place --
   useEffect(() => {
@@ -234,6 +247,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
               hexes: { type: "geojson", data: collection([]) as never },
               records: { type: "geojson", data: data.records as never },
               arcs: { type: "geojson", data: data.arcs as never },
+              links: { type: "geojson", data: data.links as never },
               ego: { type: "geojson", data: data.ego as never }
             },
             layers: [
@@ -247,7 +261,11 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
               { id: "hexes", type: "fill", source: "hexes",
                 paint: { "fill-color": ["interpolate", ["linear"], ["get", "t"], 0, mix(palette.wash, palette.paper, 0.78), 1, palette.moss],
                   "fill-opacity": 0.82, "fill-outline-color": palette.paper } },
-              { id: "ego", type: "line", source: "ego", paint: { "line-color": palette.ink, "line-width": 1.2, "line-opacity": 0.75 } },
+              { id: "map-links", type: "line", source: "links", layout:{"line-cap":"round","line-join":"round"},
+                paint:{"line-color":palette.moss,"line-opacity":0.48,
+                  "line-width":["interpolate",["linear"],["zoom"],2,0.9,6,1.55,10,2.1]} },
+              { id: "ego", type: "line", source: "ego",layout:{"line-cap":"round"},
+                paint: { "line-color": palette.moss, "line-width": 3.1, "line-opacity": 0.9 } },
               { id: "arcs-casing", type: "line", source: "arcs", layout: { "line-cap": "round" },
                 paint: { "line-color": palette.paper, "line-opacity": 0.9, "line-width": ["+", ["get", "w"], 2.4] } },
               { id: "arcs", type: "line", source: "arcs", layout: { "line-cap": "round" },
@@ -280,20 +298,34 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         });
         map.on("click", event => {
           const hit = map?.queryRenderedFeatures(event.point, { layers: ["records", "places"] })[0];
-          pick.current(hit ? String(hit.properties?.id) : null);
+          if(hit){pick.current(String(hit.properties?.id));return;}
+          const link=map?.queryRenderedFeatures(event.point,{layers:["ego","map-links"]})[0];
+          if(link){
+            const source=String(link.properties?.source),target=String(link.properties?.target);
+            pick.current(selectedRef.current===source?target:source);
+          } else pick.current(null);
         });
         // Hover names a record without committing to it.
         map.on("mousemove", event => {
           if (!map) return;
-          const hit = map.queryRenderedFeatures(event.point, { layers: ["records"] })[0];
-          map.getCanvas().style.cursor = hit ? "pointer" : "";
-          const id = hit ? String(hit.properties?.id) : null;
-          const node = id ? byIdRef.current.get(id) : null;
-          if (!node || id === selectedRef.current) { hoverMarker.current?.remove(); hoverMarker.current = null; return; }
-          const el = hoverMarker.current?.getElement() ?? document.createElement("div");
-          el.className = "ml-map-hover"; el.textContent = node.label;
-          const coords = (hit!.geometry as unknown as { coordinates: [number, number] }).coordinates;
-          if (!hoverMarker.current) hoverMarker.current = new ml.Marker({ element: el, anchor: "left", offset: [10, 0] }).setLngLat(coords).addTo(map);
+          const hit = map.queryRenderedFeatures(event.point, { layers: ["records","places"] })[0];
+          const link = hit?null:map.queryRenderedFeatures(event.point,{layers:["ego","map-links"]})[0];
+          map.getCanvas().style.cursor = hit||link ? "pointer" : "";
+          const id=hit?String(hit.properties?.id):null;
+          const node=id?byIdRef.current.get(id):null;
+          if(id===selectedRef.current||(!node&&!link)){hoverMarker.current?.remove();hoverMarker.current=null;return;}
+          const el=hoverMarker.current?.getElement()??document.createElement("div");
+          el.className="ml-map-hover";
+          if(node)el.textContent=node.label;
+          else if(link){
+            const from=byIdRef.current.get(String(link.properties?.source));
+            const to=byIdRef.current.get(String(link.properties?.target));
+            el.textContent=[from?.label,to?.label].filter(Boolean).join(" → ")+" · "+String(link.properties?.type??"connected");
+          }
+          const coords:[number,number]=node
+            ? (hit!.geometry as unknown as {coordinates:[number,number]}).coordinates
+            : [event.lngLat.lng,event.lngLat.lat];
+          if(!hoverMarker.current)hoverMarker.current=new ml.Marker({element:el,anchor:"left",offset:[10,0]}).setLngLat(coords).addTo(map);
           else hoverMarker.current.setLngLat(coords);
         });
         map.on("mouseout", () => { hoverMarker.current?.remove(); hoverMarker.current = null; });
@@ -385,6 +417,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     const map = mapRef.current;
     if (!map || status !== "ready") return;
     (map.getSource("records") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.records);
+    (map.getSource("links") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.links);
+    map.setPaintProperty("map-links","line-opacity",selectedId?0.2:0.48);
     (map.getSource("arcs") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.arcs);
     (map.getSource("ego") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.ego);
     map.setFilter("selected", ["==", ["get", "id"], selectedId ?? "__none__"]);
@@ -396,7 +430,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     // MapLibre's canvas is focusable for keyboard panning; describe it there.
     map.getCanvas().setAttribute("aria-label",
       `Map: ${(located.length - approximate).toLocaleString("en-GB")} records plotted from their source coordinates` +
-      (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") + ". Use Browse records for a list.");
+      (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") +
+      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Use Browse records for a list.`);
     // The selected record gets a name card, as a map would label a feature.
     focusMarkers.current.forEach(m => m.remove()); focusMarkers.current = [];
     const sel = selectedNode ? located.find(p => p.node.id === selectedNode.id) : null;
@@ -630,10 +665,24 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       <button type="button" aria-label="Fit everything" onClick={() => zoom("fit")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5V1.5H5M9 1.5h3.5V5M12.5 9v3.5H9M5 12.5H1.5V9"/></svg></button>
     </div>
     <div className="ml-map-cards">
+      <section className="ml-overlay-card ml-map-connections" aria-label="Connections on the map">
+        <h3>Recorded connections</h3>
+        <div className="ml-segmented" role="group" aria-label="Show connections">
+          <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");}}>All</button>
+          <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>setConnectionsMode("selected")} disabled={!selectedId}>Selected</button>
+          <button type="button" aria-pressed={connectionsMode==="off"} onClick={()=>setConnectionsMode("off")}>Off</button>
+        </div>
+        <p>{spatial.plotted.toLocaleString("en-GB")} recorded mapped {spatial.plotted===1?"link":"links"}
+          {spatial.unplaced>0&&<> · {spatial.unplaced.toLocaleString("en-GB")} cannot be drawn without locations</>}
+          {spatial.colocated>0&&<> · {spatial.colocated.toLocaleString("en-GB")} at the same coordinates</>}
+          {connectionsMode==="all"&&spatial.links.length>SPATIAL_LINK_LIMIT&&<> · Showing {SPATIAL_LINK_LIMIT} distinct links at once</>}
+          {mode==="hexagons"&&connectionsMode==="all"&&<> · Switch to Points for lines</>}
+        </p>
+      </section>
       {!narrow && <section className="ml-overlay-card ml-map-show" aria-label="Show places as">
         <h3>Show places as</h3>
         <div className="ml-segmented" role="group" aria-label="Show places as">
-          <button type="button" aria-pressed={mode === "points"} onClick={() => setMode("points")}>Points</button>
+          <button type="button" aria-pressed={mode === "points"} onClick={() => setMode("points")}>Points & links</button>
           <button type="button" aria-pressed={mode === "hexagons"} onClick={() => setMode("hexagons")}>Hexagons</button>
         </div>
         {mode === "hexagons" && <p>Darker hexagons hold more records. Places are counted where your source puts them.</p>}
@@ -657,7 +706,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     <p className="ml-canvas-caption ml-drawing-caption ml-map-pill" data-status={status}>
       {selectedNode?.type === "funder" && myGrants.length > 0 && grantsOutside > 0
         ? <>{grantsOutside.toLocaleString("en-GB")} more grant{grantsOutside === 1 ? " is" : "s are"} outside this view or unplaced</>
-        : <>{located.length.toLocaleString("en-GB")} plotted{approximate > 0 && <> ({approximate.toLocaleString("en-GB")} approximate)</>} · {unplaced.length.toLocaleString("en-GB")} without a place
+        : <>{located.length.toLocaleString("en-GB")} plotted · {spatial.plotted.toLocaleString("en-GB")} positioned connections{approximate > 0 && <> ({approximate.toLocaleString("en-GB")} approximate)</>} · {unplaced.length.toLocaleString("en-GB")} without a place
           {status === "ready" && outside > 0 && <> · {outside.toLocaleString("en-GB")} outside this view</>}</>}
     </p>
   </section>;

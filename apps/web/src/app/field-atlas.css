@@ -1459,3 +1459,12 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
  .ml-start-example.is-featured >.ml-start-example-copy{padding:22px;}
  .ml-start-examples{padding-inline:18px;}
 }
+
+/* Recorded direct map relationships, rendered behind their spatial endpoints. */
+.ml-map-connections {display:grid;gap:7px;max-width:295px;}
+.ml-map-connections h3 {margin:0;}
+.ml-map-connections p {font-size:12px;line-height:1.45;margin:0;color:var(--ml-muted);}
+.ml-map-connections .ml-segmented {display:flex;gap:2px;}
+.ml-map-connections .ml-segmented button {min-width:0;flex:1;padding:6px 8px;}
+.ml-map-connections .ml-segmented button:disabled {opacity:.4;cursor:default;}
+@media(max-width:700px){.ml-map-connections{max-width:min(260px,calc(100vw - 26px));}}
