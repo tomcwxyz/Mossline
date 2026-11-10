@@ -11,7 +11,15 @@ export function MossyFindings({graph,onPick,onLens,onBrowse}:{
   onBrowse:()=>void;
 }){
   const report=useMemo(()=>mossyOverview(graph),[graph]);
-  const lensName={network:"connections",map:"places",themes:"themes",funding:"funding",timeline:"changes over time"}[report.recommended];
+  // Lead with the strongest evidence for this particular dataset, not a fixed list.
+  // The same source observation must never appear twice.
+  const lead=report.findings.find(item=>item.lens===report.recommended)??report.findings[0];
+  const remaining=report.findings.filter(item=>item.id!==lead.id).slice(0,3);
+  const explore=(item:typeof lead)=>{
+    onLens(item.lens);
+    if(item.recordId)onPick(item.recordId);
+    else if(item.id==="records")onBrowse();
+  };
   return <div className="ml-empty-panel ml-findings" aria-label="What Mossy found">
     <p className="ml-eyebrow">Your data, explored</p>
     <h2>What Mossy found</h2>
@@ -19,18 +27,21 @@ export function MossyFindings({graph,onPick,onLens,onBrowse}:{
       <strong> {report.relationships.toLocaleString("en-GB")} source-recorded relationships</strong>.
       These observations come from the records, not an AI guess.</p>
     <div className="ml-findings-recommend">
-      <span className="ml-eyebrow">A good place to begin</span>
-      <button type="button" onClick={()=>onLens(report.recommended)}>Explore {lensName} →</button>
+      <span className="ml-eyebrow">Start here</span>
+      <h3>{lead.heading}</h3>
+      <p>{lead.detail}</p>
+      <button type="button" onClick={()=>explore(lead)}>{lead.label} →</button>
     </div>
-    <h3 className="ml-section-title">Worth exploring</h3>
-    <ul className="ml-findings-list">{report.findings.slice(0,4).map(item=><li key={item.id}>
-      <strong>{item.heading}</strong><p>{item.detail}</p>
-      <button type="button" onClick={()=>{onLens(item.lens);if(item.recordId)onPick(item.recordId);else if(item.id==="records")onBrowse();}}>
-        {item.label} →</button>
-    </li>)}</ul>
+    {remaining.length>0&&<>
+      <h3 className="ml-section-title">Other things to explore</h3>
+      <ul className="ml-findings-list">{remaining.map(item=><li key={item.id}>
+        <strong>{item.heading}</strong><p>{item.detail}</p>
+        <button type="button" onClick={()=>explore(item)}>{item.label} →</button>
+      </li>)}</ul>
+    </>}
     {(report.missingPlaces>0||report.noConnections>0)&&<div className="ml-findings-gaps">
       <strong>What could make this richer?</strong>
-      <p>{report.missingPlaces>0?report.missingPlaces+" records lack source-given coordinates. ":""}
+      <p>{report.missingPlaces>0?report.missingPlaces+" records cannot yet be placed on the map. ":""}
         {report.noConnections>0?report.noConnections+" records have no recorded links. ":""}
         You can add or correct records without altering the original source data.</p>
     </div>}
