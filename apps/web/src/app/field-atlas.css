@@ -1419,3 +1419,5 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-add-adjust-toggle {justify-self:start;padding:6px 0;text-decoration:underline;text-underline-offset:4px;}
 .ml-add-knows {border:1px solid var(--ml-border);border-radius:8px;padding:12px;}
 .ml-add-knows > summary {cursor:pointer;font-size:13px;font-weight:600;}
+
+.ml-start-example-preview{display:block;width:100%;height:auto;aspect-ratio:480/210;object-fit:cover;border-radius:5px;border:1px solid var(--ml-border);background:var(--ml-paper);}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 210" width="480" height="210" role="img">
+<rect width="480" height="210" fill="#F3F1EA"/>
+<path d="M0 42H480M0 84H480M0 126H480M0 168H480M80 0V210M160 0V210M240 0V210M320 0V210M400 0V210" stroke="#DCD9CE" stroke-width=".45"/>
+<rect x="0" y="0" width="480" height="210" fill="#7192AA" fill-opacity=".035"/>
+<path d="M-40 46L490 135M-30 139L485 58M72 -25L100 240M212 -25L252 240M355 -25L382 240" stroke="#C2C9C5" stroke-width="8" opacity=".36"/>
+ <path d="M0 177C120 103 145 199 269 151S403 87 480 105" fill="none" stroke="#A3C1CB" stroke-opacity=".35" stroke-width="23"/><circle cx="45.0" cy="184.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="45.0" cy="184.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="45.0" cy="130.7" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="45.0" cy="130.7" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="45.0" cy="77.3" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="45.0" cy="77.3" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="45.0" cy="24.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="45.0" cy="24.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="240.0" cy="184.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="240.0" cy="184.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="240.0" cy="130.7" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="240.0" cy="130.7" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="240.0" cy="77.3" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="240.0" cy="77.3" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="240.0" cy="24.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="240.0" cy="24.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="435.0" cy="184.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="435.0" cy="184.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="435.0" cy="130.7" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="435.0" cy="130.7" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="435.0" cy="77.3" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="435.0" cy="77.3" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><circle cx="435.0" cy="24.0" r="7.5" fill="#6C7C8C" opacity=".15"/>
+ <circle cx="435.0" cy="24.0" r="4.4" fill="#5D7994" stroke="#F9F7F0" stroke-width="1.3"/><text x="54.0" y="179.0" fill="#414B56" font-size="10" font-family="serif">The Lantern Room</text><text x="54.0" y="19.0" fill="#414B56" font-size="10" font-family="serif">The Foundry</text><text x="249.0" y="72.3" fill="#414B56" font-size="10" font-family="serif">The Moor Street Bar</text><text x="398.0" y="125.7" fill="#414B56" font-size="10" font-family="serif">The Listening Shed</text>
+</svg>

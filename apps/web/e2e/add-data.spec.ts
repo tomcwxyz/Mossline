@@ -90,6 +90,11 @@ test("a large grants file stays readable: grants as links, groupings, ranked fun
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(csv);
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await page.getByRole("button",{name:"Create the map"}).click({timeout:60_000});
+  // Mossy now recognises a grant portfolio and recommends the Funding lens.
+  await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Funding"}))
+    .toHaveAttribute("aria-current","page");
+  // The full-network controls are still available whenever users choose Network.
+  await page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Network"}).click();
   await page.getByRole("button",{name:/Refine results/}).click({timeout:60_000});
   await expect(page.getByRole("combobox",{name:"Grants"})).toHaveValue("links");
   await page.getByRole("button",{name:"Hide filters"}).click();

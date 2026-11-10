@@ -82,6 +82,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
       <div className="ml-start-example-grid">
         {MOSSY_EXAMPLES.map(example=><article key={example.id} className={"ml-start-example is-"+example.colour}>
           <p className="ml-start-eyebrow">{example.tag}</p>
+          <img className="ml-start-example-preview" src={"/examples/"+example.id+".svg"} width="480" height="210" alt="" loading="lazy"/>
           <h3>{example.title}</h3><p>{example.subtitle}</p>
           <strong>{example.focus}</strong>
           <div className="ml-start-example-actions">
