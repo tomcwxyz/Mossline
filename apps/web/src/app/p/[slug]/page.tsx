@@ -16,9 +16,9 @@ export async function generateMetadata({params}:{params:Promise<{slug:string}>})
     if(!p)return {};
     const t=previewText(p.snapshot);
     const base=process.env.MOSSLINE_BASE_URL;
-    return {title:t.title+" — Mossline",description:t.description,
+    return {title:t.title+" — Mossy",description:t.description,
       ...(base?{metadataBase:new URL(base)}:{}),
-      openGraph:{title:t.title,description:t.description,type:"article",siteName:"Mossline"},
+      openGraph:{title:t.title,description:t.description,type:"article",siteName:"Mossy"},
       twitter:{card:"summary_large_image",title:t.title,description:t.description}};
   }catch{return {};}
 }
