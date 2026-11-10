@@ -51,6 +51,9 @@ export default async function ShowcasePage(){
         {unavailable?<p role="status">The community gallery is temporarily unavailable.</p>:
         items.length===0?<p className="ml-showcase-empty">The first community contributions haven't been featured yet. Yours could be one of them.</p>:
         <div className="ml-showcase-community-grid">{items.map(item=><article key={item.slug} className="ml-showcase-item">
+          <a href={"/p/"+item.slug} className="ml-showcase-cover" aria-label={"Explore "+item.title}>
+            <img src={"/p/"+item.slug+"/opengraph-image"} width="1200" height="630" loading="lazy" alt=""/>
+          </a>
           <p className="ml-start-eyebrow">Community contribution</p><h3><a href={"/p/"+item.slug}>{item.title}</a></h3>
           <p>{item.description}</p><small>Shared by {item.credit}</small>
           <a href={"/p/"+item.slug}>Explore this work →</a>

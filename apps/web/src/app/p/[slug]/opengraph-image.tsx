@@ -7,7 +7,7 @@ import {previewText} from "../../../lib/preview-text";
 import {seeded} from "../../../components/atlas/marginalia";
 
 export const runtime="nodejs";
-export const alt="A preview of a map published with Mossline";
+export const alt="A preview of a map published with Mossy";
 export const size={width:1200,height:630};
 export const contentType="image/png";
 
@@ -23,7 +23,7 @@ export default async function Image({params}:{params:Promise<{slug:string}>}){
   const {slug}=await params;
   const [serif,sans,sansMedium]=await Promise.all([font("newsreader-latin-500-normal.woff"),
     font("ibm-plex-sans-latin-400-normal.woff"),font("ibm-plex-sans-latin-500-normal.woff")]);
-  let text={kind:"Mossline",title:"A map of connected work",description:"Published with Mossline.",counts:"",cover:null as null|{src:string}};
+  let text={kind:"Mossy",title:"A map of connected work",description:"Published with Mossy.",counts:"",cover:null as null|{src:string}};
   if(validPublicationId(slug)&&isHostedConfigured()){
     try{const p=await getPublished(slug);if(p)text=previewText(p.snapshot);}catch{/* the plain card below */}
   }
@@ -41,7 +41,7 @@ export default async function Image({params}:{params:Promise<{slug:string}>}){
         <div style={{display:"flex",alignItems:"center",gap:14,fontSize:22,color:C.muted}}>
           <svg width="34" height="34" viewBox="0 0 26 26"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" stroke={C.ink} strokeWidth="1.6" fill="none"/>
             <circle cx="3.5" cy="19" r="2.6" fill="#4F7A3E"/><circle cx="14" cy="8" r="2.6" fill="#2E6E8E"/><circle cx="22.6" cy="6.4" r="2.6" fill="#B07A3A"/></svg>
-          <span style={{fontWeight:500,color:C.ink}}>Mossline</span>{text.counts&&<span>· {text.counts}</span>}
+          <span style={{fontWeight:500,color:C.ink}}>Mossy</span>{text.counts&&<span>· {text.counts}</span>}
         </div>
       </div>
       {text.cover
