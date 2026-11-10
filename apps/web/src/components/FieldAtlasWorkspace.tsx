@@ -646,6 +646,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           </div>
           <button type="button" className="ml-chip ml-chip--browse" aria-expanded={browse} onClick={() => setBrowse(b => !b)}>
             {browse ? "Hide list" : "Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}</button>
+          {!readOnly&&!reading&&selectedId&&<button type="button" className="ml-chip ml-chip--clear"
+            onClick={()=>{setSelectedId(null);setBrowse(false);}}>
+            ← Back to findings</button>}
           {funderName && <p className="ml-filter-note"><span>Showing records reached by {funderName}</span></p>}
         </div>
 
