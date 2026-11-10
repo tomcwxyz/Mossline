@@ -1,0 +1,37 @@
+Label,Type,Description,Tags,Region,Latitude,Longitude,ID
+The Old Library,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.58,village-web-the-old-library
+Millstone Community Garden,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.568,village-web-millstone-community-garden
+Riverside Workshop,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.556,village-web-riverside-workshop
+Bridge Street Hall,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.544,village-web-bridge-street-hall
+Willowbank School,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.58,village-web-willowbank-school
+North Field,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.568,village-web-north-field
+Ashwood Cafe,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.556,village-web-ashwood-cafe
+The Market Square,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.544,village-web-the-market-square
+Community Kitchen,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.58,village-web-community-kitchen
+Valley Mutual Aid,organisation,Fictional organisation working across the valley,Food|Climate,West Alder,,,village-web-valley-mutual-aid
+Alder Food Partnership,organisation,Fictional organisation working across the valley,Wellbeing|Housing,East Alder,,,village-web-alder-food-partnership
+Willowbank Youth Club,organisation,Fictional organisation working across the valley,Young people|Arts,Central Alder,,,village-web-willowbank-youth-club
+Riverside Repairers,organisation,Fictional organisation working across the valley,Climate|Learning,Central Alder,,,village-web-riverside-repairers
+Neighbourhood Nurses,organisation,Fictional organisation working across the valley,Housing|Mobility,West Alder,,,village-web-neighbourhood-nurses
+The Listening Room,organisation,Fictional organisation working across the valley,Arts|Food,East Alder,,,village-web-the-listening-room
+Alder Housing Network,organisation,Fictional organisation working across the valley,Learning|Wellbeing,Central Alder,,,village-web-alder-housing-network
+Green Steps Collective,organisation,Fictional organisation working across the valley,Mobility|Young people,Central Alder,,,village-web-green-steps-collective
+High Street Traders,organisation,Fictional organisation working across the valley,Food|Climate,West Alder,,,village-web-high-street-traders
+The Community Choir,organisation,Fictional organisation working across the valley,Wellbeing|Housing,East Alder,,,village-web-the-community-choir
+Valley Learning Trust,organisation,Fictional organisation working across the valley,Young people|Arts,Central Alder,,,village-web-valley-learning-trust
+Co-operative Transport,organisation,Fictional organisation working across the valley,Climate|Learning,Central Alder,,,village-web-co-operative-transport
+Warm Welcome,project,Fictional project organised by local residents,Wellbeing,,,,village-web-warm-welcome
+Repair and Share,project,Fictional project organised by local residents,Young people,,,,village-web-repair-and-share
+Kitchen Table,project,Fictional project organised by local residents,Climate,,,,village-web-kitchen-table
+Night Bus,project,Fictional project organised by local residents,Housing,,,,village-web-night-bus
+Youth Makers,project,Fictional project organised by local residents,Arts,,,,village-web-youth-makers
+Meet Your Neighbour,project,Fictional project organised by local residents,Learning,,,,village-web-meet-your-neighbour
+Garden Saturdays,project,Fictional project organised by local residents,Mobility,,,,village-web-garden-saturdays
+Access for All,project,Fictional project organised by local residents,Food,,,,village-web-access-for-all
+Winter Pantry,project,Fictional project organised by local residents,Wellbeing,,,,village-web-winter-pantry
+Healthy Streets,project,Fictional project organised by local residents,Young people,,,,village-web-healthy-streets
+Oral Histories,project,Fictional project organised by local residents,Climate,,,,village-web-oral-histories
+Climate Assembly,project,Fictional project organised by local residents,Housing,,,,village-web-climate-assembly
+Community Seed Fund,funder,,Community funding,,,,village-web-community-seed-fund
+Alder Giving Circle,funder,,Community funding,,,,village-web-alder-giving-circle
+Valley Foundation,funder,,Community funding,,,,village-web-valley-foundation

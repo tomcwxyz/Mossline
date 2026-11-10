@@ -2,7 +2,7 @@ import {test} from "node:test";
 import {strict as assert} from "node:assert";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
-import {parseGraphDocument} from "@mossline/graph-core";
+import {parseGraphDocument,readDelimited,recogniseTable} from "@mossline/graph-core";
 import {mossyOverview} from "../src/lib/mossy-findings";
 const examples=["village-web","follow-the-money","after-dark","the-ripple-effect","changing-tides"] as const;
 for(const id of examples)test("fictional "+id+" has valid source-grounded exploratory findings",()=>{
@@ -27,4 +27,16 @@ test("inferences do not increase recorded relationship counts",()=>{
  const result=mossyOverview(graph);
  assert.equal(result.relationships,0);
  assert.equal(result.noConnections,2);
+});
+
+for(const id of examples)test("raw source CSVs for "+id+" are matched by the importer",()=>{
+ const graph=parseGraphDocument(JSON.parse(readFileSync(resolve("apps/web/public/examples",id+".json"),"utf8")));
+ const records=readDelimited(id+"-records.csv",readFileSync(resolve("apps/web/public/examples",id+"-records.csv"),"utf8"));
+ const relationships=readDelimited(id+"-relationships.csv",readFileSync(resolve("apps/web/public/examples",id+"-relationships.csv"),"utf8"));
+ assert.equal(records.rows.length,graph.nodes.length);
+ assert.equal(relationships.rows.length,graph.edges.length);
+ assert.equal(recogniseTable(records)[0]?.shape.id,"kumu-elements");
+ assert.equal(recogniseTable(relationships)[0]?.shape.id,"kumu-connections");
+ const labels=new Set(records.rows.map(row=>row[0]));
+ assert.ok(relationships.rows.every(row=>labels.has(row[0])&&labels.has(row[1])));
 });

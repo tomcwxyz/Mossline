@@ -87,7 +87,12 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
           <strong>{example.focus}</strong>
           <div className="ml-start-example-actions">
             <button type="button" onClick={()=>onOpenExample(example.id)}>Explore example →</button>
-            <a href={example.url} download={example.id+".json"}>Get the data</a>
+            <details className="ml-example-download"><summary>Try the source files</summary>
+              <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
+              <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
+              <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
+              <small>Select both CSV files together in Mossy's Add data screen.</small>
+            </details>
           </div>
         </article>)}
       </div>

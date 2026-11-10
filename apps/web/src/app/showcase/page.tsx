@@ -36,7 +36,12 @@ export default async function ShowcasePage(){
             <h3>{example.title}</h3><p>{example.subtitle}</p>
             <strong>{example.focus}</strong>
             <div className="ml-start-example-actions"><a href={"/?example="+example.id}>Open in Mossy →</a>
-              <a href={example.url} download={example.id+".json"}>Download data</a></div>
+              <details className="ml-example-download"><summary>Try the source files</summary>
+                <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
+                <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
+                <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
+                <small>Download both CSV files and import them together.</small>
+              </details></div>
           </article>)}
         </div>
       </section>

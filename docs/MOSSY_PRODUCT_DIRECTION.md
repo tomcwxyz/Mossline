@@ -65,3 +65,20 @@ Pilot quality signals:
 ## Not now
 
 A fully autonomous agent importing unseen private datasets, automatic external enrichment without consent, new graph engines, simultaneous rewrites of the database and auth, semantic guesses presented as recorded facts, and further independent studios.
+
+## Fictional example library and community Showcase
+
+Five fully fictional, source-attributed graph examples live at `apps/web/public/examples/*.json`:
+The Village Web (relationships), Follow the Money (funding), After Dark (geography),
+The Ripple Effect (signed systems), Changing Tides (timeline).
+Each also has a lightweight SVG visual preview and **two plain CSV source files**
+(`*-records.csv`, `*-relationships.csv`) designed for the unified importer.
+Those CSVs intentionally contain the underlying rows; they are not pre-built Mossy graph documents.
+For an import exercise, download both and select them together. A JSON file opens the finished map.
+
+The **Showcase** page at `/showcase` lists intentionally submitted,
+operator-reviewed publications. Published maps are not automatically featured.
+Submitting requires an existing publication under the author's account and a separate
+consent choice. Rejecting and unpublishing both remove public listing eligibility.
+This is not the same thing as opening the app to unauthenticated pilot users:
+Vercel access protection and host configuration require separate release checks.

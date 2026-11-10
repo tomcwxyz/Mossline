@@ -1421,3 +1421,9 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-add-knows > summary {cursor:pointer;font-size:13px;font-weight:600;}
 
 .ml-start-example-preview{display:block;width:100%;height:auto;aspect-ratio:480/210;object-fit:cover;border-radius:5px;border:1px solid var(--ml-border);background:var(--ml-paper);}
+
+.ml-example-download{position:relative;display:grid;gap:4px;}
+.ml-example-download summary{cursor:pointer;color:var(--ml-link);font-size:12px;text-decoration:underline;text-underline-offset:3px;list-style:revert;}
+.ml-example-download[open]{flex-basis:100%;padding:8px;background:var(--ml-paper);border:1px solid var(--ml-border);border-radius:6px;}
+.ml-example-download[open] > a{display:block;padding:3px 0;font-size:12px;}
+.ml-example-download small{display:block;color:var(--ml-muted);line-height:1.4;font-size:11px;}
