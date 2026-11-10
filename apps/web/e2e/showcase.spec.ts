@@ -54,3 +54,19 @@ test("Geography has a real map with a substantial number of plotted places",asyn
     .toHaveAttribute("aria-current","page");
   await expect(page.locator(".ml-map-pill")).toContainText("122 plotted",{timeout:20_000});
 });
+
+test("Geography remains a connected map, with recorded links shown by default",async({page})=>{
+  await page.goto("/?example=after-dark");
+  await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}))
+    .toHaveAttribute("aria-current","page");
+  const card=page.getByRole("region",{name:"Connections on the map"});
+  await expect(card).toContainText("146 recorded mapped links",{timeout:30_000});
+  const controls=page.getByRole("group",{name:"Show connections"});
+  const all=controls.getByRole("button",{name:"All"});
+  const off=controls.getByRole("button",{name:"Off"});
+  await expect(all).toHaveAttribute("aria-pressed","true");
+  await off.click();
+  await expect(off).toHaveAttribute("aria-pressed","true");
+  await all.click();
+  await expect(all).toHaveAttribute("aria-pressed","true");
+});

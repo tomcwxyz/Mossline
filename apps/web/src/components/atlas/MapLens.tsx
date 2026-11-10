@@ -197,7 +197,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     }
     // Always include all direct plotted neighbours when somebody selects a record,
     // even if the overview is capped or currently in hexagon mode.
-    if(selectedId&&connectionsMode!=="off"){
+    if(selectedId&&selectedNode?.type!=="funder"&&connectionsMode!=="off"){
       for(const link of spatial.links) {
         if(link.source!==selectedId&&link.target!==selectedId)continue;
         ego.push({type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
@@ -205,7 +205,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       }
     }
     let hiddenArcs = 0;
-    if (selectedNode) {
+    if (selectedNode&&connectionsMode!=="off") {
       const origin = coordsOf(selectedNode.id);
       if (selectedNode.type === "funder") {
         const max = Math.max(1, ...myGrants.map(f => f.amount ?? 0));
@@ -215,7 +215,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           const w = f.amount ? 0.7 + 3 * Math.sqrt(f.amount / max) : 1;
           arcs.push({ type: "Feature", geometry: { type: "LineString", coordinates: arc(origin, to) }, properties: { w } });
         }
-      }   }
+      }
+    }
     return { records, arcs: collection(arcs), ego: collection(ego), links:collection(mappedLinks), hiddenArcs };
   }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial, displayed, connectionsMode, mode]);
 
