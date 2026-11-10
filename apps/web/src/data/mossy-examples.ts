@@ -9,7 +9,7 @@ export const MOSSY_EXAMPLES = [
     "focus": "Where are the cultural hotspots — and who connects them?",
     "lens": "map",
     "colour": "cobalt",
-    "facts": "122 mapped venues · 16 cities",
+    "facts": "122 mapped venues · 146 recorded links",
     "url": "/examples/after-dark.json"
   },
   {
