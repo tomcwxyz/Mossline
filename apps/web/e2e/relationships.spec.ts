@@ -6,7 +6,7 @@ test("a systems map shows direction, signs, feedback loops and routes that follo
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await page.getByRole("button",{name:/Check what this adds/}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
   await page.getByRole("button",{name:"Create the map"}).click();
   const loops=page.getByRole("complementary",{name:"Feedback loops"});
   await expect(loops).toContainText("Feedback loops · 4");
