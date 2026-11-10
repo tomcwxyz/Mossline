@@ -14,6 +14,13 @@ for(const id of examples)test("fictional "+id+" has valid source-grounded explor
   assert.equal(report.relationships,graph.edges.filter(e=>!e.inferred).length);
   assert.ok(graph.nodes.every(n=>n.origin?.fileName?.includes("fictional")));
   assert.ok(graph.edges.every(e=>e.origin?.fileName?.includes("fictional")));
+  if(id==="after-dark"){
+    // A geographical discovery must contain connected places, not merely pins.
+    assert.ok(report.mappedConnections>=100);
+    const placeFinding=report.findings.find(f=>f.id==="places");
+    assert.ok(placeFinding);
+    assert.match(placeFinding.detail,/recorded relationships connect mapped places/);
+  }
 });
 test("the 5 examples recommend meaningfully different lenses",()=>{
  const lenses=examples.map(id=>mossyOverview(parseGraphDocument(
