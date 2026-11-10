@@ -50,7 +50,7 @@ test("stories travel with a shared map: moved in, written together, clashes keep
   await sam.goto("/");
   await sam.getByRole("button",{name:/Add your data/}).click();
   await sam.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await sam.getByRole("button",{name:/Check what this adds/}).click();
+  await expect(sam.getByRole("heading",{name:"Check before adding"})).toBeVisible();
   await sam.getByRole("button",{name:"Create the map"}).click();
   await sam.locator(".ml-toast button").click();
   await openStories(sam);
