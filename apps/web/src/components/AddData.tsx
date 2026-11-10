@@ -112,7 +112,11 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       setPlans(next); setReport(null); setMerge(new Set()); setTitle(proposedTitle);
       setShowTechnical(m.tables.some(t=>!t.matches[0]?.builtIn||(t.matches[0]?.missing.length??0)>0) ||
         (m.tables.length>0 && !Object.values(next).some(p=>p.use==="records") && !haveRecords));
-      if (!m.tables.length && !m.maps.length) return;
+      if (!m.tables.length && !m.maps.length) {
+        setError(m.problems.length?m.problems.map(p=>p.file+": "+p.message).join(" "):
+          "Mossy couldn't find any tables or records in these files. Try a CSV, Excel workbook or Mossy JSON map.");
+        return;
+      }
       // The proposal is still reversible. The worker provides a full evidence and
       // omissions report; only the subsequent Create/Add action stores anything.
       setPhase("plan");
