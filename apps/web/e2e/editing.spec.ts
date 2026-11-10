@@ -5,7 +5,7 @@ test("a map can be built and changed in place, with receipts, undo and a Kumu ex
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await page.getByRole("button",{name:/Check what this adds/}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
   await page.getByRole("button",{name:"Create the map"}).click();
   await page.locator(".ml-toast button").click();
   await page.getByRole("button",{name:"Edit",exact:true}).click();
