@@ -604,13 +604,16 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
+            {publishing && <>
+              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>
+                Publish a shareable copy…</button>
+              <p className="ml-menu-note">Choose exactly what to publish. Anyone with the resulting link can explore that copy. You&apos;ll need an account.</p>
+              <hr/>
+            </>}
             <button type="button" onClick={() => { closeShare(); void navigator.clipboard?.writeText(window.location.href).then(() =>
-              setNotice("View link copied. The underlying local dataset does not travel with the link."))
-              .catch(() => setNotice("Copy the address from your browser.")); }}>Copy view link</button>
-            <p className="ml-menu-note">Opens this view for someone with the same data in their browser.</p>
-            {publishing && <><hr/>
-              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>Publish online…</button>
-              <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
+              setNotice("View address copied. It does not share your data; the recipient must already have the same dataset in their browser."))
+              .catch(() => setNotice("Copy the address from your browser.")); }}>Copy local view address</button>
+            <p className="ml-menu-note">Only works for someone who already has the same data on their device. This does not publish or transfer your dataset.</p>
           </div>
         </details>}
       </div>
