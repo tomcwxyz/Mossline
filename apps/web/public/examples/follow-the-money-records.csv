@@ -1,28 +1,91 @@
 Label,Type,Description,Tags,Region,Latitude,Longitude,ID
-Northbank Trust,funder,,Grant maker,,,,follow-the-money-northbank-trust
-Open Fields Fund,funder,,Grant maker,,,,follow-the-money-open-fields-fund
-Civic Futures Foundation,funder,,Grant maker,,,,follow-the-money-civic-futures-foundation
-Bright Steps Fund,funder,,Grant maker,,,,follow-the-money-bright-steps-fund
-Meridian Community Fund,funder,,Grant maker,,,,follow-the-money-meridian-community-fund
-Cornerstone Collective,organisation,Invented grant recipient,Food,Fictional Westborough,,,follow-the-money-cornerstone-collective
-Lantern Collective,organisation,Invented grant recipient,Young people,Fictional Eastbank,,,follow-the-money-lantern-collective
-Bridge Collective,organisation,Invented grant recipient,Housing,Fictional Northfields,,,follow-the-money-bridge-collective
-Spring Collective,organisation,Invented grant recipient,Climate,Fictional Southmead,,,follow-the-money-spring-collective
-Anchor Collective,organisation,Invented grant recipient,Culture,Fictional Westborough,,,follow-the-money-anchor-collective
-Harbour Collective,organisation,Invented grant recipient,Wellbeing,Fictional Eastbank,,,follow-the-money-harbour-collective
-Common Collective,organisation,Invented grant recipient,Skills,Fictional Northfields,,,follow-the-money-common-collective
-Roots Collective,organisation,Invented grant recipient,Transport,Fictional Southmead,,,follow-the-money-roots-collective
-Pathway Collective,organisation,Invented grant recipient,Food,Fictional Westborough,,,follow-the-money-pathway-collective
-Crossroads Collective,organisation,Invented grant recipient,Young people,Fictional Eastbank,,,follow-the-money-crossroads-collective
-Meadow Collective,organisation,Invented grant recipient,Housing,Fictional Northfields,,,follow-the-money-meadow-collective
-Wildflower Collective,organisation,Invented grant recipient,Climate,Fictional Southmead,,,follow-the-money-wildflower-collective
-Oak Collective,organisation,Invented grant recipient,Culture,Fictional Westborough,,,follow-the-money-oak-collective
-Hearth Collective,organisation,Invented grant recipient,Wellbeing,Fictional Eastbank,,,follow-the-money-hearth-collective
-Lighthouse Collective,organisation,Invented grant recipient,Skills,Fictional Northfields,,,follow-the-money-lighthouse-collective
-Mosaic Collective,organisation,Invented grant recipient,Transport,Fictional Southmead,,,follow-the-money-mosaic-collective
-Open Door Collective,organisation,Invented grant recipient,Food,Fictional Westborough,,,follow-the-money-open-door-collective
-Compass Collective,organisation,Invented grant recipient,Young people,Fictional Eastbank,,,follow-the-money-compass-collective
-Circle Collective,organisation,Invented grant recipient,Housing,Fictional Northfields,,,follow-the-money-circle-collective
-Future Collective,organisation,Invented grant recipient,Climate,Fictional Southmead,,,follow-the-money-future-collective
-Gathering Collective,organisation,Invented grant recipient,Culture,Fictional Westborough,,,follow-the-money-gathering-collective
-North Star Collective,organisation,Invented grant recipient,Wellbeing,Fictional Eastbank,,,follow-the-money-north-star-collective
+Northbank Trust,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-northbank-trust
+Open Fields Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-open-fields-fund
+Civic Futures Foundation,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-civic-futures-foundation
+Bright Steps Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-bright-steps-fund
+Meridian Community Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-meridian-community-fund
+New Routes Foundation,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-new-routes-foundation
+Hearth Trust,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-hearth-trust
+Coastal Renewal Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-coastal-renewal-fund
+Shared Prosperity Trust,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-shared-prosperity-trust
+Tomorrow Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-tomorrow-fund
+Elm Grove Foundation,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-elm-grove-foundation
+People First Fund,funder,Fictional funding organisation,Grant-maker,,,,follow-the-money-people-first-fund
+North Collective — Westborough,organisation,Fictional recipient delivering food work,Food|Health,Westborough (invented),,,follow-the-money-north-collective-westborough
+Open Collective — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-open-collective-northfields
+Common Collective — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-common-collective-eastbank
+River Collective — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-river-collective-southmead
+New Collective — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Young people,Harbour County (invented),,,follow-the-money-new-collective-harbour-county
+Bright Collective — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-bright-collective-high-pennine
+Shared Collective — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-shared-collective-rivertown
+Silver Collective — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-silver-collective-old-coast
+Neighbour Collective — Westborough,organisation,Fictional recipient delivering food work,Food|Energy,Westborough (invented),,,follow-the-money-neighbour-collective-westborough
+Willow Collective — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-willow-collective-northfields
+Harbour Collective — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-harbour-collective-eastbank
+Bridge Collective — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-bridge-collective-southmead
+Lantern Collective — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Nature,Harbour County (invented),,,follow-the-money-lantern-collective-harbour-county
+Moss Collective — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-moss-collective-high-pennine
+Highland Collective — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-highland-collective-rivertown
+Alder Collective — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-alder-collective-old-coast
+Foundry Collective — Westborough,organisation,Fictional recipient delivering food work,Food|Culture,Westborough (invented),,,follow-the-money-foundry-collective-westborough
+Mill Collective — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-mill-collective-northfields
+Meadow Collective — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-meadow-collective-eastbank
+West Collective — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-west-collective-southmead
+East Collective — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Food,Harbour County (invented),,,follow-the-money-east-collective-harbour-county
+Cedar Collective — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-cedar-collective-high-pennine
+Stone Collective — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-stone-collective-rivertown
+Spring Collective — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-spring-collective-old-coast
+Elm Collective — Westborough,organisation,Fictional recipient delivering food work,Food|Health,Westborough (invented),,,follow-the-money-elm-collective-westborough
+Fox Collective — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-fox-collective-northfields
+Hearth Collective — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-hearth-collective-eastbank
+Green Collective — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-green-collective-southmead
+Blue Collective — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Young people,Harbour County (invented),,,follow-the-money-blue-collective-harbour-county
+Dawn Collective — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-dawn-collective-high-pennine
+Wild Collective — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-wild-collective-rivertown
+Sun Collective — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-sun-collective-old-coast
+Field Collective — Westborough,organisation,Fictional recipient delivering food work,Food|Energy,Westborough (invented),,,follow-the-money-field-collective-westborough
+Compass Collective — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-compass-collective-northfields
+Oak Collective — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-oak-collective-eastbank
+Hope Collective — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-hope-collective-southmead
+Coast Collective — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Nature,Harbour County (invented),,,follow-the-money-coast-collective-harbour-county
+Fell Collective — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-fell-collective-high-pennine
+Summer Collective — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-summer-collective-rivertown
+Winter Collective — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-winter-collective-old-coast
+North Partnership — Westborough,organisation,Fictional recipient delivering food work,Food|Culture,Westborough (invented),,,follow-the-money-north-partnership-westborough
+Open Partnership — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-open-partnership-northfields
+Common Partnership — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-common-partnership-eastbank
+River Partnership — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-river-partnership-southmead
+New Partnership — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Food,Harbour County (invented),,,follow-the-money-new-partnership-harbour-county
+Bright Partnership — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-bright-partnership-high-pennine
+Shared Partnership — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-shared-partnership-rivertown
+Silver Partnership — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-silver-partnership-old-coast
+Neighbour Partnership — Westborough,organisation,Fictional recipient delivering food work,Food|Health,Westborough (invented),,,follow-the-money-neighbour-partnership-westborough
+Willow Partnership — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-willow-partnership-northfields
+Harbour Partnership — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-harbour-partnership-eastbank
+Bridge Partnership — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-bridge-partnership-southmead
+Lantern Partnership — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Young people,Harbour County (invented),,,follow-the-money-lantern-partnership-harbour-county
+Moss Partnership — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-moss-partnership-high-pennine
+Highland Partnership — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-highland-partnership-rivertown
+Alder Partnership — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-alder-partnership-old-coast
+Foundry Partnership — Westborough,organisation,Fictional recipient delivering food work,Food|Energy,Westborough (invented),,,follow-the-money-foundry-partnership-westborough
+Mill Partnership — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-mill-partnership-northfields
+Meadow Partnership — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-meadow-partnership-eastbank
+West Partnership — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-west-partnership-southmead
+East Partnership — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Nature,Harbour County (invented),,,follow-the-money-east-partnership-harbour-county
+Cedar Partnership — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-cedar-partnership-high-pennine
+Stone Partnership — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-stone-partnership-rivertown
+Spring Partnership — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-spring-partnership-old-coast
+Elm Partnership — Westborough,organisation,Fictional recipient delivering food work,Food|Culture,Westborough (invented),,,follow-the-money-elm-partnership-westborough
+Fox Partnership — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-fox-partnership-northfields
+Hearth Partnership — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-hearth-partnership-eastbank
+Green Partnership — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-green-partnership-southmead
+Blue Partnership — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Food,Harbour County (invented),,,follow-the-money-blue-partnership-harbour-county
+Dawn Partnership — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-dawn-partnership-high-pennine
+Wild Partnership — Rivertown,organisation,Fictional recipient delivering nature work,Nature,Rivertown (invented),,,follow-the-money-wild-partnership-rivertown
+Sun Partnership — Old Coast,organisation,Fictional recipient delivering young people work,Young people,Old Coast (invented),,,follow-the-money-sun-partnership-old-coast
+Field Partnership — Westborough,organisation,Fictional recipient delivering food work,Food|Health,Westborough (invented),,,follow-the-money-field-partnership-westborough
+Compass Partnership — Northfields,organisation,Fictional recipient delivering housing work,Housing,Northfields (invented),,,follow-the-money-compass-partnership-northfields
+Oak Partnership — Eastbank,organisation,Fictional recipient delivering health work,Health,Eastbank (invented),,,follow-the-money-oak-partnership-eastbank
+Hope Partnership — Southmead,organisation,Fictional recipient delivering culture work,Culture,Southmead (invented),,,follow-the-money-hope-partnership-southmead
+Coast Partnership — Harbour County,organisation,Fictional recipient delivering energy work,Energy|Young people,Harbour County (invented),,,follow-the-money-coast-partnership-harbour-county
+Fell Partnership — High Pennine,organisation,Fictional recipient delivering transport work,Transport,High Pennine (invented),,,follow-the-money-fell-partnership-high-pennine

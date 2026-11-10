@@ -1,85 +1,521 @@
 From,To,Type,Direction,Polarity,Date,Amount Awarded,Currency,Description
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2020-01-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2021-02-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2022-03-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Cornerstone Collective,awarded funding,directed,,2023-04-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Roots Collective,awarded funding,directed,,2024-05-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2025-06-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2026-07-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2020-08-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2021-09-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2022-10-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2023-11-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Lighthouse Collective,awarded funding,directed,,2024-12-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Cornerstone Collective,awarded funding,directed,,2025-01-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2026-02-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2020-03-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2021-04-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2022-05-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2023-06-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2024-07-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Roots Collective,awarded funding,directed,,2025-08-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Lighthouse Collective,awarded funding,directed,,2026-09-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2020-10-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2021-11-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2022-12-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2023-01-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2024-02-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2025-03-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Cornerstone Collective,awarded funding,directed,,2026-04-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Roots Collective,awarded funding,directed,,2020-05-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2021-06-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2022-07-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2023-08-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2024-09-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2025-10-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2026-11-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Lighthouse Collective,awarded funding,directed,,2020-12-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Cornerstone Collective,awarded funding,directed,,2021-01-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2022-02-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2023-03-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2024-04-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2025-05-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2026-06-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2020-07-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Roots Collective,awarded funding,directed,,2021-08-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Lighthouse Collective,awarded funding,directed,,2022-09-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2023-10-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2024-11-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2025-12-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2026-01-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2020-02-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2021-03-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Cornerstone Collective,awarded funding,directed,,2022-04-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Roots Collective,awarded funding,directed,,2023-05-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2024-06-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2025-07-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2026-08-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2020-09-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2021-10-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2022-11-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Lighthouse Collective,awarded funding,directed,,2023-12-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Cornerstone Collective,awarded funding,directed,,2024-01-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2025-02-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2026-03-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2020-04-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Roots Collective,awarded funding,directed,,2021-05-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Lighthouse Collective,awarded funding,directed,,2022-06-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Cornerstone Collective,awarded funding,directed,,2023-07-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Roots Collective,awarded funding,directed,,2024-08-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Lighthouse Collective,awarded funding,directed,,2025-09-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2026-10-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2020-11-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2021-12-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Cornerstone Collective,awarded funding,directed,,2022-01-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Roots Collective,awarded funding,directed,,2023-02-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Lighthouse Collective,awarded funding,directed,,2024-03-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Cornerstone Collective,awarded funding,directed,,2025-04-15,18000,GBP,Invented grant award; a shared funder does not establish collaboration
-Civic Futures Foundation,Roots Collective,awarded funding,directed,,2026-05-15,12000,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2020-06-15,7500,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2021-07-15,5000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2022-08-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Northbank Trust,Lighthouse Collective,awarded funding,directed,,2023-09-15,2400,GBP,Invented grant award; a shared funder does not establish collaboration
-Bright Steps Fund,Cornerstone Collective,awarded funding,directed,,2024-10-15,95000,GBP,Invented grant award; a shared funder does not establish collaboration
-Open Fields Fund,Roots Collective,awarded funding,directed,,2025-11-15,60000,GBP,Invented grant award; a shared funder does not establish collaboration
-Meridian Community Fund,Lighthouse Collective,awarded funding,directed,,2026-12-15,36000,GBP,Invented grant award; a shared funder does not establish collaboration
+Northbank Trust,Open Collective — Northfields,awarded funding,directed,,2018-01-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Mill Partnership — Northfields,awarded funding,directed,,2019-06-07,32000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,North Collective — Westborough,awarded funding,directed,,2020-11-10,4800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Bridge Partnership — Southmead,awarded funding,directed,,2021-04-13,62000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Lantern Collective — Harbour County,awarded funding,directed,,2022-09-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Bright Partnership — High Pennine,awarded funding,directed,,2023-02-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,East Collective — Harbour County,awarded funding,directed,,2024-07-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Spring Partnership — Old Coast,awarded funding,directed,,2025-12-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Elm Collective — Westborough,awarded funding,directed,,2026-05-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Compass Collective — Northfields,awarded funding,directed,,2018-10-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Common Collective — Eastbank,awarded funding,directed,,2019-03-10,125000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,River Collective — Southmead,awarded funding,directed,,2020-08-13,23000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,New Partnership — Harbour County,awarded funding,directed,,2021-01-16,2800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Cedar Collective — High Pennine,awarded funding,directed,,2022-06-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Stone Collective — Rivertown,awarded funding,directed,,2023-11-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Lantern Collective — Harbour County,awarded funding,directed,,2024-04-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Foundry Partnership — Westborough,awarded funding,directed,,2025-09-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Open Collective — Northfields,awarded funding,directed,,2026-02-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-07-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Hope Collective — Southmead,awarded funding,directed,,2019-12-13,7500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Coast Partnership — Harbour County,awarded funding,directed,,2020-05-16,90000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Fell Partnership — High Pennine,awarded funding,directed,,2021-10-19,17500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Shared Collective — Rivertown,awarded funding,directed,,2022-03-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Silver Partnership — Old Coast,awarded funding,directed,,2023-08-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Neighbour Collective — Westborough,awarded funding,directed,,2024-01-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Mill Partnership — Northfields,awarded funding,directed,,2025-06-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Harbour Collective — Eastbank,awarded funding,directed,,2026-11-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Mill Collective — Northfields,awarded funding,directed,,2018-04-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Blue Collective — Harbour County,awarded funding,directed,,2019-09-16,32000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Moss Partnership — High Pennine,awarded funding,directed,,2020-02-19,4800,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,East Partnership — Harbour County,awarded funding,directed,,2021-07-22,62000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Coast Partnership — Harbour County,awarded funding,directed,,2022-12-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,North Partnership — Westborough,awarded funding,directed,,2023-05-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,New Collective — Harbour County,awarded funding,directed,,2024-10-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Meadow Collective — Eastbank,awarded funding,directed,,2025-03-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Bridge Collective — Southmead,awarded funding,directed,,2026-08-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-01-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Dawn Collective — High Pennine,awarded funding,directed,,2019-06-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Summer Collective — Rivertown,awarded funding,directed,,2020-11-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Blue Collective — Harbour County,awarded funding,directed,,2021-04-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Blue Partnership — Harbour County,awarded funding,directed,,2022-09-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Willow Collective — Northfields,awarded funding,directed,,2023-02-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Coast Partnership — Harbour County,awarded funding,directed,,2024-07-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,North Partnership — Westborough,awarded funding,directed,,2025-12-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,New Collective — Harbour County,awarded funding,directed,,2026-05-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Open Collective — Northfields,awarded funding,directed,,2018-10-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Stone Collective — Rivertown,awarded funding,directed,,2019-03-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Alder Partnership — Old Coast,awarded funding,directed,,2020-08-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,East Collective — Harbour County,awarded funding,directed,,2021-01-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Fox Partnership — Northfields,awarded funding,directed,,2022-06-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Hearth Collective — Eastbank,awarded funding,directed,,2023-11-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Blue Partnership — Harbour County,awarded funding,directed,,2024-04-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Field Collective — Westborough,awarded funding,directed,,2025-09-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Moss Partnership — High Pennine,awarded funding,directed,,2026-02-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Compass Collective — Northfields,awarded funding,directed,,2018-07-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Silver Collective — Old Coast,awarded funding,directed,,2019-12-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Neighbour Partnership — Westborough,awarded funding,directed,,2020-05-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Open Partnership — Northfields,awarded funding,directed,,2021-10-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Oak Collective — Eastbank,awarded funding,directed,,2022-03-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,West Collective — Southmead,awarded funding,directed,,2023-08-13,125000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,East Partnership — Harbour County,awarded funding,directed,,2024-01-16,23000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Dawn Collective — High Pennine,awarded funding,directed,,2025-06-19,2800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Highland Partnership — Rivertown,awarded funding,directed,,2026-11-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Fox Partnership — Northfields,awarded funding,directed,,2018-04-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,North Collective — Westborough,awarded funding,directed,,2019-09-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Mill Collective — Northfields,awarded funding,directed,,2020-02-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Common Partnership — Eastbank,awarded funding,directed,,2021-07-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Bridge Partnership — Southmead,awarded funding,directed,,2022-12-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Lantern Collective — Harbour County,awarded funding,directed,,2023-05-16,7500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Foundry Partnership — Westborough,awarded funding,directed,,2024-10-19,90000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Coast Collective — Harbour County,awarded funding,directed,,2025-03-22,17500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Spring Partnership — Old Coast,awarded funding,directed,,2026-08-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Mill Collective — Northfields,awarded funding,directed,,2018-01-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Compass Partnership — Northfields,awarded funding,directed,,2019-06-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Neighbour Partnership — Westborough,awarded funding,directed,,2020-11-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,River Collective — Southmead,awarded funding,directed,,2021-04-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,New Partnership — Harbour County,awarded funding,directed,,2022-09-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Cedar Partnership — High Pennine,awarded funding,directed,,2023-02-19,32000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Lantern Partnership — Harbour County,awarded funding,directed,,2024-07-22,4800,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Alder Collective — Old Coast,awarded funding,directed,,2025-12-25,62000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Foundry Partnership — Westborough,awarded funding,directed,,2026-05-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-10-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Harbour Partnership — Eastbank,awarded funding,directed,,2019-03-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Hope Collective — Southmead,awarded funding,directed,,2020-08-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Coast Partnership — Harbour County,awarded funding,directed,,2021-01-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Fell Collective — High Pennine,awarded funding,directed,,2022-06-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Wild Partnership — Rivertown,awarded funding,directed,,2023-11-22,125000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,New Partnership — Harbour County,awarded funding,directed,,2024-04-25,23000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Neighbour Collective — Westborough,awarded funding,directed,,2025-09-04,2800,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Mill Collective — Northfields,awarded funding,directed,,2026-02-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Open Collective — Northfields,awarded funding,directed,,2018-07-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Elm Partnership — Westborough,awarded funding,directed,,2019-12-13,125000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Blue Collective — Harbour County,awarded funding,directed,,2020-05-16,23000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Moss Collective — High Pennine,awarded funding,directed,,2021-10-19,2800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Highland Partnership — Rivertown,awarded funding,directed,,2022-03-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Coast Partnership — Harbour County,awarded funding,directed,,2023-08-25,7500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Coast Collective — Harbour County,awarded funding,directed,,2024-01-04,90000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Compass Partnership — Northfields,awarded funding,directed,,2025-06-07,17500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Meadow Partnership — Eastbank,awarded funding,directed,,2026-11-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Compass Collective — Northfields,awarded funding,directed,,2018-04-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Foundry Partnership — Westborough,awarded funding,directed,,2019-09-16,7500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Dawn Partnership — High Pennine,awarded funding,directed,,2020-02-19,90000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Coast Collective — Harbour County,awarded funding,directed,,2021-07-22,17500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Blue Collective — Harbour County,awarded funding,directed,,2022-12-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Blue Partnership — Harbour County,awarded funding,directed,,2023-05-04,32000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Field Collective — Westborough,awarded funding,directed,,2024-10-07,4800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Hearth Partnership — Eastbank,awarded funding,directed,,2025-03-10,62000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,North Partnership — Westborough,awarded funding,directed,,2026-08-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-01-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Bright Partnership — High Pennine,awarded funding,directed,,2019-06-19,32000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Highland Collective — Rivertown,awarded funding,directed,,2020-11-22,4800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Alder Partnership — Old Coast,awarded funding,directed,,2021-04-25,62000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,East Collective — Harbour County,awarded funding,directed,,2022-09-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Fox Collective — Northfields,awarded funding,directed,,2023-02-07,125000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Blue Collective — Harbour County,awarded funding,directed,,2024-07-10,23000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Green Partnership — Southmead,awarded funding,directed,,2025-12-13,2800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Field Collective — Westborough,awarded funding,directed,,2026-05-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Mill Collective — Northfields,awarded funding,directed,,2018-10-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Wild Partnership — Rivertown,awarded funding,directed,,2019-03-22,125000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Silver Collective — Old Coast,awarded funding,directed,,2020-08-25,23000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Neighbour Partnership — Westborough,awarded funding,directed,,2021-01-04,2800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Open Collective — Northfields,awarded funding,directed,,2022-06-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Oak Partnership — Eastbank,awarded funding,directed,,2023-11-10,7500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,East Collective — Harbour County,awarded funding,directed,,2024-04-13,90000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,East Partnership — Harbour County,awarded funding,directed,,2025-09-16,17500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Dawn Partnership — High Pennine,awarded funding,directed,,2026-02-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-07-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Winter Collective — Old Coast,awarded funding,directed,,2019-12-25,7500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,North Collective — Westborough,awarded funding,directed,,2020-05-04,90000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Mill Partnership — Northfields,awarded funding,directed,,2021-10-07,17500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,North Collective — Westborough,awarded funding,directed,,2022-03-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Bridge Partnership — Southmead,awarded funding,directed,,2023-08-13,32000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Lantern Collective — Harbour County,awarded funding,directed,,2024-01-16,4800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Bright Partnership — High Pennine,awarded funding,directed,,2025-06-19,62000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Wild Collective — Rivertown,awarded funding,directed,,2026-11-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Open Collective — Northfields,awarded funding,directed,,2018-04-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Field Collective — Westborough,awarded funding,directed,,2019-09-04,32000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Compass Collective — Northfields,awarded funding,directed,,2020-02-07,4800,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Common Collective — Eastbank,awarded funding,directed,,2021-07-10,62000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,River Collective — Southmead,awarded funding,directed,,2022-12-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,New Partnership — Harbour County,awarded funding,directed,,2023-05-16,125000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Neighbour Collective — Westborough,awarded funding,directed,,2024-10-19,23000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Lantern Collective — Harbour County,awarded funding,directed,,2025-03-22,2800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Alder Collective — Old Coast,awarded funding,directed,,2026-08-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Compass Collective — Northfields,awarded funding,directed,,2018-01-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Willow Collective — Northfields,awarded funding,directed,,2019-06-07,125000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Harbour Collective — Eastbank,awarded funding,directed,,2020-11-10,23000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Hope Collective — Southmead,awarded funding,directed,,2021-04-13,2800,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Coast Partnership — Harbour County,awarded funding,directed,,2022-09-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Fell Partnership — High Pennine,awarded funding,directed,,2023-02-19,7500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,New Collective — Harbour County,awarded funding,directed,,2024-07-22,90000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Silver Partnership — Old Coast,awarded funding,directed,,2025-12-25,17500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Neighbour Collective — Westborough,awarded funding,directed,,2026-05-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-10-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Meadow Collective — Eastbank,awarded funding,directed,,2019-03-10,7500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Elm Partnership — Westborough,awarded funding,directed,,2020-08-13,90000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Blue Collective — Harbour County,awarded funding,directed,,2021-01-16,17500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Moss Partnership — High Pennine,awarded funding,directed,,2022-06-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Shared Partnership — Rivertown,awarded funding,directed,,2023-11-22,32000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Coast Partnership — Harbour County,awarded funding,directed,,2024-04-25,4800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,North Partnership — Westborough,awarded funding,directed,,2025-09-04,62000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Compass Collective — Northfields,awarded funding,directed,,2026-02-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Mill Collective — Northfields,awarded funding,directed,,2018-07-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Foundry Collective — Westborough,awarded funding,directed,,2019-12-13,32000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Foundry Partnership — Westborough,awarded funding,directed,,2020-05-16,4800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Dawn Collective — High Pennine,awarded funding,directed,,2021-10-19,62000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Wild Collective — Rivertown,awarded funding,directed,,2022-03-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Blue Collective — Harbour County,awarded funding,directed,,2023-08-25,125000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Blue Partnership — Harbour County,awarded funding,directed,,2024-01-04,23000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Willow Collective — Northfields,awarded funding,directed,,2025-06-07,2800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Elm Collective — Westborough,awarded funding,directed,,2026-11-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Willow Partnership — Northfields,awarded funding,directed,,2018-04-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Neighbour Collective — Westborough,awarded funding,directed,,2019-09-16,125000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Bright Collective — High Pennine,awarded funding,directed,,2020-02-19,23000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Lantern Collective — Harbour County,awarded funding,directed,,2021-07-22,2800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Alder Partnership — Old Coast,awarded funding,directed,,2022-12-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,East Collective — Harbour County,awarded funding,directed,,2023-05-04,7500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,East Partnership — Harbour County,awarded funding,directed,,2024-10-07,90000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Hearth Collective — Eastbank,awarded funding,directed,,2025-03-10,17500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Green Partnership — Southmead,awarded funding,directed,,2026-08-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Open Collective — Northfields,awarded funding,directed,,2018-01-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Cedar Partnership — High Pennine,awarded funding,directed,,2019-06-19,7500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Stone Partnership — Rivertown,awarded funding,directed,,2020-11-22,90000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Silver Collective — Old Coast,awarded funding,directed,,2021-04-25,17500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Neighbour Partnership — Westborough,awarded funding,directed,,2022-09-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Open Partnership — Northfields,awarded funding,directed,,2023-02-07,32000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Foundry Partnership — Westborough,awarded funding,directed,,2024-07-10,4800,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,West Collective — Southmead,awarded funding,directed,,2025-12-13,62000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,East Partnership — Harbour County,awarded funding,directed,,2026-05-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Compass Collective — Northfields,awarded funding,directed,,2018-10-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Shared Partnership — Rivertown,awarded funding,directed,,2019-03-22,32000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Winter Collective — Old Coast,awarded funding,directed,,2020-08-25,4800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,North Collective — Westborough,awarded funding,directed,,2021-01-04,62000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Mill Collective — Northfields,awarded funding,directed,,2022-06-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Common Partnership — Eastbank,awarded funding,directed,,2023-11-10,125000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Lantern Partnership — Harbour County,awarded funding,directed,,2024-04-13,23000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Lantern Collective — Harbour County,awarded funding,directed,,2025-09-16,2800,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Bright Collective — High Pennine,awarded funding,directed,,2026-02-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Fox Partnership — Northfields,awarded funding,directed,,2018-07-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Sun Partnership — Old Coast,awarded funding,directed,,2019-12-25,125000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Field Collective — Westborough,awarded funding,directed,,2020-05-04,23000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Compass Partnership — Northfields,awarded funding,directed,,2021-10-07,2800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Neighbour Partnership — Westborough,awarded funding,directed,,2022-03-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,River Collective — Southmead,awarded funding,directed,,2023-08-13,7500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,New Partnership — Harbour County,awarded funding,directed,,2024-01-16,90000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Cedar Partnership — High Pennine,awarded funding,directed,,2025-06-19,17500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Shared Collective — Rivertown,awarded funding,directed,,2026-11-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Mill Collective — Northfields,awarded funding,directed,,2018-04-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Elm Partnership — Westborough,awarded funding,directed,,2019-09-04,7500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Willow Partnership — Northfields,awarded funding,directed,,2020-02-07,90000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Harbour Partnership — Eastbank,awarded funding,directed,,2021-07-10,17500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Hope Collective — Southmead,awarded funding,directed,,2022-12-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Coast Partnership — Harbour County,awarded funding,directed,,2023-05-16,32000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Coast Collective — Harbour County,awarded funding,directed,,2024-10-19,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,East Partnership — Harbour County,awarded funding,directed,,2025-03-22,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Silver Partnership — Old Coast,awarded funding,directed,,2026-08-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Willow Partnership — Northfields,awarded funding,directed,,2018-01-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Fox Collective — Northfields,awarded funding,directed,,2019-06-07,32000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Meadow Partnership — Eastbank,awarded funding,directed,,2020-11-10,4800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Elm Partnership — Westborough,awarded funding,directed,,2021-04-13,62000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Blue Collective — Harbour County,awarded funding,directed,,2022-09-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Moss Collective — High Pennine,awarded funding,directed,,2023-02-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Field Collective — Westborough,awarded funding,directed,,2024-07-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Coast Partnership — Harbour County,awarded funding,directed,,2025-12-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,North Partnership — Westborough,awarded funding,directed,,2026-05-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Open Collective — Northfields,awarded funding,directed,,2018-10-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Hearth Partnership — Eastbank,awarded funding,directed,,2019-03-10,125000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Foundry Collective — Westborough,awarded funding,directed,,2020-08-13,23000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Foundry Partnership — Westborough,awarded funding,directed,,2021-01-16,2800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Dawn Partnership — High Pennine,awarded funding,directed,,2022-06-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Stone Collective — Rivertown,awarded funding,directed,,2023-11-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Blue Collective — Harbour County,awarded funding,directed,,2024-04-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Blue Partnership — Harbour County,awarded funding,directed,,2025-09-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Willow Partnership — Northfields,awarded funding,directed,,2026-02-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Compass Collective — Northfields,awarded funding,directed,,2018-07-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,River Partnership — Southmead,awarded funding,directed,,2019-12-13,7500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Neighbour Collective — Westborough,awarded funding,directed,,2020-05-16,90000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Bright Partnership — High Pennine,awarded funding,directed,,2021-10-19,17500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Shared Collective — Rivertown,awarded funding,directed,,2022-03-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Alder Partnership — Old Coast,awarded funding,directed,,2023-08-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,East Collective — Harbour County,awarded funding,directed,,2024-01-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Fox Collective — Northfields,awarded funding,directed,,2025-06-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Field Partnership — Westborough,awarded funding,directed,,2026-11-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-04-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Coast Collective — Harbour County,awarded funding,directed,,2019-09-16,32000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Cedar Collective — High Pennine,awarded funding,directed,,2020-02-19,4800,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,East Partnership — Harbour County,awarded funding,directed,,2021-07-22,62000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Silver Collective — Old Coast,awarded funding,directed,,2022-12-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Neighbour Partnership — Westborough,awarded funding,directed,,2023-05-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Lantern Collective — Harbour County,awarded funding,directed,,2024-10-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Oak Partnership — Eastbank,awarded funding,directed,,2025-03-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,West Collective — Southmead,awarded funding,directed,,2026-08-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Mill Collective — Northfields,awarded funding,directed,,2018-01-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Fell Partnership — High Pennine,awarded funding,directed,,2019-06-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Summer Collective — Rivertown,awarded funding,directed,,2020-11-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Winter Collective — Old Coast,awarded funding,directed,,2021-04-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,North Collective — Westborough,awarded funding,directed,,2022-09-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Mill Partnership — Northfields,awarded funding,directed,,2023-02-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Neighbour Collective — Westborough,awarded funding,directed,,2024-07-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Bridge Partnership — Southmead,awarded funding,directed,,2025-12-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Lantern Collective — Harbour County,awarded funding,directed,,2026-05-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Willow Partnership — Northfields,awarded funding,directed,,2018-10-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Stone Collective — Rivertown,awarded funding,directed,,2019-03-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Sun Partnership — Old Coast,awarded funding,directed,,2020-08-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Field Collective — Westborough,awarded funding,directed,,2021-01-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Compass Collective — Northfields,awarded funding,directed,,2022-06-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Common Collective — Eastbank,awarded funding,directed,,2023-11-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,New Collective — Harbour County,awarded funding,directed,,2024-04-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,New Partnership — Harbour County,awarded funding,directed,,2025-09-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Cedar Collective — High Pennine,awarded funding,directed,,2026-02-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Open Collective — Northfields,awarded funding,directed,,2018-07-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Spring Collective — Old Coast,awarded funding,directed,,2019-12-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Elm Partnership — Westborough,awarded funding,directed,,2020-05-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Willow Collective — Northfields,awarded funding,directed,,2021-10-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Harbour Collective — Eastbank,awarded funding,directed,,2022-03-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Hope Collective — Southmead,awarded funding,directed,,2023-08-13,125000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Coast Partnership — Harbour County,awarded funding,directed,,2024-01-16,23000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Fell Partnership — High Pennine,awarded funding,directed,,2025-06-19,2800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Highland Partnership — Rivertown,awarded funding,directed,,2026-11-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Compass Collective — Northfields,awarded funding,directed,,2018-04-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Foundry Collective — Westborough,awarded funding,directed,,2019-09-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Fox Partnership — Northfields,awarded funding,directed,,2020-02-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Meadow Collective — Eastbank,awarded funding,directed,,2021-07-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Elm Partnership — Westborough,awarded funding,directed,,2022-12-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Blue Collective — Harbour County,awarded funding,directed,,2023-05-16,7500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Blue Partnership — Harbour County,awarded funding,directed,,2024-10-19,90000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Coast Collective — Harbour County,awarded funding,directed,,2025-03-22,17500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Coast Partnership — Harbour County,awarded funding,directed,,2026-08-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Fox Partnership — Northfields,awarded funding,directed,,2018-01-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Open Partnership — Northfields,awarded funding,directed,,2019-06-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Elm Collective — Westborough,awarded funding,directed,,2020-11-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Foundry Collective — Westborough,awarded funding,directed,,2021-04-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Foundry Partnership — Westborough,awarded funding,directed,,2022-09-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Dawn Collective — High Pennine,awarded funding,directed,,2023-02-19,32000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,East Partnership — Harbour County,awarded funding,directed,,2024-07-22,4800,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Blue Collective — Harbour County,awarded funding,directed,,2025-12-25,62000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Blue Partnership — Harbour County,awarded funding,directed,,2026-05-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Mill Collective — Northfields,awarded funding,directed,,2018-10-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Hearth Collective — Eastbank,awarded funding,directed,,2019-03-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,River Partnership — Southmead,awarded funding,directed,,2020-08-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Neighbour Collective — Westborough,awarded funding,directed,,2021-01-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Bright Collective — High Pennine,awarded funding,directed,,2022-06-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Wild Partnership — Rivertown,awarded funding,directed,,2023-11-22,125000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Foundry Partnership — Westborough,awarded funding,directed,,2024-04-25,23000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,East Collective — Harbour County,awarded funding,directed,,2025-09-04,2800,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Fox Partnership — Northfields,awarded funding,directed,,2026-02-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-07-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Hope Partnership — Southmead,awarded funding,directed,,2019-12-13,125000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Coast Collective — Harbour County,awarded funding,directed,,2020-05-16,23000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Cedar Partnership — High Pennine,awarded funding,directed,,2021-10-19,2800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Highland Partnership — Rivertown,awarded funding,directed,,2022-03-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Silver Collective — Old Coast,awarded funding,directed,,2023-08-25,7500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Lantern Partnership — Harbour County,awarded funding,directed,,2024-01-04,90000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Open Partnership — Northfields,awarded funding,directed,,2025-06-07,17500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Oak Collective — Eastbank,awarded funding,directed,,2026-11-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Open Collective — Northfields,awarded funding,directed,,2018-04-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Blue Partnership — Harbour County,awarded funding,directed,,2019-09-16,7500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Fell Collective — High Pennine,awarded funding,directed,,2020-02-19,90000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Coast Collective — Harbour County,awarded funding,directed,,2021-07-22,17500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Winter Collective — Old Coast,awarded funding,directed,,2022-12-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,North Collective — Westborough,awarded funding,directed,,2023-05-04,32000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,New Partnership — Harbour County,awarded funding,directed,,2024-10-07,4800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Common Partnership — Eastbank,awarded funding,directed,,2025-03-10,62000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Bridge Partnership — Southmead,awarded funding,directed,,2026-08-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Compass Collective — Northfields,awarded funding,directed,,2018-01-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Moss Collective — High Pennine,awarded funding,directed,,2019-06-19,32000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Highland Collective — Rivertown,awarded funding,directed,,2020-11-22,4800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Sun Partnership — Old Coast,awarded funding,directed,,2021-04-25,62000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Field Collective — Westborough,awarded funding,directed,,2022-09-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Compass Partnership — Northfields,awarded funding,directed,,2023-02-07,125000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Coast Collective — Harbour County,awarded funding,directed,,2024-07-10,23000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,River Collective — Southmead,awarded funding,directed,,2025-12-13,2800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,New Partnership — Harbour County,awarded funding,directed,,2026-05-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Fox Partnership — Northfields,awarded funding,directed,,2018-10-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Wild Partnership — Rivertown,awarded funding,directed,,2019-03-22,125000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Spring Collective — Old Coast,awarded funding,directed,,2020-08-25,23000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Elm Partnership — Westborough,awarded funding,directed,,2021-01-04,2800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Willow Partnership — Northfields,awarded funding,directed,,2022-06-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Harbour Partnership — Eastbank,awarded funding,directed,,2023-11-10,7500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Field Collective — Westborough,awarded funding,directed,,2024-04-13,90000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Coast Partnership — Harbour County,awarded funding,directed,,2025-09-16,17500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Fell Collective — High Pennine,awarded funding,directed,,2026-02-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Mill Collective — Northfields,awarded funding,directed,,2018-07-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Lantern Partnership — Harbour County,awarded funding,directed,,2019-12-25,7500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Foundry Collective — Westborough,awarded funding,directed,,2020-05-04,90000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Fox Collective — Northfields,awarded funding,directed,,2021-10-07,17500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Meadow Partnership — Eastbank,awarded funding,directed,,2022-03-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Elm Partnership — Westborough,awarded funding,directed,,2023-08-13,32000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Blue Collective — Harbour County,awarded funding,directed,,2024-01-16,4800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Moss Collective — High Pennine,awarded funding,directed,,2025-06-19,62000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Wild Collective — Rivertown,awarded funding,directed,,2026-11-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Willow Partnership — Northfields,awarded funding,directed,,2018-04-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,New Partnership — Harbour County,awarded funding,directed,,2019-09-04,32000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Open Collective — Northfields,awarded funding,directed,,2020-02-07,4800,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Hearth Partnership — Eastbank,awarded funding,directed,,2021-07-10,62000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Foundry Collective — Westborough,awarded funding,directed,,2022-12-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Foundry Partnership — Westborough,awarded funding,directed,,2023-05-16,125000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,East Collective — Harbour County,awarded funding,directed,,2024-10-19,23000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Lantern Collective — Harbour County,awarded funding,directed,,2025-03-22,2800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Blue Collective — Harbour County,awarded funding,directed,,2026-08-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Open Collective — Northfields,awarded funding,directed,,2018-01-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Mill Partnership — Northfields,awarded funding,directed,,2019-06-07,125000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Field Partnership — Westborough,awarded funding,directed,,2020-11-10,23000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,River Partnership — Southmead,awarded funding,directed,,2021-04-13,2800,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Neighbour Collective — Westborough,awarded funding,directed,,2022-09-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Bright Partnership — High Pennine,awarded funding,directed,,2023-02-19,7500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Lantern Collective — Harbour County,awarded funding,directed,,2024-07-22,90000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Alder Partnership — Old Coast,awarded funding,directed,,2025-12-25,17500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,East Collective — Harbour County,awarded funding,directed,,2026-05-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Compass Collective — Northfields,awarded funding,directed,,2018-10-07,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Oak Partnership — Eastbank,awarded funding,directed,,2019-03-10,7500,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Hope Partnership — Southmead,awarded funding,directed,,2020-08-13,90000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Coast Collective — Harbour County,awarded funding,directed,,2021-01-16,17500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Cedar Collective — High Pennine,awarded funding,directed,,2022-06-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Shared Partnership — Rivertown,awarded funding,directed,,2023-11-22,32000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Neighbour Collective — Westborough,awarded funding,directed,,2024-04-25,4800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Neighbour Partnership — Westborough,awarded funding,directed,,2025-09-04,62000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Open Collective — Northfields,awarded funding,directed,,2026-02-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-07-10,1500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Green Collective — Southmead,awarded funding,directed,,2019-12-13,32000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Blue Partnership — Harbour County,awarded funding,directed,,2020-05-16,4800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Fell Partnership — High Pennine,awarded funding,directed,,2021-10-19,62000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Wild Collective — Rivertown,awarded funding,directed,,2022-03-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Winter Collective — Old Coast,awarded funding,directed,,2023-08-25,125000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,New Collective — Harbour County,awarded funding,directed,,2024-01-04,23000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Mill Partnership — Northfields,awarded funding,directed,,2025-06-07,2800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,North Collective — Westborough,awarded funding,directed,,2026-11-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Mill Collective — Northfields,awarded funding,directed,,2018-04-13,12000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,East Collective — Harbour County,awarded funding,directed,,2019-09-16,125000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Moss Partnership — High Pennine,awarded funding,directed,,2020-02-19,23000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Lantern Collective — Harbour County,awarded funding,directed,,2021-07-22,2800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Sun Partnership — Old Coast,awarded funding,directed,,2022-12-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Field Collective — Westborough,awarded funding,directed,,2023-05-04,7500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Coast Partnership — Harbour County,awarded funding,directed,,2024-10-07,90000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Common Collective — Eastbank,awarded funding,directed,,2025-03-10,17500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,River Collective — Southmead,awarded funding,directed,,2026-08-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-01-16,45000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Dawn Collective — High Pennine,awarded funding,directed,,2019-06-19,7500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Stone Partnership — Rivertown,awarded funding,directed,,2020-11-22,90000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Spring Collective — Old Coast,awarded funding,directed,,2021-04-25,17500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Elm Partnership — Westborough,awarded funding,directed,,2022-09-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Willow Collective — Northfields,awarded funding,directed,,2023-02-07,32000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Blue Partnership — Harbour County,awarded funding,directed,,2024-07-10,4800,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Hope Collective — Southmead,awarded funding,directed,,2025-12-13,62000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Coast Partnership — Harbour County,awarded funding,directed,,2026-05-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Open Collective — Northfields,awarded funding,directed,,2018-10-19,1500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Shared Partnership — Rivertown,awarded funding,directed,,2019-03-22,32000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Lantern Partnership — Harbour County,awarded funding,directed,,2020-08-25,4800,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Foundry Collective — Westborough,awarded funding,directed,,2021-01-04,62000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Fox Partnership — Northfields,awarded funding,directed,,2022-06-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Meadow Collective — Eastbank,awarded funding,directed,,2023-11-10,125000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,East Partnership — Harbour County,awarded funding,directed,,2024-04-13,23000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Blue Collective — Harbour County,awarded funding,directed,,2025-09-16,2800,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Moss Partnership — High Pennine,awarded funding,directed,,2026-02-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Compass Collective — Northfields,awarded funding,directed,,2018-07-22,12000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,New Collective — Harbour County,awarded funding,directed,,2019-12-25,125000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,New Partnership — Harbour County,awarded funding,directed,,2020-05-04,23000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Open Partnership — Northfields,awarded funding,directed,,2021-10-07,2800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Elm Collective — Westborough,awarded funding,directed,,2022-03-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Foundry Collective — Westborough,awarded funding,directed,,2023-08-13,7500,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Foundry Partnership — Westborough,awarded funding,directed,,2024-01-16,90000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Dawn Collective — High Pennine,awarded funding,directed,,2025-06-19,17500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Shared Collective — Rivertown,awarded funding,directed,,2026-11-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Fox Partnership — Northfields,awarded funding,directed,,2018-04-25,45000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Field Partnership — Westborough,awarded funding,directed,,2019-09-04,7500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Mill Collective — Northfields,awarded funding,directed,,2020-02-07,90000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Hearth Collective — Eastbank,awarded funding,directed,,2021-07-10,17500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,River Partnership — Southmead,awarded funding,directed,,2022-12-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Neighbour Collective — Westborough,awarded funding,directed,,2023-05-16,32000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Lantern Partnership — Harbour County,awarded funding,directed,,2024-10-19,4800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,East Partnership — Harbour County,awarded funding,directed,,2025-03-22,62000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Alder Partnership — Old Coast,awarded funding,directed,,2026-08-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Mill Collective — Northfields,awarded funding,directed,,2018-01-04,1500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Compass Partnership — Northfields,awarded funding,directed,,2019-06-07,32000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Oak Collective — Eastbank,awarded funding,directed,,2020-11-10,4800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Hope Partnership — Southmead,awarded funding,directed,,2021-04-13,62000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Coast Collective — Harbour County,awarded funding,directed,,2022-09-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Cedar Partnership — High Pennine,awarded funding,directed,,2023-02-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,New Partnership — Harbour County,awarded funding,directed,,2024-07-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Silver Collective — Old Coast,awarded funding,directed,,2025-12-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Neighbour Partnership — Westborough,awarded funding,directed,,2026-05-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Willow Partnership — Northfields,awarded funding,directed,,2018-10-07,12000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Common Partnership — Eastbank,awarded funding,directed,,2019-03-10,125000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Green Collective — Southmead,awarded funding,directed,,2020-08-13,23000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Blue Partnership — Harbour County,awarded funding,directed,,2021-01-16,2800,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Fell Collective — High Pennine,awarded funding,directed,,2022-06-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Stone Collective — Rivertown,awarded funding,directed,,2023-11-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Coast Collective — Harbour County,awarded funding,directed,,2024-04-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,North Collective — Westborough,awarded funding,directed,,2025-09-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Mill Collective — Northfields,awarded funding,directed,,2026-02-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Open Collective — Northfields,awarded funding,directed,,2018-07-10,45000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,West Partnership — Southmead,awarded funding,directed,,2019-12-13,7500,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,East Collective — Harbour County,awarded funding,directed,,2020-05-16,90000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Moss Collective — High Pennine,awarded funding,directed,,2021-10-19,17500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Shared Collective — Rivertown,awarded funding,directed,,2022-03-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Sun Partnership — Old Coast,awarded funding,directed,,2023-08-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Field Collective — Westborough,awarded funding,directed,,2024-01-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Compass Partnership — Northfields,awarded funding,directed,,2025-06-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Neighbour Partnership — Westborough,awarded funding,directed,,2026-11-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Compass Collective — Northfields,awarded funding,directed,,2018-04-13,1500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Lantern Partnership — Harbour County,awarded funding,directed,,2019-09-16,32000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Dawn Partnership — High Pennine,awarded funding,directed,,2020-02-19,4800,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,East Partnership — Harbour County,awarded funding,directed,,2021-07-22,62000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Spring Collective — Old Coast,awarded funding,directed,,2022-12-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Elm Partnership — Westborough,awarded funding,directed,,2023-05-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Blue Collective — Harbour County,awarded funding,directed,,2024-10-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Harbour Partnership — Eastbank,awarded funding,directed,,2025-03-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Hope Collective — Southmead,awarded funding,directed,,2026-08-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-01-16,12000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Bright Partnership — High Pennine,awarded funding,directed,,2019-06-19,125000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Summer Collective — Rivertown,awarded funding,directed,,2020-11-22,23000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Lantern Partnership — Harbour County,awarded funding,directed,,2021-04-25,2800,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Foundry Collective — Westborough,awarded funding,directed,,2022-09-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Fox Collective — Northfields,awarded funding,directed,,2023-02-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,East Collective — Harbour County,awarded funding,directed,,2024-07-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Elm Partnership — Westborough,awarded funding,directed,,2025-12-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Blue Collective — Harbour County,awarded funding,directed,,2026-05-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Mill Collective — Northfields,awarded funding,directed,,2018-10-19,45000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Stone Collective — Rivertown,awarded funding,directed,,2019-03-22,7500,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,New Collective — Harbour County,awarded funding,directed,,2020-08-25,90000,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,New Partnership — Harbour County,awarded funding,directed,,2021-01-04,17500,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Open Collective — Northfields,awarded funding,directed,,2022-06-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Hearth Partnership — Eastbank,awarded funding,directed,,2023-11-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Lantern Collective — Harbour County,awarded funding,directed,,2024-04-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Foundry Partnership — Westborough,awarded funding,directed,,2025-09-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Dawn Partnership — High Pennine,awarded funding,directed,,2026-02-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Willow Partnership — Northfields,awarded funding,directed,,2018-07-22,1500,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Sun Collective — Old Coast,awarded funding,directed,,2019-12-25,32000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Field Partnership — Westborough,awarded funding,directed,,2020-05-04,4800,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Mill Partnership — Northfields,awarded funding,directed,,2021-10-07,62000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Field Partnership — Westborough,awarded funding,directed,,2022-03-10,12000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,River Partnership — Southmead,awarded funding,directed,,2023-08-13,125000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Neighbour Collective — Westborough,awarded funding,directed,,2024-01-16,23000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Bright Partnership — High Pennine,awarded funding,directed,,2025-06-19,2800,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Highland Partnership — Rivertown,awarded funding,directed,,2026-11-22,45000,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Open Collective — Northfields,awarded funding,directed,,2018-04-25,12000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,Elm Collective — Westborough,awarded funding,directed,,2019-09-04,125000,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Compass Collective — Northfields,awarded funding,directed,,2020-02-07,23000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Oak Partnership — Eastbank,awarded funding,directed,,2021-07-10,2800,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,Hope Partnership — Southmead,awarded funding,directed,,2022-12-13,45000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Coast Collective — Harbour County,awarded funding,directed,,2023-05-16,7500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,New Collective — Harbour County,awarded funding,directed,,2024-10-19,90000,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Coast Collective — Harbour County,awarded funding,directed,,2025-03-22,17500,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Silver Collective — Old Coast,awarded funding,directed,,2026-08-25,1500,GBP,Invented grant award; common funders do not imply collaboration
+Hearth Trust,Compass Collective — Northfields,awarded funding,directed,,2018-01-04,45000,GBP,Invented grant award; common funders do not imply collaboration
+People First Fund,Willow Collective — Northfields,awarded funding,directed,,2019-06-07,7500,GBP,Invented grant award; common funders do not imply collaboration
+Meridian Community Fund,North Collective — Westborough,awarded funding,directed,,2020-11-10,90000,GBP,Invented grant award; common funders do not imply collaboration
+Tomorrow Fund,Green Collective — Southmead,awarded funding,directed,,2021-04-13,17500,GBP,Invented grant award; common funders do not imply collaboration
+Civic Futures Foundation,Blue Partnership — Harbour County,awarded funding,directed,,2022-09-16,1500,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,Fell Partnership — High Pennine,awarded funding,directed,,2023-02-19,32000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Coast Partnership — Harbour County,awarded funding,directed,,2024-07-22,4800,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Winter Collective — Old Coast,awarded funding,directed,,2025-12-25,62000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,North Collective — Westborough,awarded funding,directed,,2026-05-04,12000,GBP,Invented grant award; common funders do not imply collaboration
+Bright Steps Fund,Fox Partnership — Northfields,awarded funding,directed,,2018-10-07,1500,GBP,Invented grant award; common funders do not imply collaboration
+Shared Prosperity Trust,Common Collective — Eastbank,awarded funding,directed,,2019-03-10,32000,GBP,Invented grant award; common funders do not imply collaboration
+Open Fields Fund,West Partnership — Southmead,awarded funding,directed,,2020-08-13,4800,GBP,Invented grant award; common funders do not imply collaboration
+Coastal Renewal Fund,East Collective — Harbour County,awarded funding,directed,,2021-01-16,62000,GBP,Invented grant award; common funders do not imply collaboration
+Northbank Trust,Moss Partnership — High Pennine,awarded funding,directed,,2022-06-19,12000,GBP,Invented grant award; common funders do not imply collaboration
+New Routes Foundation,Wild Partnership — Rivertown,awarded funding,directed,,2023-11-22,125000,GBP,Invented grant award; common funders do not imply collaboration
+Elm Grove Foundation,Blue Partnership — Harbour County,awarded funding,directed,,2024-04-25,23000,GBP,Invented grant award; common funders do not imply collaboration

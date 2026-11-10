@@ -1,31 +1,140 @@
 Label,Type,Description,Tags,Region,Latitude,Longitude,ID
-Old Quay,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.6,-1.3,changing-tides-old-quay
-New Harbour,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.609,-1.3,changing-tides-new-harbour
-Northbank,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.618,-1.3,changing-tides-northbank
-West Docks,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.627,-1.3,changing-tides-west-docks
-South Fields,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.6,-1.2850000000000001,changing-tides-south-fields
-Bridge End,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.609,-1.2850000000000001,changing-tides-bridge-end
-Mill Gardens,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.618,-1.2850000000000001,changing-tides-mill-gardens
-Station Quarter,place,Invented neighbourhood; coordinates are illustrative,,Fictional Tidesford,54.627,-1.2850000000000001,changing-tides-station-quarter
-Tidesford Community Trust,organisation,,Health,,,,changing-tides-tidesford-community-trust
-Harbour Health Partnership,organisation,,Young people,,,,changing-tides-harbour-health-partnership
-The Listening Service,organisation,,Food,,,,changing-tides-the-listening-service
-Tidesford Youth Network,organisation,,Housing,,,,changing-tides-tidesford-youth-network
-Common Ground Co-op,organisation,,Health,,,,changing-tides-common-ground-co-op
-Lighthouse Learning,organisation,,Young people,,,,changing-tides-lighthouse-learning
-The Local Food Alliance,organisation,,Food,,,,changing-tides-the-local-food-alliance
-Active Neighbourhoods,organisation,,Housing,,,,changing-tides-active-neighbourhoods
-Evening Advice Drop-in,project,Invented service with a changing delivery footprint,Advice,,,,changing-tides-evening-advice-drop-in
-Family Hub,project,Invented service with a changing delivery footprint,Families,,,,changing-tides-family-hub
-Community Pantry,project,Invented service with a changing delivery footprint,Food,,,,changing-tides-community-pantry
-Repair Cafe,project,Invented service with a changing delivery footprint,Climate,,,,changing-tides-repair-cafe
-Youth Studio,project,Invented service with a changing delivery footprint,Young people,,,,changing-tides-youth-studio
-Neighbourhood Health Desk,project,Invented service with a changing delivery footprint,Health,,,,changing-tides-neighbourhood-health-desk
-Cycle Library,project,Invented service with a changing delivery footprint,Mobility,,,,changing-tides-cycle-library
-Winter Warmth,project,Invented service with a changing delivery footprint,Advice,,,,changing-tides-winter-warmth
-Learning Exchange,project,Invented service with a changing delivery footprint,Families,,,,changing-tides-learning-exchange
-Community Bus,project,Invented service with a changing delivery footprint,Food,,,,changing-tides-community-bus
-Shared Garden,project,Invented service with a changing delivery footprint,Climate,,,,changing-tides-shared-garden
-Outreach Kitchen,project,Invented service with a changing delivery footprint,Young people,,,,changing-tides-outreach-kitchen
-Skills Studio,project,Invented service with a changing delivery footprint,Health,,,,changing-tides-skills-studio
-Wellbeing Walks,project,Invented service with a changing delivery footprint,Mobility,,,,changing-tides-wellbeing-walks
+Old Quay Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.52,-1.35,changing-tides-old-quay-centre
+New Harbour Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.551,-1.35,changing-tides-new-harbour-centre
+Northbank Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.582,-1.35,changing-tides-northbank-centre
+West Docks Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.613,-1.35,changing-tides-west-docks-centre
+South Fields Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.52,-1.317,changing-tides-south-fields-centre
+Bridge End Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.551,-1.317,changing-tides-bridge-end-centre
+Mill Gardens Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.582,-1.317,changing-tides-mill-gardens-centre
+Station Quarter Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.613,-1.317,changing-tides-station-quarter-centre
+East Ward Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.52,-1.284,changing-tides-east-ward-centre
+Upper Port Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.551,-1.284,changing-tides-upper-port-centre
+Saltburn Way Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.582,-1.284,changing-tides-saltburn-way-centre
+Lower Reach Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.613,-1.284,changing-tides-lower-reach-centre
+Lighthouse Point Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.52,-1.251,changing-tides-lighthouse-point-centre
+Marshgate Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.551,-1.251,changing-tides-marshgate-centre
+Harbour Village Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.582,-1.251,changing-tides-harbour-village-centre
+Old Market Centre,place,Invented neighbourhood in a fictional coastal region,Local places,Tidesford (invented),54.613,-1.251,changing-tides-old-market-centre
+Tidesford Community Trust,organisation,Fictional service provider,Food,,,,changing-tides-tidesford-community-trust
+Harbour Health Partnership,organisation,Fictional service provider,Housing,,,,changing-tides-harbour-health-partnership
+The Listening Service,organisation,Fictional service provider,Health,,,,changing-tides-the-listening-service
+Tidesford Youth Network,organisation,Fictional service provider,Culture,,,,changing-tides-tidesford-youth-network
+Common Ground Co-op,organisation,Fictional service provider,Energy,,,,changing-tides-common-ground-co-op
+Lighthouse Learning,organisation,Fictional service provider,Transport,,,,changing-tides-lighthouse-learning
+The Food Alliance,organisation,Fictional service provider,Nature,,,,changing-tides-the-food-alliance
+Active Neighbourhoods,organisation,Fictional service provider,Young people,,,,changing-tides-active-neighbourhoods
+Tidesford Care,organisation,Fictional service provider,Food,,,,changing-tides-tidesford-care
+Shared Futures,organisation,Fictional service provider,Housing,,,,changing-tides-shared-futures
+The Repair Fund,organisation,Fictional service provider,Health,,,,changing-tides-the-repair-fund
+Community Transit,organisation,Fictional service provider,Culture,,,,changing-tides-community-transit
+Neighbourhood Housing,organisation,Fictional service provider,Energy,,,,changing-tides-neighbourhood-housing
+Local Action,organisation,Fictional service provider,Transport,,,,changing-tides-local-action
+Street Commons,organisation,Fictional service provider,Nature,,,,changing-tides-street-commons
+Open Hands,organisation,Fictional service provider,Young people,,,,changing-tides-open-hands
+Fresh Start,organisation,Fictional service provider,Food,,,,changing-tides-fresh-start
+Coastal Support,organisation,Fictional service provider,Housing,,,,changing-tides-coastal-support
+Advice Line · service 1,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-advice-line-service-1
+Family Hub · service 2,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-family-hub-service-2
+Community Pantry · service 3,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-community-pantry-service-3
+Repair Café · service 4,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-repair-caf-service-4
+Youth Studio · service 5,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-youth-studio-service-5
+Health Desk · service 6,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-health-desk-service-6
+Cycle Library · service 7,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-cycle-library-service-7
+Winter Warmth · service 8,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-winter-warmth-service-8
+Learning Exchange · service 9,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-learning-exchange-service-9
+Community Bus · service 10,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-community-bus-service-10
+Shared Garden · service 11,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-shared-garden-service-11
+Outreach Kitchen · service 12,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-outreach-kitchen-service-12
+Skills Studio · service 13,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-skills-studio-service-13
+Wellbeing Walk · service 14,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-wellbeing-walk-service-14
+Employment Desk · service 15,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-employment-desk-service-15
+Warm Meals · service 16,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-warm-meals-service-16
+Neighbourhood Choir · service 17,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-neighbourhood-choir-service-17
+Local Library · service 18,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-local-library-service-18
+Advice Line · service 19,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-advice-line-service-19
+Family Hub · service 20,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-family-hub-service-20
+Community Pantry · service 21,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-community-pantry-service-21
+Repair Café · service 22,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-repair-caf-service-22
+Youth Studio · service 23,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-youth-studio-service-23
+Health Desk · service 24,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-health-desk-service-24
+Cycle Library · service 25,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-cycle-library-service-25
+Winter Warmth · service 26,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-winter-warmth-service-26
+Learning Exchange · service 27,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-learning-exchange-service-27
+Community Bus · service 28,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-community-bus-service-28
+Shared Garden · service 29,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-shared-garden-service-29
+Outreach Kitchen · service 30,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-outreach-kitchen-service-30
+Skills Studio · service 31,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-skills-studio-service-31
+Wellbeing Walk · service 32,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-wellbeing-walk-service-32
+Employment Desk · service 33,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-employment-desk-service-33
+Warm Meals · service 34,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-warm-meals-service-34
+Neighbourhood Choir · service 35,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-neighbourhood-choir-service-35
+Local Library · service 36,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-local-library-service-36
+Advice Line · service 37,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-advice-line-service-37
+Family Hub · service 38,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-family-hub-service-38
+Community Pantry · service 39,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-community-pantry-service-39
+Repair Café · service 40,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-repair-caf-service-40
+Youth Studio · service 41,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-youth-studio-service-41
+Health Desk · service 42,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-health-desk-service-42
+Cycle Library · service 43,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-cycle-library-service-43
+Winter Warmth · service 44,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-winter-warmth-service-44
+Learning Exchange · service 45,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-learning-exchange-service-45
+Community Bus · service 46,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-community-bus-service-46
+Shared Garden · service 47,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-shared-garden-service-47
+Outreach Kitchen · service 48,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-outreach-kitchen-service-48
+Skills Studio · service 49,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-skills-studio-service-49
+Wellbeing Walk · service 50,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-wellbeing-walk-service-50
+Employment Desk · service 51,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-employment-desk-service-51
+Warm Meals · service 52,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-warm-meals-service-52
+Neighbourhood Choir · service 53,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-neighbourhood-choir-service-53
+Local Library · service 54,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-local-library-service-54
+Advice Line · service 55,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-advice-line-service-55
+Family Hub · service 56,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-family-hub-service-56
+Community Pantry · service 57,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-community-pantry-service-57
+Repair Café · service 58,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-repair-caf-service-58
+Youth Studio · service 59,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-youth-studio-service-59
+Health Desk · service 60,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-health-desk-service-60
+Cycle Library · service 61,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-cycle-library-service-61
+Winter Warmth · service 62,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-winter-warmth-service-62
+Learning Exchange · service 63,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-learning-exchange-service-63
+Community Bus · service 64,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-community-bus-service-64
+Shared Garden · service 65,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-shared-garden-service-65
+Outreach Kitchen · service 66,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-outreach-kitchen-service-66
+Skills Studio · service 67,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-skills-studio-service-67
+Wellbeing Walk · service 68,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-wellbeing-walk-service-68
+Employment Desk · service 69,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-employment-desk-service-69
+Warm Meals · service 70,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-warm-meals-service-70
+Neighbourhood Choir · service 71,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-neighbourhood-choir-service-71
+Local Library · service 72,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-local-library-service-72
+Advice Line · service 73,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-advice-line-service-73
+Family Hub · service 74,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-family-hub-service-74
+Community Pantry · service 75,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-community-pantry-service-75
+Repair Café · service 76,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-repair-caf-service-76
+Youth Studio · service 77,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-youth-studio-service-77
+Health Desk · service 78,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-health-desk-service-78
+Cycle Library · service 79,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-cycle-library-service-79
+Winter Warmth · service 80,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-winter-warmth-service-80
+Learning Exchange · service 81,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-learning-exchange-service-81
+Community Bus · service 82,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-community-bus-service-82
+Shared Garden · service 83,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-shared-garden-service-83
+Outreach Kitchen · service 84,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-outreach-kitchen-service-84
+Skills Studio · service 85,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-skills-studio-service-85
+Wellbeing Walk · service 86,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-wellbeing-walk-service-86
+Employment Desk · service 87,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-employment-desk-service-87
+Warm Meals · service 88,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-warm-meals-service-88
+Neighbourhood Choir · service 89,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-neighbourhood-choir-service-89
+Local Library · service 90,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,Upper Port,,,changing-tides-local-library-service-90
+Advice Line · service 91,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Saltburn Way,,,changing-tides-advice-line-service-91
+Family Hub · service 92,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,Lower Reach,,,changing-tides-family-hub-service-92
+Community Pantry · service 93,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,Lighthouse Point,,,changing-tides-community-pantry-service-93
+Repair Café · service 94,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Marshgate,,,changing-tides-repair-caf-service-94
+Youth Studio · service 95,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Harbour Village,,,changing-tides-youth-studio-service-95
+Health Desk · service 96,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Old Market,,,changing-tides-health-desk-service-96
+Cycle Library · service 97,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,Old Quay,,,changing-tides-cycle-library-service-97
+Winter Warmth · service 98,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Housing,New Harbour,,,changing-tides-winter-warmth-service-98
+Learning Exchange · service 99,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Health,Northbank,,,changing-tides-learning-exchange-service-99
+Community Bus · service 100,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Culture,West Docks,,,changing-tides-community-bus-service-100
+Shared Garden · service 101,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Energy,South Fields,,,changing-tides-shared-garden-service-101
+Outreach Kitchen · service 102,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Transport,Bridge End,,,changing-tides-outreach-kitchen-service-102
+Skills Studio · service 103,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Nature,Mill Gardens,,,changing-tides-skills-studio-service-103
+Wellbeing Walk · service 104,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Young people,Station Quarter,,,changing-tides-wellbeing-walk-service-104
+Employment Desk · service 105,project,"Invented local service whose recorded openings, moves and closures illustrate change over time",Food,East Ward,,,changing-tides-employment-desk-service-105

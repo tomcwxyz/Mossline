@@ -1,37 +1,98 @@
 Label,Type,Description,Tags,Region,Latitude,Longitude,ID
-The Old Library,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.58,village-web-the-old-library
-Millstone Community Garden,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.568,village-web-millstone-community-garden
-Riverside Workshop,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.556,village-web-riverside-workshop
-Bridge Street Hall,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.544,village-web-bridge-street-hall
-Willowbank School,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.58,village-web-willowbank-school
-North Field,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.568,village-web-north-field
-Ashwood Cafe,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.56,-1.556,village-web-ashwood-cafe
-The Market Square,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.567,-1.544,village-web-the-market-square
-Community Kitchen,place,Invented place in the Alder Valley example,,Fictional Alder Valley,54.574000000000005,-1.58,village-web-community-kitchen
-Valley Mutual Aid,organisation,Fictional organisation working across the valley,Food|Climate,West Alder,,,village-web-valley-mutual-aid
-Alder Food Partnership,organisation,Fictional organisation working across the valley,Wellbeing|Housing,East Alder,,,village-web-alder-food-partnership
-Willowbank Youth Club,organisation,Fictional organisation working across the valley,Young people|Arts,Central Alder,,,village-web-willowbank-youth-club
-Riverside Repairers,organisation,Fictional organisation working across the valley,Climate|Learning,Central Alder,,,village-web-riverside-repairers
-Neighbourhood Nurses,organisation,Fictional organisation working across the valley,Housing|Mobility,West Alder,,,village-web-neighbourhood-nurses
-The Listening Room,organisation,Fictional organisation working across the valley,Arts|Food,East Alder,,,village-web-the-listening-room
-Alder Housing Network,organisation,Fictional organisation working across the valley,Learning|Wellbeing,Central Alder,,,village-web-alder-housing-network
-Green Steps Collective,organisation,Fictional organisation working across the valley,Mobility|Young people,Central Alder,,,village-web-green-steps-collective
-High Street Traders,organisation,Fictional organisation working across the valley,Food|Climate,West Alder,,,village-web-high-street-traders
-The Community Choir,organisation,Fictional organisation working across the valley,Wellbeing|Housing,East Alder,,,village-web-the-community-choir
-Valley Learning Trust,organisation,Fictional organisation working across the valley,Young people|Arts,Central Alder,,,village-web-valley-learning-trust
-Co-operative Transport,organisation,Fictional organisation working across the valley,Climate|Learning,Central Alder,,,village-web-co-operative-transport
-Warm Welcome,project,Fictional project organised by local residents,Wellbeing,,,,village-web-warm-welcome
-Repair and Share,project,Fictional project organised by local residents,Young people,,,,village-web-repair-and-share
-Kitchen Table,project,Fictional project organised by local residents,Climate,,,,village-web-kitchen-table
-Night Bus,project,Fictional project organised by local residents,Housing,,,,village-web-night-bus
-Youth Makers,project,Fictional project organised by local residents,Arts,,,,village-web-youth-makers
-Meet Your Neighbour,project,Fictional project organised by local residents,Learning,,,,village-web-meet-your-neighbour
-Garden Saturdays,project,Fictional project organised by local residents,Mobility,,,,village-web-garden-saturdays
-Access for All,project,Fictional project organised by local residents,Food,,,,village-web-access-for-all
-Winter Pantry,project,Fictional project organised by local residents,Wellbeing,,,,village-web-winter-pantry
-Healthy Streets,project,Fictional project organised by local residents,Young people,,,,village-web-healthy-streets
-Oral Histories,project,Fictional project organised by local residents,Climate,,,,village-web-oral-histories
-Climate Assembly,project,Fictional project organised by local residents,Housing,,,,village-web-climate-assembly
-Community Seed Fund,funder,,Community funding,,,,village-web-community-seed-fund
-Alder Giving Circle,funder,,Community funding,,,,village-web-alder-giving-circle
-Valley Foundation,funder,,Community funding,,,,village-web-valley-foundation
+Alderbank Community Space,place,Fictional local meeting space,Food,Alder Valley (invented),54.55,-1.59,village-web-alderbank-community-space
+Old Mill Community Space,place,Fictional local meeting space,Housing,Alder Valley (invented),54.566,-1.59,village-web-old-mill-community-space
+West Ridge Community Space,place,Fictional local meeting space,Health,Alder Valley (invented),54.582,-1.59,village-web-west-ridge-community-space
+River Gate Community Space,place,Fictional local meeting space,Culture,Alder Valley (invented),54.598,-1.59,village-web-river-gate-community-space
+South Fields Community Space,place,Fictional local meeting space,Energy,Alder Valley (invented),54.55,-1.555,village-web-south-fields-community-space
+The Heights Community Space,place,Fictional local meeting space,Transport,Alder Valley (invented),54.566,-1.555,village-web-the-heights-community-space
+Market Row Community Space,place,Fictional local meeting space,Nature,Alder Valley (invented),54.582,-1.555,village-web-market-row-community-space
+East Crossing Community Space,place,Fictional local meeting space,Young people,Alder Valley (invented),54.598,-1.555,village-web-east-crossing-community-space
+North Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Food|Culture,Alderbank,,,village-web-north-collective-of-alder-valley
+Open Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Housing|Housing,Old Mill,,,village-web-open-collective-of-alder-valley
+Common Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Health|Health,West Ridge,,,village-web-common-collective-of-alder-valley
+River Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Culture|Culture,River Gate,,,village-web-river-collective-of-alder-valley
+New Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Energy|Energy,South Fields,,,village-web-new-collective-of-alder-valley
+Bright Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Transport|Transport,The Heights,,,village-web-bright-collective-of-alder-valley
+Shared Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Nature|Nature,Market Row,,,village-web-shared-collective-of-alder-valley
+Silver Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Young people|Young people,East Crossing,,,village-web-silver-collective-of-alder-valley
+Neighbour Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Food|Food,Alderbank,,,village-web-neighbour-collective-of-alder-valley
+Willow Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Housing|Energy,Old Mill,,,village-web-willow-collective-of-alder-valley
+Harbour Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Health|Health,West Ridge,,,village-web-harbour-collective-of-alder-valley
+Bridge Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Culture|Culture,River Gate,,,village-web-bridge-collective-of-alder-valley
+Lantern Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Energy|Energy,South Fields,,,village-web-lantern-collective-of-alder-valley
+Moss Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Transport|Transport,The Heights,,,village-web-moss-collective-of-alder-valley
+Highland Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Nature|Nature,Market Row,,,village-web-highland-collective-of-alder-valley
+Alder Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Young people|Young people,East Crossing,,,village-web-alder-collective-of-alder-valley
+Foundry Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Food|Food,Alderbank,,,village-web-foundry-collective-of-alder-valley
+Mill Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Housing|Housing,Old Mill,,,village-web-mill-collective-of-alder-valley
+Meadow Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Health|Transport,West Ridge,,,village-web-meadow-collective-of-alder-valley
+West Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Culture|Culture,River Gate,,,village-web-west-collective-of-alder-valley
+East Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Energy|Energy,South Fields,,,village-web-east-collective-of-alder-valley
+Cedar Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Transport|Transport,The Heights,,,village-web-cedar-collective-of-alder-valley
+Stone Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Nature|Nature,Market Row,,,village-web-stone-collective-of-alder-valley
+Spring Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Young people|Young people,East Crossing,,,village-web-spring-collective-of-alder-valley
+Elm Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Food|Food,Alderbank,,,village-web-elm-collective-of-alder-valley
+Fox Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Housing|Housing,Old Mill,,,village-web-fox-collective-of-alder-valley
+Hearth Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Health|Health,West Ridge,,,village-web-hearth-collective-of-alder-valley
+Green Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Culture|Nature,River Gate,,,village-web-green-collective-of-alder-valley
+Blue Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Energy|Energy,South Fields,,,village-web-blue-collective-of-alder-valley
+Dawn Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Transport|Transport,The Heights,,,village-web-dawn-collective-of-alder-valley
+Wild Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Nature|Nature,Market Row,,,village-web-wild-collective-of-alder-valley
+Sun Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Young people|Young people,East Crossing,,,village-web-sun-collective-of-alder-valley
+Field Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Food|Food,Alderbank,,,village-web-field-collective-of-alder-valley
+Compass Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Housing|Housing,Old Mill,,,village-web-compass-collective-of-alder-valley
+Oak Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Health|Health,West Ridge,,,village-web-oak-collective-of-alder-valley
+Hope Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Culture|Culture,River Gate,,,village-web-hope-collective-of-alder-valley
+Coast Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Energy|Young people,South Fields,,,village-web-coast-collective-of-alder-valley
+Fell Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Transport|Transport,The Heights,,,village-web-fell-collective-of-alder-valley
+Summer Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Nature|Nature,Market Row,,,village-web-summer-collective-of-alder-valley
+Winter Collective of Alder Valley,organisation,Fictional neighbourhood organisation,Young people|Young people,East Crossing,,,village-web-winter-collective-of-alder-valley
+Food tables — Alderbank,project,Invented programme led by local people,Food|Culture,,,,village-web-food-tables-alderbank
+Young makers — Alderbank,project,Invented programme led by local people,Housing,,,,village-web-young-makers-alderbank
+Warm doors — Alderbank,project,Invented programme led by local people,Health,,,,village-web-warm-doors-alderbank
+Safe streets — Alderbank,project,Invented programme led by local people,Culture,,,,village-web-safe-streets-alderbank
+Repair days — Alderbank,project,Invented programme led by local people,Energy,,,,village-web-repair-days-alderbank
+Garden sessions — Alderbank,project,Invented programme led by local people,Transport|Food,,,,village-web-garden-sessions-alderbank
+Community radio — Alderbank,project,Invented programme led by local people,Nature,,,,village-web-community-radio-alderbank
+Shared rides — Alderbank,project,Invented programme led by local people,Young people,,,,village-web-shared-rides-alderbank
+Food tables — Old Mill,project,Invented programme led by local people,Food,,,,village-web-food-tables-old-mill
+Young makers — Old Mill,project,Invented programme led by local people,Housing,,,,village-web-young-makers-old-mill
+Warm doors — Old Mill,project,Invented programme led by local people,Health|Transport,,,,village-web-warm-doors-old-mill
+Safe streets — Old Mill,project,Invented programme led by local people,Culture,,,,village-web-safe-streets-old-mill
+Repair days — Old Mill,project,Invented programme led by local people,Energy,,,,village-web-repair-days-old-mill
+Garden sessions — Old Mill,project,Invented programme led by local people,Transport,,,,village-web-garden-sessions-old-mill
+Community radio — Old Mill,project,Invented programme led by local people,Nature,,,,village-web-community-radio-old-mill
+Shared rides — Old Mill,project,Invented programme led by local people,Young people|Health,,,,village-web-shared-rides-old-mill
+Food tables — West Ridge,project,Invented programme led by local people,Food,,,,village-web-food-tables-west-ridge
+Young makers — West Ridge,project,Invented programme led by local people,Housing,,,,village-web-young-makers-west-ridge
+Warm doors — West Ridge,project,Invented programme led by local people,Health,,,,village-web-warm-doors-west-ridge
+Safe streets — West Ridge,project,Invented programme led by local people,Culture,,,,village-web-safe-streets-west-ridge
+Repair days — West Ridge,project,Invented programme led by local people,Energy|Young people,,,,village-web-repair-days-west-ridge
+Garden sessions — West Ridge,project,Invented programme led by local people,Transport,,,,village-web-garden-sessions-west-ridge
+Community radio — West Ridge,project,Invented programme led by local people,Nature,,,,village-web-community-radio-west-ridge
+Shared rides — West Ridge,project,Invented programme led by local people,Young people,,,,village-web-shared-rides-west-ridge
+Food tables — River Gate,project,Invented programme led by local people,Food,,,,village-web-food-tables-river-gate
+Young makers — River Gate,project,Invented programme led by local people,Housing|Energy,,,,village-web-young-makers-river-gate
+Warm doors — River Gate,project,Invented programme led by local people,Health,,,,village-web-warm-doors-river-gate
+Safe streets — River Gate,project,Invented programme led by local people,Culture,,,,village-web-safe-streets-river-gate
+Repair days — River Gate,project,Invented programme led by local people,Energy,,,,village-web-repair-days-river-gate
+Garden sessions — River Gate,project,Invented programme led by local people,Transport,,,,village-web-garden-sessions-river-gate
+Community radio — River Gate,project,Invented programme led by local people,Nature|Housing,,,,village-web-community-radio-river-gate
+Shared rides — River Gate,project,Invented programme led by local people,Young people,,,,village-web-shared-rides-river-gate
+Alder Seed Fund,funder,,Community funding,,,,village-web-alder-seed-fund
+River Mutual Trust,funder,,Community funding,,,,village-web-river-mutual-trust
+Valley Neighbours Fund,funder,,Community funding,,,,village-web-valley-neighbours-fund
+Open Door Foundation,funder,,Community funding,,,,village-web-open-door-foundation
+Common Good Fund,funder,,Community funding,,,,village-web-common-good-fund
+Avery of Alderbank,person,Invented volunteer organiser,Food,,,,village-web-avery-of-alderbank
+Cleo of Old Mill,person,Invented volunteer organiser,Housing,,,,village-web-cleo-of-old-mill
+Imani of West Ridge,person,Invented volunteer organiser,Health,,,,village-web-imani-of-west-ridge
+Jonah of River Gate,person,Invented volunteer organiser,Culture,,,,village-web-jonah-of-river-gate
+Miri of South Fields,person,Invented volunteer organiser,Energy,,,,village-web-miri-of-south-fields
+Nell of The Heights,person,Invented volunteer organiser,Transport,,,,village-web-nell-of-the-heights
+Ravi of Market Row,person,Invented volunteer organiser,Nature,,,,village-web-ravi-of-market-row
+Tessa of East Crossing,person,Invented volunteer organiser,Young people,,,,village-web-tessa-of-east-crossing
+Arlo of Alderbank,person,Invented volunteer organiser,Food,,,,village-web-arlo-of-alderbank
+Esther of Old Mill,person,Invented volunteer organiser,Housing,,,,village-web-esther-of-old-mill
+Rosa of West Ridge,person,Invented volunteer organiser,Health,,,,village-web-rosa-of-west-ridge
+Saul of River Gate,person,Invented volunteer organiser,Culture,,,,village-web-saul-of-river-gate

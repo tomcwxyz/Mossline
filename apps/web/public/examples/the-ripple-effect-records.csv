@@ -1,25 +1,201 @@
 Label,Type,Description,Tags,Region,Latitude,Longitude,ID
-Affordable homes,topic,"Hypothetical factor in a systems map, not a measured relationship",Housing,,,,the-ripple-effect-affordable-homes
-Secure tenancies,topic,"Hypothetical factor in a systems map, not a measured relationship",Mobility,,,,the-ripple-effect-secure-tenancies
-Neighbourhood trust,topic,"Hypothetical factor in a systems map, not a measured relationship",Health,,,,the-ripple-effect-neighbourhood-trust
-Street safety,topic,"Hypothetical factor in a systems map, not a measured relationship",Environment,,,,the-ripple-effect-street-safety
-Active travel,topic,"Hypothetical factor in a systems map, not a measured relationship",Economy,,,,the-ripple-effect-active-travel
-Bus reliability,topic,"Hypothetical factor in a systems map, not a measured relationship",Community,,,,the-ripple-effect-bus-reliability
-Household costs,topic,"Hypothetical factor in a systems map, not a measured relationship",Housing,,,,the-ripple-effect-household-costs
-Mental wellbeing,topic,"Hypothetical factor in a systems map, not a measured relationship",Mobility,,,,the-ripple-effect-mental-wellbeing
-Social isolation,topic,"Hypothetical factor in a systems map, not a measured relationship",Health,,,,the-ripple-effect-social-isolation
-Local volunteering,topic,"Hypothetical factor in a systems map, not a measured relationship",Environment,,,,the-ripple-effect-local-volunteering
-Green space,topic,"Hypothetical factor in a systems map, not a measured relationship",Economy,,,,the-ripple-effect-green-space
-Air quality,topic,"Hypothetical factor in a systems map, not a measured relationship",Community,,,,the-ripple-effect-air-quality
-Warm homes,topic,"Hypothetical factor in a systems map, not a measured relationship",Housing,,,,the-ripple-effect-warm-homes
-Fuel poverty,topic,"Hypothetical factor in a systems map, not a measured relationship",Mobility,,,,the-ripple-effect-fuel-poverty
-Employment access,topic,"Hypothetical factor in a systems map, not a measured relationship",Health,,,,the-ripple-effect-employment-access
-Skills and training,topic,"Hypothetical factor in a systems map, not a measured relationship",Environment,,,,the-ripple-effect-skills-and-training
-Community spaces,topic,"Hypothetical factor in a systems map, not a measured relationship",Economy,,,,the-ripple-effect-community-spaces
-Youth activities,topic,"Hypothetical factor in a systems map, not a measured relationship",Community,,,,the-ripple-effect-youth-activities
-Food security,topic,"Hypothetical factor in a systems map, not a measured relationship",Housing,,,,the-ripple-effect-food-security
-Local business,topic,"Hypothetical factor in a systems map, not a measured relationship",Mobility,,,,the-ripple-effect-local-business
-Public investment,topic,"Hypothetical factor in a systems map, not a measured relationship",Health,,,,the-ripple-effect-public-investment
-Community voice,topic,"Hypothetical factor in a systems map, not a measured relationship",Environment,,,,the-ripple-effect-community-voice
-Transport emissions,topic,"Hypothetical factor in a systems map, not a measured relationship",Economy,,,,the-ripple-effect-transport-emissions
-Healthy streets,topic,"Hypothetical factor in a systems map, not a measured relationship",Community,,,,the-ripple-effect-healthy-streets
+North Collective · Old Port,organisation,Invented local group working in food,Food|Culture,Old Port (invented),,,the-ripple-effect-north-collective-old-port
+Open Collective · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-open-collective-north-end
+Common Collective · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-common-collective-lime-fields
+River Collective · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-river-collective-southbank
+New Collective · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-new-collective-upper-mill
+Bright Collective · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-bright-collective-the-quays
+Shared Collective · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-shared-collective-westhaven
+Silver Collective · East Ward,organisation,Invented local group working in young people,Young people|Health,East Ward (invented),,,the-ripple-effect-silver-collective-east-ward
+Neighbour Collective · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-neighbour-collective-old-port
+Willow Collective · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-willow-collective-north-end
+Harbour Collective · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-harbour-collective-lime-fields
+Bridge Collective · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-bridge-collective-southbank
+Lantern Collective · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-lantern-collective-upper-mill
+Moss Collective · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-moss-collective-the-quays
+Highland Collective · Westhaven,organisation,Invented local group working in nature,Nature|Housing,Westhaven (invented),,,the-ripple-effect-highland-collective-westhaven
+Alder Collective · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-alder-collective-east-ward
+Foundry Collective · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-foundry-collective-old-port
+Mill Collective · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-mill-collective-north-end
+Meadow Collective · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-meadow-collective-lime-fields
+West Collective · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-west-collective-southbank
+East Collective · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-east-collective-upper-mill
+Cedar Collective · The Quays,organisation,Invented local group working in transport,Transport|Food,The Quays (invented),,,the-ripple-effect-cedar-collective-the-quays
+Stone Collective · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-stone-collective-westhaven
+Spring Collective · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-spring-collective-east-ward
+Elm Collective · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-elm-collective-old-port
+Fox Collective · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-fox-collective-north-end
+Hearth Collective · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-hearth-collective-lime-fields
+Green Collective · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-green-collective-southbank
+Blue Collective · Upper Mill,organisation,Invented local group working in energy,Energy|Young people,Upper Mill (invented),,,the-ripple-effect-blue-collective-upper-mill
+Dawn Collective · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-dawn-collective-the-quays
+Wild Collective · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-wild-collective-westhaven
+Sun Collective · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-sun-collective-east-ward
+Field Collective · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-field-collective-old-port
+Compass Collective · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-compass-collective-north-end
+Oak Collective · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-oak-collective-lime-fields
+Hope Collective · Southbank,organisation,Invented local group working in culture,Culture|Nature,Southbank (invented),,,the-ripple-effect-hope-collective-southbank
+Coast Collective · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-coast-collective-upper-mill
+Fell Collective · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-fell-collective-the-quays
+Summer Collective · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-summer-collective-westhaven
+Winter Collective · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-winter-collective-east-ward
+North Partnership · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-north-partnership-old-port
+Open Partnership · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-open-partnership-north-end
+Common Partnership · Lime Fields,organisation,Invented local group working in health,Health|Transport,Lime Fields (invented),,,the-ripple-effect-common-partnership-lime-fields
+River Partnership · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-river-partnership-southbank
+New Partnership · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-new-partnership-upper-mill
+Bright Partnership · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-bright-partnership-the-quays
+Shared Partnership · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-shared-partnership-westhaven
+Silver Partnership · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-silver-partnership-east-ward
+Neighbour Partnership · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-neighbour-partnership-old-port
+Willow Partnership · North End,organisation,Invented local group working in housing,Housing|Energy,North End (invented),,,the-ripple-effect-willow-partnership-north-end
+Harbour Partnership · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-harbour-partnership-lime-fields
+Bridge Partnership · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-bridge-partnership-southbank
+Lantern Partnership · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-lantern-partnership-upper-mill
+Moss Partnership · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-moss-partnership-the-quays
+Highland Partnership · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-highland-partnership-westhaven
+Alder Partnership · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-alder-partnership-east-ward
+Foundry Partnership · Old Port,organisation,Invented local group working in food,Food|Culture,Old Port (invented),,,the-ripple-effect-foundry-partnership-old-port
+Mill Partnership · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-mill-partnership-north-end
+Meadow Partnership · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-meadow-partnership-lime-fields
+West Partnership · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-west-partnership-southbank
+East Partnership · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-east-partnership-upper-mill
+Cedar Partnership · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-cedar-partnership-the-quays
+Stone Partnership · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-stone-partnership-westhaven
+Spring Partnership · East Ward,organisation,Invented local group working in young people,Young people|Health,East Ward (invented),,,the-ripple-effect-spring-partnership-east-ward
+Elm Partnership · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-elm-partnership-old-port
+Fox Partnership · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-fox-partnership-north-end
+Hearth Partnership · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-hearth-partnership-lime-fields
+Green Partnership · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-green-partnership-southbank
+Blue Partnership · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-blue-partnership-upper-mill
+Dawn Partnership · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-dawn-partnership-the-quays
+Wild Partnership · Westhaven,organisation,Invented local group working in nature,Nature|Housing,Westhaven (invented),,,the-ripple-effect-wild-partnership-westhaven
+Sun Partnership · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-sun-partnership-east-ward
+Field Partnership · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-field-partnership-old-port
+Compass Partnership · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-compass-partnership-north-end
+Oak Partnership · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-oak-partnership-lime-fields
+Hope Partnership · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-hope-partnership-southbank
+Coast Partnership · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-coast-partnership-upper-mill
+Fell Partnership · The Quays,organisation,Invented local group working in transport,Transport|Food,The Quays (invented),,,the-ripple-effect-fell-partnership-the-quays
+Summer Partnership · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-summer-partnership-westhaven
+Winter Partnership · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-winter-partnership-east-ward
+North Network · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-north-network-old-port
+Open Network · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-open-network-north-end
+Common Network · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-common-network-lime-fields
+River Network · Southbank,organisation,Invented local group working in culture,Culture,Southbank (invented),,,the-ripple-effect-river-network-southbank
+New Network · Upper Mill,organisation,Invented local group working in energy,Energy|Young people,Upper Mill (invented),,,the-ripple-effect-new-network-upper-mill
+Bright Network · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-bright-network-the-quays
+Shared Network · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-shared-network-westhaven
+Silver Network · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-silver-network-east-ward
+Neighbour Network · Old Port,organisation,Invented local group working in food,Food,Old Port (invented),,,the-ripple-effect-neighbour-network-old-port
+Willow Network · North End,organisation,Invented local group working in housing,Housing,North End (invented),,,the-ripple-effect-willow-network-north-end
+Harbour Network · Lime Fields,organisation,Invented local group working in health,Health,Lime Fields (invented),,,the-ripple-effect-harbour-network-lime-fields
+Bridge Network · Southbank,organisation,Invented local group working in culture,Culture|Nature,Southbank (invented),,,the-ripple-effect-bridge-network-southbank
+Lantern Network · Upper Mill,organisation,Invented local group working in energy,Energy,Upper Mill (invented),,,the-ripple-effect-lantern-network-upper-mill
+Moss Network · The Quays,organisation,Invented local group working in transport,Transport,The Quays (invented),,,the-ripple-effect-moss-network-the-quays
+Highland Network · Westhaven,organisation,Invented local group working in nature,Nature,Westhaven (invented),,,the-ripple-effect-highland-network-westhaven
+Alder Network · East Ward,organisation,Invented local group working in young people,Young people,East Ward (invented),,,the-ripple-effect-alder-network-east-ward
+Old Port Hub,place,Fictional community space,Food,Commonport (fictional),,,the-ripple-effect-old-port-hub
+North End Hub,place,Fictional community space,Housing,Commonport (fictional),,,the-ripple-effect-north-end-hub
+Lime Fields Hub,place,Fictional community space,Health,Commonport (fictional),,,the-ripple-effect-lime-fields-hub
+Southbank Hub,place,Fictional community space,Culture,Commonport (fictional),,,the-ripple-effect-southbank-hub
+Upper Mill Hub,place,Fictional community space,Energy,Commonport (fictional),,,the-ripple-effect-upper-mill-hub
+The Quays Hub,place,Fictional community space,Transport,Commonport (fictional),,,the-ripple-effect-the-quays-hub
+Westhaven Hub,place,Fictional community space,Nature,Commonport (fictional),,,the-ripple-effect-westhaven-hub
+East Ward Hub,place,Fictional community space,Young people,Commonport (fictional),,,the-ripple-effect-east-ward-hub
+Shared Tables · programme 1,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-1
+Culture Nights · programme 2,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-2
+Street Greening · programme 3,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-3
+Neighbourhood Care · programme 4,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-4
+Young Leaders · programme 5,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-5
+Energy Advice · programme 6,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-6
+Safer Roads · programme 7,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-7
+Open Homes · programme 8,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-8
+Shared Tables · programme 9,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-9
+Culture Nights · programme 10,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-10
+Street Greening · programme 11,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-11
+Neighbourhood Care · programme 12,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-12
+Young Leaders · programme 13,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-13
+Energy Advice · programme 14,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-14
+Safer Roads · programme 15,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-15
+Open Homes · programme 16,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-16
+Shared Tables · programme 17,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-17
+Culture Nights · programme 18,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-18
+Street Greening · programme 19,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-19
+Neighbourhood Care · programme 20,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-20
+Young Leaders · programme 21,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-21
+Energy Advice · programme 22,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-22
+Safer Roads · programme 23,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-23
+Open Homes · programme 24,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-24
+Shared Tables · programme 25,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-25
+Culture Nights · programme 26,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-26
+Street Greening · programme 27,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-27
+Neighbourhood Care · programme 28,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-28
+Young Leaders · programme 29,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-29
+Energy Advice · programme 30,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-30
+Safer Roads · programme 31,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-31
+Open Homes · programme 32,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-32
+Shared Tables · programme 33,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-33
+Culture Nights · programme 34,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-34
+Street Greening · programme 35,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-35
+Neighbourhood Care · programme 36,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-36
+Young Leaders · programme 37,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-37
+Energy Advice · programme 38,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-38
+Safer Roads · programme 39,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-39
+Open Homes · programme 40,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-40
+Shared Tables · programme 41,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-41
+Culture Nights · programme 42,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-42
+Street Greening · programme 43,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-43
+Neighbourhood Care · programme 44,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-44
+Young Leaders · programme 45,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-45
+Energy Advice · programme 46,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-46
+Safer Roads · programme 47,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-47
+Open Homes · programme 48,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-48
+Shared Tables · programme 49,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-49
+Culture Nights · programme 50,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-50
+Street Greening · programme 51,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-51
+Neighbourhood Care · programme 52,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-52
+Young Leaders · programme 53,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-53
+Energy Advice · programme 54,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-54
+Safer Roads · programme 55,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-55
+Open Homes · programme 56,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-56
+Shared Tables · programme 57,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-57
+Culture Nights · programme 58,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-58
+Street Greening · programme 59,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-59
+Neighbourhood Care · programme 60,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-60
+Young Leaders · programme 61,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-61
+Energy Advice · programme 62,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-62
+Safer Roads · programme 63,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-63
+Open Homes · programme 64,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-64
+Shared Tables · programme 65,project,Fictional collaboration across local groups,Food|Housing,,,,the-ripple-effect-shared-tables-programme-65
+Culture Nights · programme 66,project,Fictional collaboration across local groups,Housing,,,,the-ripple-effect-culture-nights-programme-66
+Street Greening · programme 67,project,Fictional collaboration across local groups,Health,,,,the-ripple-effect-street-greening-programme-67
+Neighbourhood Care · programme 68,project,Fictional collaboration across local groups,Culture,,,,the-ripple-effect-neighbourhood-care-programme-68
+Young Leaders · programme 69,project,Fictional collaboration across local groups,Energy|Transport,,,,the-ripple-effect-young-leaders-programme-69
+Energy Advice · programme 70,project,Fictional collaboration across local groups,Transport,,,,the-ripple-effect-energy-advice-programme-70
+Safer Roads · programme 71,project,Fictional collaboration across local groups,Nature,,,,the-ripple-effect-safer-roads-programme-71
+Open Homes · programme 72,project,Fictional collaboration across local groups,Young people,,,,the-ripple-effect-open-homes-programme-72
+Asha · coordinator 1,person,Invented community project coordinator,Food,,,,the-ripple-effect-asha-coordinator-1
+Tariq · coordinator 2,person,Invented community project coordinator,Housing,,,,the-ripple-effect-tariq-coordinator-2
+Cora · coordinator 3,person,Invented community project coordinator,Health,,,,the-ripple-effect-cora-coordinator-3
+Bryn · coordinator 4,person,Invented community project coordinator,Culture,,,,the-ripple-effect-bryn-coordinator-4
+Sana · coordinator 5,person,Invented community project coordinator,Energy,,,,the-ripple-effect-sana-coordinator-5
+Luca · coordinator 6,person,Invented community project coordinator,Transport,,,,the-ripple-effect-luca-coordinator-6
+Erin · coordinator 7,person,Invented community project coordinator,Nature,,,,the-ripple-effect-erin-coordinator-7
+Kian · coordinator 8,person,Invented community project coordinator,Young people,,,,the-ripple-effect-kian-coordinator-8
+Neve · coordinator 9,person,Invented community project coordinator,Food,,,,the-ripple-effect-neve-coordinator-9
+Milo · coordinator 10,person,Invented community project coordinator,Housing,,,,the-ripple-effect-milo-coordinator-10
+Zuri · coordinator 11,person,Invented community project coordinator,Health,,,,the-ripple-effect-zuri-coordinator-11
+Ivan · coordinator 12,person,Invented community project coordinator,Culture,,,,the-ripple-effect-ivan-coordinator-12
+Asha · coordinator 13,person,Invented community project coordinator,Energy,,,,the-ripple-effect-asha-coordinator-13
+Tariq · coordinator 14,person,Invented community project coordinator,Transport,,,,the-ripple-effect-tariq-coordinator-14
+Cora · coordinator 15,person,Invented community project coordinator,Nature,,,,the-ripple-effect-cora-coordinator-15
+Bryn · coordinator 16,person,Invented community project coordinator,Young people,,,,the-ripple-effect-bryn-coordinator-16
+Sana · coordinator 17,person,Invented community project coordinator,Food,,,,the-ripple-effect-sana-coordinator-17
+Luca · coordinator 18,person,Invented community project coordinator,Housing,,,,the-ripple-effect-luca-coordinator-18
+Erin · coordinator 19,person,Invented community project coordinator,Health,,,,the-ripple-effect-erin-coordinator-19
+Kian · coordinator 20,person,Invented community project coordinator,Culture,,,,the-ripple-effect-kian-coordinator-20
+Neve · coordinator 21,person,Invented community project coordinator,Energy,,,,the-ripple-effect-neve-coordinator-21
+Milo · coordinator 22,person,Invented community project coordinator,Transport,,,,the-ripple-effect-milo-coordinator-22
+Zuri · coordinator 23,person,Invented community project coordinator,Nature,,,,the-ripple-effect-zuri-coordinator-23
+Ivan · coordinator 24,person,Invented community project coordinator,Young people,,,,the-ripple-effect-ivan-coordinator-24

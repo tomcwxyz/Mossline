@@ -1,40 +1,335 @@
 Label,Type,Description,Tags,Region,Latitude,Longitude,ID
-The Lantern Room,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.965,-1.63,after-dark-the-lantern-room
-Small Hours Theatre,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.974000000000004,-1.63,after-dark-small-hours-theatre
-Riverlight Gallery,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.983000000000004,-1.63,after-dark-riverlight-gallery
-The Foundry,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.992000000000004,-1.63,after-dark-the-foundry
-The Old Cinema,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.965,-1.6179999999999999,after-dark-the-old-cinema
-Station Yard,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.974000000000004,-1.6179999999999999,after-dark-station-yard
-The Moor Street Bar,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.983000000000004,-1.6179999999999999,after-dark-the-moor-street-bar
-Glasshouse Studios,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.992000000000004,-1.6179999999999999,after-dark-glasshouse-studios
-The Exchange,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.965,-1.6059999999999999,after-dark-the-exchange
-The Listening Shed,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.974000000000004,-1.6059999999999999,after-dark-the-listening-shed
-North Pier Stage,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.983000000000004,-1.6059999999999999,after-dark-north-pier-stage
-The Print Room,place,Fictional venue; illustrative coordinates only,Venue,Briarhaven (fictional city),54.992000000000004,-1.6059999999999999,after-dark-the-print-room
-Ava North,person,Imaginary artist or organiser,Music,,,,after-dark-ava-north
-Rae Calder,person,Imaginary artist or organiser,Theatre,,,,after-dark-rae-calder
-Imani Vale,person,Imaginary artist or organiser,Art,,,,after-dark-imani-vale
-Jules Farrow,person,Imaginary artist or organiser,Film,,,,after-dark-jules-farrow
-Noor Baines,person,Imaginary artist or organiser,Music,,,,after-dark-noor-baines
-Ada Blythe,person,Imaginary artist or organiser,Theatre,,,,after-dark-ada-blythe
-Kit Rowan,person,Imaginary artist or organiser,Art,,,,after-dark-kit-rowan
-Ezra Moss,person,Imaginary artist or organiser,Film,,,,after-dark-ezra-moss
-Leni Shore,person,Imaginary artist or organiser,Music,,,,after-dark-leni-shore
-Sol Fern,person,Imaginary artist or organiser,Theatre,,,,after-dark-sol-fern
-Tali Brook,person,Imaginary artist or organiser,Art,,,,after-dark-tali-brook
-Max Wren,person,Imaginary artist or organiser,Film,,,,after-dark-max-wren
-Night School,organisation,,Culture,,,,after-dark-night-school
-Afterglow Arts,organisation,,Culture,,,,after-dark-afterglow-arts
-Common Frequency,organisation,,Culture,,,,after-dark-common-frequency
-Briarhaven Fringe,organisation,,Culture,,,,after-dark-briarhaven-fringe
-Out There Collective,organisation,,Culture,,,,after-dark-out-there-collective
-The Listening Sessions,project,Invented cultural programme,Music,,,,after-dark-the-listening-sessions
-Last Train Sessions,project,Invented cultural programme,Theatre,,,,after-dark-last-train-sessions
-Lightworks,project,Invented cultural programme,Art,,,,after-dark-lightworks
-Open Stage,project,Invented cultural programme,Film,,,,after-dark-open-stage
-Neighbourhood Film Nights,project,Invented cultural programme,Music,,,,after-dark-neighbourhood-film-nights
-New Voices,project,Invented cultural programme,Theatre,,,,after-dark-new-voices
-Print After Dark,project,Invented cultural programme,Art,,,,after-dark-print-after-dark
-Street Stories,project,Invented cultural programme,Film,,,,after-dark-street-stories
-The Hidden Rooms,project,Invented cultural programme,Music,,,,after-dark-the-hidden-rooms
-Winter Fringe,project,Invented cultural programme,Theatre,,,,after-dark-winter-fringe
+The Lantern Room · Newcastle 1,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Music,Newcastle,54.97729,-1.59527,after-dark-the-lantern-room-newcastle-1
+The Print House · Newcastle 2,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Theatre,Newcastle,54.95695,-1.63744,after-dark-the-print-house-newcastle-2
+The Night Archive · Newcastle 3,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Visual arts,Newcastle,54.92961,-1.61159,after-dark-the-night-archive-newcastle-3
+The River Room · Newcastle 4,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Film,Newcastle,54.94692,-1.56457,after-dark-the-river-room-newcastle-4
+The Foundry Stage · Newcastle 5,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Music,Newcastle,55.02934,-1.65001,after-dark-the-foundry-stage-newcastle-5
+The Small Hours Club · Newcastle 6,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Theatre,Newcastle,54.94967,-1.64801,after-dark-the-small-hours-club-newcastle-6
+The Listening Loft · Newcastle 7,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Visual arts,Newcastle,54.95359,-1.65388,after-dark-the-listening-loft-newcastle-7
+The Blue Door · Newcastle 8,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Film,Newcastle,54.96756,-1.57489,after-dark-the-blue-door-newcastle-8
+The Old Cinema · Newcastle 9,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Music,Newcastle,54.96269,-1.65847,after-dark-the-old-cinema-newcastle-9
+The Glasshouse · Newcastle 10,place,"Invented arts venue, situated approximately within the real city of Newcastle",Venue|Theatre,Newcastle,55.03149,-1.58564,after-dark-the-glasshouse-newcastle-10
+The River Room · Gateshead 1,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Music,Gateshead,55.01336,-1.61238,after-dark-the-river-room-gateshead-1
+The Foundry Stage · Gateshead 2,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Theatre,Gateshead,55.01045,-1.63011,after-dark-the-foundry-stage-gateshead-2
+The Small Hours Club · Gateshead 3,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Visual arts,Gateshead,54.92109,-1.54819,after-dark-the-small-hours-club-gateshead-3
+The Listening Loft · Gateshead 4,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Film,Gateshead,54.91761,-1.56661,after-dark-the-listening-loft-gateshead-4
+The Blue Door · Gateshead 5,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Music,Gateshead,54.96567,-1.62013,after-dark-the-blue-door-gateshead-5
+The Old Cinema · Gateshead 6,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Theatre,Gateshead,54.95594,-1.57758,after-dark-the-old-cinema-gateshead-6
+The Glasshouse · Gateshead 7,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Visual arts,Gateshead,54.9194,-1.61885,after-dark-the-glasshouse-gateshead-7
+The Paper Theatre · Gateshead 8,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Film,Gateshead,55.00116,-1.62852,after-dark-the-paper-theatre-gateshead-8
+The Rail Yard · Gateshead 9,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Music,Gateshead,54.90699,-1.62599,after-dark-the-rail-yard-gateshead-9
+The Lantern Room · Gateshead 10,place,"Invented arts venue, situated approximately within the real city of Gateshead",Venue|Theatre,Gateshead,54.91025,-1.61883,after-dark-the-lantern-room-gateshead-10
+The Listening Loft · Sunderland 1,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Music,Sunderland,54.93946,-1.38201,after-dark-the-listening-loft-sunderland-1
+The Blue Door · Sunderland 2,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Theatre,Sunderland,54.87635,-1.4346,after-dark-the-blue-door-sunderland-2
+The Old Cinema · Sunderland 3,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Visual arts,Sunderland,54.85286,-1.39472,after-dark-the-old-cinema-sunderland-3
+The Glasshouse · Sunderland 4,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Film,Sunderland,54.87955,-1.38668,after-dark-the-glasshouse-sunderland-4
+The Paper Theatre · Sunderland 5,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Music,Sunderland,54.87727,-1.37444,after-dark-the-paper-theatre-sunderland-5
+The Rail Yard · Sunderland 6,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Theatre,Sunderland,54.95805,-1.35654,after-dark-the-rail-yard-sunderland-6
+The Lantern Room · Sunderland 7,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Visual arts,Sunderland,54.87101,-1.37061,after-dark-the-lantern-room-sunderland-7
+The Print House · Sunderland 8,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Film,Sunderland,54.953,-1.37084,after-dark-the-print-house-sunderland-8
+The Night Archive · Sunderland 9,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Music,Sunderland,54.92063,-1.36102,after-dark-the-night-archive-sunderland-9
+The River Room · Sunderland 10,place,"Invented arts venue, situated approximately within the real city of Sunderland",Venue|Theatre,Sunderland,54.95675,-1.43197,after-dark-the-river-room-sunderland-10
+The Glasshouse · Durham 1,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Music,Durham,54.7443,-1.5478,after-dark-the-glasshouse-durham-1
+The Paper Theatre · Durham 2,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Theatre,Durham,54.7405,-1.63536,after-dark-the-paper-theatre-durham-2
+The Rail Yard · Durham 3,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Visual arts,Durham,54.75446,-1.55647,after-dark-the-rail-yard-durham-3
+The Lantern Room · Durham 4,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Film,Durham,54.75626,-1.63565,after-dark-the-lantern-room-durham-4
+The Print House · Durham 5,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Music,Durham,54.77251,-1.58681,after-dark-the-print-house-durham-5
+The Night Archive · Durham 6,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Theatre,Durham,54.77437,-1.61712,after-dark-the-night-archive-durham-6
+The River Room · Durham 7,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Visual arts,Durham,54.76163,-1.60912,after-dark-the-river-room-durham-7
+The Foundry Stage · Durham 8,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Film,Durham,54.81177,-1.61784,after-dark-the-foundry-stage-durham-8
+The Small Hours Club · Durham 9,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Music,Durham,54.72559,-1.59963,after-dark-the-small-hours-club-durham-9
+The Listening Loft · Durham 10,place,"Invented arts venue, situated approximately within the real city of Durham",Venue|Theatre,Durham,54.79733,-1.63796,after-dark-the-listening-loft-durham-10
+The Lantern Room · Middlesbrough 1,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Music,Middlesbrough,54.61127,-1.20885,after-dark-the-lantern-room-middlesbrough-1
+The Print House · Middlesbrough 2,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Theatre,Middlesbrough,54.54069,-1.24173,after-dark-the-print-house-middlesbrough-2
+The Night Archive · Middlesbrough 3,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Visual arts,Middlesbrough,54.57643,-1.19698,after-dark-the-night-archive-middlesbrough-3
+The River Room · Middlesbrough 4,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Film,Middlesbrough,54.54527,-1.194,after-dark-the-river-room-middlesbrough-4
+The Foundry Stage · Middlesbrough 5,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Music,Middlesbrough,54.56067,-1.28015,after-dark-the-foundry-stage-middlesbrough-5
+The Small Hours Club · Middlesbrough 6,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Theatre,Middlesbrough,54.5817,-1.21102,after-dark-the-small-hours-club-middlesbrough-6
+The Listening Loft · Middlesbrough 7,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Visual arts,Middlesbrough,54.54316,-1.25715,after-dark-the-listening-loft-middlesbrough-7
+The Blue Door · Middlesbrough 8,place,"Invented arts venue, situated approximately within the real city of Middlesbrough",Venue|Film,Middlesbrough,54.55427,-1.23148,after-dark-the-blue-door-middlesbrough-8
+The River Room · York 1,place,"Invented arts venue, situated approximately within the real city of York",Venue|Music,York,53.97469,-1.06195,after-dark-the-river-room-york-1
+The Foundry Stage · York 2,place,"Invented arts venue, situated approximately within the real city of York",Venue|Theatre,York,53.90662,-1.06935,after-dark-the-foundry-stage-york-2
+The Small Hours Club · York 3,place,"Invented arts venue, situated approximately within the real city of York",Venue|Visual arts,York,53.90861,-1.0351,after-dark-the-small-hours-club-york-3
+The Listening Loft · York 4,place,"Invented arts venue, situated approximately within the real city of York",Venue|Film,York,53.92997,-1.04792,after-dark-the-listening-loft-york-4
+The Blue Door · York 5,place,"Invented arts venue, situated approximately within the real city of York",Venue|Music,York,53.91571,-1.08957,after-dark-the-blue-door-york-5
+The Old Cinema · York 6,place,"Invented arts venue, situated approximately within the real city of York",Venue|Theatre,York,53.9177,-1.06672,after-dark-the-old-cinema-york-6
+The Glasshouse · York 7,place,"Invented arts venue, situated approximately within the real city of York",Venue|Visual arts,York,53.99875,-1.04468,after-dark-the-glasshouse-york-7
+The Paper Theatre · York 8,place,"Invented arts venue, situated approximately within the real city of York",Venue|Film,York,53.98082,-1.13135,after-dark-the-paper-theatre-york-8
+The Listening Loft · Leeds 1,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Music,Leeds,53.79978,-1.56635,after-dark-the-listening-loft-leeds-1
+The Blue Door · Leeds 2,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Theatre,Leeds,53.80607,-1.56063,after-dark-the-blue-door-leeds-2
+The Old Cinema · Leeds 3,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Visual arts,Leeds,53.79719,-1.55056,after-dark-the-old-cinema-leeds-3
+The Glasshouse · Leeds 4,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Film,Leeds,53.77246,-1.55426,after-dark-the-glasshouse-leeds-4
+The Paper Theatre · Leeds 5,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Music,Leeds,53.82869,-1.56593,after-dark-the-paper-theatre-leeds-5
+The Rail Yard · Leeds 6,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Theatre,Leeds,53.83116,-1.54299,after-dark-the-rail-yard-leeds-6
+The Lantern Room · Leeds 7,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Visual arts,Leeds,53.75576,-1.56089,after-dark-the-lantern-room-leeds-7
+The Print House · Leeds 8,place,"Invented arts venue, situated approximately within the real city of Leeds",Venue|Film,Leeds,53.82307,-1.58333,after-dark-the-print-house-leeds-8
+The Glasshouse · Sheffield 1,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Music,Sheffield,53.39625,-1.48082,after-dark-the-glasshouse-sheffield-1
+The Paper Theatre · Sheffield 2,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Theatre,Sheffield,53.41936,-1.4581,after-dark-the-paper-theatre-sheffield-2
+The Rail Yard · Sheffield 3,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Visual arts,Sheffield,53.37917,-1.50609,after-dark-the-rail-yard-sheffield-3
+The Lantern Room · Sheffield 4,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Film,Sheffield,53.40798,-1.49021,after-dark-the-lantern-room-sheffield-4
+The Print House · Sheffield 5,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Music,Sheffield,53.41215,-1.41874,after-dark-the-print-house-sheffield-5
+The Night Archive · Sheffield 6,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Theatre,Sheffield,53.34519,-1.47361,after-dark-the-night-archive-sheffield-6
+The River Room · Sheffield 7,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Visual arts,Sheffield,53.38737,-1.42557,after-dark-the-river-room-sheffield-7
+The Foundry Stage · Sheffield 8,place,"Invented arts venue, situated approximately within the real city of Sheffield",Venue|Film,Sheffield,53.37678,-1.46533,after-dark-the-foundry-stage-sheffield-8
+The Lantern Room · Manchester 1,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Music,Manchester,53.46935,-2.21515,after-dark-the-lantern-room-manchester-1
+The Print House · Manchester 2,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Theatre,Manchester,53.47105,-2.20256,after-dark-the-print-house-manchester-2
+The Night Archive · Manchester 3,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Visual arts,Manchester,53.49131,-2.21056,after-dark-the-night-archive-manchester-3
+The River Room · Manchester 4,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Film,Manchester,53.42899,-2.21267,after-dark-the-river-room-manchester-4
+The Foundry Stage · Manchester 5,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Music,Manchester,53.4801,-2.21134,after-dark-the-foundry-stage-manchester-5
+The Small Hours Club · Manchester 6,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Theatre,Manchester,53.47056,-2.23596,after-dark-the-small-hours-club-manchester-6
+The Listening Loft · Manchester 7,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Visual arts,Manchester,53.42746,-2.28248,after-dark-the-listening-loft-manchester-7
+The Blue Door · Manchester 8,place,"Invented arts venue, situated approximately within the real city of Manchester",Venue|Film,Manchester,53.47336,-2.24525,after-dark-the-blue-door-manchester-8
+The River Room · Liverpool 1,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Music,Liverpool,53.42991,-2.95704,after-dark-the-river-room-liverpool-1
+The Foundry Stage · Liverpool 2,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Theatre,Liverpool,53.37491,-3.00502,after-dark-the-foundry-stage-liverpool-2
+The Small Hours Club · Liverpool 3,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Visual arts,Liverpool,53.43017,-2.97593,after-dark-the-small-hours-club-liverpool-3
+The Listening Loft · Liverpool 4,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Film,Liverpool,53.38014,-2.95011,after-dark-the-listening-loft-liverpool-4
+The Blue Door · Liverpool 5,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Music,Liverpool,53.41808,-2.93779,after-dark-the-blue-door-liverpool-5
+The Old Cinema · Liverpool 6,place,"Invented arts venue, situated approximately within the real city of Liverpool",Venue|Theatre,Liverpool,53.36072,-3.04292,after-dark-the-old-cinema-liverpool-6
+The Listening Loft · Hull 1,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Music,Hull,53.80986,-0.38209,after-dark-the-listening-loft-hull-1
+The Blue Door · Hull 2,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Theatre,Hull,53.76407,-0.27872,after-dark-the-blue-door-hull-2
+The Old Cinema · Hull 3,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Visual arts,Hull,53.78383,-0.28612,after-dark-the-old-cinema-hull-3
+The Glasshouse · Hull 4,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Film,Hull,53.78851,-0.29567,after-dark-the-glasshouse-hull-4
+The Paper Theatre · Hull 5,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Music,Hull,53.7816,-0.29127,after-dark-the-paper-theatre-hull-5
+The Rail Yard · Hull 6,place,"Invented arts venue, situated approximately within the real city of Hull",Venue|Theatre,Hull,53.76281,-0.36162,after-dark-the-rail-yard-hull-6
+The Glasshouse · Carlisle 1,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Music,Carlisle,54.91752,-2.90243,after-dark-the-glasshouse-carlisle-1
+The Paper Theatre · Carlisle 2,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Theatre,Carlisle,54.87124,-2.88739,after-dark-the-paper-theatre-carlisle-2
+The Rail Yard · Carlisle 3,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Visual arts,Carlisle,54.92672,-2.89207,after-dark-the-rail-yard-carlisle-3
+The Lantern Room · Carlisle 4,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Film,Carlisle,54.93342,-2.95457,after-dark-the-lantern-room-carlisle-4
+The Print House · Carlisle 5,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Music,Carlisle,54.84917,-2.94693,after-dark-the-print-house-carlisle-5
+The Night Archive · Carlisle 6,place,"Invented arts venue, situated approximately within the real city of Carlisle",Venue|Theatre,Carlisle,54.94521,-2.88188,after-dark-the-night-archive-carlisle-6
+The Lantern Room · Lancaster 1,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Music,Lancaster,54.07232,-2.79377,after-dark-the-lantern-room-lancaster-1
+The Print House · Lancaster 2,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Theatre,Lancaster,54.07168,-2.79297,after-dark-the-print-house-lancaster-2
+The Night Archive · Lancaster 3,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Visual arts,Lancaster,54.00286,-2.78338,after-dark-the-night-archive-lancaster-3
+The River Room · Lancaster 4,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Film,Lancaster,54.0918,-2.76083,after-dark-the-river-room-lancaster-4
+The Foundry Stage · Lancaster 5,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Music,Lancaster,54.01759,-2.75885,after-dark-the-foundry-stage-lancaster-5
+The Small Hours Club · Lancaster 6,place,"Invented arts venue, situated approximately within the real city of Lancaster",Venue|Theatre,Lancaster,54.04326,-2.84141,after-dark-the-small-hours-club-lancaster-6
+The River Room · Bradford 1,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Music,Bradford,53.76641,-1.79029,after-dark-the-river-room-bradford-1
+The Foundry Stage · Bradford 2,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Theatre,Bradford,53.82947,-1.72457,after-dark-the-foundry-stage-bradford-2
+The Small Hours Club · Bradford 3,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Visual arts,Bradford,53.78771,-1.75969,after-dark-the-small-hours-club-bradford-3
+The Listening Loft · Bradford 4,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Film,Bradford,53.75749,-1.81247,after-dark-the-listening-loft-bradford-4
+The Blue Door · Bradford 5,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Music,Bradford,53.8483,-1.72848,after-dark-the-blue-door-bradford-5
+The Old Cinema · Bradford 6,place,"Invented arts venue, situated approximately within the real city of Bradford",Venue|Theatre,Bradford,53.77805,-1.81418,after-dark-the-old-cinema-bradford-6
+The Listening Loft · Edinburgh 1,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Music,Edinburgh,56.00153,-3.21441,after-dark-the-listening-loft-edinburgh-1
+The Blue Door · Edinburgh 2,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Theatre,Edinburgh,55.96984,-3.23944,after-dark-the-blue-door-edinburgh-2
+The Old Cinema · Edinburgh 3,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Visual arts,Edinburgh,55.90383,-3.23065,after-dark-the-old-cinema-edinburgh-3
+The Glasshouse · Edinburgh 4,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Film,Edinburgh,55.96723,-3.23055,after-dark-the-glasshouse-edinburgh-4
+The Paper Theatre · Edinburgh 5,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Music,Edinburgh,55.98214,-3.24267,after-dark-the-paper-theatre-edinburgh-5
+The Rail Yard · Edinburgh 6,place,"Invented arts venue, situated approximately within the real city of Edinburgh",Venue|Theatre,Edinburgh,56.0024,-3.19433,after-dark-the-rail-yard-edinburgh-6
+The Glasshouse · Glasgow 1,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Music,Glasgow,55.84007,-4.2821,after-dark-the-glasshouse-glasgow-1
+The Paper Theatre · Glasgow 2,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Theatre,Glasgow,55.89884,-4.22966,after-dark-the-paper-theatre-glasgow-2
+The Rail Yard · Glasgow 3,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Visual arts,Glasgow,55.87881,-4.23765,after-dark-the-rail-yard-glasgow-3
+The Lantern Room · Glasgow 4,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Film,Glasgow,55.86058,-4.25675,after-dark-the-lantern-room-glasgow-4
+The Print House · Glasgow 5,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Music,Glasgow,55.81168,-4.21241,after-dark-the-print-house-glasgow-5
+The Night Archive · Glasgow 6,place,"Invented arts venue, situated approximately within the real city of Glasgow",Venue|Theatre,Glasgow,55.88505,-4.27383,after-dark-the-night-archive-glasgow-6
+Afterglow Arts · Group 1,organisation,Fictional creative collective,Music,Newcastle,,,after-dark-afterglow-arts-group-1
+Common Frequency · Group 2,organisation,Fictional creative collective,Theatre,Gateshead,,,after-dark-common-frequency-group-2
+North Night School · Group 3,organisation,Fictional creative collective,Visual arts,Sunderland,,,after-dark-north-night-school-group-3
+Briarhaven Fringe · Group 4,organisation,Fictional creative collective,Film,Durham,,,after-dark-briarhaven-fringe-group-4
+Open Stage Network · Group 5,organisation,Fictional creative collective,Music,Middlesbrough,,,after-dark-open-stage-network-group-5
+The Last Train Collective · Group 6,organisation,Fictional creative collective,Theatre,York,,,after-dark-the-last-train-collective-group-6
+Independent Rooms Partnership · Group 7,organisation,Fictional creative collective,Visual arts,Leeds,,,after-dark-independent-rooms-partnership-group-7
+Night Garden · Group 8,organisation,Fictional creative collective,Film,Sheffield,,,after-dark-night-garden-group-8
+Future Sound · Group 9,organisation,Fictional creative collective,Music,Manchester,,,after-dark-future-sound-group-9
+Cinema Commons · Group 10,organisation,Fictional creative collective,Theatre,Liverpool,,,after-dark-cinema-commons-group-10
+New Voices · Group 11,organisation,Fictional creative collective,Visual arts,Hull,,,after-dark-new-voices-group-11
+People's Stage · Group 12,organisation,Fictional creative collective,Film,Carlisle,,,after-dark-people-s-stage-group-12
+Afterglow Arts · Group 13,organisation,Fictional creative collective,Music,Lancaster,,,after-dark-afterglow-arts-group-13
+Common Frequency · Group 14,organisation,Fictional creative collective,Theatre,Bradford,,,after-dark-common-frequency-group-14
+North Night School · Group 15,organisation,Fictional creative collective,Visual arts,Edinburgh,,,after-dark-north-night-school-group-15
+Briarhaven Fringe · Group 16,organisation,Fictional creative collective,Film,Glasgow,,,after-dark-briarhaven-fringe-group-16
+Open Stage Network · Group 17,organisation,Fictional creative collective,Music,Newcastle,,,after-dark-open-stage-network-group-17
+The Last Train Collective · Group 18,organisation,Fictional creative collective,Theatre,Gateshead,,,after-dark-the-last-train-collective-group-18
+Independent Rooms Partnership · Group 19,organisation,Fictional creative collective,Visual arts,Sunderland,,,after-dark-independent-rooms-partnership-group-19
+Night Garden · Group 20,organisation,Fictional creative collective,Film,Durham,,,after-dark-night-garden-group-20
+Ava North · 1,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-ava-north-1
+Rae Moss · 2,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-rae-moss-2
+Imani Hale · 3,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-imani-hale-3
+Jules Calder · 4,person,Fictional artist or organiser,Film,Durham,,,after-dark-jules-calder-4
+Noor Shore · 5,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-noor-shore-5
+Ada Stone · 6,person,Fictional artist or organiser,Theatre,York,,,after-dark-ada-stone-6
+Kit Vale · 7,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-kit-vale-7
+Ezra Fern · 8,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-ezra-fern-8
+Leni Dale · 9,person,Fictional artist or organiser,Music,Manchester,,,after-dark-leni-dale-9
+Sol Farrow · 10,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-sol-farrow-10
+Tali Brook · 11,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-tali-brook-11
+Max Quinn · 12,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-max-quinn-12
+Otis Baines · 13,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-otis-baines-13
+Nina Wren · 14,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-nina-wren-14
+Maya Green · 15,person,Fictional artist or organiser,Visual arts,Edinburgh,,,after-dark-maya-green-15
+Uma Blythe · 16,person,Fictional artist or organiser,Film,Glasgow,,,after-dark-uma-blythe-16
+Alex Hart · 17,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-alex-hart-17
+Ivy Sage · 18,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-ivy-sage-18
+Zara Rowan · 19,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-zara-rowan-19
+Hugo Frost · 20,person,Fictional artist or organiser,Film,Durham,,,after-dark-hugo-frost-20
+Cleo North · 21,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-cleo-north-21
+Rory Moss · 22,person,Fictional artist or organiser,Theatre,York,,,after-dark-rory-moss-22
+Tessa Hale · 23,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-tessa-hale-23
+Eli Calder · 24,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-eli-calder-24
+Ava Shore · 25,person,Fictional artist or organiser,Music,Manchester,,,after-dark-ava-shore-25
+Rae Stone · 26,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-rae-stone-26
+Imani Vale · 27,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-imani-vale-27
+Jules Fern · 28,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-jules-fern-28
+Noor Dale · 29,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-noor-dale-29
+Ada Farrow · 30,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-ada-farrow-30
+Kit Brook · 31,person,Fictional artist or organiser,Visual arts,Edinburgh,,,after-dark-kit-brook-31
+Ezra Quinn · 32,person,Fictional artist or organiser,Film,Glasgow,,,after-dark-ezra-quinn-32
+Leni Baines · 33,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-leni-baines-33
+Sol Wren · 34,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-sol-wren-34
+Tali Green · 35,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-tali-green-35
+Max Blythe · 36,person,Fictional artist or organiser,Film,Durham,,,after-dark-max-blythe-36
+Otis Hart · 37,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-otis-hart-37
+Nina Sage · 38,person,Fictional artist or organiser,Theatre,York,,,after-dark-nina-sage-38
+Maya Rowan · 39,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-maya-rowan-39
+Uma Frost · 40,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-uma-frost-40
+Alex North · 41,person,Fictional artist or organiser,Music,Manchester,,,after-dark-alex-north-41
+Ivy Moss · 42,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-ivy-moss-42
+Zara Hale · 43,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-zara-hale-43
+Hugo Calder · 44,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-hugo-calder-44
+Cleo Shore · 45,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-cleo-shore-45
+Rory Stone · 46,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-rory-stone-46
+Tessa Vale · 47,person,Fictional artist or organiser,Visual arts,Edinburgh,,,after-dark-tessa-vale-47
+Eli Fern · 48,person,Fictional artist or organiser,Film,Glasgow,,,after-dark-eli-fern-48
+Ava Dale · 49,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-ava-dale-49
+Rae Farrow · 50,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-rae-farrow-50
+Imani Brook · 51,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-imani-brook-51
+Jules Quinn · 52,person,Fictional artist or organiser,Film,Durham,,,after-dark-jules-quinn-52
+Noor Baines · 53,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-noor-baines-53
+Ada Wren · 54,person,Fictional artist or organiser,Theatre,York,,,after-dark-ada-wren-54
+Kit Green · 55,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-kit-green-55
+Ezra Blythe · 56,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-ezra-blythe-56
+Leni Hart · 57,person,Fictional artist or organiser,Music,Manchester,,,after-dark-leni-hart-57
+Sol Sage · 58,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-sol-sage-58
+Tali Rowan · 59,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-tali-rowan-59
+Max Frost · 60,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-max-frost-60
+Otis North · 61,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-otis-north-61
+Nina Moss · 62,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-nina-moss-62
+Maya Hale · 63,person,Fictional artist or organiser,Visual arts,Edinburgh,,,after-dark-maya-hale-63
+Uma Calder · 64,person,Fictional artist or organiser,Film,Glasgow,,,after-dark-uma-calder-64
+Alex Shore · 65,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-alex-shore-65
+Ivy Stone · 66,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-ivy-stone-66
+Zara Vale · 67,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-zara-vale-67
+Hugo Fern · 68,person,Fictional artist or organiser,Film,Durham,,,after-dark-hugo-fern-68
+Cleo Dale · 69,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-cleo-dale-69
+Rory Farrow · 70,person,Fictional artist or organiser,Theatre,York,,,after-dark-rory-farrow-70
+Tessa Brook · 71,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-tessa-brook-71
+Eli Quinn · 72,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-eli-quinn-72
+Ava Baines · 73,person,Fictional artist or organiser,Music,Manchester,,,after-dark-ava-baines-73
+Rae Wren · 74,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-rae-wren-74
+Imani Green · 75,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-imani-green-75
+Jules Blythe · 76,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-jules-blythe-76
+Noor Hart · 77,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-noor-hart-77
+Ada Sage · 78,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-ada-sage-78
+Kit Rowan · 79,person,Fictional artist or organiser,Visual arts,Edinburgh,,,after-dark-kit-rowan-79
+Ezra Frost · 80,person,Fictional artist or organiser,Film,Glasgow,,,after-dark-ezra-frost-80
+Leni North · 81,person,Fictional artist or organiser,Music,Newcastle,,,after-dark-leni-north-81
+Sol Moss · 82,person,Fictional artist or organiser,Theatre,Gateshead,,,after-dark-sol-moss-82
+Tali Hale · 83,person,Fictional artist or organiser,Visual arts,Sunderland,,,after-dark-tali-hale-83
+Max Calder · 84,person,Fictional artist or organiser,Film,Durham,,,after-dark-max-calder-84
+Otis Shore · 85,person,Fictional artist or organiser,Music,Middlesbrough,,,after-dark-otis-shore-85
+Nina Stone · 86,person,Fictional artist or organiser,Theatre,York,,,after-dark-nina-stone-86
+Maya Vale · 87,person,Fictional artist or organiser,Visual arts,Leeds,,,after-dark-maya-vale-87
+Uma Fern · 88,person,Fictional artist or organiser,Film,Sheffield,,,after-dark-uma-fern-88
+Alex Dale · 89,person,Fictional artist or organiser,Music,Manchester,,,after-dark-alex-dale-89
+Ivy Farrow · 90,person,Fictional artist or organiser,Theatre,Liverpool,,,after-dark-ivy-farrow-90
+Zara Brook · 91,person,Fictional artist or organiser,Visual arts,Hull,,,after-dark-zara-brook-91
+Hugo Quinn · 92,person,Fictional artist or organiser,Film,Carlisle,,,after-dark-hugo-quinn-92
+Cleo Baines · 93,person,Fictional artist or organiser,Music,Lancaster,,,after-dark-cleo-baines-93
+Rory Wren · 94,person,Fictional artist or organiser,Theatre,Bradford,,,after-dark-rory-wren-94
+Listening Sessions · Newcastle 2019 #0,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-listening-sessions-newcastle-2019-0
+Late Museum · Gateshead 2020 #1,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-late-museum-gateshead-2020-1
+After-hours Orchestra · Sunderland 2021 #2,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-after-hours-orchestra-sunderland-2021-2
+Film on the Walls · Durham 2022 #3,project,Fictional late-night arts event,Film,Durham,,,after-dark-film-on-the-walls-durham-2022-3
+New Voices Night · Middlesbrough 2023 #4,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-new-voices-night-middlesbrough-2023-4
+Open Stage · York 2024 #5,project,Fictional late-night arts event,Theatre,York,,,after-dark-open-stage-york-2024-5
+Night Drawing · Leeds 2025 #6,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-night-drawing-leeds-2025-6
+City Stories · Sheffield 2026 #7,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-city-stories-sheffield-2026-7
+Sound Walk · Manchester 2019 #8,project,Fictional late-night arts event,Music,Manchester,,,after-dark-sound-walk-manchester-2019-8
+Studio Night · Liverpool 2020 #9,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-studio-night-liverpool-2020-9
+Last Train Sessions · Hull 2021 #10,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-last-train-sessions-hull-2021-10
+Community Cinema · Carlisle 2022 #11,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-community-cinema-carlisle-2022-11
+Micro Festival · Lancaster 2023 #12,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-micro-festival-lancaster-2023-12
+Lightworks · Bradford 2024 #13,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-lightworks-bradford-2024-13
+Listening Sessions · Edinburgh 2025 #14,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-listening-sessions-edinburgh-2025-14
+Late Museum · Glasgow 2026 #15,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-late-museum-glasgow-2026-15
+After-hours Orchestra · Newcastle 2019 #16,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-after-hours-orchestra-newcastle-2019-16
+Film on the Walls · Gateshead 2020 #17,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-film-on-the-walls-gateshead-2020-17
+New Voices Night · Sunderland 2021 #18,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-new-voices-night-sunderland-2021-18
+Open Stage · Durham 2022 #19,project,Fictional late-night arts event,Film,Durham,,,after-dark-open-stage-durham-2022-19
+Night Drawing · Middlesbrough 2023 #20,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-night-drawing-middlesbrough-2023-20
+City Stories · York 2024 #21,project,Fictional late-night arts event,Theatre,York,,,after-dark-city-stories-york-2024-21
+Sound Walk · Leeds 2025 #22,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-sound-walk-leeds-2025-22
+Studio Night · Sheffield 2026 #23,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-studio-night-sheffield-2026-23
+Last Train Sessions · Manchester 2019 #24,project,Fictional late-night arts event,Music,Manchester,,,after-dark-last-train-sessions-manchester-2019-24
+Community Cinema · Liverpool 2020 #25,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-community-cinema-liverpool-2020-25
+Micro Festival · Hull 2021 #26,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-micro-festival-hull-2021-26
+Lightworks · Carlisle 2022 #27,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-lightworks-carlisle-2022-27
+Listening Sessions · Lancaster 2023 #28,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-listening-sessions-lancaster-2023-28
+Late Museum · Bradford 2024 #29,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-late-museum-bradford-2024-29
+After-hours Orchestra · Edinburgh 2025 #30,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-after-hours-orchestra-edinburgh-2025-30
+Film on the Walls · Glasgow 2026 #31,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-film-on-the-walls-glasgow-2026-31
+New Voices Night · Newcastle 2019 #32,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-new-voices-night-newcastle-2019-32
+Open Stage · Gateshead 2020 #33,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-open-stage-gateshead-2020-33
+Night Drawing · Sunderland 2021 #34,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-night-drawing-sunderland-2021-34
+City Stories · Durham 2022 #35,project,Fictional late-night arts event,Film,Durham,,,after-dark-city-stories-durham-2022-35
+Sound Walk · Middlesbrough 2023 #36,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-sound-walk-middlesbrough-2023-36
+Studio Night · York 2024 #37,project,Fictional late-night arts event,Theatre,York,,,after-dark-studio-night-york-2024-37
+Last Train Sessions · Leeds 2025 #38,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-last-train-sessions-leeds-2025-38
+Community Cinema · Sheffield 2026 #39,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-community-cinema-sheffield-2026-39
+Micro Festival · Manchester 2019 #40,project,Fictional late-night arts event,Music,Manchester,,,after-dark-micro-festival-manchester-2019-40
+Lightworks · Liverpool 2020 #41,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-lightworks-liverpool-2020-41
+Listening Sessions · Hull 2021 #42,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-listening-sessions-hull-2021-42
+Late Museum · Carlisle 2022 #43,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-late-museum-carlisle-2022-43
+After-hours Orchestra · Lancaster 2023 #44,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-after-hours-orchestra-lancaster-2023-44
+Film on the Walls · Bradford 2024 #45,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-film-on-the-walls-bradford-2024-45
+New Voices Night · Edinburgh 2025 #46,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-new-voices-night-edinburgh-2025-46
+Open Stage · Glasgow 2026 #47,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-open-stage-glasgow-2026-47
+Night Drawing · Newcastle 2019 #48,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-night-drawing-newcastle-2019-48
+City Stories · Gateshead 2020 #49,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-city-stories-gateshead-2020-49
+Sound Walk · Sunderland 2021 #50,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-sound-walk-sunderland-2021-50
+Studio Night · Durham 2022 #51,project,Fictional late-night arts event,Film,Durham,,,after-dark-studio-night-durham-2022-51
+Last Train Sessions · Middlesbrough 2023 #52,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-last-train-sessions-middlesbrough-2023-52
+Community Cinema · York 2024 #53,project,Fictional late-night arts event,Theatre,York,,,after-dark-community-cinema-york-2024-53
+Micro Festival · Leeds 2025 #54,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-micro-festival-leeds-2025-54
+Lightworks · Sheffield 2026 #55,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-lightworks-sheffield-2026-55
+Listening Sessions · Manchester 2019 #56,project,Fictional late-night arts event,Music,Manchester,,,after-dark-listening-sessions-manchester-2019-56
+Late Museum · Liverpool 2020 #57,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-late-museum-liverpool-2020-57
+After-hours Orchestra · Hull 2021 #58,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-after-hours-orchestra-hull-2021-58
+Film on the Walls · Carlisle 2022 #59,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-film-on-the-walls-carlisle-2022-59
+New Voices Night · Lancaster 2023 #60,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-new-voices-night-lancaster-2023-60
+Open Stage · Bradford 2024 #61,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-open-stage-bradford-2024-61
+Night Drawing · Edinburgh 2025 #62,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-night-drawing-edinburgh-2025-62
+City Stories · Glasgow 2026 #63,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-city-stories-glasgow-2026-63
+Sound Walk · Newcastle 2019 #64,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-sound-walk-newcastle-2019-64
+Studio Night · Gateshead 2020 #65,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-studio-night-gateshead-2020-65
+Last Train Sessions · Sunderland 2021 #66,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-last-train-sessions-sunderland-2021-66
+Community Cinema · Durham 2022 #67,project,Fictional late-night arts event,Film,Durham,,,after-dark-community-cinema-durham-2022-67
+Micro Festival · Middlesbrough 2023 #68,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-micro-festival-middlesbrough-2023-68
+Lightworks · York 2024 #69,project,Fictional late-night arts event,Theatre,York,,,after-dark-lightworks-york-2024-69
+Listening Sessions · Leeds 2025 #70,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-listening-sessions-leeds-2025-70
+Late Museum · Sheffield 2026 #71,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-late-museum-sheffield-2026-71
+After-hours Orchestra · Manchester 2019 #72,project,Fictional late-night arts event,Music,Manchester,,,after-dark-after-hours-orchestra-manchester-2019-72
+Film on the Walls · Liverpool 2020 #73,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-film-on-the-walls-liverpool-2020-73
+New Voices Night · Hull 2021 #74,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-new-voices-night-hull-2021-74
+Open Stage · Carlisle 2022 #75,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-open-stage-carlisle-2022-75
+Night Drawing · Lancaster 2023 #76,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-night-drawing-lancaster-2023-76
+City Stories · Bradford 2024 #77,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-city-stories-bradford-2024-77
+Sound Walk · Edinburgh 2025 #78,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-sound-walk-edinburgh-2025-78
+Studio Night · Glasgow 2026 #79,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-studio-night-glasgow-2026-79
+Last Train Sessions · Newcastle 2019 #80,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-last-train-sessions-newcastle-2019-80
+Community Cinema · Gateshead 2020 #81,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-community-cinema-gateshead-2020-81
+Micro Festival · Sunderland 2021 #82,project,Fictional late-night arts event,Visual arts,Sunderland,,,after-dark-micro-festival-sunderland-2021-82
+Lightworks · Durham 2022 #83,project,Fictional late-night arts event,Film,Durham,,,after-dark-lightworks-durham-2022-83
+Listening Sessions · Middlesbrough 2023 #84,project,Fictional late-night arts event,Music,Middlesbrough,,,after-dark-listening-sessions-middlesbrough-2023-84
+Late Museum · York 2024 #85,project,Fictional late-night arts event,Theatre,York,,,after-dark-late-museum-york-2024-85
+After-hours Orchestra · Leeds 2025 #86,project,Fictional late-night arts event,Visual arts,Leeds,,,after-dark-after-hours-orchestra-leeds-2025-86
+Film on the Walls · Sheffield 2026 #87,project,Fictional late-night arts event,Film,Sheffield,,,after-dark-film-on-the-walls-sheffield-2026-87
+New Voices Night · Manchester 2019 #88,project,Fictional late-night arts event,Music,Manchester,,,after-dark-new-voices-night-manchester-2019-88
+Open Stage · Liverpool 2020 #89,project,Fictional late-night arts event,Theatre,Liverpool,,,after-dark-open-stage-liverpool-2020-89
+Night Drawing · Hull 2021 #90,project,Fictional late-night arts event,Visual arts,Hull,,,after-dark-night-drawing-hull-2021-90
+City Stories · Carlisle 2022 #91,project,Fictional late-night arts event,Film,Carlisle,,,after-dark-city-stories-carlisle-2022-91
+Sound Walk · Lancaster 2023 #92,project,Fictional late-night arts event,Music,Lancaster,,,after-dark-sound-walk-lancaster-2023-92
+Studio Night · Bradford 2024 #93,project,Fictional late-night arts event,Theatre,Bradford,,,after-dark-studio-night-bradford-2024-93
+Last Train Sessions · Edinburgh 2025 #94,project,Fictional late-night arts event,Visual arts,Edinburgh,,,after-dark-last-train-sessions-edinburgh-2025-94
+Community Cinema · Glasgow 2026 #95,project,Fictional late-night arts event,Film,Glasgow,,,after-dark-community-cinema-glasgow-2026-95
+Micro Festival · Newcastle 2019 #96,project,Fictional late-night arts event,Music,Newcastle,,,after-dark-micro-festival-newcastle-2019-96
+Lightworks · Gateshead 2020 #97,project,Fictional late-night arts event,Theatre,Gateshead,,,after-dark-lightworks-gateshead-2020-97
