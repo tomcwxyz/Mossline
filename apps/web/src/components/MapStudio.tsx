@@ -14,7 +14,9 @@ import {
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
-import { MOSSY_EXAMPLES, type MossyExampleId } from "../data/mossy-examples";
+import { MOSSY_EXAMPLES, isMossyExample, type MossyExampleId } from "../data/mossy-examples";
+import {mossyOverview} from "../lib/mossy-findings";
+import type {AtlasLens} from "@mossline/graph-core";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
 import {AddData,type AddTarget} from "./AddData";
 import {useAtlasTheme} from "./atlas/theme";
@@ -72,6 +74,7 @@ export function MapStudio() {
   const [homeTheme,setHomeTheme]=useAtlasTheme();
   // New evidence-led workspace; existing specialised workflows remain available.
   const [fieldAtlasOpen,setFieldAtlasOpen]=useState(true);
+  const [preferredLens,setPreferredLens]=useState<AtlasLens|undefined>(undefined);
   useEffect(()=>{
     try{if(window.localStorage.getItem("mossline-workspace-v1")==="advanced")
       setFieldAtlasOpen(false);}catch{}
@@ -169,6 +172,19 @@ export function MapStudio() {
     window.history.replaceState(null,"",window.location.pathname);
     void selectLocalMap(id);setFieldAtlasOpen(true);setExperienceSpace("studio");
   },[localMaps,selectLocalMap]);
+
+  // Showcase deep links open a real, separate local copy after the map library hydrates.
+  const exampleOpened=useRef(false);
+  useEffect(()=>{
+    if(exampleOpened.current||!localMaps.length)return;
+    const id=new URLSearchParams(window.location.search).get("example");
+    if(!id||!isMossyExample(id))return;
+    exampleOpened.current=true;
+    window.history.replaceState(null,"",window.location.pathname);
+    void openMossyExample(id);
+  // The library's initial hydration is the only prerequisite.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[localMaps]);
 
   // ---- Maps kept in an account ------------------------------------------------
   const [openingShared,setOpeningShared]=useState("");
@@ -558,6 +574,7 @@ export function MapStudio() {
     }catch(error){
       return error instanceof Error?error.message:"Could not save in this browser's storage.";
     }
+    setPreferredLens(mossyOverview(proposed).recommended);
     setAtlasMessage((target==="new"?"Created ‘"+proposed.title+"’. ":"")+summary);
     if(addData?.from!=="studio"){setFieldAtlasOpen(true);}
     window.scrollTo(0,0);
@@ -576,6 +593,7 @@ export function MapStudio() {
       if(!response.ok)throw Error("Example file unavailable");
       const graph=parseGraphDocument(await response.json());
       if(createNewMap(graph)){
+        setPreferredLens(example.lens as AtlasLens);
         setFieldAtlasOpen(true);
         setExperienceSpace("studio");
         setAtlasMessage("Fictional example: every person, place, amount, date and relationship is invented.");
@@ -592,6 +610,7 @@ export function MapStudio() {
     }
   }
   async function openFieldAtlasExample() {
+    setPreferredLens(undefined);
     try {
       // Loaded on demand: the worked example is larger than the bundled demos.
       const example = parseGraphDocument((await import("../../../../data/northern-food-example.json")).default);
@@ -628,7 +647,7 @@ export function MapStudio() {
     return <div className="mossline-field-atlas-entry">
       <input ref={fileRef} type="file" hidden multiple accept=".json,.csv,application/json,text/csv"
         aria-label="Import source records" onChange={onImport}/>
-      <FieldAtlasWorkspace key={graphKey} graph={graph} message={atlasMessage} onMessageShown={clearAtlasMessage} mapId={activeMapId ?? undefined}
+      <FieldAtlasWorkspace key={graphKey} graph={graph} initialLens={preferredLens} message={atlasMessage} onMessageShown={clearAtlasMessage} mapId={activeMapId ?? undefined}
         shared={activeShared} onSharedChange={(link:SharedLink|undefined)=>{if(activeMapId)setShared(activeMapId,link);}}
         onSharedRefresh={()=>{if(activeShared)void refreshShared(activeShared);}}
         datasetId={activeFundingMap?.fundingDatasetId} example={graphKey===DEMO_KEY||/fictional/i.test(graph.title)}
@@ -665,7 +684,7 @@ export function MapStudio() {
       updatedAt:m.createdAt,funding:!!m.fundingDatasetId,badge:m.shared?"Shared":undefined,
       summary:m.fundingAnalysis?m.fundingAnalysis.grants.toLocaleString("en-GB")+
         " grants in complete dataset":undefined}))}
-      onOpen={id=>{void selectLocalMap(id);setExperienceSpace("studio");}}
+      onOpen={id=>{setPreferredLens(undefined);void selectLocalMap(id);setExperienceSpace("studio");}}
       onImport={()=>setAddData({from:"home",intent:"general"})}
       onFunding={()=>setAddData({from:"home",intent:"funding"})}
       onTheList={()=>setAddData({from:"home",intent:"the-list"})}

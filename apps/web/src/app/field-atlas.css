@@ -1395,3 +1395,17 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-showcase-submission {display:grid;gap:10px;border-top:1px solid var(--ml-border);padding-top:18px;}
 .ml-showcase-submission h3 {font:500 22px var(--ml-serif);margin:0;}
 @media(max-width:800px){.ml-showcase-body{padding-top:24px;}.ml-showcase-community-grid{grid-template-columns:1fr;}}
+
+/* The first read of an unfamiliar dataset should be an explanation, not a wall of controls. */
+.ml-findings {display:grid;gap:16px;}
+.ml-findings > p {line-height:1.5;}
+.ml-findings h2 {font:500 28px/1.15 var(--ml-serif);margin:0;}
+.ml-findings-recommend {background:var(--ml-sea);padding:14px;border-radius:8px;display:grid;gap:8px;}
+.ml-findings-recommend button {text-align:left;background:none;border:0;color:var(--ml-ink);font-weight:600;padding:0;cursor:pointer;}
+.ml-findings-list {list-style:none;margin:0;padding:0;display:grid;gap:16px;}
+.ml-findings-list > li {border-bottom:1px solid var(--ml-border);display:grid;gap:6px;padding-bottom:14px;}
+.ml-findings-list strong {font-size:14px;}
+.ml-findings-list p,.ml-findings-gaps p {font-size:13px;line-height:1.55;color:var(--ml-muted);}
+.ml-findings-list button {justify-self:start;border:0;background:none;color:var(--ml-link);padding:4px 0;font-weight:600;cursor:pointer;font-size:13px;}
+.ml-findings-gaps {display:grid;gap:5px;padding:12px;border:1px solid var(--ml-border);border-radius:8px;}
+.ml-findings-gaps strong {font-size:13px;}

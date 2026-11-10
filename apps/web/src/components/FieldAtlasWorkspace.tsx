@@ -24,6 +24,7 @@ import { MapLens } from "./atlas/MapLens";
 import { FundingLens } from "./atlas/FundingLens";
 import { TimeStrip, TimelineLens, type YearRange } from "./atlas/TimeLens";
 import { RecordPanel, TypeMark } from "./atlas/RecordPanel";
+import { MossyFindings } from "./MossyFindings";
 import { PublishCard } from "./atlas/PublishCard";
 import { ShareMapCard } from "./atlas/ShareMapCard";
 import type { SharedLink } from "../lib/map-library";
@@ -39,8 +40,8 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published }: {
-  graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean;
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published, initialLens = "network" }: {
+  graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean; initialLens?: AtlasLens;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
   /** Shown once, e.g. after adding data; onMessageShown lets the owner clear it. */
@@ -151,7 +152,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   }
 
   // ---- View state, mirrored in the URL ----------------------------------------
-  const [lens, setLens] = useState<AtlasLens>("network");
+  const [lens, setLens] = useState<AtlasLens>(initialLens);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [theme, setTheme] = useState("");
@@ -670,7 +671,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               unplaced={unplaced} onBrowse={() => setBrowse(true)}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
+              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
               grouping={grouping} groupLabel={groupOption?.label ?? "Themes"}
               selectedId={selectedId} onPick={pickRecord}/>}
@@ -823,6 +824,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       <aside className="ml-inspector" aria-label="Selected record">
         {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
           aria-label="Clear selection">×</button>}
+        {!selected && !readOnly && !reading ? <MossyFindings graph={graph} onPick={setSelectedId}
+          onLens={setLens} onBrowse={()=>setBrowse(true)}/> :
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads} editing={editing}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
           onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}

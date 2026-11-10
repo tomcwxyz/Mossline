@@ -53,7 +53,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
         <div className="ml-start-routes ml-start-routes--simple" role="group" aria-label="Start exploring">
           <button type="button" onClick={onImport}>
             <svg className="ml-start-icon" viewBox="0 0 28 28" aria-hidden="true"><circle cx="8" cy="9" r="4" className="ml-sk-org"/>
-              <rect x="16" y="15" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="8 9L20 19" className="ml-sk-ink"/></svg>
+              <rect x="16" y="15" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="M8 9L20 19" className="ml-sk-ink"/></svg>
             <span><strong>Add your data</strong>
               <small>Spreadsheets, records or existing maps. Mossy will help make sense of them.</small></span>
             <span aria-hidden="true" className="ml-start-arrow">→</span>
