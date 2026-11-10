@@ -1,10 +1,10 @@
-# Mossline
+# Mossy
 
 **A field atlas for connected work.** Explore the connections between
 organisations, projects, funders, people, places and ideas, with a source
 record behind each recorded relationship.
 
-Mossline is an [Apache-2.0 licensed](LICENSE), local-first, general-purpose
+Mossy is an [Apache-2.0 licensed](LICENSE), local-first, general-purpose
 technical alpha. It is **not** a product for one farming organisation: the
 Progressive Farming Trust visual example and fictional neighbourhood network
 are optional demonstrations.
@@ -77,7 +77,7 @@ contribution guidance.
 
 ## Data, trust and portability
 
-Mossline is local-first. Browser-saved maps and full funding datasets use
+Mossy is local-first. Browser-saved maps and full funding datasets use
 **different storage layers** and are not synced to other devices. Keep source
 exports and download backups before clearing browser storage; see
 [Recovery](docs/RECOVERY.md).

@@ -764,7 +764,7 @@ export function MapStudio() {
       }}/>}
     {(importPreview || discovery) && <section className="import-preview" aria-label="Data discovery and import preview">
       <div className="import-title">
-        <div><p className="eyebrow">Explore what Mossline found</p>
+        <div><p className="eyebrow">Explore what Mossy found</p>
           <h2>{discovery?.kind==="kumu-configuration" ? "Understanding your Kumu project" :
             discovery?.kind==="csv-table" ? "Map your existing data" : "Import preview"}</h2>
           {importPreview && <p>{importPreview.counts.nodes} entities · {importPreview.counts.edges} relationships</p>}
@@ -784,14 +784,14 @@ export function MapStudio() {
         </div>
         {discovery.externalSheets && <p className="mapping-important">
           Linked Google Sheets source detected. The project's configuration is present, but the spreadsheet rows
-          must be exported separately before Mossline can reconstruct the network. No Google account is accessed here.
+          must be exported separately before Mossy can reconstruct the network. No Google account is accessed here.
         </p>}
         <div className="kumu-discovery-parts">
           <div><h3>Entity categories</h3><p>{discovery.elementTypes.length ?
             discovery.elementTypes.join(" · ") : "No categories defined"}</p></div>
           <div><h3>Relationship vocabulary</h3><p>{discovery.connectionTypes.length ?
             discovery.connectionTypes.join(" · ") : "No relation labels defined"}</p></div>
-          <div className="kumu-field-recommendations"><h3>How these fields could fit Mossline</h3>
+          <div className="kumu-field-recommendations"><h3>How these fields could fit Mossy</h3>
             <p>Recommendations describe a possible destination. Review them against the actual spreadsheet data.</p>
             <ul>{discovery.fieldSuggestions.map(suggestion=><li key={suggestion.field}>
               <strong>{suggestion.field}</strong><span>{suggestion.role}</span>
@@ -1032,7 +1032,7 @@ export function MapStudio() {
           <div className="portable-perspectives">
             <p className="eyebrow">Take your perspectives with you</p>
             <input type="file" hidden ref={perspectiveFileRef}
-              accept=".json,application/json" aria-label="Import Mossline perspectives"
+              accept=".json,application/json" aria-label="Import Mossy perspectives"
               onChange={previewPerspectiveImport}/>
             <div className="portable-actions">
               <button type="button" onClick={downloadPerspectives}
@@ -1076,7 +1076,7 @@ export function MapStudio() {
           <summary>Follow a connection</summary>
         <section ref={tracePanelRef} className="trace-panel" aria-label="Follow recorded connections from an entity">
           <div className="trace-head"><p className="eyebrow">Follow a connection</p><span>Explore what’s reachable</span></div>
-          <p className="help">Choose something you know. Mossline shows who and what is connected through recorded relationships.</p>
+          <p className="help">Choose something you know. Mossy shows who and what is connected through recorded relationships.</p>
           <form className="trace-form" onSubmit={traceEntities}>
             <label htmlFor="trace-from">1 · Start with</label>
             <select id="trace-from" className="search" required value={traceFrom} onChange={e => {setTraceFrom(e.target.value);setTraceTo("");clearTrail();}}>
@@ -1297,7 +1297,7 @@ export function MapStudio() {
     </section>
     <details className="example-library">
       <summary>Explore example networks · community and farming</summary>
-      <p>Examples demonstrate what Mossline can do with different kinds of data.
+      <p>Examples demonstrate what Mossy can do with different kinds of data.
         They are fictional, optional and never overwrite your current map.</p>
       <div className="example-community">
         <div><strong>Neighbourhood Connections</strong>
@@ -1324,6 +1324,6 @@ export function MapStudio() {
       </>}
     </details>
     </>}
-    <footer className="footer"><span>Mossline — a field atlas for connected work.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
+    <footer className="footer"><span>Mossy — a field atlas for connected work.</span><span>Open by design · Read-only MCP · Locally saved perspectives</span></footer>
   </main>;
 }

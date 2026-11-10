@@ -47,7 +47,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   message?: string; onMessageShown?: () => void;
   /** A published copy: explore only. No editing, reviews, data menus or publishing, and nothing read from this browser's storage. */
   readOnly?: boolean;
-  /** This map's copy in a Mossline account, if it has one; onSharedChange records saving, leaving or deleting it. */
+  /** This map's copy in a Mossy account, if it has one; onSharedChange records saving, leaving or deleting it. */
   shared?: SharedLink; onSharedChange?: (link: SharedLink | undefined) => void;
   /** Fetch the newer imported records someone added to this shared map. */
   onSharedRefresh?: () => void;
@@ -128,7 +128,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       if (file.size > 2_000_000) throw Error("Review backup is too large.");
       const parsed: unknown = JSON.parse(await file.text());
       if (!parsed || typeof parsed !== "object" || !("kind" in parsed) ||
-        parsed.kind !== "mossline-atlas-annotation-backup" || !("layer" in parsed)) throw Error("Not a Mossline review backup.");
+        parsed.kind !== "mossline-atlas-annotation-backup" || !("layer" in parsed)) throw Error("Not a Mossy review backup.");
       const layer = parseAnnotationLayer(parsed.layer, graphKey);
       if (!parsed.layer || typeof parsed.layer !== "object" || !("graphKey" in parsed.layer) ||
         parsed.layer.graphKey !== graphKey) throw Error("This backup belongs to another version of the dataset.");
@@ -532,17 +532,17 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     data-theme={activeTheme} data-lens={lens}>
     <header className="ml-header">
       {embedded ? <a className="ml-wordmark" href={"/p/" + (published?.slug ?? "") + (reading ? "?step=" + (stepIndex + 1) : "")} target="_blank" rel="noopener"
-        aria-label="Open this in Mossline (new tab)">
+        aria-label="Open this in Mossy (new tab)">
         <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
           <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
           <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
-        <span>Mossline</span>
+        <span>Mossy</span>
       </a> :
-      <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossline — all maps">
+      <button className="ml-wordmark" type="button" onClick={onBack} aria-label="Mossy — all maps">
         <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M3 19C8 19 9 8 14 8S20 15 23 6" className="ml-mark-line"/>
           <circle cx="3.5" cy="19" r="2.6" className="ml-mark-a"/><circle cx="14" cy="8" r="2.6" className="ml-mark-b"/>
           <circle cx="22.6" cy="6.4" r="2.6" className="ml-mark-c"/></svg>
-        <span>Mossline</span>
+        <span>Mossy</span>
       </button>}
       {readOnly ? <div className="ml-dataset ml-dataset--static">
         <strong>{imported.title}</strong>

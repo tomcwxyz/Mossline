@@ -127,7 +127,7 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
         <button type="button" onClick={onRecovery}>Recover browser data</button>
       </div>
     </details>
-    <footer className="ml-start-footer"><span>Mossline is an open-source technical alpha.</span>
+    <footer className="ml-start-footer"><span>Mossy is an open-source technical alpha.</span>
       <span>Maps are saved locally · Keep backups of important work</span></footer>
   </div>;
 }

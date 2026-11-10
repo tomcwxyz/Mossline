@@ -13,7 +13,7 @@ import "./field-atlas.css";
 import { THEME_BOOT } from "../components/atlas/theme";
 
 export const metadata: Metadata = {
-  title: "Mossline — a field atlas for connected work",
+  title: "Mossy — a field atlas for connected work",
   description: "Map organisations, projects, funders, people and places, and check the evidence behind every connection.",
   icons: { icon: "/icon.svg" }
 };

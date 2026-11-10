@@ -216,7 +216,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <h1 id="add-h" ref={heading} tabIndex={-1}>{intent === "the-list" ? "Shifting Ground" : intent === "funding" ? "Bring in grants data" : "Bring in your data"}</h1>
           <p className="ml-add-lede">{intent === "the-list"
             ? "Explore approved or confirmed funding changes collected by The List. See funders, dates, classifications and original sources together, and review the complete map before saving it."
-            : "Add one file or several at once. Mossline works out what each table is, joins them on registered numbers and other identifiers, and shows you what will change before anything is saved."}</p>
+            : "Add one file or several at once. Mossy works out what each table is, joins them on registered numbers and other identifiers, and shows you what will change before anything is saved."}</p>
         </div>
         {intent === "the-list" && <section className="ml-add-try ml-the-list-intro" aria-label="Import published funding changes">
           <h2 className="ml-section-title">Shifting Ground · published funding changes</h2>
@@ -226,7 +226,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             Load public changes from The List →</button>
           <p className="ml-small">© The List · CC BY-NC. This is an exploratory transformation, not a record of grants awarded,
             proven impacts or funder collaboration. Changes in reporting coverage may affect apparent trends.</p>
-          <p className="ml-small">The public API is read via Mossline's server. Your saved atlas stays in your browser; import again to
+          <p className="ml-small">The public API is read via Mossy's server. Your saved atlas stays in your browser; import again to
             get a fresh copy. No private submissions or personal contact details are included.</p>
         </section>}
         <label className={"ml-add-drop" + (dragging ? " is-over" : "")} onDragOver={e => { e.preventDefault(); setDragging(true); }}
@@ -259,7 +259,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
         {intent === "funding" && onLargeFunding && <p className="ml-small ml-add-legacy">More than 100,000 grants in one file?
           <button type="button" className="ml-link-button" onClick={onLargeFunding}>Use the complete funding explorer</button></p>}
-        <p className="ml-start-privacy">{intent === "the-list" ? "Public records are fetched through Mossline; the atlas you save stays in this browser." : "Nothing is uploaded. Files are read on this device and saved only in this browser."}</p>
+        <p className="ml-start-privacy">{intent === "the-list" ? "Public records are fetched through Mossy; the atlas you save stays in this browser." : "Nothing is uploaded. Files are read on this device and saved only in this browser."}</p>
       </section>}
 
       {phase === "plan" && <section className="ml-add-stack" aria-labelledby="plan-h">
@@ -272,7 +272,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         {maps.map(m => <article key={m.file} className="ml-add-table">
           <header><label className="ml-add-include"><input type="checkbox" checked={m.include}
             onChange={e => setMaps(all => all.map(x => x.file === m.file ? { ...x, include: e.target.checked } : x))}/>
-            <span><strong>{m.title}</strong><small className="ml-mono">{m.file} · Mossline map · {count(m.nodes, "record")} · {count(m.edges, "link")}</small></span></label></header>
+            <span><strong>{m.title}</strong><small className="ml-mono">{m.file} · Mossy map · {count(m.nodes, "record")} · {count(m.edges, "link")}</small></span></label></header>
           <p className="ml-add-each">Its records and links are added as they are; anything already present is left alone.</p>
         </article>)}
         {tables.map(t => {
@@ -378,7 +378,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
               {t.unresolvedLinks > 0 && <p className="ml-add-warn">{count(t.unresolvedLinks, "link")} could not be joined: the record named at one end
                 was not found, or more than one record has that name.</p>}
             </li>)}
-              {report.mapsAdded > 0 && <li><div className="ml-add-ledger-head"><strong>{count(report.mapsAdded, "Mossline map")}</strong></div>
+              {report.mapsAdded > 0 && <li><div className="ml-add-ledger-head"><strong>{count(report.mapsAdded, "Mossy map")}</strong></div>
                 <p>Records and links added as they were.</p></li>}</ul>
           </section>
 
