@@ -1,2 +1,2 @@
 /** The newest migration in apps/web/migrations. A unit test keeps this in step with the folder. */
-export const LATEST_MIGRATION="20261029d_map_stories.sql";
+export const LATEST_MIGRATION="20261110_showcase.sql";

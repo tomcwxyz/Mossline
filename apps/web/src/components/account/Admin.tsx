@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "../../hooks/useAccount";
 import { AccountShell } from "./AccountShell";
 
+type ShowcaseReview={slug:string;title:string;description:string;credit:string;status:string;submittedAt:string};
 type Overview = {
   counts: { users: number; orgs: number; paid: number; maps: number; publications: number };
   orgs: { id: string; name: string; plan: "free" | "organisation"; planUntil: string | null; planSource: string | null;
@@ -30,10 +31,22 @@ export function Admin() {
   const [problem, setProblem] = useState("");
   const [until, setUntil] = useState<Record<string, string>>({});
   const [confirm, setConfirm] = useState("");
+  const [showcase,setShowcase]=useState<ShowcaseReview[]>([]);
+  const [showcaseBusy,setShowcaseBusy]=useState("");
+  const loadShowcase=useCallback(async()=>{
+    try{const result=await call<{items:ShowcaseReview[]}>("/api/admin/showcase");setShowcase(result.items);}
+    catch(e){setProblem(e instanceof Error?e.message:"Couldn't load Showcase requests.");}
+  },[]);
+  const review=async(slug:string,status:"approved"|"rejected")=>{
+    setShowcaseBusy(slug);
+    try{await call("/api/admin/showcase",{method:"PATCH",body:JSON.stringify({slug,status})});await loadShowcase();}
+    catch(e){setProblem(e instanceof Error?e.message:"Couldn't review Showcase request.");}
+    finally{setShowcaseBusy("");}
+  };
   const load = useCallback(async () => {
     try { setData(await call<Overview>("/api/admin")); } catch (e) { setProblem(e instanceof Error ? e.message : "Couldn't load."); }
   }, []);
-  useEffect(() => { if (user?.operator) void load(); }, [user?.operator, load]);
+  useEffect(() => { if (user?.operator){void load();void loadShowcase();} }, [user?.operator, load,loadShowcase]);
   const plan = async (orgId: string, p: "free" | "organisation") => {
     setProblem("");
     try { await call("/api/admin/plan", { method: "POST", body: JSON.stringify({ orgId, plan: p, until: until[orgId] || null, source: "invoice" }) }); await load(); }
@@ -44,10 +57,10 @@ export function Admin() {
     catch (e) { setProblem(e instanceof Error ? e.message : "Couldn't take it down."); }
   };
 
-  return <AccountShell title="Running Mossline">
+  return <AccountShell title="Running Mossy">
     <section className="ml-account-card ml-account-card--wide" aria-labelledby="admin-title">
       <p className="ml-start-eyebrow">Operator</p>
-      <h1 id="admin-title">Running Mossline</h1>
+      <h1 id="admin-title">Running Mossy</h1>
       {state.status === "ready" && !user?.operator && <p className="ml-account-note">This page is for the people running this Mossline.</p>}
       {problem && <p className="ml-add-error" role="alert">{problem}</p>}
       {data && <>
@@ -73,6 +86,20 @@ export function Admin() {
               {o.plan === "organisation" && <button type="button" className="ml-quiet" onClick={() => void plan(o.id, "free")}>Free</button>}
             </div>
           </li>)}</ul>
+        </section>
+        <section className="ml-account-section" aria-labelledby="admin-showcase">
+          <h2 id="admin-showcase">Showcase requests</h2>
+          <p className="ml-small">Only approve maps that are suitable for public discovery. Check the entire published map, its title and description, and that its creator has permission to share it.</p>
+          <ul className="ml-account-maps">{showcase.map(item=><li key={item.slug}>
+            <div><strong><a href={"/p/"+item.slug} target="_blank" rel="noreferrer">{item.title}</a></strong>
+              <small>{item.status} · proposed by {item.credit} · {when(item.submittedAt)}</small>
+              <p>{item.description}</p></div>
+            <div className="ml-edit-actions">
+              <button type="button" className="ml-quiet" disabled={showcaseBusy===item.slug} onClick={()=>void review(item.slug,"approved")}>Approve</button>
+              <button type="button" className="ml-quiet" disabled={showcaseBusy===item.slug} onClick={()=>void review(item.slug,"rejected")}>Reject / unfeature</button>
+            </div>
+          </li>)}</ul>
+          {!showcase.length&&<p className="ml-small">No requests yet.</p>}
         </section>
         <section className="ml-account-section" aria-labelledby="admin-pubs">
           <h2 id="admin-pubs">Published maps</h2>

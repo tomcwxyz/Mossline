@@ -33,6 +33,23 @@ export function PublishCard({ graph: drawn, whole, stories = [], initialStory = 
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState("");
   const [done, setDone] = useState<{ slug: string; updated: boolean } | null>(null);
+  const [featureDescription,setFeatureDescription]=useState("");
+  const [featureCredit,setFeatureCredit]=useState("");
+  const [featureConsent,setFeatureConsent]=useState(false);
+  const [featureStatus,setFeatureStatus]=useState("");
+  const [featureBusy,setFeatureBusy]=useState(false);
+  async function submitToShowcase(slug:string){
+    if(!featureConsent||featureBusy)return;
+    setFeatureBusy(true);setFeatureStatus("");
+    try {
+      const response=await fetch("/api/showcase",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({slug,description:featureDescription.trim(),credit:featureCredit.trim()})});
+      const result=await response.json() as {error?:string};
+      if(!response.ok)throw Error(result.error??"Could not send your request");
+      setFeatureStatus("Submitted for review. Your map won't appear in Showcase unless it's approved.");
+    } catch(error){setFeatureStatus(error instanceof Error?error.message:"Could not submit your map");}
+    finally{setFeatureBusy(false);}
+  }
   const doneRef = useRef<HTMLDivElement>(null);
   useEffect(() => { if (done) doneRef.current?.scrollIntoView({ block: "nearest" }); }, [done]);
 
@@ -157,6 +174,20 @@ export function PublishCard({ graph: drawn, whole, stories = [], initialStory = 
           <button type="button" className="ml-quiet" onClick={() => void navigator.clipboard?.writeText(link(done.slug)).catch(() => {})}>Copy link</button>
           <a className="ml-quiet ml-account-button" href={"/p/" + done.slug} target="_blank" rel="noreferrer">Open ↗</a>
         </div>
+      </div>}
+      {done && <div className="ml-showcase-submission" aria-label="Submit to Showcase">
+        <h3>Show it in the Showcase?</h3>
+        <p className="ml-small">Your link is already published, but it is <strong>not</strong> listed publicly. You can offer it for our curated gallery. An operator reviews requests before they appear.</p>
+        <label className="ml-edit-field"><span>How should we credit you?</span>
+          <input value={featureCredit} maxLength={80} onChange={e=>setFeatureCredit(e.target.value)} placeholder="Your name or organisation"/></label>
+        <label className="ml-edit-field"><span>Tell people what's interesting about it</span>
+          <textarea value={featureDescription} maxLength={600} rows={3} onChange={e=>setFeatureDescription(e.target.value)}
+            placeholder="What did you make or discover, and what can visitors explore?"/></label>
+        <label className="ml-check"><input type="checkbox" checked={featureConsent} onChange={e=>setFeatureConsent(e.target.checked)}/>
+          I want this work considered for a publicly listed Showcase, with the credit and description above.</label>
+        <button type="button" className="ml-quiet" disabled={!featureConsent||featureCredit.trim().length<2||featureDescription.trim().length<30||featureBusy}
+          onClick={()=>void submitToShowcase(done.slug)}>{featureBusy?"Submitting…":"Submit to Showcase"}</button>
+        {featureStatus&&<p className="ml-small" role="status">{featureStatus}</p>}
       </div>}
       <p className="ml-small ml-publish-foot">Anyone with the link can see it. Signed in as {user.name || user.email} ·
         {" "}<a href="/account" target="_blank" rel="noreferrer">your account ↗</a></p>
