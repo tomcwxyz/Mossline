@@ -1,0 +1,1755 @@
+{
+  "version": 1,
+  "title": "The Village Web · Fictional example",
+  "description": "A fictional northern valley's informal and formal networks of care. Every name, relationship, date and amount in this example is invented.",
+  "nodes": [
+    {
+      "id": "village-web-the-old-library",
+      "label": "The Old Library",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-the-old-library",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-the-old-library",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 1,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.56,
+        "longitude": -1.58
+      }
+    },
+    {
+      "id": "village-web-millstone-community-garden",
+      "label": "Millstone Community Garden",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-millstone-community-garden",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-millstone-community-garden",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 2,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.567,
+        "longitude": -1.568
+      }
+    },
+    {
+      "id": "village-web-riverside-workshop",
+      "label": "Riverside Workshop",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-riverside-workshop",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-riverside-workshop",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 3,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.574000000000005,
+        "longitude": -1.556
+      }
+    },
+    {
+      "id": "village-web-bridge-street-hall",
+      "label": "Bridge Street Hall",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-bridge-street-hall",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-bridge-street-hall",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 4,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.56,
+        "longitude": -1.544
+      }
+    },
+    {
+      "id": "village-web-willowbank-school",
+      "label": "Willowbank School",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-willowbank-school",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-willowbank-school",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 5,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.567,
+        "longitude": -1.58
+      }
+    },
+    {
+      "id": "village-web-north-field",
+      "label": "North Field",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-north-field",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-north-field",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 6,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.574000000000005,
+        "longitude": -1.568
+      }
+    },
+    {
+      "id": "village-web-ashwood-cafe",
+      "label": "Ashwood Cafe",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-ashwood-cafe",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-ashwood-cafe",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 7,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.56,
+        "longitude": -1.556
+      }
+    },
+    {
+      "id": "village-web-the-market-square",
+      "label": "The Market Square",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-the-market-square",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-the-market-square",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 8,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.567,
+        "longitude": -1.544
+      }
+    },
+    {
+      "id": "village-web-community-kitchen",
+      "label": "Community Kitchen",
+      "type": "place",
+      "tags": [],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-community-kitchen",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-community-kitchen",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 9,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Alder Valley",
+      "description": "Invented place in the Alder Valley example",
+      "properties": {
+        "latitude": 54.574000000000005,
+        "longitude": -1.58
+      }
+    },
+    {
+      "id": "village-web-valley-mutual-aid",
+      "label": "Valley Mutual Aid",
+      "type": "organisation",
+      "tags": [
+        "Food",
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-valley-mutual-aid",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-valley-mutual-aid",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 10,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "West Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-alder-food-partnership",
+      "label": "Alder Food Partnership",
+      "type": "organisation",
+      "tags": [
+        "Wellbeing",
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-alder-food-partnership",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-alder-food-partnership",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 11,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "East Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-willowbank-youth-club",
+      "label": "Willowbank Youth Club",
+      "type": "organisation",
+      "tags": [
+        "Young people",
+        "Arts"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-willowbank-youth-club",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-willowbank-youth-club",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 12,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-riverside-repairers",
+      "label": "Riverside Repairers",
+      "type": "organisation",
+      "tags": [
+        "Climate",
+        "Learning"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-riverside-repairers",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-riverside-repairers",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 13,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-neighbourhood-nurses",
+      "label": "Neighbourhood Nurses",
+      "type": "organisation",
+      "tags": [
+        "Housing",
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-neighbourhood-nurses",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-neighbourhood-nurses",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 14,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "West Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-the-listening-room",
+      "label": "The Listening Room",
+      "type": "organisation",
+      "tags": [
+        "Arts",
+        "Food"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-the-listening-room",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-the-listening-room",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 15,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "East Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-alder-housing-network",
+      "label": "Alder Housing Network",
+      "type": "organisation",
+      "tags": [
+        "Learning",
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-alder-housing-network",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-alder-housing-network",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 16,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-green-steps-collective",
+      "label": "Green Steps Collective",
+      "type": "organisation",
+      "tags": [
+        "Mobility",
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-green-steps-collective",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-green-steps-collective",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 17,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-high-street-traders",
+      "label": "High Street Traders",
+      "type": "organisation",
+      "tags": [
+        "Food",
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-high-street-traders",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-high-street-traders",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 18,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "West Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-the-community-choir",
+      "label": "The Community Choir",
+      "type": "organisation",
+      "tags": [
+        "Wellbeing",
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-the-community-choir",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-the-community-choir",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 19,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "East Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-valley-learning-trust",
+      "label": "Valley Learning Trust",
+      "type": "organisation",
+      "tags": [
+        "Young people",
+        "Arts"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-valley-learning-trust",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-valley-learning-trust",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 20,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-co-operative-transport",
+      "label": "Co-operative Transport",
+      "type": "organisation",
+      "tags": [
+        "Climate",
+        "Learning"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-co-operative-transport",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-co-operative-transport",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 21,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Central Alder",
+      "description": "Fictional organisation working across the valley"
+    },
+    {
+      "id": "village-web-warm-welcome",
+      "label": "Warm Welcome",
+      "type": "project",
+      "tags": [
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-warm-welcome",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-warm-welcome",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 22,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-repair-and-share",
+      "label": "Repair and Share",
+      "type": "project",
+      "tags": [
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-repair-and-share",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-repair-and-share",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 23,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-kitchen-table",
+      "label": "Kitchen Table",
+      "type": "project",
+      "tags": [
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-kitchen-table",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-kitchen-table",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 24,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-night-bus",
+      "label": "Night Bus",
+      "type": "project",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-night-bus",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-night-bus",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 25,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-youth-makers",
+      "label": "Youth Makers",
+      "type": "project",
+      "tags": [
+        "Arts"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-youth-makers",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-youth-makers",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 26,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-meet-your-neighbour",
+      "label": "Meet Your Neighbour",
+      "type": "project",
+      "tags": [
+        "Learning"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-meet-your-neighbour",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-meet-your-neighbour",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 27,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-garden-saturdays",
+      "label": "Garden Saturdays",
+      "type": "project",
+      "tags": [
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-garden-saturdays",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-garden-saturdays",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 28,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-access-for-all",
+      "label": "Access for All",
+      "type": "project",
+      "tags": [
+        "Food"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-access-for-all",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-access-for-all",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 29,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-winter-pantry",
+      "label": "Winter Pantry",
+      "type": "project",
+      "tags": [
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-winter-pantry",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-winter-pantry",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 30,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-healthy-streets",
+      "label": "Healthy Streets",
+      "type": "project",
+      "tags": [
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-healthy-streets",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-healthy-streets",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 31,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-oral-histories",
+      "label": "Oral Histories",
+      "type": "project",
+      "tags": [
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-oral-histories",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-oral-histories",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 32,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-climate-assembly",
+      "label": "Climate Assembly",
+      "type": "project",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-climate-assembly",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-climate-assembly",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 33,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Fictional project organised by local residents"
+    },
+    {
+      "id": "village-web-community-seed-fund",
+      "label": "Community Seed Fund",
+      "type": "funder",
+      "tags": [
+        "Community funding"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-community-seed-fund",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-community-seed-fund",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 34,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "village-web-alder-giving-circle",
+      "label": "Alder Giving Circle",
+      "type": "funder",
+      "tags": [
+        "Community funding"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-alder-giving-circle",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 35,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-alder-giving-circle",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 35,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "village-web-valley-foundation",
+      "label": "Valley Foundation",
+      "type": "funder",
+      "tags": [
+        "Community funding"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-valley-foundation",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 36,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "village-web-valley-foundation",
+          "fileName": "village-web-fictional.json",
+          "recordNumber": 36,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "village-web-edge-1",
+      "source": "village-web-valley-mutual-aid",
+      "target": "village-web-warm-welcome",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-1",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-2",
+      "source": "village-web-warm-welcome",
+      "target": "village-web-millstone-community-garden",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-2",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-3",
+      "source": "village-web-riverside-repairers",
+      "target": "village-web-warm-welcome",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-3",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-4",
+      "source": "village-web-community-seed-fund",
+      "target": "village-web-valley-mutual-aid",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-4",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 3000,
+        "currency": "GBP",
+        "awardDate": "2020-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-5",
+      "source": "village-web-alder-food-partnership",
+      "target": "village-web-repair-and-share",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-5",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-6",
+      "source": "village-web-repair-and-share",
+      "target": "village-web-willowbank-school",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-6",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-7",
+      "source": "village-web-neighbourhood-nurses",
+      "target": "village-web-repair-and-share",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-7",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-8",
+      "source": "village-web-willowbank-youth-club",
+      "target": "village-web-kitchen-table",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-8",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-9",
+      "source": "village-web-kitchen-table",
+      "target": "village-web-the-market-square",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-9",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-10",
+      "source": "village-web-the-listening-room",
+      "target": "village-web-kitchen-table",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-10",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-11",
+      "source": "village-web-valley-foundation",
+      "target": "village-web-willowbank-youth-club",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-11",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 4700,
+        "currency": "GBP",
+        "awardDate": "2022-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-12",
+      "source": "village-web-riverside-repairers",
+      "target": "village-web-night-bus",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-12",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-13",
+      "source": "village-web-night-bus",
+      "target": "village-web-millstone-community-garden",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-13",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-14",
+      "source": "village-web-alder-housing-network",
+      "target": "village-web-night-bus",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-14",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-15",
+      "source": "village-web-neighbourhood-nurses",
+      "target": "village-web-youth-makers",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-15",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-16",
+      "source": "village-web-youth-makers",
+      "target": "village-web-willowbank-school",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-16",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-17",
+      "source": "village-web-green-steps-collective",
+      "target": "village-web-youth-makers",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-17",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-18",
+      "source": "village-web-alder-giving-circle",
+      "target": "village-web-neighbourhood-nurses",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-18",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 6400,
+        "currency": "GBP",
+        "awardDate": "2024-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-19",
+      "source": "village-web-the-listening-room",
+      "target": "village-web-meet-your-neighbour",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-19",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-20",
+      "source": "village-web-meet-your-neighbour",
+      "target": "village-web-the-market-square",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-20",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-21",
+      "source": "village-web-high-street-traders",
+      "target": "village-web-meet-your-neighbour",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-21",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-22",
+      "source": "village-web-alder-housing-network",
+      "target": "village-web-garden-saturdays",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-22",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-23",
+      "source": "village-web-garden-saturdays",
+      "target": "village-web-millstone-community-garden",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-23",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-24",
+      "source": "village-web-the-community-choir",
+      "target": "village-web-garden-saturdays",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-24",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-25",
+      "source": "village-web-community-seed-fund",
+      "target": "village-web-alder-housing-network",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-25",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 8100,
+        "currency": "GBP",
+        "awardDate": "2021-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-26",
+      "source": "village-web-green-steps-collective",
+      "target": "village-web-access-for-all",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-26",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-27",
+      "source": "village-web-access-for-all",
+      "target": "village-web-willowbank-school",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-27",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-28",
+      "source": "village-web-valley-learning-trust",
+      "target": "village-web-access-for-all",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-28",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-29",
+      "source": "village-web-high-street-traders",
+      "target": "village-web-winter-pantry",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-29",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-30",
+      "source": "village-web-winter-pantry",
+      "target": "village-web-the-market-square",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-30",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-31",
+      "source": "village-web-co-operative-transport",
+      "target": "village-web-winter-pantry",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-31",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-32",
+      "source": "village-web-valley-foundation",
+      "target": "village-web-high-street-traders",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-32",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 9800,
+        "currency": "GBP",
+        "awardDate": "2023-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-33",
+      "source": "village-web-the-community-choir",
+      "target": "village-web-healthy-streets",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-33",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-34",
+      "source": "village-web-healthy-streets",
+      "target": "village-web-millstone-community-garden",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-34",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-35",
+      "source": "village-web-valley-mutual-aid",
+      "target": "village-web-healthy-streets",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-35",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 35,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-36",
+      "source": "village-web-valley-learning-trust",
+      "target": "village-web-oral-histories",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-36",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 36,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-37",
+      "source": "village-web-oral-histories",
+      "target": "village-web-willowbank-school",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-37",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 37,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-38",
+      "source": "village-web-alder-food-partnership",
+      "target": "village-web-oral-histories",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-38",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 38,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-39",
+      "source": "village-web-alder-giving-circle",
+      "target": "village-web-valley-learning-trust",
+      "type": "funded",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-39",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 39,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 11500,
+        "currency": "GBP",
+        "awardDate": "2020-05-12"
+      }
+    },
+    {
+      "id": "village-web-edge-40",
+      "source": "village-web-co-operative-transport",
+      "target": "village-web-climate-assembly",
+      "type": "runs",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-40",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 40,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-41",
+      "source": "village-web-climate-assembly",
+      "target": "village-web-the-market-square",
+      "type": "takes place at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-41",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 41,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-42",
+      "source": "village-web-willowbank-youth-club",
+      "target": "village-web-climate-assembly",
+      "type": "supports",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-42",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 42,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "village-web-edge-43",
+      "source": "village-web-valley-mutual-aid",
+      "target": "village-web-the-listening-room",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-43",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 43,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-44",
+      "source": "village-web-alder-food-partnership",
+      "target": "village-web-alder-housing-network",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-44",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 44,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-45",
+      "source": "village-web-willowbank-youth-club",
+      "target": "village-web-green-steps-collective",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-45",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 45,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-46",
+      "source": "village-web-riverside-repairers",
+      "target": "village-web-high-street-traders",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-46",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 46,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-47",
+      "source": "village-web-neighbourhood-nurses",
+      "target": "village-web-the-community-choir",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-47",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 47,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-48",
+      "source": "village-web-the-listening-room",
+      "target": "village-web-valley-learning-trust",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-48",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 48,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-49",
+      "source": "village-web-alder-housing-network",
+      "target": "village-web-co-operative-transport",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-49",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 49,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-50",
+      "source": "village-web-green-steps-collective",
+      "target": "village-web-valley-mutual-aid",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-50",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 50,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-51",
+      "source": "village-web-high-street-traders",
+      "target": "village-web-alder-food-partnership",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-51",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 51,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-52",
+      "source": "village-web-the-community-choir",
+      "target": "village-web-willowbank-youth-club",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-52",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 52,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-53",
+      "source": "village-web-valley-learning-trust",
+      "target": "village-web-riverside-repairers",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-53",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 53,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    },
+    {
+      "id": "village-web-edge-54",
+      "source": "village-web-co-operative-transport",
+      "target": "village-web-neighbourhood-nurses",
+      "type": "works alongside",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "village-web-edge-54",
+        "fileName": "village-web-fictional.json",
+        "recordNumber": 54,
+        "shape": "Fictional showcase example"
+      },
+      "description": "Fictional partnership recorded for this showcase"
+    }
+  ]
+}

@@ -1,0 +1,1221 @@
+{
+  "version": 1,
+  "title": "The Ripple Effect · Fictional example",
+  "description": "A hypothetical model of interactions between housing, transport, wellbeing and place. Every name, relationship, date and amount in this example is invented.",
+  "nodes": [
+    {
+      "id": "the-ripple-effect-affordable-homes",
+      "label": "Affordable homes",
+      "type": "topic",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-affordable-homes",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-affordable-homes",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 1,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-secure-tenancies",
+      "label": "Secure tenancies",
+      "type": "topic",
+      "tags": [
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-secure-tenancies",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-secure-tenancies",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 2,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-neighbourhood-trust",
+      "label": "Neighbourhood trust",
+      "type": "topic",
+      "tags": [
+        "Health"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-neighbourhood-trust",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-neighbourhood-trust",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 3,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-street-safety",
+      "label": "Street safety",
+      "type": "topic",
+      "tags": [
+        "Environment"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-street-safety",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-street-safety",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 4,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-active-travel",
+      "label": "Active travel",
+      "type": "topic",
+      "tags": [
+        "Economy"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-active-travel",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-active-travel",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 5,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-bus-reliability",
+      "label": "Bus reliability",
+      "type": "topic",
+      "tags": [
+        "Community"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-bus-reliability",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-bus-reliability",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 6,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-household-costs",
+      "label": "Household costs",
+      "type": "topic",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-household-costs",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-household-costs",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 7,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-mental-wellbeing",
+      "label": "Mental wellbeing",
+      "type": "topic",
+      "tags": [
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-mental-wellbeing",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-mental-wellbeing",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 8,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-social-isolation",
+      "label": "Social isolation",
+      "type": "topic",
+      "tags": [
+        "Health"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-social-isolation",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-social-isolation",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 9,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-local-volunteering",
+      "label": "Local volunteering",
+      "type": "topic",
+      "tags": [
+        "Environment"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-local-volunteering",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-local-volunteering",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 10,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-green-space",
+      "label": "Green space",
+      "type": "topic",
+      "tags": [
+        "Economy"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-green-space",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-green-space",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 11,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-air-quality",
+      "label": "Air quality",
+      "type": "topic",
+      "tags": [
+        "Community"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-air-quality",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-air-quality",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 12,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-warm-homes",
+      "label": "Warm homes",
+      "type": "topic",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-warm-homes",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-warm-homes",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 13,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-fuel-poverty",
+      "label": "Fuel poverty",
+      "type": "topic",
+      "tags": [
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-fuel-poverty",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-fuel-poverty",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 14,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-employment-access",
+      "label": "Employment access",
+      "type": "topic",
+      "tags": [
+        "Health"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-employment-access",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-employment-access",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 15,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-skills-and-training",
+      "label": "Skills and training",
+      "type": "topic",
+      "tags": [
+        "Environment"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-skills-and-training",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-skills-and-training",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 16,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-community-spaces",
+      "label": "Community spaces",
+      "type": "topic",
+      "tags": [
+        "Economy"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-community-spaces",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-community-spaces",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 17,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-youth-activities",
+      "label": "Youth activities",
+      "type": "topic",
+      "tags": [
+        "Community"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-youth-activities",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-youth-activities",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 18,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-food-security",
+      "label": "Food security",
+      "type": "topic",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-food-security",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-food-security",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 19,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-local-business",
+      "label": "Local business",
+      "type": "topic",
+      "tags": [
+        "Mobility"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-local-business",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-local-business",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 20,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-public-investment",
+      "label": "Public investment",
+      "type": "topic",
+      "tags": [
+        "Health"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-public-investment",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-public-investment",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 21,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-community-voice",
+      "label": "Community voice",
+      "type": "topic",
+      "tags": [
+        "Environment"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-community-voice",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-community-voice",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 22,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-transport-emissions",
+      "label": "Transport emissions",
+      "type": "topic",
+      "tags": [
+        "Economy"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-transport-emissions",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-transport-emissions",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 23,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    },
+    {
+      "id": "the-ripple-effect-healthy-streets",
+      "label": "Healthy streets",
+      "type": "topic",
+      "tags": [
+        "Community"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-healthy-streets",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "the-ripple-effect-healthy-streets",
+          "fileName": "the-ripple-effect-fictional.json",
+          "recordNumber": 24,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Hypothetical factor in a systems map, not a measured relationship"
+    }
+  ],
+  "edges": [
+    {
+      "id": "the-ripple-effect-edge-1",
+      "source": "the-ripple-effect-affordable-homes",
+      "target": "the-ripple-effect-secure-tenancies",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-1",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-2",
+      "source": "the-ripple-effect-secure-tenancies",
+      "target": "the-ripple-effect-neighbourhood-trust",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-2",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-3",
+      "source": "the-ripple-effect-neighbourhood-trust",
+      "target": "the-ripple-effect-local-volunteering",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-3",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-4",
+      "source": "the-ripple-effect-local-volunteering",
+      "target": "the-ripple-effect-community-voice",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-4",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-5",
+      "source": "the-ripple-effect-community-voice",
+      "target": "the-ripple-effect-public-investment",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-5",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-6",
+      "source": "the-ripple-effect-public-investment",
+      "target": "the-ripple-effect-affordable-homes",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-6",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-7",
+      "source": "the-ripple-effect-active-travel",
+      "target": "the-ripple-effect-mental-wellbeing",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-7",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-8",
+      "source": "the-ripple-effect-mental-wellbeing",
+      "target": "the-ripple-effect-local-volunteering",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-8",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-9",
+      "source": "the-ripple-effect-local-volunteering",
+      "target": "the-ripple-effect-active-travel",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-9",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-10",
+      "source": "the-ripple-effect-bus-reliability",
+      "target": "the-ripple-effect-employment-access",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-10",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-11",
+      "source": "the-ripple-effect-employment-access",
+      "target": "the-ripple-effect-local-business",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-11",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-12",
+      "source": "the-ripple-effect-local-business",
+      "target": "the-ripple-effect-public-investment",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-12",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-13",
+      "source": "the-ripple-effect-public-investment",
+      "target": "the-ripple-effect-bus-reliability",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-13",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-14",
+      "source": "the-ripple-effect-household-costs",
+      "target": "the-ripple-effect-mental-wellbeing",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-14",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-15",
+      "source": "the-ripple-effect-mental-wellbeing",
+      "target": "the-ripple-effect-social-isolation",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-15",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-16",
+      "source": "the-ripple-effect-social-isolation",
+      "target": "the-ripple-effect-local-volunteering",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-16",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-17",
+      "source": "the-ripple-effect-local-volunteering",
+      "target": "the-ripple-effect-neighbourhood-trust",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-17",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-18",
+      "source": "the-ripple-effect-neighbourhood-trust",
+      "target": "the-ripple-effect-social-isolation",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-18",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-19",
+      "source": "the-ripple-effect-green-space",
+      "target": "the-ripple-effect-air-quality",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-19",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-20",
+      "source": "the-ripple-effect-air-quality",
+      "target": "the-ripple-effect-mental-wellbeing",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-20",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-21",
+      "source": "the-ripple-effect-warm-homes",
+      "target": "the-ripple-effect-fuel-poverty",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-21",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-22",
+      "source": "the-ripple-effect-fuel-poverty",
+      "target": "the-ripple-effect-household-costs",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-22",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-23",
+      "source": "the-ripple-effect-skills-and-training",
+      "target": "the-ripple-effect-employment-access",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-23",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-24",
+      "source": "the-ripple-effect-community-spaces",
+      "target": "the-ripple-effect-local-volunteering",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-24",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-25",
+      "source": "the-ripple-effect-youth-activities",
+      "target": "the-ripple-effect-social-isolation",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-25",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-26",
+      "source": "the-ripple-effect-food-security",
+      "target": "the-ripple-effect-mental-wellbeing",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-26",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-27",
+      "source": "the-ripple-effect-active-travel",
+      "target": "the-ripple-effect-transport-emissions",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-27",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-28",
+      "source": "the-ripple-effect-transport-emissions",
+      "target": "the-ripple-effect-air-quality",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-28",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-29",
+      "source": "the-ripple-effect-healthy-streets",
+      "target": "the-ripple-effect-active-travel",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-29",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-30",
+      "source": "the-ripple-effect-healthy-streets",
+      "target": "the-ripple-effect-street-safety",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-30",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-31",
+      "source": "the-ripple-effect-affordable-homes",
+      "target": "the-ripple-effect-household-costs",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-31",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "-"
+      },
+      "description": "Hypothetical opposite-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-32",
+      "source": "the-ripple-effect-public-investment",
+      "target": "the-ripple-effect-community-spaces",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-32",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-33",
+      "source": "the-ripple-effect-community-spaces",
+      "target": "the-ripple-effect-youth-activities",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-33",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    },
+    {
+      "id": "the-ripple-effect-edge-34",
+      "source": "the-ripple-effect-community-voice",
+      "target": "the-ripple-effect-street-safety",
+      "type": "influences",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "the-ripple-effect-edge-34",
+        "fileName": "the-ripple-effect-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "Polarity": "+"
+      },
+      "description": "Hypothetical same-direction influence — illustrative, not causal evidence"
+    }
+  ]
+}

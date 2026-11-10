@@ -1350,3 +1350,24 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-marks--clean .ml-pin-frame { rx: 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .14)); }
 .ml-story--clean .ml-story-num { font: 600 12.5px var(--ml-sans); }
 .ml-story-style { display: grid; gap: 4px; }
+
+/* First-use example library: deliberately restrained, with five different data stories. */
+.ml-start-routes--simple {grid-template-columns: minmax(0, 1fr);max-width: 530px;}
+.ml-start-routes--simple > button {grid-column: 1 / -1;}
+.ml-start-examples {padding: 28px clamp(20px, 4vw, 55px) 30px;display:grid;gap:18px;}
+.ml-start-examples-head {display:flex;align-items:end;justify-content:space-between;gap:24px;}
+.ml-start-examples-head h2 {font:500 clamp(25px,3vw,36px)/1.1 var(--ml-serif);margin:6px 0 10px;}
+.ml-start-examples-head p:not(.ml-start-eyebrow) {max-width:65ch;font-size:14px;color:var(--ml-muted);}
+.ml-start-examples-head a {flex:none;text-decoration:none;}
+.ml-start-example-grid {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+.ml-start-example {border:1px solid var(--ml-border);border-top:4px solid var(--ml-moss);border-radius:var(--ml-radius-md);background:var(--ml-surface);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0;}
+.ml-start-example.is-ochre {border-top-color:#B58B4E;} .ml-start-example.is-cobalt {border-top-color:#5F87A6;}
+.ml-start-example.is-rust {border-top-color:#A7795E;} .ml-start-example.is-sea {border-top-color:#6B9B95;}
+.ml-start-example h3 {font:500 24px/1.13 var(--ml-serif);margin:0;}
+.ml-start-example p:not(.ml-start-eyebrow) {font-size:13px;color:var(--ml-muted);line-height:1.45;margin:0;flex:1;}
+.ml-start-example > strong {font-size:13px;font-weight:500;line-height:1.35;}
+.ml-start-example-actions {display:flex;align-items:center;flex-wrap:wrap;gap:9px;border-top:1px solid var(--ml-border);padding-top:12px;}
+.ml-start-example-actions button {background:transparent;border:0;padding:3px 0;color:var(--ml-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:13px;font-weight:600;}
+.ml-start-example-actions a {font-size:12px;color:var(--ml-muted);}
+@media(max-width:1100px){.ml-start-example-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:700px){.ml-start-examples-head{align-items:start;flex-direction:column;gap:8px;}.ml-start-example-grid{grid-template-columns:1fr;}.ml-start-example{gap:8px;}}

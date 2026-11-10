@@ -14,6 +14,7 @@ import {
 } from "@mossline/graph-core";
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
+import { MOSSY_EXAMPLES, type MossyExampleId } from "../data/mossy-examples";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
 import {AddData,type AddTarget} from "./AddData";
 import {useAtlasTheme} from "./atlas/theme";
@@ -567,6 +568,23 @@ export function MapStudio() {
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
+  async function openMossyExample(id:MossyExampleId) {
+    const example=MOSSY_EXAMPLES.find(item=>item.id===id);
+    if(!example)return;
+    try {
+      const response=await fetch(example.url);
+      if(!response.ok)throw Error("Example file unavailable");
+      const graph=parseGraphDocument(await response.json());
+      if(createNewMap(graph)){
+        setFieldAtlasOpen(true);
+        setExperienceSpace("studio");
+        setAtlasMessage("Fictional example: every person, place, amount, date and relationship is invented.");
+        closeImport();
+      } else setNotice("Could not save this example. Back up or remove a saved map before trying again.");
+    }catch{
+      setNotice("This example could not be opened. Try another, or download its data.");
+    }
+  }
   function openCommunityExample() {
     if(createNewMap(COMMUNITY_EXAMPLE)) {
       setNotice("Opened a separate fictional community network. Try Network, Connections and Places; your other maps are preserved.");
@@ -660,6 +678,7 @@ export function MapStudio() {
       onCommunity={()=>{openCommunityExample();setExperienceSpace("studio");}}
       onSampleSheet={()=>{tryExampleDiscovery();setExperienceSpace("studio");}}
       onPft={()=>{openPftVisualExample();setExperienceSpace("studio");}}
+      onOpenExample={id=>{void openMossyExample(id);}}
       onRecovery={()=>{window.location.href="/recover";}}
       accountMaps={<AccountMaps have={new Set(localMaps.flatMap(m=>m.shared?[m.shared.id]:[]))} busy={openingShared}
         onOpen={m=>void openSharedMap(m.id,m)}/>}/>

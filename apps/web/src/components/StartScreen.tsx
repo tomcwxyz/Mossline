@@ -1,6 +1,7 @@
 "use client";
 
 import type {ReactNode} from "react";
+import {MOSSY_EXAMPLES, type MossyExampleId} from "../data/mossy-examples";
 
 export type StartMap={id:string;title:string;nodes:number;edges:number;updatedAt:number;funding:boolean;summary?:string;
   /** e.g. "Shared" for a map kept in an account. */
@@ -34,10 +35,10 @@ function AtlasSketch(){
 }
 
 export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,onCommunity,onSampleSheet,
-  onPft,onRecovery,accountMaps}:{
+  onPft,onRecovery,onOpenExample,accountMaps}:{
   maps:StartMap[];onOpen:(id:string)=>void;onImport:()=>void;
   onFunding:()=>void;onTheList:()=>void;onExample:()=>void;onCommunity:()=>void;onSampleSheet:()=>void;
-  onPft:()=>void;onRecovery:()=>void;
+  onPft:()=>void;onRecovery:()=>void;onOpenExample:(id:MossyExampleId)=>void;
   /** Maps in the signed-in account that aren't in this browser yet. */
   accountMaps?:ReactNode;
 }){
@@ -48,38 +49,18 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
         <h1>See the relationships, not just the parts.</h1>
         <p className="ml-start-lede">Bring your organisations, projects, places and people into one atlas.
           Follow what your records say, see where the money goes, and check the evidence behind every line.</p>
-        <p className="ml-start-choose">How would you like to start?</p>
-        <div className="ml-start-routes" role="group" aria-label="Choose a data import route">
+        <p className="ml-start-choose">Start with what you have</p>
+        <div className="ml-start-routes ml-start-routes--simple" role="group" aria-label="Start exploring">
           <button type="button" onClick={onImport}>
             <svg className="ml-start-icon" viewBox="0 0 28 28" aria-hidden="true"><circle cx="8" cy="9" r="4" className="ml-sk-org"/>
-              <rect x="16" y="15" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="M8 9L20 19" className="ml-sk-ink"/></svg>
-            <span><strong>Map your own data</strong>
-              <small>Organisations, people, projects or places · CSV, Kumu and JSON</small></span>
-            <span aria-hidden="true" className="ml-start-arrow">→</span>
-          </button>
-          <button type="button" onClick={onFunding}>
-            <svg className="ml-start-icon" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 3L14 9L8 15L2 9Z" className="ml-sk-funder"/>
-              <rect x="17" y="17" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="M11 12Q20 12 21 17" className="ml-sk-arc"/></svg>
-            <span><strong>Explore funding data</strong>
-              <small>Grant awards, funders and recipients · complete source network</small></span>
-            <span aria-hidden="true" className="ml-start-arrow">→</span>
-          </button>
-          <button type="button" onClick={onTheList}>
-            <svg className="ml-start-icon" viewBox="0 0 28 28" aria-hidden="true">
-              <path d="M3 20L9 12L15 16L24 5" className="ml-sk-ink"/>
-              <circle cx="9" cy="12" r="3" className="ml-sk-funder"/>
-              <circle cx="15" cy="16" r="3" className="ml-sk-project"/>
-              <circle cx="24" cy="5" r="3" className="ml-sk-org"/>
-            </svg>
-            <span><strong>Shifting Ground · The List</strong>
-              <small>Explore published UK funding changes as a source-linked network</small></span>
+              <rect x="16" y="15" width="8" height="8" rx="1.5" className="ml-sk-project"/><path d="8 9L20 19" className="ml-sk-ink"/></svg>
+            <span><strong>Add your data</strong>
+              <small>Spreadsheets, records or existing maps. Mossy will help make sense of them.</small></span>
             <span aria-hidden="true" className="ml-start-arrow">→</span>
           </button>
         </div>
-        <button type="button" className="ml-start-try" onClick={onExample}>
-          Or try an example network →
-        </button>
-        <p className="ml-start-privacy">No account needed · Your working data stays in this browser</p>
+        <button type="button" className="ml-start-try" onClick={onExample}>Or try an example network →</button>
+        <p className="ml-start-privacy">No account needed to begin · Files are read in your browser</p>
       </div>
       <figure className="ml-start-art">
         <AtlasSketch/>
@@ -89,6 +70,26 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
           <span><i className="ml-key-wash"/>Wash · to navigate</span>
         </figcaption>
       </figure>
+    </section>
+
+    <section className="ml-start-examples" aria-labelledby="start-examples">
+      <div className="ml-start-examples-head">
+        <div><p className="ml-start-eyebrow">Five invented worlds</p>
+          <h2 id="start-examples">See what Mossy can uncover</h2>
+          <p>Explore a complete fictional dataset, then download it and try importing it yourself. Every person, place, figure and connection is invented.</p></div>
+        <a className="ml-quiet" href="/showcase">Visit Showcase →</a>
+      </div>
+      <div className="ml-start-example-grid">
+        {MOSSY_EXAMPLES.map(example=><article key={example.id} className={"ml-start-example is-"+example.colour}>
+          <p className="ml-start-eyebrow">{example.tag}</p>
+          <h3>{example.title}</h3><p>{example.subtitle}</p>
+          <strong>{example.focus}</strong>
+          <div className="ml-start-example-actions">
+            <button type="button" onClick={()=>onOpenExample(example.id)}>Explore example →</button>
+            <a href={example.url} download={example.id+".json"}>Get the data</a>
+          </div>
+        </article>)}
+      </div>
     </section>
 
     <section className="ml-start-maps" aria-labelledby="start-maps">
@@ -121,6 +122,8 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
     <details className="studio-start-more ml-start-more">
       <summary>More ways to get started</summary>
       <div className="ml-start-more-actions">
+        <button type="button" onClick={onFunding}>Bring in grants data</button>
+        <button type="button" onClick={onTheList}>Shifting Ground · The List</button>
         <button type="button" onClick={onCommunity}>Try the small community example</button>
         <button type="button" onClick={onSampleSheet}>Try a fictional spreadsheet</button>
         <button type="button" onClick={onPft}>Explore the illustration showcase</button>

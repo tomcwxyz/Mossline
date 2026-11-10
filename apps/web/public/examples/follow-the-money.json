@@ -1,0 +1,2465 @@
+{
+  "version": 1,
+  "title": "Follow the Money · Fictional example",
+  "description": "An invented five-year portfolio of grants and overlapping priorities. Every name, relationship, date and amount in this example is invented.",
+  "nodes": [
+    {
+      "id": "follow-the-money-northbank-trust",
+      "label": "Northbank Trust",
+      "type": "funder",
+      "tags": [
+        "Grant maker"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-northbank-trust",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-northbank-trust",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 1,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-open-fields-fund",
+      "label": "Open Fields Fund",
+      "type": "funder",
+      "tags": [
+        "Grant maker"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-open-fields-fund",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-open-fields-fund",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 2,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-civic-futures-foundation",
+      "label": "Civic Futures Foundation",
+      "type": "funder",
+      "tags": [
+        "Grant maker"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-civic-futures-foundation",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-civic-futures-foundation",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 3,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-bright-steps-fund",
+      "label": "Bright Steps Fund",
+      "type": "funder",
+      "tags": [
+        "Grant maker"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-bright-steps-fund",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-bright-steps-fund",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 4,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-meridian-community-fund",
+      "label": "Meridian Community Fund",
+      "type": "funder",
+      "tags": [
+        "Grant maker"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-meridian-community-fund",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-meridian-community-fund",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 5,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money-cornerstone-collective",
+      "label": "Cornerstone Collective",
+      "type": "organisation",
+      "tags": [
+        "Food"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-cornerstone-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-cornerstone-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 6,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-lantern-collective",
+      "label": "Lantern Collective",
+      "type": "organisation",
+      "tags": [
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-lantern-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-lantern-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 7,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-bridge-collective",
+      "label": "Bridge Collective",
+      "type": "organisation",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-bridge-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-bridge-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 8,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Northfields",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-spring-collective",
+      "label": "Spring Collective",
+      "type": "organisation",
+      "tags": [
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-spring-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-spring-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 9,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Southmead",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-anchor-collective",
+      "label": "Anchor Collective",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-anchor-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-anchor-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 10,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-harbour-collective",
+      "label": "Harbour Collective",
+      "type": "organisation",
+      "tags": [
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-harbour-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-harbour-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 11,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-common-collective",
+      "label": "Common Collective",
+      "type": "organisation",
+      "tags": [
+        "Skills"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-common-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-common-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 12,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Northfields",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-roots-collective",
+      "label": "Roots Collective",
+      "type": "organisation",
+      "tags": [
+        "Transport"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-roots-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-roots-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 13,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Southmead",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-pathway-collective",
+      "label": "Pathway Collective",
+      "type": "organisation",
+      "tags": [
+        "Food"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-pathway-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-pathway-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 14,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-crossroads-collective",
+      "label": "Crossroads Collective",
+      "type": "organisation",
+      "tags": [
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-crossroads-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-crossroads-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 15,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-meadow-collective",
+      "label": "Meadow Collective",
+      "type": "organisation",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-meadow-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-meadow-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 16,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Northfields",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-wildflower-collective",
+      "label": "Wildflower Collective",
+      "type": "organisation",
+      "tags": [
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-wildflower-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-wildflower-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 17,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Southmead",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-oak-collective",
+      "label": "Oak Collective",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-oak-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-oak-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 18,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-hearth-collective",
+      "label": "Hearth Collective",
+      "type": "organisation",
+      "tags": [
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-hearth-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-hearth-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 19,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-lighthouse-collective",
+      "label": "Lighthouse Collective",
+      "type": "organisation",
+      "tags": [
+        "Skills"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-lighthouse-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-lighthouse-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 20,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Northfields",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-mosaic-collective",
+      "label": "Mosaic Collective",
+      "type": "organisation",
+      "tags": [
+        "Transport"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-mosaic-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-mosaic-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 21,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Southmead",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-open-door-collective",
+      "label": "Open Door Collective",
+      "type": "organisation",
+      "tags": [
+        "Food"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-open-door-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-open-door-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 22,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-compass-collective",
+      "label": "Compass Collective",
+      "type": "organisation",
+      "tags": [
+        "Young people"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-compass-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-compass-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 23,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-circle-collective",
+      "label": "Circle Collective",
+      "type": "organisation",
+      "tags": [
+        "Housing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-circle-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-circle-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 24,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Northfields",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-future-collective",
+      "label": "Future Collective",
+      "type": "organisation",
+      "tags": [
+        "Climate"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-future-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-future-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 25,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Southmead",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-gathering-collective",
+      "label": "Gathering Collective",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-gathering-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-gathering-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 26,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Westborough",
+      "description": "Invented grant recipient"
+    },
+    {
+      "id": "follow-the-money-north-star-collective",
+      "label": "North Star Collective",
+      "type": "organisation",
+      "tags": [
+        "Wellbeing"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-north-star-collective",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "follow-the-money-north-star-collective",
+          "fileName": "follow-the-money-fictional.json",
+          "recordNumber": 27,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Fictional Eastbank",
+      "description": "Invented grant recipient"
+    }
+  ],
+  "edges": [
+    {
+      "id": "follow-the-money-edge-1",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-1",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2020-01-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-2",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-2",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2021-02-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-3",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-3",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2022-03-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-4",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-4",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2023-04-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-5",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-5",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2024-05-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-6",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-6",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2025-06-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-7",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-7",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2026-07-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-8",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-8",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2020-08-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-9",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-9",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2021-09-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-10",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-10",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2022-10-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-11",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-11",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2023-11-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-12",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-12",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2024-12-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-13",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-13",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2025-01-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-14",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-14",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2026-02-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-15",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-15",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2020-03-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-16",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-16",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2021-04-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-17",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-17",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2022-05-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-18",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-18",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2023-06-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-19",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-19",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2024-07-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-20",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-20",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2025-08-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-21",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-21",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2026-09-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-22",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-22",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2020-10-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-23",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-23",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2021-11-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-24",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-24",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2022-12-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-25",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-25",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2023-01-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-26",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-26",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2024-02-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-27",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-27",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2025-03-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-28",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-28",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2026-04-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-29",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-29",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2020-05-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-30",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-30",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2021-06-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-31",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-31",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2022-07-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-32",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-32",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2023-08-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-33",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-33",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2024-09-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-34",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-34",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2025-10-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-35",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-35",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 35,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2026-11-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-36",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-36",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 36,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2020-12-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-37",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-37",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 37,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2021-01-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-38",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-38",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 38,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2022-02-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-39",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-39",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 39,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2023-03-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-40",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-40",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 40,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2024-04-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-41",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-41",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 41,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2025-05-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-42",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-42",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 42,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2026-06-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-43",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-43",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 43,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2020-07-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-44",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-44",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 44,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2021-08-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-45",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-45",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 45,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2022-09-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-46",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-46",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 46,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2023-10-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-47",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-47",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 47,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2024-11-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-48",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-48",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 48,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2025-12-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-49",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-49",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 49,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2026-01-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-50",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-50",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 50,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2020-02-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-51",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-51",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 51,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2021-03-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-52",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-52",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 52,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2022-04-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-53",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-53",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 53,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2023-05-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-54",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-54",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 54,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2024-06-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-55",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-55",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 55,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2025-07-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-56",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-56",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 56,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2026-08-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-57",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-57",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 57,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2020-09-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-58",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-58",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 58,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2021-10-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-59",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-59",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 59,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2022-11-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-60",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-60",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 60,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2023-12-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-61",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-61",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 61,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2024-01-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-62",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-62",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 62,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2025-02-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-63",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-63",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 63,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2026-03-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-64",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-64",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 64,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2020-04-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-65",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-65",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 65,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2021-05-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-66",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-66",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 66,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2022-06-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-67",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-67",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 67,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2023-07-15",
+        "programme": "Young people"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-68",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-68",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 68,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2024-08-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-69",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-69",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 69,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2025-09-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-70",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-70",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 70,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2026-10-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-71",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-71",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 71,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2020-11-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-72",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-72",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 72,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2021-12-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-73",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-73",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 73,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2022-01-15",
+        "programme": "Culture"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-74",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-74",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 74,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2023-02-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-75",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-75",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 75,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2024-03-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-76",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-76",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 76,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 18000,
+        "currency": "GBP",
+        "awardDate": "2025-04-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-77",
+      "source": "follow-the-money-civic-futures-foundation",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-77",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 77,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 12000,
+        "currency": "GBP",
+        "awardDate": "2026-05-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-78",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-78",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 78,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 7500,
+        "currency": "GBP",
+        "awardDate": "2020-06-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-79",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-79",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 79,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 5000,
+        "currency": "GBP",
+        "awardDate": "2021-07-15",
+        "programme": "Transport"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-80",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-80",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 80,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2022-08-15",
+        "programme": "Housing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-81",
+      "source": "follow-the-money-northbank-trust",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-81",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 81,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 2400,
+        "currency": "GBP",
+        "awardDate": "2023-09-15",
+        "programme": "Wellbeing"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-82",
+      "source": "follow-the-money-bright-steps-fund",
+      "target": "follow-the-money-cornerstone-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-82",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 82,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 95000,
+        "currency": "GBP",
+        "awardDate": "2024-10-15",
+        "programme": "Food"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-83",
+      "source": "follow-the-money-open-fields-fund",
+      "target": "follow-the-money-roots-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-83",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 83,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 60000,
+        "currency": "GBP",
+        "awardDate": "2025-11-15",
+        "programme": "Climate"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    },
+    {
+      "id": "follow-the-money-edge-84",
+      "source": "follow-the-money-meridian-community-fund",
+      "target": "follow-the-money-lighthouse-collective",
+      "type": "awarded funding",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "follow-the-money-edge-84",
+        "fileName": "follow-the-money-fictional.json",
+        "recordNumber": 84,
+        "shape": "Fictional showcase example"
+      },
+      "properties": {
+        "amountAwarded": 36000,
+        "currency": "GBP",
+        "awardDate": "2026-12-15",
+        "programme": "Skills"
+      },
+      "description": "Invented grant award; a shared funder does not establish collaboration"
+    }
+  ]
+}

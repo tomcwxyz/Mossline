@@ -1,0 +1,1851 @@
+{
+  "version": 1,
+  "title": "After Dark · Fictional example",
+  "description": "Invented venues, artists and late-night culture in the imaginary city of Briarhaven. Every name, relationship, date and amount in this example is invented.",
+  "nodes": [
+    {
+      "id": "after-dark-the-lantern-room",
+      "label": "The Lantern Room",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-lantern-room",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-lantern-room",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 1,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.965,
+        "longitude": -1.63
+      }
+    },
+    {
+      "id": "after-dark-small-hours-theatre",
+      "label": "Small Hours Theatre",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-small-hours-theatre",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-small-hours-theatre",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 2,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.974000000000004,
+        "longitude": -1.63
+      }
+    },
+    {
+      "id": "after-dark-riverlight-gallery",
+      "label": "Riverlight Gallery",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-riverlight-gallery",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-riverlight-gallery",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 3,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.983000000000004,
+        "longitude": -1.63
+      }
+    },
+    {
+      "id": "after-dark-the-foundry",
+      "label": "The Foundry",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-foundry",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-foundry",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 4,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.992000000000004,
+        "longitude": -1.63
+      }
+    },
+    {
+      "id": "after-dark-the-old-cinema",
+      "label": "The Old Cinema",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-old-cinema",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-old-cinema",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 5,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.965,
+        "longitude": -1.6179999999999999
+      }
+    },
+    {
+      "id": "after-dark-station-yard",
+      "label": "Station Yard",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-station-yard",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-station-yard",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 6,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.974000000000004,
+        "longitude": -1.6179999999999999
+      }
+    },
+    {
+      "id": "after-dark-the-moor-street-bar",
+      "label": "The Moor Street Bar",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-moor-street-bar",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-moor-street-bar",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 7,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.983000000000004,
+        "longitude": -1.6179999999999999
+      }
+    },
+    {
+      "id": "after-dark-glasshouse-studios",
+      "label": "Glasshouse Studios",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-glasshouse-studios",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-glasshouse-studios",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 8,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.992000000000004,
+        "longitude": -1.6179999999999999
+      }
+    },
+    {
+      "id": "after-dark-the-exchange",
+      "label": "The Exchange",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-exchange",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-exchange",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 9,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.965,
+        "longitude": -1.6059999999999999
+      }
+    },
+    {
+      "id": "after-dark-the-listening-shed",
+      "label": "The Listening Shed",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-listening-shed",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-listening-shed",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 10,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.974000000000004,
+        "longitude": -1.6059999999999999
+      }
+    },
+    {
+      "id": "after-dark-north-pier-stage",
+      "label": "North Pier Stage",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-north-pier-stage",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-north-pier-stage",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 11,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.983000000000004,
+        "longitude": -1.6059999999999999
+      }
+    },
+    {
+      "id": "after-dark-the-print-room",
+      "label": "The Print Room",
+      "type": "place",
+      "tags": [
+        "Venue"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-print-room",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-print-room",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 12,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "region": "Briarhaven (fictional city)",
+      "description": "Fictional venue; illustrative coordinates only",
+      "properties": {
+        "latitude": 54.992000000000004,
+        "longitude": -1.6059999999999999
+      }
+    },
+    {
+      "id": "after-dark-ava-north",
+      "label": "Ava North",
+      "type": "person",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-ava-north",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-ava-north",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 13,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-rae-calder",
+      "label": "Rae Calder",
+      "type": "person",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-rae-calder",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-rae-calder",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 14,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-imani-vale",
+      "label": "Imani Vale",
+      "type": "person",
+      "tags": [
+        "Art"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-imani-vale",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-imani-vale",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 15,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-jules-farrow",
+      "label": "Jules Farrow",
+      "type": "person",
+      "tags": [
+        "Film"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-jules-farrow",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-jules-farrow",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 16,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-noor-baines",
+      "label": "Noor Baines",
+      "type": "person",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-noor-baines",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-noor-baines",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 17,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-ada-blythe",
+      "label": "Ada Blythe",
+      "type": "person",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-ada-blythe",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-ada-blythe",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 18,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-kit-rowan",
+      "label": "Kit Rowan",
+      "type": "person",
+      "tags": [
+        "Art"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-kit-rowan",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-kit-rowan",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 19,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-ezra-moss",
+      "label": "Ezra Moss",
+      "type": "person",
+      "tags": [
+        "Film"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-ezra-moss",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-ezra-moss",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 20,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-leni-shore",
+      "label": "Leni Shore",
+      "type": "person",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-leni-shore",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-leni-shore",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 21,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-sol-fern",
+      "label": "Sol Fern",
+      "type": "person",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-sol-fern",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-sol-fern",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 22,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-tali-brook",
+      "label": "Tali Brook",
+      "type": "person",
+      "tags": [
+        "Art"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-tali-brook",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-tali-brook",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 23,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-max-wren",
+      "label": "Max Wren",
+      "type": "person",
+      "tags": [
+        "Film"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-max-wren",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-max-wren",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 24,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Imaginary artist or organiser"
+    },
+    {
+      "id": "after-dark-night-school",
+      "label": "Night School",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-night-school",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-night-school",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 25,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "after-dark-afterglow-arts",
+      "label": "Afterglow Arts",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-afterglow-arts",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-afterglow-arts",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 26,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "after-dark-common-frequency",
+      "label": "Common Frequency",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-common-frequency",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-common-frequency",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 27,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "after-dark-briarhaven-fringe",
+      "label": "Briarhaven Fringe",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-briarhaven-fringe",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-briarhaven-fringe",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 28,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "after-dark-out-there-collective",
+      "label": "Out There Collective",
+      "type": "organisation",
+      "tags": [
+        "Culture"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-out-there-collective",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-out-there-collective",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 29,
+          "shape": "Fictional showcase example"
+        }
+      ]
+    },
+    {
+      "id": "after-dark-the-listening-sessions",
+      "label": "The Listening Sessions",
+      "type": "project",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-listening-sessions",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-listening-sessions",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 30,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-last-train-sessions",
+      "label": "Last Train Sessions",
+      "type": "project",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-last-train-sessions",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-last-train-sessions",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 31,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-lightworks",
+      "label": "Lightworks",
+      "type": "project",
+      "tags": [
+        "Art"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-lightworks",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-lightworks",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 32,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-open-stage",
+      "label": "Open Stage",
+      "type": "project",
+      "tags": [
+        "Film"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-open-stage",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-open-stage",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 33,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-neighbourhood-film-nights",
+      "label": "Neighbourhood Film Nights",
+      "type": "project",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-neighbourhood-film-nights",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-neighbourhood-film-nights",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 34,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-new-voices",
+      "label": "New Voices",
+      "type": "project",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-new-voices",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 35,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-new-voices",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 35,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-print-after-dark",
+      "label": "Print After Dark",
+      "type": "project",
+      "tags": [
+        "Art"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-print-after-dark",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 36,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-print-after-dark",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 36,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-street-stories",
+      "label": "Street Stories",
+      "type": "project",
+      "tags": [
+        "Film"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-street-stories",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 37,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-street-stories",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 37,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-the-hidden-rooms",
+      "label": "The Hidden Rooms",
+      "type": "project",
+      "tags": [
+        "Music"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-the-hidden-rooms",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 38,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-the-hidden-rooms",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 38,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    },
+    {
+      "id": "after-dark-winter-fringe",
+      "label": "Winter Fringe",
+      "type": "project",
+      "tags": [
+        "Theatre"
+      ],
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-winter-fringe",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 39,
+        "shape": "Fictional showcase example"
+      },
+      "receipts": [
+        {
+          "system": "json",
+          "recordId": "after-dark-winter-fringe",
+          "fileName": "after-dark-fictional.json",
+          "recordNumber": 39,
+          "shape": "Fictional showcase example"
+        }
+      ],
+      "description": "Invented cultural programme"
+    }
+  ],
+  "edges": [
+    {
+      "id": "after-dark-edge-1",
+      "source": "after-dark-night-school",
+      "target": "after-dark-the-listening-sessions",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-1",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 1,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-2",
+      "source": "after-dark-the-listening-sessions",
+      "target": "after-dark-the-foundry",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-2",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 2,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-3",
+      "source": "after-dark-ava-north",
+      "target": "after-dark-the-listening-sessions",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-3",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 3,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-4",
+      "source": "after-dark-ada-blythe",
+      "target": "after-dark-the-listening-sessions",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-4",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 4,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-5",
+      "source": "after-dark-afterglow-arts",
+      "target": "after-dark-last-train-sessions",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-5",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 5,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-6",
+      "source": "after-dark-last-train-sessions",
+      "target": "after-dark-station-yard",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-6",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 6,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-7",
+      "source": "after-dark-rae-calder",
+      "target": "after-dark-last-train-sessions",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-7",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 7,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-8",
+      "source": "after-dark-kit-rowan",
+      "target": "after-dark-last-train-sessions",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-8",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 8,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-9",
+      "source": "after-dark-common-frequency",
+      "target": "after-dark-lightworks",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-9",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 9,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-10",
+      "source": "after-dark-lightworks",
+      "target": "after-dark-glasshouse-studios",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-10",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 10,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-11",
+      "source": "after-dark-imani-vale",
+      "target": "after-dark-lightworks",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-11",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 11,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-12",
+      "source": "after-dark-ezra-moss",
+      "target": "after-dark-lightworks",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-12",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 12,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-13",
+      "source": "after-dark-briarhaven-fringe",
+      "target": "after-dark-open-stage",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-13",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 13,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-14",
+      "source": "after-dark-open-stage",
+      "target": "after-dark-the-listening-shed",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-14",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 14,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-15",
+      "source": "after-dark-jules-farrow",
+      "target": "after-dark-open-stage",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-15",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 15,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-16",
+      "source": "after-dark-leni-shore",
+      "target": "after-dark-open-stage",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-16",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 16,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-17",
+      "source": "after-dark-out-there-collective",
+      "target": "after-dark-neighbourhood-film-nights",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-17",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 17,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-18",
+      "source": "after-dark-neighbourhood-film-nights",
+      "target": "after-dark-the-print-room",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-18",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 18,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-19",
+      "source": "after-dark-noor-baines",
+      "target": "after-dark-neighbourhood-film-nights",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-19",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 19,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-20",
+      "source": "after-dark-sol-fern",
+      "target": "after-dark-neighbourhood-film-nights",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-20",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 20,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-21",
+      "source": "after-dark-night-school",
+      "target": "after-dark-new-voices",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-21",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 21,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-22",
+      "source": "after-dark-new-voices",
+      "target": "after-dark-small-hours-theatre",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-22",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 22,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-23",
+      "source": "after-dark-ada-blythe",
+      "target": "after-dark-new-voices",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-23",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 23,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-24",
+      "source": "after-dark-tali-brook",
+      "target": "after-dark-new-voices",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-24",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 24,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-25",
+      "source": "after-dark-afterglow-arts",
+      "target": "after-dark-print-after-dark",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-25",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 25,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-26",
+      "source": "after-dark-print-after-dark",
+      "target": "after-dark-the-foundry",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-26",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 26,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-27",
+      "source": "after-dark-kit-rowan",
+      "target": "after-dark-print-after-dark",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-27",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 27,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-28",
+      "source": "after-dark-max-wren",
+      "target": "after-dark-print-after-dark",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-28",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 28,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-29",
+      "source": "after-dark-common-frequency",
+      "target": "after-dark-street-stories",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-29",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 29,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-30",
+      "source": "after-dark-street-stories",
+      "target": "after-dark-station-yard",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-30",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 30,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-31",
+      "source": "after-dark-ezra-moss",
+      "target": "after-dark-street-stories",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-31",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 31,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-32",
+      "source": "after-dark-ava-north",
+      "target": "after-dark-street-stories",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-32",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 32,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-33",
+      "source": "after-dark-briarhaven-fringe",
+      "target": "after-dark-the-hidden-rooms",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-33",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 33,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-34",
+      "source": "after-dark-the-hidden-rooms",
+      "target": "after-dark-glasshouse-studios",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-34",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 34,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-35",
+      "source": "after-dark-leni-shore",
+      "target": "after-dark-the-hidden-rooms",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-35",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 35,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-36",
+      "source": "after-dark-rae-calder",
+      "target": "after-dark-the-hidden-rooms",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-36",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 36,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-37",
+      "source": "after-dark-out-there-collective",
+      "target": "after-dark-winter-fringe",
+      "type": "organises",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-37",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 37,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-38",
+      "source": "after-dark-winter-fringe",
+      "target": "after-dark-the-listening-shed",
+      "type": "held at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-38",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 38,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-39",
+      "source": "after-dark-sol-fern",
+      "target": "after-dark-winter-fringe",
+      "type": "performs at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-39",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 39,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-40",
+      "source": "after-dark-imani-vale",
+      "target": "after-dark-winter-fringe",
+      "type": "collaborates on",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-40",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 40,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-41",
+      "source": "after-dark-ava-north",
+      "target": "after-dark-night-school",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-41",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 41,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-42",
+      "source": "after-dark-rae-calder",
+      "target": "after-dark-afterglow-arts",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-42",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 42,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-43",
+      "source": "after-dark-imani-vale",
+      "target": "after-dark-common-frequency",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-43",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 43,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-44",
+      "source": "after-dark-jules-farrow",
+      "target": "after-dark-briarhaven-fringe",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-44",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 44,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-45",
+      "source": "after-dark-noor-baines",
+      "target": "after-dark-out-there-collective",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-45",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 45,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-46",
+      "source": "after-dark-ada-blythe",
+      "target": "after-dark-night-school",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-46",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 46,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-47",
+      "source": "after-dark-kit-rowan",
+      "target": "after-dark-afterglow-arts",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-47",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 47,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-48",
+      "source": "after-dark-ezra-moss",
+      "target": "after-dark-common-frequency",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-48",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 48,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-49",
+      "source": "after-dark-leni-shore",
+      "target": "after-dark-briarhaven-fringe",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-49",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 49,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-50",
+      "source": "after-dark-sol-fern",
+      "target": "after-dark-out-there-collective",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-50",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 50,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-51",
+      "source": "after-dark-tali-brook",
+      "target": "after-dark-night-school",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-51",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 51,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-52",
+      "source": "after-dark-max-wren",
+      "target": "after-dark-afterglow-arts",
+      "type": "member of",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-52",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 52,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-53",
+      "source": "after-dark-common-frequency",
+      "target": "after-dark-the-lantern-room",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-53",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 53,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-54",
+      "source": "after-dark-out-there-collective",
+      "target": "after-dark-riverlight-gallery",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-54",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 54,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-55",
+      "source": "after-dark-afterglow-arts",
+      "target": "after-dark-the-old-cinema",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-55",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 55,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-56",
+      "source": "after-dark-briarhaven-fringe",
+      "target": "after-dark-the-moor-street-bar",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-56",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 56,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-57",
+      "source": "after-dark-night-school",
+      "target": "after-dark-the-exchange",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-57",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 57,
+        "shape": "Fictional showcase example"
+      }
+    },
+    {
+      "id": "after-dark-edge-58",
+      "source": "after-dark-common-frequency",
+      "target": "after-dark-north-pier-stage",
+      "type": "programmes events at",
+      "direction": "directed",
+      "origin": {
+        "system": "json",
+        "recordId": "after-dark-edge-58",
+        "fileName": "after-dark-fictional.json",
+        "recordNumber": 58,
+        "shape": "Fictional showcase example"
+      }
+    }
+  ]
+}
