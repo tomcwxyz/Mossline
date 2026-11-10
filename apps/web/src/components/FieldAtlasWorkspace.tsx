@@ -671,7 +671,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               unplaced={unplaced} onBrowse={() => setBrowse(true)}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}}
+              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
               grouping={grouping} groupLabel={groupOption?.label ?? "Themes"}
               selectedId={selectedId} onPick={pickRecord}/>}
@@ -830,7 +830,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
           onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
-          grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>
+          grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
       </aside>}
     </section>
     {printing?.ready && story && <StoryPrint story={story} pictures={printing.pictures} labelOf={labelOf} mapTitle={imported.title}
