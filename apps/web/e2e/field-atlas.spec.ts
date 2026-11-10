@@ -58,6 +58,19 @@ test("geography-first datasets lead with recorded mapped connections",async({pag
     .toHaveAttribute("aria-current","page");
 });
 
+test("sharing clearly distinguishes published copies from local view addresses",async({page})=>{
+  await openExample(page);
+  await page.locator(".ml-share summary").click();
+  const share=page.getByRole("group",{name:"Share"});
+  await expect(share.getByRole("button",{name:"Copy local view address"})).toBeVisible();
+  await expect(share).toContainText("does not publish or transfer your dataset");
+  const publish=share.getByRole("button",{name:"Publish a shareable copy…"});
+  if(await publish.count()){
+    await expect(publish).toBeVisible();
+    await expect(share).toContainText("Anyone with the resulting link can explore that copy");
+  }
+});
+
 test("Network lens draws every record with named areas and the ink/pencil key",async({page})=>{
   await openExample(page);
   const stage=page.getByRole("region",{name:"Complete Sigma network"});
