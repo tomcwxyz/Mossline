@@ -40,3 +40,33 @@ for(const id of examples)test("raw source CSVs for "+id+" are matched by the imp
  const labels=new Set(records.rows.map(row=>row[0]));
  assert.ok(relationships.rows.every(row=>labels.has(row[0])&&labels.has(row[1])));
 });
+
+test("showcase scale is meaningful without orphan records or misleading geography",()=>{
+  const ranges:Record<string,{minNodes:number;minEdges:number;minMapped:number}>={
+    "after-dark":{minNodes:300,minEdges:450,minMapped:110},
+    "village-web":{minNodes:90,minEdges:190,minMapped:8},
+    "the-ripple-effect":{minNodes:190,minEdges:400,minMapped:0},
+    "follow-the-money":{minNodes:85,minEdges:500,minMapped:0},
+    "changing-tides":{minNodes:135,minEdges:280,minMapped:16}
+  };
+  for(const id of examples){
+    const graph=parseGraphDocument(JSON.parse(readFileSync(resolve("apps/web/public/examples",id+".json"),"utf8")));
+    const ids=new Set(graph.nodes.map(n=>n.id));
+    assert.ok(graph.nodes.length>=ranges[id].minNodes,id+" too few records");
+    assert.ok(graph.edges.length>=ranges[id].minEdges,id+" too few links");
+    assert.ok(graph.nodes.filter(n=>Number.isFinite(n.properties?.latitude)&&Number.isFinite(n.properties?.longitude)).length>=ranges[id].minMapped,id+" missing places");
+    assert.ok(graph.edges.every(e=>ids.has(e.source)&&ids.has(e.target)),id+" orphan link");
+    assert.ok(graph.edges.every(e=>!e.inferred),id+" example should not assert suggested links as facts");
+  }
+});
+test("each showcase visual is a distinct, data-backed chart",()=>{
+  const expected=["after-dark","village-web","the-ripple-effect","follow-the-money","changing-tides"];
+  for(const id of expected){
+    const svg=readFileSync(resolve("apps/web/public/examples",id+".svg"),"utf8");
+    assert.match(svg,/<svg[^>]+viewBox="0 0 960 540"/);
+    assert.ok(svg.includes("</svg>"));
+  }
+  assert.match(readFileSync(resolve("apps/web/public/examples/after-dark.svg"),"utf8"),/GEOGRAPHY/);
+  assert.match(readFileSync(resolve("apps/web/public/examples/the-ripple-effect.svg"),"utf8"),/THEMES/);
+  assert.match(readFileSync(resolve("apps/web/public/examples/follow-the-money.svg"),"utf8"),/Ribbon widths/);
+});

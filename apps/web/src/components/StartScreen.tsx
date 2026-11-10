@@ -74,25 +74,30 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
 
     <section className="ml-start-examples" aria-labelledby="start-examples">
       <div className="ml-start-examples-head">
-        <div><p className="ml-start-eyebrow">Five invented worlds</p>
-          <h2 id="start-examples">See what Mossy can uncover</h2>
-          <p>Explore a complete fictional dataset, then download it and try importing it yourself. Every person, place, figure and connection is invented.</p></div>
+        <div><p className="ml-start-eyebrow">Five ways to see the connections</p>
+          <h2 id="start-examples">See what Mossy can make</h2>
+          <p>Each example demonstrates a different view, with data you can explore or import yourself. All people and projects are fictional; the geography example uses real city locations.</p></div>
         <a className="ml-quiet" href="/showcase">Visit Showcase →</a>
       </div>
       <div className="ml-start-example-grid">
-        {MOSSY_EXAMPLES.map(example=><article key={example.id} className={"ml-start-example is-"+example.colour}>
-          <p className="ml-start-eyebrow">{example.tag}</p>
-          <img className="ml-start-example-preview" src={"/examples/"+example.id+".svg"} width="480" height="210" alt="" loading="lazy"/>
-          <h3>{example.title}</h3><p>{example.subtitle}</p>
-          <strong>{example.focus}</strong>
-          <div className="ml-start-example-actions">
-            <button type="button" onClick={()=>onOpenExample(example.id)}>Explore example →</button>
-            <details className="ml-example-download"><summary>Try the source files</summary>
-              <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
-              <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
-              <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
-              <small>Select both CSV files together in Mossy's Add data screen.</small>
-            </details>
+        {MOSSY_EXAMPLES.map((example,index)=><article key={example.id} className={"ml-start-example is-"+example.colour+(index===0?" is-featured":"")}>
+          <img className="ml-start-example-preview" src={"/examples/"+example.id+".svg"} width="960" height="540"
+            alt={example.lensLabel+" chart preview of the fictional "+example.title+" dataset"} loading={index===0?"eager":"lazy"}/>
+          <div className="ml-start-example-copy">
+            <p className="ml-start-eyebrow">{String(index+1).padStart(2,"0")} / {example.lensLabel}</p>
+            <h3>{example.title}</h3>
+            <p>{example.subtitle}</p>
+            <strong>{example.focus}</strong>
+            <p className="ml-example-facts">{example.facts}</p>
+            <div className="ml-start-example-actions">
+              <button className="ml-example-open" type="button" onClick={()=>onOpenExample(example.id)}>Explore this {example.lensLabel.toLowerCase()} view →</button>
+              <details className="ml-example-download"><summary>Try the source files</summary>
+                <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
+                <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
+                <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
+                <small>Import both CSV files together.</small>
+              </details>
+            </div>
           </div>
         </article>)}
       </div>

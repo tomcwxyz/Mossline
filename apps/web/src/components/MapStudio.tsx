@@ -596,7 +596,7 @@ export function MapStudio() {
         setPreferredLens(example.lens as AtlasLens);
         setFieldAtlasOpen(true);
         setExperienceSpace("studio");
-        setAtlasMessage("Fictional example: every person, place, amount, date and relationship is invented.");
+        setAtlasMessage("Fictional example: organisations, events, funding and links are invented. After Dark uses real UK cities as a geographical backdrop.");
         closeImport();
       } else setNotice("Could not save this example. Back up or remove a saved map before trying again.");
     }catch{

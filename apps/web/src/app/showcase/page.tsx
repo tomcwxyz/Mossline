@@ -5,7 +5,7 @@ import {featuredShowcase, type ShowcaseItem} from "../../lib/showcase-db";
 import {Wordmark} from "../../components/atlas/Wordmark";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
-export const metadata:Metadata={title:"Showcase · Mossy",description:"Five fictional worlds to explore, plus maps and stories shared by the Mossy community."};
+export const metadata:Metadata={title:"Showcase · Mossy",description:"Five ways to explore to explore, plus maps and stories shared by the Mossy community."};
 
 export default async function ShowcasePage(){
   let items:ShowcaseItem[]=[];
@@ -27,21 +27,28 @@ export default async function ShowcasePage(){
         <div className="ml-start-examples-head"><div>
           <p className="ml-start-eyebrow">Start somewhere interesting</p>
           <h2 id="examples-heading">Five fictional worlds</h2>
-          <p>The figures, names and relationships are invented. Open an example in Mossy, or download its source data and import it yourself.</p>
+          <p>Five distinct views — Geography, Network, Themes, Funding and Timeline. Explore an example or download both CSVs and let Mossy work it out. All organisations, activities and relationships are invented; the geography example uses real UK city locations.</p>
         </div></div>
         <div className="ml-start-example-grid">
-          {MOSSY_EXAMPLES.map(example=><article key={example.id} className={"ml-start-example is-"+example.colour}>
-            <p className="ml-start-eyebrow">{example.tag}</p>
-            <img className="ml-start-example-preview" src={"/examples/"+example.id+".svg"} width="480" height="210" alt="" loading="lazy"/>
-            <h3>{example.title}</h3><p>{example.subtitle}</p>
-            <strong>{example.focus}</strong>
-            <div className="ml-start-example-actions"><a href={"/?example="+example.id}>Open in Mossy →</a>
-              <details className="ml-example-download"><summary>Try the source files</summary>
-                <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
-                <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
-                <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
-                <small>Download both CSV files and import them together.</small>
-              </details></div>
+          {MOSSY_EXAMPLES.map((example,index)=><article key={example.id} className={"ml-start-example is-"+example.colour+(index===0?" is-featured":"")}>
+            <img className="ml-start-example-preview" src={"/examples/"+example.id+".svg"} width="960" height="540"
+              alt={example.lensLabel+" chart preview of the fictional "+example.title+" dataset"} loading={index===0?"eager":"lazy"}/>
+            <div className="ml-start-example-copy">
+              <p className="ml-start-eyebrow">{String(index+1).padStart(2,"0")} / {example.lensLabel}</p>
+              <h3>{example.title}</h3>
+              <p>{example.subtitle}</p>
+              <strong>{example.focus}</strong>
+              <p className="ml-example-facts">{example.facts}</p>
+              <div className="ml-start-example-actions">
+                <a className="ml-example-open" href={"/?example="+example.id}>Explore this {example.lensLabel.toLowerCase()} view →</a>
+                <details className="ml-example-download"><summary>Try the source files</summary>
+                  <a href={"/examples/"+example.id+"-records.csv"} download>Records CSV</a>
+                  <a href={"/examples/"+example.id+"-relationships.csv"} download>Relationships CSV</a>
+                  <a href={example.url} download={example.id+".json"}>Complete map JSON</a>
+                  <small>Import both CSV files together.</small>
+                </details>
+              </div>
+            </div>
           </article>)}
         </div>
       </section>

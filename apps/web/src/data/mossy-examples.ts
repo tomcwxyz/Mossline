@@ -1,53 +1,63 @@
-/** Fictional, curated examples. All names, figures and relationships are invented. */
+/** Five curated fictional datasets, each opening a distinct real Mossy lens. */
 export const MOSSY_EXAMPLES = [
+  {
+    "id": "after-dark",
+    "title": "After Dark",
+    "tag": "Geography",
+    "lensLabel": "Map",
+    "subtitle": "A fictional creative scene spread across real northern cities.",
+    "focus": "Where are the cultural hotspots — and who connects them?",
+    "lens": "map",
+    "colour": "cobalt",
+    "facts": "122 mapped venues · 16 cities",
+    "url": "/examples/after-dark.json"
+  },
   {
     "id": "village-web",
     "title": "The Village Web",
     "tag": "Connections",
-    "subtitle": "A small place with a surprisingly large network of care.",
-    "focus": "Who holds a community together?",
+    "lensLabel": "Network",
+    "subtitle": "An imaginary valley's people, projects and organisations.",
+    "focus": "Which relationships hold a community together?",
     "lens": "network",
     "colour": "sage",
+    "facts": "97 records · 207 recorded links",
     "url": "/examples/village-web.json"
+  },
+  {
+    "id": "the-ripple-effect",
+    "title": "Common Threads",
+    "tag": "Themes",
+    "lensLabel": "Themes",
+    "subtitle": "Discover the overlap between different kinds of local work.",
+    "focus": "Where do housing, culture, health and climate work meet?",
+    "lens": "themes",
+    "colour": "rust",
+    "facts": "8 themes · 200 records",
+    "url": "/examples/the-ripple-effect.json"
   },
   {
     "id": "follow-the-money",
     "title": "Follow the Money",
     "tag": "Funding",
-    "subtitle": "Grants across organisations, places and changing priorities.",
-    "focus": "Who gets funded, and what gets missed?",
+    "lensLabel": "Funding",
+    "subtitle": "Nine years of invented grants, recipients and shifting priorities.",
+    "focus": "Where does the money flow, and what changes over time?",
     "lens": "funding",
     "colour": "ochre",
+    "facts": "520 grants · 12 funders",
     "url": "/examples/follow-the-money.json"
-  },
-  {
-    "id": "after-dark",
-    "title": "After Dark",
-    "tag": "Places",
-    "subtitle": "A fictional city's venues, artists and creative collaborations.",
-    "focus": "Where does a city's creative energy gather?",
-    "lens": "map",
-    "colour": "cobalt",
-    "url": "/examples/after-dark.json"
-  },
-  {
-    "id": "the-ripple-effect",
-    "title": "The Ripple Effect",
-    "tag": "Systems",
-    "subtitle": "A neighbourhood's housing, health and transport feedback loops.",
-    "focus": "What changes when one thing changes?",
-    "lens": "network",
-    "colour": "rust",
-    "url": "/examples/the-ripple-effect.json"
   },
   {
     "id": "changing-tides",
     "title": "Changing Tides",
     "tag": "Time",
-    "subtitle": "How community services shift, close and reappear over a decade.",
-    "focus": "How does a place change over time?",
+    "lensLabel": "Timeline",
+    "subtitle": "How a fictional coastal area's services evolve over a decade.",
+    "focus": "What opened, expanded or disappeared — and when?",
     "lens": "timeline",
     "colour": "sea",
+    "facts": "301 dated events · 13 years",
     "url": "/examples/changing-tides.json"
   }
 ] as const;
