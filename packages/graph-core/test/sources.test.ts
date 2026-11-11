@@ -109,6 +109,41 @@ test("suggests shapes for grants, links and rows naming several records", () => 
   assert.deepEqual(r.graph.edges.map(e => e.type).sort(), ["delivers", "funded by"]);
 });
 
+test("a relationship-only table creates sparse, source-mentioned endpoints without inferred identities",()=>{
+  const t=readDelimited("links.csv","From,To,Relationship,Direction\\nAlice,Bob,helps,directed\\nBob,Charlie,works with,mutual\\nAlice,Bob,helps,directed\\n");
+  const reading=recogniseTable(t)[0].shape;
+  assert.equal(reading.records.length,0);
+  const res=applySources([{table:t,shape:reading,use:"records"}],null,"Untyped relationships");
+  assert.equal(res.graph.nodes.length,3);
+  assert.equal(res.graph.edges.length,3);
+  assert.equal(res.totals.newRecords,3);
+  assert.equal(res.totals.newLinks,3);
+  assert.equal(res.tables[0].unresolvedLinks,0);
+  assert.deepEqual(res.graph.nodes.map(n=>n.label).sort(),["Alice","Bob","Charlie"]);
+  assert.ok(res.graph.nodes.every(n=>n.type==="other" && n.origin?.fileName==="links.csv" &&
+    (n.receipts?.length??0)>0 && !n.description));
+  assert.ok(res.graph.edges.every(e=>!e.inferred && e.origin?.fileName==="links.csv"));
+  assert.equal(res.graph.edges.find(e=>e.type==="works with")?.direction,"mutual");
+});
+test("paired record and link files use real records, never placeholder duplicates",()=>{
+  const people=readDelimited("people.csv","Name,Type\\nAlice,person\\nBob,person\\n");
+  const links=readDelimited("links.csv","From,To,Relationship\\nAlice,Bob,helps\\n");
+  const res=applySources([
+    {table:people,shape:recogniseTable(people)[0].shape,use:"records"},
+    {table:links,shape:recogniseTable(links)[0].shape,use:"records"}
+  ],null);
+  assert.equal(res.graph.nodes.length,2);
+  assert.equal(res.graph.edges.length,1);
+  assert.ok(res.graph.nodes.every(n=>n.type==="person"));
+  assert.ok(res.graph.nodes.every(n=>!n.id.startsWith("src:mentioned:")));
+});
+test("fill-in link tables never manufacture source-mentioned endpoints",()=>{
+  const links=readDelimited("links.csv","From,To,Relationship\\nAlice,Bob,works with\\n");
+  const res=applySources([{table:links,shape:recogniseTable(links)[0].shape,use:"fill"}],null);
+  assert.equal(res.graph.nodes.length,0);
+  assert.equal(res.graph.edges.length,0);
+});
+
 test("joins 360Giving, Charity Commission and Companies House rows on identifiers, never names", () => {
   const res = applySources(plan(all()), null);
   const g = res.graph;
