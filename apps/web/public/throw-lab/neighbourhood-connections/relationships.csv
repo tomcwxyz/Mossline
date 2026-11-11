@@ -1,0 +1,351 @@
+From,To,Relationship,Direction,Since
+Newcastle Bracken Co-operative 001,Newcastle Food Programme 001,supports,directed,2022
+Newcastle Food Programme 001,Durham Riverside Group 012,works alongside,mutual,2023
+Darlington Beacon Co-operative 004,Sunderland Health Programme 002,supports,directed,2023
+Sunderland Health Programme 002,Newcastle Cedar Group 015,works alongside,mutual,2024
+Gateshead Bridgewater Co-operative 007,Middlesbrough Housing Programme 003,supports,directed,2024
+Middlesbrough Housing Programme 003,Darlington Foundry Group 018,works alongside,mutual,2025
+Middlesbrough Highfield Co-operative 010,Darlington Nature Programme 004,supports,directed,2025
+Darlington Nature Programme 004,Gateshead Mosaic Group 021,works alongside,mutual,2023
+Hartlepool Northbank Co-operative 013,Durham Transport Programme 005,supports,directed,2022
+Durham Transport Programme 005,Middlesbrough Cornerstone Group 024,works alongside,mutual,2024
+Sunderland Hilltop Co-operative 016,Hartlepool Culture Programme 006,supports,directed,2023
+Hartlepool Culture Programme 006,Hartlepool Meadow Group 027,works alongside,mutual,2025
+Durham Bracken Co-operative 019,Gateshead Young people Programme 007,supports,directed,2024
+Gateshead Young people Programme 007,Sunderland Riverside Group 030,works alongside,mutual,2023
+Newcastle Beacon Co-operative 022,Newcastle Energy Programme 008,supports,directed,2025
+Newcastle Energy Programme 008,Durham Cedar Group 033,works alongside,mutual,2024
+Darlington Bridgewater Co-operative 025,Sunderland Community care Programme 009,supports,directed,2022
+Sunderland Community care Programme 009,Newcastle Foundry Group 036,works alongside,mutual,2025
+Gateshead Highfield Co-operative 028,Middlesbrough Learning Programme 010,supports,directed,2023
+Middlesbrough Learning Programme 010,Darlington Mosaic Group 039,works alongside,mutual,2023
+Middlesbrough Northbank Co-operative 031,Darlington Food Programme 011,supports,directed,2024
+Darlington Food Programme 011,Gateshead Cornerstone Group 042,works alongside,mutual,2024
+Hartlepool Hilltop Co-operative 034,Durham Health Programme 012,supports,directed,2025
+Durham Health Programme 012,Middlesbrough Meadow Group 045,works alongside,mutual,2025
+Sunderland Bracken Co-operative 037,Hartlepool Housing Programme 013,supports,directed,2022
+Hartlepool Housing Programme 013,Hartlepool Riverside Group 048,works alongside,mutual,2023
+Durham Beacon Co-operative 040,Gateshead Nature Programme 014,supports,directed,2023
+Gateshead Nature Programme 014,Sunderland Cedar Group 051,works alongside,mutual,2024
+Newcastle Bridgewater Co-operative 043,Newcastle Transport Programme 015,supports,directed,2024
+Newcastle Transport Programme 015,Durham Foundry Group 054,works alongside,mutual,2025
+Darlington Highfield Co-operative 046,Sunderland Culture Programme 016,supports,directed,2025
+Sunderland Culture Programme 016,Newcastle Mosaic Group 057,works alongside,mutual,2023
+Gateshead Northbank Co-operative 049,Middlesbrough Young people Programme 017,supports,directed,2022
+Middlesbrough Young people Programme 017,Darlington Cornerstone Group 060,works alongside,mutual,2024
+Middlesbrough Hilltop Co-operative 052,Darlington Energy Programme 018,supports,directed,2023
+Darlington Energy Programme 018,Gateshead Meadow Group 063,works alongside,mutual,2025
+Hartlepool Bracken Co-operative 055,Durham Community care Programme 019,supports,directed,2024
+Durham Community care Programme 019,Middlesbrough Riverside Group 066,works alongside,mutual,2023
+Sunderland Beacon Co-operative 058,Hartlepool Learning Programme 020,supports,directed,2025
+Hartlepool Learning Programme 020,Hartlepool Cedar Group 069,works alongside,mutual,2024
+Durham Bridgewater Co-operative 061,Gateshead Food Programme 021,supports,directed,2022
+Gateshead Food Programme 021,Sunderland Foundry Group 072,works alongside,mutual,2025
+Newcastle Highfield Co-operative 064,Newcastle Health Programme 022,supports,directed,2023
+Newcastle Health Programme 022,Durham Mosaic Group 075,works alongside,mutual,2023
+Darlington Northbank Co-operative 067,Sunderland Housing Programme 023,supports,directed,2024
+Sunderland Housing Programme 023,Newcastle Cornerstone Group 078,works alongside,mutual,2024
+Gateshead Hilltop Co-operative 070,Middlesbrough Nature Programme 024,supports,directed,2025
+Middlesbrough Nature Programme 024,Darlington Meadow Group 081,works alongside,mutual,2025
+Middlesbrough Bracken Co-operative 073,Darlington Transport Programme 025,supports,directed,2022
+Darlington Transport Programme 025,Gateshead Riverside Group 084,works alongside,mutual,2023
+Hartlepool Beacon Co-operative 076,Durham Culture Programme 026,supports,directed,2023
+Durham Culture Programme 026,Middlesbrough Cedar Group 087,works alongside,mutual,2024
+Sunderland Bridgewater Co-operative 079,Hartlepool Young people Programme 027,supports,directed,2024
+Hartlepool Young people Programme 027,Hartlepool Foundry Group 090,works alongside,mutual,2025
+Durham Highfield Co-operative 082,Gateshead Energy Programme 028,supports,directed,2025
+Gateshead Energy Programme 028,Sunderland Mosaic Group 093,works alongside,mutual,2023
+Newcastle Northbank Co-operative 085,Newcastle Community care Programme 029,supports,directed,2022
+Newcastle Community care Programme 029,Durham Cornerstone Group 096,works alongside,mutual,2024
+Darlington Hilltop Co-operative 088,Sunderland Learning Programme 030,supports,directed,2023
+Sunderland Learning Programme 030,Newcastle Meadow Group 099,works alongside,mutual,2025
+Gateshead Bracken Co-operative 091,Middlesbrough Food Programme 031,supports,directed,2024
+Middlesbrough Food Programme 031,Darlington Riverside Group 102,works alongside,mutual,2023
+Middlesbrough Beacon Co-operative 094,Darlington Health Programme 032,supports,directed,2025
+Darlington Health Programme 032,Gateshead Cedar Group 105,works alongside,mutual,2024
+Hartlepool Bridgewater Co-operative 097,Durham Housing Programme 033,supports,directed,2022
+Durham Housing Programme 033,Middlesbrough Foundry Group 108,works alongside,mutual,2025
+Sunderland Highfield Co-operative 100,Hartlepool Nature Programme 034,supports,directed,2023
+Hartlepool Nature Programme 034,Hartlepool Mosaic Group 111,works alongside,mutual,2023
+Durham Northbank Co-operative 103,Gateshead Transport Programme 035,supports,directed,2024
+Gateshead Transport Programme 035,Sunderland Cornerstone Group 114,works alongside,mutual,2024
+Newcastle Hilltop Co-operative 106,Newcastle Culture Programme 036,supports,directed,2025
+Newcastle Culture Programme 036,Sunderland Harbour Trust 002,works alongside,mutual,2025
+Darlington Bracken Co-operative 109,Sunderland Young people Programme 037,supports,directed,2022
+Sunderland Young people Programme 037,Durham Willow Trust 005,works alongside,mutual,2023
+Gateshead Beacon Co-operative 112,Middlesbrough Energy Programme 038,supports,directed,2023
+Middlesbrough Energy Programme 038,Newcastle Hearth Trust 008,works alongside,mutual,2024
+Middlesbrough Bridgewater Co-operative 115,Darlington Community care Programme 039,supports,directed,2024
+Darlington Community care Programme 039,Darlington Lantern Trust 011,works alongside,mutual,2025
+Middlesbrough Mosaic Group 003,Durham Learning Programme 040,supports,directed,2025
+Durham Learning Programme 040,Gateshead Seedling Trust 014,works alongside,mutual,2023
+Hartlepool Cornerstone Group 006,Hartlepool Food Programme 041,supports,directed,2022
+Hartlepool Food Programme 041,Middlesbrough Tideway Trust 017,works alongside,mutual,2024
+Sunderland Meadow Group 009,Gateshead Health Programme 042,supports,directed,2023
+Gateshead Health Programme 042,Hartlepool Harbour Trust 020,works alongside,mutual,2025
+Durham Riverside Group 012,Newcastle Housing Programme 043,supports,directed,2024
+Newcastle Housing Programme 043,Sunderland Willow Trust 023,works alongside,mutual,2023
+Newcastle Cedar Group 015,Sunderland Nature Programme 044,supports,directed,2025
+Sunderland Nature Programme 044,Durham Hearth Trust 026,works alongside,mutual,2024
+Darlington Foundry Group 018,Middlesbrough Transport Programme 045,supports,directed,2022
+Middlesbrough Transport Programme 045,Newcastle Lantern Trust 029,works alongside,mutual,2025
+Gateshead Mosaic Group 021,Darlington Culture Programme 046,supports,directed,2023
+Darlington Culture Programme 046,Darlington Seedling Trust 032,works alongside,mutual,2023
+Middlesbrough Cornerstone Group 024,Durham Young people Programme 047,supports,directed,2024
+Durham Young people Programme 047,Gateshead Tideway Trust 035,works alongside,mutual,2024
+Hartlepool Meadow Group 027,Hartlepool Energy Programme 048,supports,directed,2025
+Hartlepool Energy Programme 048,Middlesbrough Harbour Trust 038,works alongside,mutual,2025
+Sunderland Riverside Group 030,Gateshead Community care Programme 049,supports,directed,2022
+Gateshead Community care Programme 049,Hartlepool Willow Trust 041,works alongside,mutual,2023
+Durham Cedar Group 033,Newcastle Learning Programme 050,supports,directed,2023
+Newcastle Learning Programme 050,Sunderland Hearth Trust 044,works alongside,mutual,2024
+Newcastle Foundry Group 036,Sunderland Food Programme 051,supports,directed,2024
+Sunderland Food Programme 051,Durham Lantern Trust 047,works alongside,mutual,2025
+Darlington Mosaic Group 039,Middlesbrough Health Programme 052,supports,directed,2025
+Middlesbrough Health Programme 052,Newcastle Seedling Trust 050,works alongside,mutual,2023
+Gateshead Cornerstone Group 042,Darlington Housing Programme 053,supports,directed,2022
+Darlington Housing Programme 053,Darlington Tideway Trust 053,works alongside,mutual,2024
+Middlesbrough Meadow Group 045,Durham Nature Programme 054,supports,directed,2023
+Durham Nature Programme 054,Gateshead Harbour Trust 056,works alongside,mutual,2025
+Hartlepool Riverside Group 048,Hartlepool Transport Programme 055,supports,directed,2024
+Hartlepool Transport Programme 055,Middlesbrough Willow Trust 059,works alongside,mutual,2023
+Sunderland Cedar Group 051,Gateshead Culture Programme 056,supports,directed,2025
+Gateshead Culture Programme 056,Hartlepool Hearth Trust 062,works alongside,mutual,2024
+Durham Foundry Group 054,Newcastle Young people Programme 057,supports,directed,2022
+Newcastle Young people Programme 057,Sunderland Lantern Trust 065,works alongside,mutual,2025
+Newcastle Mosaic Group 057,Sunderland Energy Programme 058,supports,directed,2023
+Sunderland Energy Programme 058,Durham Seedling Trust 068,works alongside,mutual,2023
+Darlington Cornerstone Group 060,Middlesbrough Community care Programme 059,supports,directed,2024
+Middlesbrough Community care Programme 059,Newcastle Tideway Trust 071,works alongside,mutual,2024
+Gateshead Meadow Group 063,Darlington Learning Programme 060,supports,directed,2025
+Darlington Learning Programme 060,Darlington Harbour Trust 074,works alongside,mutual,2025
+Middlesbrough Riverside Group 066,Durham Food Programme 061,supports,directed,2022
+Durham Food Programme 061,Gateshead Willow Trust 077,works alongside,mutual,2023
+Hartlepool Cedar Group 069,Hartlepool Health Programme 062,supports,directed,2023
+Hartlepool Health Programme 062,Middlesbrough Hearth Trust 080,works alongside,mutual,2024
+Newcastle Bracken Co-operative 001,Gateshead Seedling Trust 014,shares a venue with,mutual,2020
+Sunderland Harbour Trust 002,Gateshead Mosaic Group 021,collaborates with,mutual,2021
+Middlesbrough Mosaic Group 003,Gateshead Highfield Co-operative 028,collaborates with,mutual,2022
+Darlington Beacon Co-operative 004,Gateshead Tideway Trust 035,collaborates with,mutual,2023
+Durham Willow Trust 005,Gateshead Cornerstone Group 042,collaborates with,mutual,2024
+Hartlepool Cornerstone Group 006,Gateshead Northbank Co-operative 049,shares a venue with,mutual,2025
+Gateshead Bridgewater Co-operative 007,Gateshead Harbour Trust 056,collaborates with,mutual,2020
+Newcastle Hearth Trust 008,Gateshead Meadow Group 063,collaborates with,mutual,2021
+Sunderland Meadow Group 009,Gateshead Hilltop Co-operative 070,collaborates with,mutual,2022
+Middlesbrough Highfield Co-operative 010,Gateshead Willow Trust 077,collaborates with,mutual,2023
+Darlington Lantern Trust 011,Gateshead Riverside Group 084,shares a venue with,mutual,2024
+Durham Riverside Group 012,Gateshead Bracken Co-operative 091,collaborates with,mutual,2025
+Hartlepool Northbank Co-operative 013,Gateshead Hearth Trust 098,collaborates with,mutual,2020
+Gateshead Seedling Trust 014,Gateshead Cedar Group 105,collaborates with,mutual,2021
+Newcastle Cedar Group 015,Sunderland Harbour Trust 002,collaborates with,mutual,2022
+Sunderland Hilltop Co-operative 016,Sunderland Meadow Group 009,shares a venue with,mutual,2023
+Middlesbrough Tideway Trust 017,Sunderland Hilltop Co-operative 016,collaborates with,mutual,2024
+Darlington Foundry Group 018,Sunderland Willow Trust 023,collaborates with,mutual,2025
+Durham Bracken Co-operative 019,Sunderland Riverside Group 030,collaborates with,mutual,2020
+Hartlepool Harbour Trust 020,Sunderland Bracken Co-operative 037,collaborates with,mutual,2021
+Gateshead Mosaic Group 021,Sunderland Hearth Trust 044,shares a venue with,mutual,2022
+Newcastle Beacon Co-operative 022,Sunderland Cedar Group 051,collaborates with,mutual,2023
+Sunderland Willow Trust 023,Sunderland Beacon Co-operative 058,collaborates with,mutual,2024
+Middlesbrough Cornerstone Group 024,Sunderland Lantern Trust 065,collaborates with,mutual,2025
+Darlington Bridgewater Co-operative 025,Sunderland Foundry Group 072,collaborates with,mutual,2020
+Durham Hearth Trust 026,Sunderland Bridgewater Co-operative 079,shares a venue with,mutual,2021
+Hartlepool Meadow Group 027,Sunderland Seedling Trust 086,collaborates with,mutual,2022
+Gateshead Highfield Co-operative 028,Sunderland Mosaic Group 093,collaborates with,mutual,2023
+Newcastle Lantern Trust 029,Sunderland Highfield Co-operative 100,collaborates with,mutual,2024
+Sunderland Riverside Group 030,Sunderland Tideway Trust 107,collaborates with,mutual,2025
+Middlesbrough Northbank Co-operative 031,Darlington Beacon Co-operative 004,shares a venue with,mutual,2020
+Darlington Seedling Trust 032,Darlington Lantern Trust 011,collaborates with,mutual,2021
+Durham Cedar Group 033,Darlington Foundry Group 018,collaborates with,mutual,2022
+Hartlepool Hilltop Co-operative 034,Darlington Bridgewater Co-operative 025,collaborates with,mutual,2023
+Gateshead Tideway Trust 035,Darlington Seedling Trust 032,collaborates with,mutual,2024
+Newcastle Foundry Group 036,Darlington Mosaic Group 039,shares a venue with,mutual,2025
+Sunderland Bracken Co-operative 037,Darlington Highfield Co-operative 046,collaborates with,mutual,2020
+Middlesbrough Harbour Trust 038,Darlington Tideway Trust 053,collaborates with,mutual,2021
+Darlington Mosaic Group 039,Darlington Cornerstone Group 060,collaborates with,mutual,2022
+Durham Beacon Co-operative 040,Darlington Northbank Co-operative 067,collaborates with,mutual,2023
+Hartlepool Willow Trust 041,Darlington Harbour Trust 074,shares a venue with,mutual,2024
+Gateshead Cornerstone Group 042,Darlington Meadow Group 081,collaborates with,mutual,2025
+Newcastle Bridgewater Co-operative 043,Darlington Hilltop Co-operative 088,collaborates with,mutual,2020
+Sunderland Hearth Trust 044,Darlington Willow Trust 095,collaborates with,mutual,2021
+Middlesbrough Meadow Group 045,Darlington Riverside Group 102,collaborates with,mutual,2022
+Darlington Highfield Co-operative 046,Darlington Bracken Co-operative 109,shares a venue with,mutual,2023
+Durham Lantern Trust 047,Hartlepool Cornerstone Group 006,collaborates with,mutual,2024
+Hartlepool Riverside Group 048,Hartlepool Northbank Co-operative 013,collaborates with,mutual,2025
+Gateshead Northbank Co-operative 049,Hartlepool Harbour Trust 020,collaborates with,mutual,2020
+Newcastle Seedling Trust 050,Hartlepool Meadow Group 027,collaborates with,mutual,2021
+Sunderland Cedar Group 051,Hartlepool Hilltop Co-operative 034,shares a venue with,mutual,2022
+Middlesbrough Hilltop Co-operative 052,Hartlepool Willow Trust 041,collaborates with,mutual,2023
+Darlington Tideway Trust 053,Hartlepool Riverside Group 048,collaborates with,mutual,2024
+Durham Foundry Group 054,Hartlepool Bracken Co-operative 055,collaborates with,mutual,2025
+Hartlepool Bracken Co-operative 055,Hartlepool Hearth Trust 062,collaborates with,mutual,2020
+Gateshead Harbour Trust 056,Hartlepool Cedar Group 069,shares a venue with,mutual,2021
+Newcastle Mosaic Group 057,Hartlepool Beacon Co-operative 076,collaborates with,mutual,2022
+Sunderland Beacon Co-operative 058,Hartlepool Lantern Trust 083,collaborates with,mutual,2023
+Middlesbrough Willow Trust 059,Hartlepool Foundry Group 090,collaborates with,mutual,2024
+Darlington Cornerstone Group 060,Hartlepool Bridgewater Co-operative 097,collaborates with,mutual,2025
+Durham Bridgewater Co-operative 061,Hartlepool Seedling Trust 104,shares a venue with,mutual,2020
+Hartlepool Hearth Trust 062,Newcastle Bracken Co-operative 001,collaborates with,mutual,2021
+Gateshead Meadow Group 063,Newcastle Hearth Trust 008,collaborates with,mutual,2022
+Newcastle Highfield Co-operative 064,Newcastle Cedar Group 015,collaborates with,mutual,2023
+Sunderland Lantern Trust 065,Newcastle Beacon Co-operative 022,collaborates with,mutual,2024
+Middlesbrough Riverside Group 066,Newcastle Lantern Trust 029,shares a venue with,mutual,2025
+Darlington Northbank Co-operative 067,Newcastle Foundry Group 036,collaborates with,mutual,2020
+Durham Seedling Trust 068,Newcastle Bridgewater Co-operative 043,collaborates with,mutual,2021
+Hartlepool Cedar Group 069,Newcastle Seedling Trust 050,collaborates with,mutual,2022
+Gateshead Hilltop Co-operative 070,Newcastle Mosaic Group 057,collaborates with,mutual,2023
+Newcastle Tideway Trust 071,Newcastle Highfield Co-operative 064,shares a venue with,mutual,2024
+Sunderland Foundry Group 072,Newcastle Tideway Trust 071,collaborates with,mutual,2025
+Middlesbrough Bracken Co-operative 073,Newcastle Cornerstone Group 078,collaborates with,mutual,2020
+Darlington Harbour Trust 074,Newcastle Northbank Co-operative 085,collaborates with,mutual,2021
+Durham Mosaic Group 075,Newcastle Harbour Trust 092,collaborates with,mutual,2022
+Hartlepool Beacon Co-operative 076,Newcastle Meadow Group 099,shares a venue with,mutual,2023
+Gateshead Willow Trust 077,Newcastle Hilltop Co-operative 106,collaborates with,mutual,2024
+Newcastle Cornerstone Group 078,Middlesbrough Mosaic Group 003,collaborates with,mutual,2025
+Sunderland Bridgewater Co-operative 079,Middlesbrough Highfield Co-operative 010,collaborates with,mutual,2020
+Middlesbrough Hearth Trust 080,Middlesbrough Tideway Trust 017,collaborates with,mutual,2021
+Darlington Meadow Group 081,Middlesbrough Cornerstone Group 024,shares a venue with,mutual,2022
+Durham Highfield Co-operative 082,Middlesbrough Northbank Co-operative 031,collaborates with,mutual,2023
+Hartlepool Lantern Trust 083,Middlesbrough Harbour Trust 038,collaborates with,mutual,2024
+Gateshead Riverside Group 084,Middlesbrough Meadow Group 045,collaborates with,mutual,2025
+Newcastle Northbank Co-operative 085,Middlesbrough Hilltop Co-operative 052,collaborates with,mutual,2020
+Sunderland Seedling Trust 086,Middlesbrough Willow Trust 059,shares a venue with,mutual,2021
+Middlesbrough Cedar Group 087,Middlesbrough Riverside Group 066,collaborates with,mutual,2022
+Darlington Hilltop Co-operative 088,Middlesbrough Bracken Co-operative 073,collaborates with,mutual,2023
+Durham Tideway Trust 089,Middlesbrough Hearth Trust 080,collaborates with,mutual,2024
+Hartlepool Foundry Group 090,Middlesbrough Cedar Group 087,collaborates with,mutual,2025
+Gateshead Bracken Co-operative 091,Middlesbrough Beacon Co-operative 094,shares a venue with,mutual,2020
+Newcastle Harbour Trust 092,Middlesbrough Lantern Trust 101,collaborates with,mutual,2021
+Sunderland Mosaic Group 093,Middlesbrough Foundry Group 108,collaborates with,mutual,2022
+Middlesbrough Beacon Co-operative 094,Durham Willow Trust 005,collaborates with,mutual,2023
+Darlington Willow Trust 095,Durham Riverside Group 012,collaborates with,mutual,2024
+Durham Cornerstone Group 096,Durham Bracken Co-operative 019,shares a venue with,mutual,2025
+Hartlepool Bridgewater Co-operative 097,Durham Hearth Trust 026,collaborates with,mutual,2020
+Gateshead Hearth Trust 098,Durham Cedar Group 033,collaborates with,mutual,2021
+Newcastle Meadow Group 099,Durham Beacon Co-operative 040,collaborates with,mutual,2022
+Sunderland Highfield Co-operative 100,Durham Lantern Trust 047,collaborates with,mutual,2023
+Newcastle Bracken Co-operative 001,Durham Foundry Group 054,shares a venue with,mutual,2024
+Sunderland Harbour Trust 002,Durham Bridgewater Co-operative 061,collaborates with,mutual,2025
+Middlesbrough Mosaic Group 003,Durham Seedling Trust 068,collaborates with,mutual,2020
+Darlington Beacon Co-operative 004,Durham Mosaic Group 075,collaborates with,mutual,2021
+Durham Willow Trust 005,Durham Highfield Co-operative 082,collaborates with,mutual,2022
+Hartlepool Cornerstone Group 006,Durham Tideway Trust 089,shares a venue with,mutual,2023
+Gateshead Bridgewater Co-operative 007,Durham Cornerstone Group 096,collaborates with,mutual,2024
+Newcastle Hearth Trust 008,Durham Northbank Co-operative 103,collaborates with,mutual,2025
+Sunderland Meadow Group 009,Durham Harbour Trust 110,collaborates with,mutual,2020
+Middlesbrough Highfield Co-operative 010,Gateshead Bridgewater Co-operative 007,collaborates with,mutual,2021
+Darlington Lantern Trust 011,Gateshead Seedling Trust 014,shares a venue with,mutual,2022
+Durham Riverside Group 012,Gateshead Mosaic Group 021,collaborates with,mutual,2023
+Hartlepool Northbank Co-operative 013,Gateshead Highfield Co-operative 028,collaborates with,mutual,2024
+Gateshead Seedling Trust 014,Gateshead Tideway Trust 035,collaborates with,mutual,2025
+Newcastle Cedar Group 015,Gateshead Cornerstone Group 042,collaborates with,mutual,2020
+Sunderland Hilltop Co-operative 016,Gateshead Northbank Co-operative 049,shares a venue with,mutual,2021
+Middlesbrough Tideway Trust 017,Gateshead Harbour Trust 056,collaborates with,mutual,2022
+Darlington Foundry Group 018,Gateshead Meadow Group 063,collaborates with,mutual,2023
+Durham Bracken Co-operative 019,Gateshead Hilltop Co-operative 070,collaborates with,mutual,2024
+Hartlepool Harbour Trust 020,Gateshead Willow Trust 077,collaborates with,mutual,2025
+Gateshead Mosaic Group 021,Gateshead Riverside Group 084,shares a venue with,mutual,2020
+Newcastle Beacon Co-operative 022,Gateshead Bracken Co-operative 091,collaborates with,mutual,2021
+Sunderland Willow Trust 023,Gateshead Hearth Trust 098,collaborates with,mutual,2022
+Middlesbrough Cornerstone Group 024,Gateshead Cedar Group 105,collaborates with,mutual,2023
+Darlington Bridgewater Co-operative 025,Sunderland Harbour Trust 002,collaborates with,mutual,2024
+Durham Hearth Trust 026,Sunderland Meadow Group 009,shares a venue with,mutual,2025
+Hartlepool Meadow Group 027,Sunderland Hilltop Co-operative 016,collaborates with,mutual,2020
+Gateshead Highfield Co-operative 028,Sunderland Willow Trust 023,collaborates with,mutual,2021
+Newcastle Lantern Trust 029,Sunderland Riverside Group 030,collaborates with,mutual,2022
+Sunderland Riverside Group 030,Sunderland Bracken Co-operative 037,collaborates with,mutual,2023
+Middlesbrough Northbank Co-operative 031,Sunderland Hearth Trust 044,shares a venue with,mutual,2024
+Darlington Seedling Trust 032,Sunderland Cedar Group 051,collaborates with,mutual,2025
+Durham Cedar Group 033,Sunderland Beacon Co-operative 058,collaborates with,mutual,2020
+Hartlepool Hilltop Co-operative 034,Sunderland Lantern Trust 065,collaborates with,mutual,2021
+Gateshead Tideway Trust 035,Sunderland Foundry Group 072,collaborates with,mutual,2022
+Newcastle Foundry Group 036,Sunderland Bridgewater Co-operative 079,shares a venue with,mutual,2023
+Sunderland Bracken Co-operative 037,Sunderland Seedling Trust 086,collaborates with,mutual,2024
+Middlesbrough Harbour Trust 038,Sunderland Mosaic Group 093,collaborates with,mutual,2025
+Darlington Mosaic Group 039,Sunderland Highfield Co-operative 100,collaborates with,mutual,2020
+Durham Beacon Co-operative 040,Sunderland Tideway Trust 107,collaborates with,mutual,2021
+Hartlepool Willow Trust 041,Darlington Beacon Co-operative 004,shares a venue with,mutual,2022
+Gateshead Cornerstone Group 042,Darlington Lantern Trust 011,collaborates with,mutual,2023
+Newcastle Bridgewater Co-operative 043,Darlington Foundry Group 018,collaborates with,mutual,2024
+Sunderland Hearth Trust 044,Darlington Bridgewater Co-operative 025,collaborates with,mutual,2025
+Middlesbrough Meadow Group 045,Darlington Seedling Trust 032,collaborates with,mutual,2020
+Darlington Highfield Co-operative 046,Darlington Mosaic Group 039,shares a venue with,mutual,2021
+Durham Lantern Trust 047,Darlington Highfield Co-operative 046,collaborates with,mutual,2022
+Hartlepool Riverside Group 048,Darlington Tideway Trust 053,collaborates with,mutual,2023
+Gateshead Northbank Co-operative 049,Darlington Cornerstone Group 060,collaborates with,mutual,2024
+Newcastle Seedling Trust 050,Darlington Northbank Co-operative 067,collaborates with,mutual,2025
+Sunderland Cedar Group 051,Darlington Harbour Trust 074,shares a venue with,mutual,2020
+Middlesbrough Hilltop Co-operative 052,Darlington Meadow Group 081,collaborates with,mutual,2021
+Darlington Tideway Trust 053,Darlington Hilltop Co-operative 088,collaborates with,mutual,2022
+Durham Foundry Group 054,Darlington Willow Trust 095,collaborates with,mutual,2023
+Hartlepool Bracken Co-operative 055,Darlington Riverside Group 102,collaborates with,mutual,2024
+Gateshead Harbour Trust 056,Darlington Bracken Co-operative 109,shares a venue with,mutual,2025
+Newcastle Mosaic Group 057,Hartlepool Cornerstone Group 006,collaborates with,mutual,2020
+Sunderland Beacon Co-operative 058,Hartlepool Northbank Co-operative 013,collaborates with,mutual,2021
+Middlesbrough Willow Trust 059,Hartlepool Harbour Trust 020,collaborates with,mutual,2022
+Darlington Cornerstone Group 060,Hartlepool Meadow Group 027,collaborates with,mutual,2023
+Newcastle Bracken Co-operative 001,Newcastle Community Space 001,uses,directed,2022
+Sunderland Harbour Trust 002,Sunderland Community Space 002,uses,directed,2023
+Middlesbrough Mosaic Group 003,Middlesbrough Community Space 003,uses,directed,2024
+Darlington Beacon Co-operative 004,Darlington Community Space 004,uses,directed,2025
+Durham Willow Trust 005,Durham Community Space 005,uses,directed,2022
+Hartlepool Cornerstone Group 006,Hartlepool Community Space 006,uses,directed,2023
+Gateshead Bridgewater Co-operative 007,Gateshead Community Space 007,uses,directed,2024
+Newcastle Hearth Trust 008,Newcastle Community Space 008,uses,directed,2025
+Sunderland Meadow Group 009,Sunderland Community Space 009,uses,directed,2022
+Middlesbrough Highfield Co-operative 010,Middlesbrough Community Space 010,uses,directed,2023
+Darlington Lantern Trust 011,Darlington Community Space 011,uses,directed,2024
+Durham Riverside Group 012,Durham Community Space 012,uses,directed,2025
+Hartlepool Northbank Co-operative 013,Hartlepool Community Space 013,uses,directed,2022
+Gateshead Seedling Trust 014,Gateshead Community Space 014,uses,directed,2023
+Newcastle Cedar Group 015,Newcastle Community Space 001,uses,directed,2024
+Sunderland Hilltop Co-operative 016,Sunderland Community Space 002,uses,directed,2025
+Middlesbrough Tideway Trust 017,Middlesbrough Community Space 003,uses,directed,2022
+Darlington Foundry Group 018,Darlington Community Space 004,uses,directed,2023
+Durham Bracken Co-operative 019,Durham Community Space 005,uses,directed,2024
+Hartlepool Harbour Trust 020,Hartlepool Community Space 006,uses,directed,2025
+Gateshead Mosaic Group 021,Gateshead Community Space 007,uses,directed,2022
+Newcastle Beacon Co-operative 022,Newcastle Community Space 008,uses,directed,2023
+Sunderland Willow Trust 023,Sunderland Community Space 009,uses,directed,2024
+Middlesbrough Cornerstone Group 024,Middlesbrough Community Space 010,uses,directed,2025
+Darlington Bridgewater Co-operative 025,Darlington Community Space 011,uses,directed,2022
+Durham Hearth Trust 026,Durham Community Space 012,uses,directed,2023
+Hartlepool Meadow Group 027,Hartlepool Community Space 013,uses,directed,2024
+Gateshead Highfield Co-operative 028,Gateshead Community Space 014,uses,directed,2025
+Newcastle Lantern Trust 029,Newcastle Community Space 001,uses,directed,2022
+Sunderland Riverside Group 030,Sunderland Community Space 002,uses,directed,2023
+Middlesbrough Northbank Co-operative 031,Middlesbrough Community Space 003,uses,directed,2024
+Darlington Seedling Trust 032,Darlington Community Space 004,uses,directed,2025
+Durham Cedar Group 033,Durham Community Space 005,uses,directed,2022
+Hartlepool Hilltop Co-operative 034,Hartlepool Community Space 006,uses,directed,2023
+Gateshead Tideway Trust 035,Gateshead Community Space 007,uses,directed,2024
+Newcastle Foundry Group 036,Newcastle Community Space 008,uses,directed,2025
+Sunderland Bracken Co-operative 037,Sunderland Community Space 009,uses,directed,2022
+Middlesbrough Harbour Trust 038,Middlesbrough Community Space 010,uses,directed,2023
+Darlington Mosaic Group 039,Darlington Community Space 011,uses,directed,2024
+Durham Beacon Co-operative 040,Durham Community Space 012,uses,directed,2025
+Hartlepool Willow Trust 041,Hartlepool Community Space 013,uses,directed,2022
+Gateshead Cornerstone Group 042,Gateshead Community Space 014,uses,directed,2023
+Newcastle Bridgewater Co-operative 043,Newcastle Community Space 001,uses,directed,2024
+Sunderland Hearth Trust 044,Sunderland Community Space 002,uses,directed,2025
+Middlesbrough Meadow Group 045,Middlesbrough Community Space 003,uses,directed,2022
+Newcastle Bracken Co-operative 001,Darlington Meadow Group 081,connects across areas,mutual,2024
+Sunderland Harbour Trust 002,Durham Highfield Co-operative 082,connects across areas,mutual,2024
+Middlesbrough Mosaic Group 003,Hartlepool Lantern Trust 083,connects across areas,mutual,2024
+Darlington Beacon Co-operative 004,Gateshead Riverside Group 084,connects across areas,mutual,2024
+Durham Willow Trust 005,Newcastle Northbank Co-operative 085,connects across areas,mutual,2024
+Hartlepool Cornerstone Group 006,Sunderland Seedling Trust 086,connects across areas,mutual,2024
+Gateshead Bridgewater Co-operative 007,Middlesbrough Cedar Group 087,connects across areas,mutual,2024
+Newcastle Bracken Co-operative 001,Darlington Hilltop Co-operative 088,connects across areas,mutual,2024
+Sunderland Harbour Trust 002,Durham Tideway Trust 089,connects across areas,mutual,2024
+Middlesbrough Mosaic Group 003,Hartlepool Foundry Group 090,connects across areas,mutual,2024
+Darlington Beacon Co-operative 004,Gateshead Bracken Co-operative 091,connects across areas,mutual,2024
+Durham Willow Trust 005,Newcastle Harbour Trust 092,connects across areas,mutual,2024
+Hartlepool Cornerstone Group 006,Sunderland Mosaic Group 093,connects across areas,mutual,2024
+Gateshead Bridgewater Co-operative 007,Middlesbrough Beacon Co-operative 094,connects across areas,mutual,2024
+Newcastle Bracken Co-operative 001,Darlington Willow Trust 095,connects across areas,mutual,2024
+Sunderland Harbour Trust 002,Durham Cornerstone Group 096,connects across areas,mutual,2024
+Middlesbrough Mosaic Group 003,Hartlepool Bridgewater Co-operative 097,connects across areas,mutual,2024
+Darlington Beacon Co-operative 004,Gateshead Hearth Trust 098,connects across areas,mutual,2024
+Durham Willow Trust 005,Newcastle Meadow Group 099,connects across areas,mutual,2024
+Hartlepool Cornerstone Group 006,Sunderland Highfield Co-operative 100,connects across areas,mutual,2024
+Gateshead Bridgewater Co-operative 007,Middlesbrough Lantern Trust 101,connects across areas,mutual,2024
