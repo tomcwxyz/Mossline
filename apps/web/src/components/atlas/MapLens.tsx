@@ -162,8 +162,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       if (small) setUnplacedOpen(false);
     };
     measure();
+    // Opening the live data table changes the canvas size without a window
+    // resize. MapLibre must measure its new viewport to keep marks clickable.
+    const observer=new ResizeObserver(()=>{
+      mapRef.current?.resize();
+      measure();
+    });
+    if(container.current)observer.observe(container.current);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {observer.disconnect();window.removeEventListener("resize", measure);};
   }, []);
 
   const data = useMemo(() => {
