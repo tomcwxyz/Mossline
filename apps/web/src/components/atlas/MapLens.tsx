@@ -17,6 +17,7 @@ type Props = {
   theme: AtlasTheme;
   selectedId: string | null;
   onPick: (id: string | null) => void;
+  onEditNode?: (id: string) => void;
   /** Records in view with no source coordinates: listed, never guessed. */
   unplaced: GraphNode[];
   onBrowse: () => void;
@@ -96,7 +97,7 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -118,6 +119,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const gratLabels = useRef<HTMLDivElement>(null);
   const insetRect = useRef<SVGRectElement>(null);
   const pick = useRef(onPick); pick.current = onPick;
+  const editNode = useRef(onEditNode); editNode.current = onEditNode;
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
   const [land, setLand] = useState<Land | null>(null);
@@ -303,6 +305,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         map.on("error", event => {
           const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? "");
           if (/webgl|context/i.test(message)) { setStatus("error"); setError(message); }
+        });
+        // Direct edit on the map, without going through a separate editing mode.
+        // Prevent default double-click zoom only when a source-backed point is hit.
+        map.on("dblclick", event => {
+          const hit=map.queryRenderedFeatures(event.point,{layers:["records","places"]})[0];
+          if(hit && editNode.current){
+            event.preventDefault();
+            editNode.current(String(hit.properties?.id));
+          }
         });
         map.on("click", event => {
           const hit = map?.queryRenderedFeatures(event.point, { layers: ["records", "places"] })[0];
