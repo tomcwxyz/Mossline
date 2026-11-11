@@ -8,6 +8,7 @@ import { ThemeButton, Wordmark } from "./atlas/Wordmark";
 import { TypeMark } from "./atlas/RecordPanel";
 import { TYPE_LABEL, TYPE_PLURAL } from "./atlas/palette";
 import { canReviewDirectly } from "../lib/import-journey";
+import type {RichLabExample} from "../lib/throw-lab-examples";
 
 /**
  * One way in for every kind of file: 360Giving grants, register downloads,
@@ -39,8 +40,10 @@ const shapeOf = (t: TableInfo, p: Plan): Shape => {
     ...(p.type ? { type: p.type, typeFallback: p.type } : {}) }, ...rest] };
 };
 
-export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", onClose, onCommit, onLargeFunding }: {
+export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", starter, onClose, onCommit, onLargeFunding }: {
   base: GraphDocument | null; baseTitle: string; canAddToBase: boolean; startWith?: AddTarget; intent?: "general" | "funding" | "the-list";
+  /** Optional fictional source files, opened through exactly the same parser as a real upload. */
+  starter?: RichLabExample;
   /** Saves the result; resolves to true, or to a message saying why it could not. */
   onClose: () => void; onCommit: (graph: GraphDocument, target: AddTarget, title: string, summary: string) => Promise<true | string>;
   onLargeFunding?: () => void;
@@ -133,6 +136,29 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       }
     });
   }, [send, target, base, title]);
+  // Loading a Throw Lab example is not a shortcut to a canned graph. The
+  // actual source files pass through the same worker, review and edit controls.
+  const openedStarter=useRef(false);
+  useEffect(()=>{
+    if(!starter||openedStarter.current)return;
+    let cancelled=false;
+    void Promise.all(starter.files.map(async file=>{
+      const res=await fetch(file.path);
+      if(!res.ok)throw Error("Could not load "+file.name+" ("+res.status+").");
+      return new File([await res.blob()],file.name,{
+        type:file.name.endsWith(".json")?"application/json":"text/csv"
+      });
+    })).then(files=>{
+      if(cancelled||openedStarter.current)return;
+      openedStarter.current=true;
+      setTarget("new");
+      readFiles(files,starter.title,"new");
+    }).catch(error=>{
+      if(!cancelled)setError(error instanceof Error?error.message:"Could not open the example's source files.");
+    });
+    return ()=>{cancelled=true;};
+  },[starter,readFiles]);
+
   async function trySamples(names = SAMPLE_FILES, title = "Invented sample data") {
     setBusy("Fetching the sample files…");
     try {
