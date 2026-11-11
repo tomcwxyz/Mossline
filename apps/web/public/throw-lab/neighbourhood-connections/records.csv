@@ -1,192 +1,192 @@
-Name,Type,Tags,Region,Latitude,Longitude,Description
-Newcastle Bracken Co-operative 001,organisation,Food|Nature,Newcastle,54.96600,-1.60769,Fictional organisation working with local food projects.
-Sunderland Harbour Trust 002,organisation,Health|Transport,Sunderland,54.91200,-1.36879,Fictional organisation working with local health projects.
-Middlesbrough Mosaic Group 003,organisation,Housing|Culture,Middlesbrough,54.55702,-1.22228,Fictional organisation working with local housing projects.
-Darlington Beacon Co-operative 004,organisation,Nature|Young people,Darlington,54.52854,-1.57912,Fictional organisation working with local nature projects.
-Durham Willow Trust 005,organisation,Transport|Energy,Durham,54.78462,-1.56368,Fictional organisation working with local transport projects.
-Hartlepool Cornerstone Group 006,organisation,Culture|Community care,Hartlepool,54.71124,-1.19462,Fictional organisation working with local culture projects.
-Gateshead Bridgewater Co-operative 007,organisation,Young people|Learning,Gateshead,54.96816,-1.60774,Fictional organisation working with local young people projects.
-Newcastle Hearth Trust 008,organisation,Energy|Food,Newcastle,54.99801,-1.59727,Fictional organisation working with local energy projects.
-Sunderland Meadow Group 009,organisation,Community care|Health,Sunderland,54.89017,-1.38126,Fictional organisation working with local community care projects.
-Middlesbrough Highfield Co-operative 010,organisation,Learning|Housing,Middlesbrough,54.57650,-1.21609,Fictional organisation working with local learning projects.
-Darlington Lantern Trust 011,organisation,Food|Nature,Darlington,54.52913,-1.57877,Fictional organisation working with local food projects.
-Durham Riverside Group 012,organisation,Health|Transport,Durham,54.76217,-1.56453,Fictional organisation working with local health projects.
-Hartlepool Northbank Co-operative 013,organisation,Housing|Culture,Hartlepool,54.69600,-1.22973,Fictional organisation working with local housing projects.
-Gateshead Seedling Trust 014,organisation,Nature|Young people,Gateshead,54.94218,-1.58203,Fictional organisation working with local nature projects.
-Newcastle Cedar Group 015,organisation,Transport|Energy,Newcastle,54.96815,-1.60213,Fictional organisation working with local transport projects.
-Sunderland Hilltop Co-operative 016,organisation,Culture|Community care,Sunderland,54.90667,-1.39400,Fictional organisation working with local culture projects.
-Middlesbrough Tideway Trust 017,organisation,Young people|Learning,Middlesbrough,54.57575,-1.24042,Fictional organisation working with local young people projects.
-Darlington Foundry Group 018,organisation,Energy|Food,Darlington,54.50373,-1.57883,Fictional organisation working with local energy projects.
-Durham Bracken Co-operative 019,organisation,Community care|Health,Durham,54.75829,-1.59205,Fictional organisation working with local community care projects.
-Hartlepool Harbour Trust 020,organisation,Learning|Housing,Hartlepool,54.67729,-1.23100,Fictional organisation working with local learning projects.
-Gateshead Mosaic Group 021,organisation,Food|Nature,Gateshead,54.97324,-1.58555,Fictional organisation working with local food projects.
-Newcastle Beacon Co-operative 022,organisation,Health|Transport,Newcastle,54.99349,-1.61681,Fictional organisation working with local health projects.
-Sunderland Willow Trust 023,organisation,Housing|Culture,Sunderland,54.90537,-1.37981,Fictional organisation working with local housing projects.
-Middlesbrough Cornerstone Group 024,organisation,Nature|Young people,Middlesbrough,54.58742,-1.22638,Fictional organisation working with local nature projects.
-Darlington Bridgewater Co-operative 025,organisation,Transport|Energy,Darlington,54.53488,-1.55880,Fictional organisation working with local transport projects.
-Durham Hearth Trust 026,organisation,Culture|Community care,Durham,54.79481,-1.59187,Fictional organisation working with local culture projects.
-Hartlepool Meadow Group 027,organisation,Young people|Learning,Hartlepool,54.67541,-1.20161,Fictional organisation working with local young people projects.
-Gateshead Highfield Co-operative 028,organisation,Energy|Food,Gateshead,54.96755,-1.61034,Fictional organisation working with local energy projects.
-Newcastle Lantern Trust 029,organisation,Community care|Health,Newcastle,54.99445,-1.62976,Fictional organisation working with local community care projects.
-Sunderland Riverside Group 030,organisation,Learning|Housing,Sunderland,54.92338,-1.36153,Fictional organisation working with local learning projects.
-Middlesbrough Northbank Co-operative 031,organisation,Food|Nature,Middlesbrough,54.57485,-1.23620,Fictional organisation working with local food projects.
-Darlington Seedling Trust 032,organisation,Health|Transport,Darlington,54.50486,-1.56567,Fictional organisation working with local health projects.
-Durham Cedar Group 033,organisation,Housing|Culture,Durham,54.78381,-1.58142,Fictional organisation working with local housing projects.
-Hartlepool Hilltop Co-operative 034,organisation,Nature|Young people,Hartlepool,54.70050,-1.21648,Fictional organisation working with local nature projects.
-Gateshead Tideway Trust 035,organisation,Transport|Energy,Gateshead,54.97533,-1.60081,Fictional organisation working with local transport projects.
-Newcastle Foundry Group 036,organisation,Culture|Community care,Newcastle,54.97251,-1.63723,Fictional organisation working with local culture projects.
-Sunderland Bracken Co-operative 037,organisation,Young people|Learning,Sunderland,54.89808,-1.36929,Fictional organisation working with local young people projects.
-Middlesbrough Harbour Trust 038,organisation,Energy|Food,Middlesbrough,54.56665,-1.24465,Fictional organisation working with local energy projects.
-Darlington Mosaic Group 039,organisation,Community care|Health,Darlington,54.52590,-1.57367,Fictional organisation working with local community care projects.
-Durham Beacon Co-operative 040,organisation,Learning|Housing,Durham,54.79753,-1.57202,Fictional organisation working with local learning projects.
-Hartlepool Willow Trust 041,organisation,Food|Nature,Hartlepool,54.70048,-1.23377,Fictional organisation working with local food projects.
-Gateshead Cornerstone Group 042,organisation,Health|Transport,Gateshead,54.96715,-1.58092,Fictional organisation working with local health projects.
-Newcastle Bridgewater Co-operative 043,organisation,Housing|Culture,Newcastle,54.95768,-1.61061,Fictional organisation working with local housing projects.
-Sunderland Hearth Trust 044,organisation,Nature|Young people,Sunderland,54.90558,-1.39844,Fictional organisation working with local nature projects.
-Middlesbrough Meadow Group 045,organisation,Transport|Energy,Middlesbrough,54.57487,-1.22232,Fictional organisation working with local transport projects.
-Darlington Highfield Co-operative 046,organisation,Culture|Community care,Darlington,54.50775,-1.54598,Fictional organisation working with local culture projects.
-Durham Lantern Trust 047,organisation,Young people|Learning,Durham,54.79437,-1.57945,Fictional organisation working with local young people projects.
-Hartlepool Riverside Group 048,organisation,Energy|Food,Hartlepool,54.70792,-1.19612,Fictional organisation working with local energy projects.
-Gateshead Northbank Co-operative 049,organisation,Community care|Health,Gateshead,54.94287,-1.61995,Fictional organisation working with local community care projects.
-Newcastle Seedling Trust 050,organisation,Learning|Housing,Newcastle,54.97509,-1.60173,Fictional organisation working with local learning projects.
-Sunderland Cedar Group 051,organisation,Food|Nature,Sunderland,54.91233,-1.40128,Fictional organisation working with local food projects.
-Middlesbrough Hilltop Co-operative 052,organisation,Health|Transport,Middlesbrough,54.55354,-1.24331,Fictional organisation working with local health projects.
-Darlington Tideway Trust 053,organisation,Housing|Culture,Darlington,54.52847,-1.57124,Fictional organisation working with local housing projects.
-Durham Foundry Group 054,organisation,Nature|Young people,Durham,54.79064,-1.59209,Fictional organisation working with local nature projects.
-Hartlepool Bracken Co-operative 055,organisation,Transport|Energy,Hartlepool,54.67020,-1.21476,Fictional organisation working with local transport projects.
-Gateshead Harbour Trust 056,organisation,Culture|Community care,Gateshead,54.97342,-1.60980,Fictional organisation working with local culture projects.
-Newcastle Mosaic Group 057,organisation,Young people|Learning,Newcastle,54.96995,-1.62145,Fictional organisation working with local young people projects.
-Sunderland Beacon Co-operative 058,organisation,Energy|Food,Sunderland,54.92157,-1.36797,Fictional organisation working with local energy projects.
-Middlesbrough Willow Trust 059,organisation,Community care|Health,Middlesbrough,54.57134,-1.22040,Fictional organisation working with local community care projects.
-Darlington Cornerstone Group 060,organisation,Learning|Housing,Darlington,54.51967,-1.53915,Fictional organisation working with local learning projects.
-Durham Bridgewater Co-operative 061,organisation,Food|Nature,Durham,54.78780,-1.57554,Fictional organisation working with local food projects.
-Hartlepool Hearth Trust 062,organisation,Health|Transport,Hartlepool,54.70880,-1.22799,Fictional organisation working with local health projects.
-Gateshead Meadow Group 063,organisation,Housing|Culture,Gateshead,54.97579,-1.62297,Fictional organisation working with local housing projects.
-Newcastle Highfield Co-operative 064,organisation,Nature|Young people,Newcastle,54.96467,-1.60230,Fictional organisation working with local nature projects.
-Sunderland Lantern Trust 065,organisation,Transport|Energy,Sunderland,54.88709,-1.39384,Fictional organisation working with local transport projects.
-Middlesbrough Riverside Group 066,organisation,Culture|Community care,Middlesbrough,54.56523,-1.25158,Fictional organisation working with local culture projects.
-Darlington Northbank Co-operative 067,organisation,Young people|Learning,Darlington,54.50967,-1.57571,Fictional organisation working with local young people projects.
-Durham Seedling Trust 068,organisation,Energy|Food,Durham,54.75351,-1.59668,Fictional organisation working with local energy projects.
-Hartlepool Cedar Group 069,organisation,Community care|Health,Hartlepool,54.67450,-1.20600,Fictional organisation working with local community care projects.
-Gateshead Hilltop Co-operative 070,organisation,Learning|Housing,Gateshead,54.97110,-1.60773,Fictional organisation working with local learning projects.
-Newcastle Tideway Trust 071,organisation,Food|Nature,Newcastle,54.95699,-1.63834,Fictional organisation working with local food projects.
-Sunderland Foundry Group 072,organisation,Health|Transport,Sunderland,54.91353,-1.36950,Fictional organisation working with local health projects.
-Middlesbrough Bracken Co-operative 073,organisation,Housing|Culture,Middlesbrough,54.57304,-1.22974,Fictional organisation working with local housing projects.
-Darlington Harbour Trust 074,organisation,Nature|Young people,Darlington,54.51424,-1.57293,Fictional organisation working with local nature projects.
-Durham Mosaic Group 075,organisation,Transport|Energy,Durham,54.78740,-1.59814,Fictional organisation working with local transport projects.
-Hartlepool Beacon Co-operative 076,organisation,Culture|Community care,Hartlepool,54.70092,-1.23170,Fictional organisation working with local culture projects.
-Gateshead Willow Trust 077,organisation,Young people|Learning,Gateshead,54.94639,-1.60781,Fictional organisation working with local young people projects.
-Newcastle Cornerstone Group 078,organisation,Energy|Food,Newcastle,54.97525,-1.63565,Fictional organisation working with local energy projects.
-Sunderland Bridgewater Co-operative 079,organisation,Community care|Health,Sunderland,54.89342,-1.37271,Fictional organisation working with local community care projects.
-Middlesbrough Hearth Trust 080,organisation,Learning|Housing,Middlesbrough,54.56756,-1.21936,Fictional organisation working with local learning projects.
-Darlington Meadow Group 081,organisation,Food|Nature,Darlington,54.54061,-1.56172,Fictional organisation working with local food projects.
-Durham Highfield Co-operative 082,organisation,Health|Transport,Durham,54.75611,-1.57115,Fictional organisation working with local health projects.
-Hartlepool Lantern Trust 083,organisation,Housing|Culture,Hartlepool,54.67230,-1.21087,Fictional organisation working with local housing projects.
-Gateshead Riverside Group 084,organisation,Nature|Young people,Gateshead,54.97497,-1.60069,Fictional organisation working with local nature projects.
-Newcastle Northbank Co-operative 085,organisation,Transport|Energy,Newcastle,54.95834,-1.60930,Fictional organisation working with local transport projects.
-Sunderland Seedling Trust 086,organisation,Culture|Community care,Sunderland,54.90073,-1.39562,Fictional organisation working with local culture projects.
-Middlesbrough Cedar Group 087,organisation,Young people|Learning,Middlesbrough,54.59556,-1.21350,Fictional organisation working with local young people projects.
-Darlington Hilltop Co-operative 088,organisation,Energy|Food,Darlington,54.52315,-1.55233,Fictional organisation working with local energy projects.
-Durham Tideway Trust 089,organisation,Community care|Health,Durham,54.75889,-1.59529,Fictional organisation working with local community care projects.
-Hartlepool Foundry Group 090,organisation,Learning|Housing,Hartlepool,54.67270,-1.19087,Fictional organisation working with local learning projects.
-Gateshead Bracken Co-operative 091,organisation,Food|Nature,Gateshead,54.96320,-1.58252,Fictional organisation working with local food projects.
-Newcastle Harbour Trust 092,organisation,Health|Transport,Newcastle,54.98936,-1.59705,Fictional organisation working with local health projects.
-Sunderland Mosaic Group 093,organisation,Housing|Culture,Sunderland,54.91274,-1.39865,Fictional organisation working with local housing projects.
-Middlesbrough Beacon Co-operative 094,organisation,Nature|Young people,Middlesbrough,54.58823,-1.21650,Fictional organisation working with local nature projects.
-Darlington Willow Trust 095,organisation,Transport|Energy,Darlington,54.53530,-1.55662,Fictional organisation working with local transport projects.
-Durham Cornerstone Group 096,organisation,Culture|Community care,Durham,54.75531,-1.56185,Fictional organisation working with local culture projects.
-Hartlepool Bridgewater Co-operative 097,organisation,Young people|Learning,Hartlepool,54.69084,-1.20799,Fictional organisation working with local young people projects.
-Gateshead Hearth Trust 098,organisation,Energy|Food,Gateshead,54.98115,-1.60275,Fictional organisation working with local energy projects.
-Newcastle Meadow Group 099,organisation,Community care|Health,Newcastle,54.97096,-1.63587,Fictional organisation working with local community care projects.
-Sunderland Highfield Co-operative 100,organisation,Learning|Housing,Sunderland,54.91634,-1.37037,Fictional organisation working with local learning projects.
-Middlesbrough Lantern Trust 101,organisation,Food|Nature,Middlesbrough,54.58145,-1.25191,Fictional organisation working with local food projects.
-Darlington Riverside Group 102,organisation,Health|Transport,Darlington,54.51286,-1.56251,Fictional organisation working with local health projects.
-Durham Northbank Co-operative 103,organisation,Housing|Culture,Durham,54.75830,-1.57438,Fictional organisation working with local housing projects.
-Hartlepool Seedling Trust 104,organisation,Nature|Young people,Hartlepool,54.67772,-1.20090,Fictional organisation working with local nature projects.
-Gateshead Cedar Group 105,organisation,Transport|Energy,Gateshead,54.94168,-1.58255,Fictional organisation working with local transport projects.
-Newcastle Hilltop Co-operative 106,organisation,Culture|Community care,Newcastle,54.96224,-1.59981,Fictional organisation working with local culture projects.
-Sunderland Tideway Trust 107,organisation,Young people|Learning,Sunderland,54.90382,-1.36458,Fictional organisation working with local young people projects.
-Middlesbrough Foundry Group 108,organisation,Energy|Food,Middlesbrough,54.56619,-1.25684,Fictional organisation working with local energy projects.
-Darlington Bracken Co-operative 109,organisation,Community care|Health,Darlington,54.52645,-1.58084,Fictional organisation working with local community care projects.
-Durham Harbour Trust 110,organisation,Learning|Housing,Durham,54.76387,-1.59874,Fictional organisation working with local learning projects.
-Hartlepool Mosaic Group 111,organisation,Food|Nature,Hartlepool,54.69648,-1.20470,Fictional organisation working with local food projects.
-Gateshead Beacon Co-operative 112,organisation,Health|Transport,Gateshead,54.94860,-1.61274,Fictional organisation working with local health projects.
-Newcastle Willow Trust 113,organisation,Housing|Culture,Newcastle,54.95980,-1.62564,Fictional organisation working with local housing projects.
-Sunderland Cornerstone Group 114,organisation,Nature|Young people,Sunderland,54.91337,-1.38661,Fictional organisation working with local nature projects.
-Middlesbrough Bridgewater Co-operative 115,organisation,Transport|Energy,Middlesbrough,54.58945,-1.23617,Fictional organisation working with local transport projects.
-Newcastle Food Programme 001,project,Housing,Newcastle,54.99339,-1.63849,Programme delivered in a fictional local network.
-Sunderland Health Programme 002,project,Nature,Sunderland,54.91805,-1.37271,Programme delivered in a fictional local network.
-Middlesbrough Housing Programme 003,project,Transport,Middlesbrough,54.58393,-1.22575,Programme delivered in a fictional local network.
-Darlington Nature Programme 004,project,Culture,Darlington,54.51475,-1.56216,Programme delivered in a fictional local network.
-Durham Transport Programme 005,project,Young people,Durham,54.76684,-1.57624,Programme delivered in a fictional local network.
-Hartlepool Culture Programme 006,project,Energy,Hartlepool,54.71023,-1.20276,Programme delivered in a fictional local network.
-Gateshead Young people Programme 007,project,Community care,Gateshead,54.96581,-1.60573,Programme delivered in a fictional local network.
-Newcastle Energy Programme 008,project,Learning,Newcastle,54.96855,-1.62369,Programme delivered in a fictional local network.
-Sunderland Community care Programme 009,project,Food,Sunderland,54.89226,-1.38144,Programme delivered in a fictional local network.
-Middlesbrough Learning Programme 010,project,Health,Middlesbrough,54.57709,-1.21343,Programme delivered in a fictional local network.
-Darlington Food Programme 011,project,Housing,Darlington,54.54230,-1.57823,Programme delivered in a fictional local network.
-Durham Health Programme 012,project,Nature,Durham,54.79308,-1.57100,Programme delivered in a fictional local network.
-Hartlepool Housing Programme 013,project,Transport,Hartlepool,54.66953,-1.19241,Programme delivered in a fictional local network.
-Gateshead Nature Programme 014,project,Culture,Gateshead,54.95904,-1.58624,Programme delivered in a fictional local network.
-Newcastle Transport Programme 015,project,Young people,Newcastle,54.97688,-1.63697,Programme delivered in a fictional local network.
-Sunderland Culture Programme 016,project,Energy,Sunderland,54.91807,-1.40154,Programme delivered in a fictional local network.
-Middlesbrough Young people Programme 017,project,Community care,Middlesbrough,54.55174,-1.24451,Programme delivered in a fictional local network.
-Darlington Energy Programme 018,project,Learning,Darlington,54.52466,-1.56166,Programme delivered in a fictional local network.
-Durham Community care Programme 019,project,Food,Durham,54.76647,-1.59541,Programme delivered in a fictional local network.
-Hartlepool Learning Programme 020,project,Health,Hartlepool,54.70956,-1.20903,Programme delivered in a fictional local network.
-Gateshead Food Programme 021,project,Housing,Gateshead,54.95075,-1.58678,Programme delivered in a fictional local network.
-Newcastle Health Programme 022,project,Nature,Newcastle,54.97389,-1.60893,Programme delivered in a fictional local network.
-Sunderland Housing Programme 023,project,Transport,Sunderland,54.89359,-1.38059,Programme delivered in a fictional local network.
-Middlesbrough Nature Programme 024,project,Culture,Middlesbrough,54.55343,-1.24154,Programme delivered in a fictional local network.
-Darlington Transport Programme 025,project,Young people,Darlington,54.53756,-1.54291,Programme delivered in a fictional local network.
-Durham Culture Programme 026,project,Energy,Durham,54.79220,-1.58878,Programme delivered in a fictional local network.
-Hartlepool Young people Programme 027,project,Community care,Hartlepool,54.71065,-1.19250,Programme delivered in a fictional local network.
-Gateshead Energy Programme 028,project,Learning,Gateshead,54.98370,-1.60758,Programme delivered in a fictional local network.
-Newcastle Community care Programme 029,project,Food,Newcastle,54.95769,-1.62866,Programme delivered in a fictional local network.
-Sunderland Learning Programme 030,project,Health,Sunderland,54.89924,-1.36796,Programme delivered in a fictional local network.
-Middlesbrough Food Programme 031,project,Housing,Middlesbrough,54.55941,-1.23098,Programme delivered in a fictional local network.
-Darlington Health Programme 032,project,Nature,Darlington,54.51818,-1.56910,Programme delivered in a fictional local network.
-Durham Housing Programme 033,project,Transport,Durham,54.78987,-1.57462,Programme delivered in a fictional local network.
-Hartlepool Nature Programme 034,project,Culture,Hartlepool,54.68705,-1.22681,Programme delivered in a fictional local network.
-Gateshead Transport Programme 035,project,Young people,Gateshead,54.95760,-1.58817,Programme delivered in a fictional local network.
-Newcastle Culture Programme 036,project,Energy,Newcastle,54.96652,-1.62823,Programme delivered in a fictional local network.
-Sunderland Young people Programme 037,project,Community care,Sunderland,54.92686,-1.36336,Programme delivered in a fictional local network.
-Middlesbrough Energy Programme 038,project,Learning,Middlesbrough,54.59110,-1.22686,Programme delivered in a fictional local network.
-Darlington Community care Programme 039,project,Food,Darlington,54.51545,-1.57027,Programme delivered in a fictional local network.
-Durham Learning Programme 040,project,Health,Durham,54.78920,-1.56216,Programme delivered in a fictional local network.
-Hartlepool Food Programme 041,project,Housing,Hartlepool,54.68325,-1.22705,Programme delivered in a fictional local network.
-Gateshead Health Programme 042,project,Nature,Gateshead,54.98081,-1.62153,Programme delivered in a fictional local network.
-Newcastle Housing Programme 043,project,Transport,Newcastle,54.98705,-1.61072,Programme delivered in a fictional local network.
-Sunderland Nature Programme 044,project,Culture,Sunderland,54.89100,-1.40455,Programme delivered in a fictional local network.
-Middlesbrough Transport Programme 045,project,Young people,Middlesbrough,54.59360,-1.21266,Programme delivered in a fictional local network.
-Darlington Culture Programme 046,project,Energy,Darlington,54.52261,-1.54853,Programme delivered in a fictional local network.
-Durham Young people Programme 047,project,Community care,Durham,54.75528,-1.55878,Programme delivered in a fictional local network.
-Hartlepool Energy Programme 048,project,Learning,Hartlepool,54.66914,-1.23030,Programme delivered in a fictional local network.
-Gateshead Community care Programme 049,project,Food,Gateshead,54.96761,-1.58770,Programme delivered in a fictional local network.
-Newcastle Learning Programme 050,project,Health,Newcastle,54.98030,-1.59627,Programme delivered in a fictional local network.
-Sunderland Food Programme 051,project,Housing,Sunderland,54.90858,-1.39739,Programme delivered in a fictional local network.
-Middlesbrough Health Programme 052,project,Nature,Middlesbrough,54.59405,-1.25004,Programme delivered in a fictional local network.
-Darlington Housing Programme 053,project,Transport,Darlington,54.52521,-1.55023,Programme delivered in a fictional local network.
-Durham Nature Programme 054,project,Culture,Durham,54.78638,-1.59814,Programme delivered in a fictional local network.
-Hartlepool Transport Programme 055,project,Young people,Hartlepool,54.69496,-1.19165,Programme delivered in a fictional local network.
-Gateshead Culture Programme 056,project,Energy,Gateshead,54.97486,-1.59792,Programme delivered in a fictional local network.
-Newcastle Young people Programme 057,project,Community care,Newcastle,54.99663,-1.61034,Programme delivered in a fictional local network.
-Sunderland Energy Programme 058,project,Learning,Sunderland,54.91293,-1.37359,Programme delivered in a fictional local network.
-Middlesbrough Community care Programme 059,project,Food,Middlesbrough,54.56616,-1.23474,Programme delivered in a fictional local network.
-Darlington Learning Programme 060,project,Health,Darlington,54.51216,-1.57105,Programme delivered in a fictional local network.
-Durham Food Programme 061,project,Housing,Durham,54.78575,-1.58204,Programme delivered in a fictional local network.
-Hartlepool Health Programme 062,project,Nature,Hartlepool,54.68198,-1.21729,Programme delivered in a fictional local network.
-Newcastle Community Space 001,place,Community spaces,Newcastle,54.99523,-1.61127,Invented meeting point on a real city's geographic backdrop.
-Sunderland Community Space 002,place,Community spaces,Sunderland,54.90194,-1.38393,Invented meeting point on a real city's geographic backdrop.
-Middlesbrough Community Space 003,place,Community spaces,Middlesbrough,54.57794,-1.21553,Invented meeting point on a real city's geographic backdrop.
-Darlington Community Space 004,place,Community spaces,Darlington,54.50984,-1.53726,Invented meeting point on a real city's geographic backdrop.
-Durham Community Space 005,place,Community spaces,Durham,54.76194,-1.55710,Invented meeting point on a real city's geographic backdrop.
-Hartlepool Community Space 006,place,Community spaces,Hartlepool,54.68769,-1.22475,Invented meeting point on a real city's geographic backdrop.
-Gateshead Community Space 007,place,Community spaces,Gateshead,54.95303,-1.61205,Invented meeting point on a real city's geographic backdrop.
-Newcastle Community Space 008,place,Community spaces,Newcastle,54.96564,-1.60894,Invented meeting point on a real city's geographic backdrop.
-Sunderland Community Space 009,place,Community spaces,Sunderland,54.90702,-1.36554,Invented meeting point on a real city's geographic backdrop.
-Middlesbrough Community Space 010,place,Community spaces,Middlesbrough,54.56941,-1.24972,Invented meeting point on a real city's geographic backdrop.
-Darlington Community Space 011,place,Community spaces,Darlington,54.51225,-1.55899,Invented meeting point on a real city's geographic backdrop.
-Durham Community Space 012,place,Community spaces,Durham,54.76672,-1.56817,Invented meeting point on a real city's geographic backdrop.
-Hartlepool Community Space 013,place,Community spaces,Hartlepool,54.67161,-1.19204,Invented meeting point on a real city's geographic backdrop.
-Gateshead Community Space 014,place,Community spaces,Gateshead,54.96839,-1.58725,Invented meeting point on a real city's geographic backdrop.
+Name,Type,Tags,Region,Latitude,Longitude,Description,Country
+Newcastle Bracken Co-operative 001,organisation,Food|Nature,"Newcastle, United Kingdom",54.96600,-1.60769,Fictional organisation working with local food projects.,United Kingdom
+Edinburgh Harbour Trust 002,organisation,Health|Transport,"Edinburgh, United Kingdom",55.95840,-3.17329,Fictional organisation working with local health projects.,United Kingdom
+Glasgow Mosaic Group 003,organisation,Housing|Culture,"Glasgow, United Kingdom",55.84702,-4.23908,Fictional organisation working with local housing projects.,United Kingdom
+Belfast Beacon Co-operative 004,organisation,Nature|Young people,"Belfast, United Kingdom",54.60054,-5.95022,Fictional organisation working with local nature projects.,United Kingdom
+Cardiff Willow Trust 005,organisation,Transport|Energy,"Cardiff, United Kingdom",51.49022,-3.16578,Fictional organisation working with local transport projects.,United Kingdom
+Bristol Cornerstone Group 006,organisation,Culture|Community care,"Bristol, United Kingdom",51.47574,-2.57052,Fictional organisation working with local culture projects.,United Kingdom
+London Bridgewater Co-operative 007,organisation,Young people|Learning,"London, United Kingdom",51.51356,-0.13454,Fictional organisation working with local young people projects.,United Kingdom
+Birmingham Hearth Trust 008,organisation,Energy|Food,"Birmingham, United Kingdom",52.50591,-1.86987,Fictional organisation working with local energy projects.,United Kingdom
+Manchester Meadow Group 009,organisation,Community care|Health,"Manchester, United Kingdom",53.46407,-2.24006,Fictional organisation working with local community care projects.,United Kingdom
+Leeds Highfield Co-operative 010,organisation,Learning|Housing,"Leeds, United Kingdom",53.80310,-1.53019,Fictional organisation working with local learning projects.,United Kingdom
+Sheffield Lantern Trust 011,organisation,Food|Nature,"Sheffield, United Kingdom",53.38493,-1.48987,Fictional organisation working with local food projects.,United Kingdom
+Aberdeen Riverside Group 012,organisation,Health|Transport,"Aberdeen, United Kingdom",57.13587,-2.08183,Fictional organisation working with local health projects.,United Kingdom
+Exeter Northbank Co-operative 013,organisation,Housing|Culture,"Exeter, United Kingdom",50.72440,-3.55163,Fictional organisation working with local housing projects.,United Kingdom
+Swansea Seedling Trust 014,organisation,Nature|Young people,"Swansea, United Kingdom",51.60158,-3.92463,Fictional organisation working with local nature projects.,United Kingdom
+Newcastle Cedar Group 015,organisation,Transport|Energy,"Newcastle, United Kingdom",54.96815,-1.60213,Fictional organisation working with local transport projects.,United Kingdom
+Edinburgh Hilltop Co-operative 016,organisation,Culture|Community care,"Edinburgh, United Kingdom",55.95307,-3.19850,Fictional organisation working with local culture projects.,United Kingdom
+Glasgow Tideway Trust 017,organisation,Young people|Learning,"Glasgow, United Kingdom",55.86575,-4.25722,Fictional organisation working with local young people projects.,United Kingdom
+Belfast Foundry Group 018,organisation,Energy|Food,"Belfast, United Kingdom",54.57573,-5.94993,Fictional organisation working with local energy projects.,United Kingdom
+Cardiff Bracken Co-operative 019,organisation,Community care|Health,"Cardiff, United Kingdom",51.46389,-3.19415,Fictional organisation working with local community care projects.,United Kingdom
+Bristol Harbour Trust 020,organisation,Learning|Housing,"Bristol, United Kingdom",51.44179,-2.60690,Fictional organisation working with local learning projects.,United Kingdom
+London Mosaic Group 021,organisation,Food|Nature,"London, United Kingdom",51.51864,-0.11235,Fictional organisation working with local food projects.,United Kingdom
+Birmingham Beacon Co-operative 022,organisation,Health|Transport,"Birmingham, United Kingdom",52.50139,-1.88941,Fictional organisation working with local health projects.,United Kingdom
+Manchester Willow Trust 023,organisation,Housing|Culture,"Manchester, United Kingdom",53.47927,-2.23861,Fictional organisation working with local housing projects.,United Kingdom
+Leeds Cornerstone Group 024,organisation,Nature|Young people,"Leeds, United Kingdom",53.81402,-1.54048,Fictional organisation working with local nature projects.,United Kingdom
+Sheffield Bridgewater Co-operative 025,organisation,Transport|Energy,"Sheffield, United Kingdom",53.39068,-1.46990,Fictional organisation working with local transport projects.,United Kingdom
+Aberdeen Hearth Trust 026,organisation,Culture|Community care,"Aberdeen, United Kingdom",57.16851,-2.10917,Fictional organisation working with local culture projects.,United Kingdom
+Exeter Meadow Group 027,organisation,Young people|Learning,"Exeter, United Kingdom",50.70381,-3.52351,Fictional organisation working with local young people projects.,United Kingdom
+Swansea Highfield Co-operative 028,organisation,Energy|Food,"Swansea, United Kingdom",51.62695,-3.95294,Fictional organisation working with local energy projects.,United Kingdom
+Newcastle Lantern Trust 029,organisation,Community care|Health,"Newcastle, United Kingdom",54.99445,-1.62976,Fictional organisation working with local community care projects.,United Kingdom
+Edinburgh Riverside Group 030,organisation,Learning|Housing,"Edinburgh, United Kingdom",55.96978,-3.16603,Fictional organisation working with local learning projects.,United Kingdom
+Glasgow Northbank Co-operative 031,organisation,Food|Nature,"Glasgow, United Kingdom",55.86485,-4.25300,Fictional organisation working with local food projects.,United Kingdom
+Belfast Seedling Trust 032,organisation,Health|Transport,"Belfast, United Kingdom",54.57686,-5.93677,Fictional organisation working with local health projects.,United Kingdom
+Cardiff Cedar Group 033,organisation,Housing|Culture,"Cardiff, United Kingdom",51.48941,-3.18352,Fictional organisation working with local housing projects.,United Kingdom
+Bristol Hilltop Co-operative 034,organisation,Nature|Young people,"Bristol, United Kingdom",51.46500,-2.59238,Fictional organisation working with local nature projects.,United Kingdom
+London Tideway Trust 035,organisation,Transport|Energy,"London, United Kingdom",51.52073,-0.12761,Fictional organisation working with local transport projects.,United Kingdom
+Birmingham Foundry Group 036,organisation,Culture|Community care,"Birmingham, United Kingdom",52.48041,-1.90983,Fictional organisation working with local culture projects.,United Kingdom
+Manchester Bracken Co-operative 037,organisation,Young people|Learning,"Manchester, United Kingdom",53.47198,-2.22809,Fictional organisation working with local young people projects.,United Kingdom
+Leeds Harbour Trust 038,organisation,Energy|Food,"Leeds, United Kingdom",53.79325,-1.55875,Fictional organisation working with local energy projects.,United Kingdom
+Sheffield Mosaic Group 039,organisation,Community care|Health,"Sheffield, United Kingdom",53.38170,-1.48477,Fictional organisation working with local community care projects.,United Kingdom
+Aberdeen Beacon Co-operative 040,organisation,Learning|Housing,"Aberdeen, United Kingdom",57.17123,-2.08932,Fictional organisation working with local learning projects.,United Kingdom
+Exeter Willow Trust 041,organisation,Food|Nature,"Exeter, United Kingdom",50.72888,-3.55567,Fictional organisation working with local food projects.,United Kingdom
+Swansea Cornerstone Group 042,organisation,Health|Transport,"Swansea, United Kingdom",51.62655,-3.92352,Fictional organisation working with local health projects.,United Kingdom
+Newcastle Bridgewater Co-operative 043,organisation,Housing|Culture,"Newcastle, United Kingdom",54.95768,-1.61061,Fictional organisation working with local housing projects.,United Kingdom
+Edinburgh Hearth Trust 044,organisation,Nature|Young people,"Edinburgh, United Kingdom",55.95198,-3.20294,Fictional organisation working with local nature projects.,United Kingdom
+Glasgow Meadow Group 045,organisation,Transport|Energy,"Glasgow, United Kingdom",55.86487,-4.23912,Fictional organisation working with local transport projects.,United Kingdom
+Belfast Highfield Co-operative 046,organisation,Culture|Community care,"Belfast, United Kingdom",54.57975,-5.91708,Fictional organisation working with local culture projects.,United Kingdom
+Cardiff Lantern Trust 047,organisation,Young people|Learning,"Cardiff, United Kingdom",51.49997,-3.18155,Fictional organisation working with local young people projects.,United Kingdom
+Bristol Riverside Group 048,organisation,Energy|Food,"Bristol, United Kingdom",51.47242,-2.57202,Fictional organisation working with local energy projects.,United Kingdom
+London Northbank Co-operative 049,organisation,Community care|Health,"London, United Kingdom",51.48827,-0.14675,Fictional organisation working with local community care projects.,United Kingdom
+Birmingham Seedling Trust 050,organisation,Learning|Housing,"Birmingham, United Kingdom",52.48299,-1.87433,Fictional organisation working with local learning projects.,United Kingdom
+Manchester Cedar Group 051,organisation,Food|Nature,"Manchester, United Kingdom",53.48623,-2.26008,Fictional organisation working with local food projects.,United Kingdom
+Leeds Hilltop Co-operative 052,organisation,Health|Transport,"Leeds, United Kingdom",53.78014,-1.55741,Fictional organisation working with local health projects.,United Kingdom
+Sheffield Tideway Trust 053,organisation,Housing|Culture,"Sheffield, United Kingdom",53.38427,-1.48234,Fictional organisation working with local housing projects.,United Kingdom
+Aberdeen Foundry Group 054,organisation,Nature|Young people,"Aberdeen, United Kingdom",57.16434,-2.10939,Fictional organisation working with local nature projects.,United Kingdom
+Exeter Bracken Co-operative 055,organisation,Transport|Energy,"Exeter, United Kingdom",50.69860,-3.53666,Fictional organisation working with local transport projects.,United Kingdom
+Swansea Harbour Trust 056,organisation,Culture|Community care,"Swansea, United Kingdom",51.63282,-3.95240,Fictional organisation working with local culture projects.,United Kingdom
+Newcastle Mosaic Group 057,organisation,Young people|Learning,"Newcastle, United Kingdom",54.96995,-1.62145,Fictional organisation working with local young people projects.,United Kingdom
+Edinburgh Beacon Co-operative 058,organisation,Energy|Food,"Edinburgh, United Kingdom",55.96797,-3.17247,Fictional organisation working with local energy projects.,United Kingdom
+Glasgow Willow Trust 059,organisation,Community care|Health,"Glasgow, United Kingdom",55.86134,-4.23720,Fictional organisation working with local community care projects.,United Kingdom
+Belfast Cornerstone Group 060,organisation,Learning|Housing,"Belfast, United Kingdom",54.59167,-5.91025,Fictional organisation working with local learning projects.,United Kingdom
+Cardiff Bridgewater Co-operative 061,organisation,Food|Nature,"Cardiff, United Kingdom",51.49340,-3.17764,Fictional organisation working with local food projects.,United Kingdom
+Bristol Hearth Trust 062,organisation,Health|Transport,"Bristol, United Kingdom",51.47330,-2.60389,Fictional organisation working with local health projects.,United Kingdom
+London Meadow Group 063,organisation,Housing|Culture,"London, United Kingdom",51.52119,-0.14977,Fictional organisation working with local housing projects.,United Kingdom
+Birmingham Highfield Co-operative 064,organisation,Nature|Young people,"Birmingham, United Kingdom",52.47257,-1.87490,Fictional organisation working with local nature projects.,United Kingdom
+Manchester Lantern Trust 065,organisation,Transport|Energy,"Manchester, United Kingdom",53.46099,-2.25264,Fictional organisation working with local transport projects.,United Kingdom
+Leeds Riverside Group 066,organisation,Culture|Community care,"Leeds, United Kingdom",53.79183,-1.56568,Fictional organisation working with local culture projects.,United Kingdom
+Sheffield Northbank Co-operative 067,organisation,Young people|Learning,"Sheffield, United Kingdom",53.36547,-1.48681,Fictional organisation working with local young people projects.,United Kingdom
+Aberdeen Seedling Trust 068,organisation,Energy|Food,"Aberdeen, United Kingdom",57.12721,-2.11398,Fictional organisation working with local energy projects.,United Kingdom
+Exeter Cedar Group 069,organisation,Community care|Health,"Exeter, United Kingdom",50.70290,-3.52790,Fictional organisation working with local community care projects.,United Kingdom
+Swansea Hilltop Co-operative 070,organisation,Learning|Housing,"Swansea, United Kingdom",51.63050,-3.95033,Fictional organisation working with local learning projects.,United Kingdom
+Newcastle Tideway Trust 071,organisation,Food|Nature,"Newcastle, United Kingdom",54.95699,-1.63834,Fictional organisation working with local food projects.,United Kingdom
+Edinburgh Foundry Group 072,organisation,Health|Transport,"Edinburgh, United Kingdom",55.95993,-3.17400,Fictional organisation working with local health projects.,United Kingdom
+Glasgow Bracken Co-operative 073,organisation,Housing|Culture,"Glasgow, United Kingdom",55.86304,-4.24654,Fictional organisation working with local housing projects.,United Kingdom
+Belfast Harbour Trust 074,organisation,Nature|Young people,"Belfast, United Kingdom",54.58624,-5.94403,Fictional organisation working with local nature projects.,United Kingdom
+Cardiff Mosaic Group 075,organisation,Transport|Energy,"Cardiff, United Kingdom",51.49300,-3.20024,Fictional organisation working with local transport projects.,United Kingdom
+Bristol Beacon Co-operative 076,organisation,Culture|Community care,"Bristol, United Kingdom",51.46542,-2.60760,Fictional organisation working with local culture projects.,United Kingdom
+London Willow Trust 077,organisation,Young people|Learning,"London, United Kingdom",51.49179,-0.13461,Fictional organisation working with local young people projects.,United Kingdom
+Birmingham Cornerstone Group 078,organisation,Energy|Food,"Birmingham, United Kingdom",52.48315,-1.90825,Fictional organisation working with local energy projects.,United Kingdom
+Manchester Bridgewater Co-operative 079,organisation,Community care|Health,"Manchester, United Kingdom",53.46732,-2.23151,Fictional organisation working with local community care projects.,United Kingdom
+Leeds Hearth Trust 080,organisation,Learning|Housing,"Leeds, United Kingdom",53.79416,-1.53346,Fictional organisation working with local learning projects.,United Kingdom
+Sheffield Meadow Group 081,organisation,Food|Nature,"Sheffield, United Kingdom",53.39641,-1.47282,Fictional organisation working with local food projects.,United Kingdom
+Aberdeen Highfield Co-operative 082,organisation,Health|Transport,"Aberdeen, United Kingdom",57.12981,-2.08845,Fictional organisation working with local health projects.,United Kingdom
+Exeter Lantern Trust 083,organisation,Housing|Culture,"Exeter, United Kingdom",50.70070,-3.53277,Fictional organisation working with local housing projects.,United Kingdom
+Swansea Riverside Group 084,organisation,Nature|Young people,"Swansea, United Kingdom",51.63437,-3.94329,Fictional organisation working with local nature projects.,United Kingdom
+Newcastle Northbank Co-operative 085,organisation,Transport|Energy,"Newcastle, United Kingdom",54.95834,-1.60930,Fictional organisation working with local transport projects.,United Kingdom
+Edinburgh Seedling Trust 086,organisation,Culture|Community care,"Edinburgh, United Kingdom",55.94713,-3.20012,Fictional organisation working with local culture projects.,United Kingdom
+Glasgow Cedar Group 087,organisation,Young people|Learning,"Glasgow, United Kingdom",55.88556,-4.23030,Fictional organisation working with local young people projects.,United Kingdom
+Belfast Hilltop Co-operative 088,organisation,Energy|Food,"Belfast, United Kingdom",54.59515,-5.92343,Fictional organisation working with local energy projects.,United Kingdom
+Cardiff Tideway Trust 089,organisation,Community care|Health,"Cardiff, United Kingdom",51.46449,-3.19739,Fictional organisation working with local community care projects.,United Kingdom
+Bristol Foundry Group 090,organisation,Learning|Housing,"Bristol, United Kingdom",51.43720,-2.56677,Fictional organisation working with local learning projects.,United Kingdom
+London Bracken Co-operative 091,organisation,Food|Nature,"London, United Kingdom",51.50860,-0.10932,Fictional organisation working with local food projects.,United Kingdom
+Birmingham Harbour Trust 092,organisation,Health|Transport,"Birmingham, United Kingdom",52.49726,-1.86965,Fictional organisation working with local health projects.,United Kingdom
+Manchester Mosaic Group 093,organisation,Housing|Culture,"Manchester, United Kingdom",53.48664,-2.25745,Fictional organisation working with local housing projects.,United Kingdom
+Leeds Beacon Co-operative 094,organisation,Nature|Young people,"Leeds, United Kingdom",53.81483,-1.53060,Fictional organisation working with local nature projects.,United Kingdom
+Sheffield Willow Trust 095,organisation,Transport|Energy,"Sheffield, United Kingdom",53.39110,-1.46772,Fictional organisation working with local transport projects.,United Kingdom
+Aberdeen Cornerstone Group 096,organisation,Culture|Community care,"Aberdeen, United Kingdom",57.12901,-2.07915,Fictional organisation working with local culture projects.,United Kingdom
+Exeter Bridgewater Co-operative 097,organisation,Young people|Learning,"Exeter, United Kingdom",50.71924,-3.52989,Fictional organisation working with local young people projects.,United Kingdom
+Swansea Hearth Trust 098,organisation,Energy|Food,"Swansea, United Kingdom",51.64055,-3.94535,Fictional organisation working with local energy projects.,United Kingdom
+Newcastle Meadow Group 099,organisation,Community care|Health,"Newcastle, United Kingdom",54.97096,-1.63587,Fictional organisation working with local community care projects.,United Kingdom
+Edinburgh Highfield Co-operative 100,organisation,Learning|Housing,"Edinburgh, United Kingdom",55.96274,-3.17487,Fictional organisation working with local learning projects.,United Kingdom
+Glasgow Lantern Trust 101,organisation,Food|Nature,"Glasgow, United Kingdom",55.87145,-4.26871,Fictional organisation working with local food projects.,United Kingdom
+Belfast Riverside Group 102,organisation,Health|Transport,"Belfast, United Kingdom",54.58486,-5.93361,Fictional organisation working with local health projects.,United Kingdom
+Cardiff Northbank Co-operative 103,organisation,Housing|Culture,"Cardiff, United Kingdom",51.46390,-3.17648,Fictional organisation working with local housing projects.,United Kingdom
+Bristol Seedling Trust 104,organisation,Nature|Young people,"Bristol, United Kingdom",51.44222,-2.57680,Fictional organisation working with local nature projects.,United Kingdom
+London Cedar Group 105,organisation,Transport|Energy,"London, United Kingdom",51.48708,-0.10935,Fictional organisation working with local transport projects.,United Kingdom
+Birmingham Hilltop Co-operative 106,organisation,Culture|Community care,"Birmingham, United Kingdom",52.47014,-1.87241,Fictional organisation working with local culture projects.,United Kingdom
+Manchester Tideway Trust 107,organisation,Young people|Learning,"Manchester, United Kingdom",53.47772,-2.22338,Fictional organisation working with local young people projects.,United Kingdom
+Leeds Foundry Group 108,organisation,Energy|Food,"Leeds, United Kingdom",53.79279,-1.57094,Fictional organisation working with local energy projects.,United Kingdom
+Sheffield Bracken Co-operative 109,organisation,Community care|Health,"Sheffield, United Kingdom",53.38225,-1.49194,Fictional organisation working with local community care projects.,United Kingdom
+Aberdeen Harbour Trust 110,organisation,Learning|Housing,"Aberdeen, United Kingdom",57.13757,-2.11604,Fictional organisation working with local learning projects.,United Kingdom
+Exeter Mosaic Group 111,organisation,Food|Nature,"Exeter, United Kingdom",50.72488,-3.52660,Fictional organisation working with local food projects.,United Kingdom
+Swansea Beacon Co-operative 112,organisation,Health|Transport,"Swansea, United Kingdom",51.60800,-3.95534,Fictional organisation working with local health projects.,United Kingdom
+Newcastle Willow Trust 113,organisation,Housing|Culture,"Newcastle, United Kingdom",54.95980,-1.62564,Fictional organisation working with local housing projects.,United Kingdom
+Edinburgh Cornerstone Group 114,organisation,Nature|Young people,"Edinburgh, United Kingdom",55.95977,-3.19111,Fictional organisation working with local nature projects.,United Kingdom
+Glasgow Bridgewater Co-operative 115,organisation,Transport|Energy,"Glasgow, United Kingdom",55.87945,-4.25297,Fictional organisation working with local transport projects.,United Kingdom
+Newcastle Food Programme 001,project,Housing,"Newcastle, United Kingdom",54.99339,-1.63849,Programme delivered in a fictional local network.,United Kingdom
+Edinburgh Health Programme 002,project,Nature,"Edinburgh, United Kingdom",55.96445,-3.17721,Programme delivered in a fictional local network.,United Kingdom
+Glasgow Housing Programme 003,project,Transport,"Glasgow, United Kingdom",55.87393,-4.24255,Programme delivered in a fictional local network.,United Kingdom
+Belfast Nature Programme 004,project,Culture,"Belfast, United Kingdom",54.58675,-5.93326,Programme delivered in a fictional local network.,United Kingdom
+Cardiff Transport Programme 005,project,Young people,"Cardiff, United Kingdom",51.47244,-3.17834,Programme delivered in a fictional local network.,United Kingdom
+Bristol Culture Programme 006,project,Energy,"Bristol, United Kingdom",51.47473,-2.57866,Programme delivered in a fictional local network.,United Kingdom
+London Young people Programme 007,project,Community care,"London, United Kingdom",51.51121,-0.13253,Programme delivered in a fictional local network.,United Kingdom
+Birmingham Energy Programme 008,project,Learning,"Birmingham, United Kingdom",52.47645,-1.89629,Programme delivered in a fictional local network.,United Kingdom
+Manchester Community care Programme 009,project,Food,"Manchester, United Kingdom",53.46616,-2.24024,Programme delivered in a fictional local network.,United Kingdom
+Leeds Learning Programme 010,project,Health,"Leeds, United Kingdom",53.80369,-1.52753,Programme delivered in a fictional local network.,United Kingdom
+Sheffield Food Programme 011,project,Housing,"Sheffield, United Kingdom",53.39810,-1.48933,Programme delivered in a fictional local network.,United Kingdom
+Aberdeen Health Programme 012,project,Nature,"Aberdeen, United Kingdom",57.16678,-2.08830,Programme delivered in a fictional local network.,United Kingdom
+Exeter Housing Programme 013,project,Transport,"Exeter, United Kingdom",50.69793,-3.51431,Programme delivered in a fictional local network.,United Kingdom
+Swansea Nature Programme 014,project,Culture,"Swansea, United Kingdom",51.61844,-3.92884,Programme delivered in a fictional local network.,United Kingdom
+Newcastle Transport Programme 015,project,Young people,"Newcastle, United Kingdom",54.97688,-1.63697,Programme delivered in a fictional local network.,United Kingdom
+Edinburgh Culture Programme 016,project,Energy,"Edinburgh, United Kingdom",55.96447,-3.20604,Programme delivered in a fictional local network.,United Kingdom
+Glasgow Young people Programme 017,project,Community care,"Glasgow, United Kingdom",55.84174,-4.26131,Programme delivered in a fictional local network.,United Kingdom
+Belfast Energy Programme 018,project,Learning,"Belfast, United Kingdom",54.59666,-5.93276,Programme delivered in a fictional local network.,United Kingdom
+Cardiff Community care Programme 019,project,Food,"Cardiff, United Kingdom",51.47207,-3.19751,Programme delivered in a fictional local network.,United Kingdom
+Bristol Learning Programme 020,project,Health,"Bristol, United Kingdom",51.47406,-2.58493,Programme delivered in a fictional local network.,United Kingdom
+London Food Programme 021,project,Housing,"London, United Kingdom",51.49615,-0.11358,Programme delivered in a fictional local network.,United Kingdom
+Birmingham Health Programme 022,project,Nature,"Birmingham, United Kingdom",52.48179,-1.88153,Programme delivered in a fictional local network.,United Kingdom
+Manchester Housing Programme 023,project,Transport,"Manchester, United Kingdom",53.46749,-2.23939,Programme delivered in a fictional local network.,United Kingdom
+Leeds Nature Programme 024,project,Culture,"Leeds, United Kingdom",53.78003,-1.55564,Programme delivered in a fictional local network.,United Kingdom
+Sheffield Transport Programme 025,project,Young people,"Sheffield, United Kingdom",53.39336,-1.45401,Programme delivered in a fictional local network.,United Kingdom
+Aberdeen Culture Programme 026,project,Energy,"Aberdeen, United Kingdom",57.16590,-2.10608,Programme delivered in a fictional local network.,United Kingdom
+Exeter Young people Programme 027,project,Community care,"Exeter, United Kingdom",50.73905,-3.51440,Programme delivered in a fictional local network.,United Kingdom
+Swansea Energy Programme 028,project,Learning,"Swansea, United Kingdom",51.64310,-3.95018,Programme delivered in a fictional local network.,United Kingdom
+Newcastle Community care Programme 029,project,Food,"Newcastle, United Kingdom",54.95769,-1.62866,Programme delivered in a fictional local network.,United Kingdom
+Edinburgh Learning Programme 030,project,Health,"Edinburgh, United Kingdom",55.94564,-3.17246,Programme delivered in a fictional local network.,United Kingdom
+Glasgow Food Programme 031,project,Housing,"Glasgow, United Kingdom",55.84941,-4.24778,Programme delivered in a fictional local network.,United Kingdom
+Belfast Health Programme 032,project,Nature,"Belfast, United Kingdom",54.59018,-5.94020,Programme delivered in a fictional local network.,United Kingdom
+Cardiff Housing Programme 033,project,Transport,"Cardiff, United Kingdom",51.49547,-3.17672,Programme delivered in a fictional local network.,United Kingdom
+Bristol Nature Programme 034,project,Culture,"Bristol, United Kingdom",51.45155,-2.60271,Programme delivered in a fictional local network.,United Kingdom
+London Transport Programme 035,project,Young people,"London, United Kingdom",51.50300,-0.11497,Programme delivered in a fictional local network.,United Kingdom
+Birmingham Culture Programme 036,project,Energy,"Birmingham, United Kingdom",52.47442,-1.90083,Programme delivered in a fictional local network.,United Kingdom
+Manchester Young people Programme 037,project,Community care,"Manchester, United Kingdom",53.50076,-2.22216,Programme delivered in a fictional local network.,United Kingdom
+Leeds Energy Programme 038,project,Learning,"Leeds, United Kingdom",53.81770,-1.54096,Programme delivered in a fictional local network.,United Kingdom
+Sheffield Community care Programme 039,project,Food,"Sheffield, United Kingdom",53.37125,-1.48137,Programme delivered in a fictional local network.,United Kingdom
+Aberdeen Learning Programme 040,project,Health,"Aberdeen, United Kingdom",57.16290,-2.07946,Programme delivered in a fictional local network.,United Kingdom
+Exeter Food Programme 041,project,Housing,"Exeter, United Kingdom",50.71165,-3.54895,Programme delivered in a fictional local network.,United Kingdom
+Swansea Health Programme 042,project,Nature,"Swansea, United Kingdom",51.64021,-3.96413,Programme delivered in a fictional local network.,United Kingdom
+Newcastle Housing Programme 043,project,Transport,"Newcastle, United Kingdom",54.98705,-1.61072,Programme delivered in a fictional local network.,United Kingdom
+Edinburgh Nature Programme 044,project,Culture,"Edinburgh, United Kingdom",55.93740,-3.20905,Programme delivered in a fictional local network.,United Kingdom
+Glasgow Transport Programme 045,project,Young people,"Glasgow, United Kingdom",55.88360,-4.22946,Programme delivered in a fictional local network.,United Kingdom
+Belfast Culture Programme 046,project,Energy,"Belfast, United Kingdom",54.59461,-5.91963,Programme delivered in a fictional local network.,United Kingdom
+Cardiff Young people Programme 047,project,Community care,"Cardiff, United Kingdom",51.46088,-3.16088,Programme delivered in a fictional local network.,United Kingdom
+Bristol Energy Programme 048,project,Learning,"Bristol, United Kingdom",51.43364,-2.60620,Programme delivered in a fictional local network.,United Kingdom
+London Community care Programme 049,project,Food,"London, United Kingdom",51.51301,-0.11450,Programme delivered in a fictional local network.,United Kingdom
+Birmingham Learning Programme 050,project,Health,"Birmingham, United Kingdom",52.48820,-1.86887,Programme delivered in a fictional local network.,United Kingdom
+Manchester Food Programme 051,project,Housing,"Manchester, United Kingdom",53.48248,-2.25619,Programme delivered in a fictional local network.,United Kingdom
+Leeds Health Programme 052,project,Nature,"Leeds, United Kingdom",53.82065,-1.56414,Programme delivered in a fictional local network.,United Kingdom
+Sheffield Housing Programme 053,project,Transport,"Sheffield, United Kingdom",53.38101,-1.46133,Programme delivered in a fictional local network.,United Kingdom
+Aberdeen Nature Programme 054,project,Culture,"Aberdeen, United Kingdom",57.16008,-2.11544,Programme delivered in a fictional local network.,United Kingdom
+Exeter Transport Programme 055,project,Young people,"Exeter, United Kingdom",50.72336,-3.51355,Programme delivered in a fictional local network.,United Kingdom
+Swansea Culture Programme 056,project,Energy,"Swansea, United Kingdom",51.63426,-3.94052,Programme delivered in a fictional local network.,United Kingdom
+Newcastle Young people Programme 057,project,Community care,"Newcastle, United Kingdom",54.99663,-1.61034,Programme delivered in a fictional local network.,United Kingdom
+Edinburgh Energy Programme 058,project,Learning,"Edinburgh, United Kingdom",55.95933,-3.17809,Programme delivered in a fictional local network.,United Kingdom
+Glasgow Community care Programme 059,project,Food,"Glasgow, United Kingdom",55.85616,-4.25154,Programme delivered in a fictional local network.,United Kingdom
+Belfast Learning Programme 060,project,Health,"Belfast, United Kingdom",54.58416,-5.94215,Programme delivered in a fictional local network.,United Kingdom
+Cardiff Food Programme 061,project,Housing,"Cardiff, United Kingdom",51.49135,-3.18414,Programme delivered in a fictional local network.,United Kingdom
+Bristol Health Programme 062,project,Nature,"Bristol, United Kingdom",51.44648,-2.59319,Programme delivered in a fictional local network.,United Kingdom
+Newcastle Community Space 001,place,Community spaces,"Newcastle, United Kingdom",54.99523,-1.61127,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Edinburgh Community Space 002,place,Community spaces,"Edinburgh, United Kingdom",55.94834,-3.18843,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Glasgow Community Space 003,place,Community spaces,"Glasgow, United Kingdom",55.86794,-4.23233,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Belfast Community Space 004,place,Community spaces,"Belfast, United Kingdom",54.58184,-5.90836,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Cardiff Community Space 005,place,Community spaces,"Cardiff, United Kingdom",51.46754,-3.15920,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Bristol Community Space 006,place,Community spaces,"Bristol, United Kingdom",51.45219,-2.60065,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+London Community Space 007,place,Community spaces,"London, United Kingdom",51.49843,-0.13885,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Birmingham Community Space 008,place,Community spaces,"Birmingham, United Kingdom",52.47354,-1.88154,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Manchester Community Space 009,place,Community spaces,"Manchester, United Kingdom",53.48092,-2.22434,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Leeds Community Space 010,place,Community spaces,"Leeds, United Kingdom",53.79601,-1.56382,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Sheffield Community Space 011,place,Community spaces,"Sheffield, United Kingdom",53.36805,-1.47009,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Aberdeen Community Space 012,place,Community spaces,"Aberdeen, United Kingdom",57.14042,-2.08547,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Exeter Community Space 013,place,Community spaces,"Exeter, United Kingdom",50.70001,-3.51394,Invented meeting point on a real city's geographic backdrop.,United Kingdom
+Swansea Community Space 014,place,Community spaces,"Swansea, United Kingdom",51.62779,-3.92985,Invented meeting point on a real city's geographic backdrop.,United Kingdom
