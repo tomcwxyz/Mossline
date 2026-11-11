@@ -497,6 +497,17 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     else if (action === "out") void c.zoomOut({ duration: 220 });
     else void c.animate(home(), { duration: 350 });
   };
+  // The split data table resizes the diagram without resizing the browser.
+  // Keep hit targets, overlays and the Sigma viewport in step with the layout.
+  useEffect(()=>{
+    if(!container.current)return;
+    const observer=new ResizeObserver(()=>{
+      sigmaRef.current?.resize();
+      sigmaRef.current?.refresh();
+    });
+    observer.observe(container.current);
+    return ()=>observer.disconnect();
+  },[]);
   const suggestions = graph.edges.length - recorded;
   return <section ref={stage} className={"ml-network ml-network--" + mode + (sketched ? " is-sketched" : "")}
     aria-label={mode === "themes" ? "Records grouped by " + (suggested ? "suggested topics" : groupName.toLowerCase()) : "Complete Sigma network"}>
