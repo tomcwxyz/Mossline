@@ -1,0 +1,286 @@
+Name,Type,Tags,Region,Description,Year
+Newcastle Bracken Community Initiative 001,project,Food|Culture,Newcastle,"Food work, recorded in a fictional project portfolio.",2021
+Sunderland Harbour Community Initiative 002,project,Health|Transport,Sunderland,"Health work, recorded in a fictional project portfolio.",2022
+Middlesbrough Mosaic Community Initiative 003,project,Housing|Culture,Middlesbrough,"Housing work, recorded in a fictional project portfolio.",2023
+Darlington Beacon Community Initiative 004,project,Nature|Young people,Darlington,"Nature work, recorded in a fictional project portfolio.",2024
+Durham Willow Community Initiative 005,project,Transport|Energy,Durham,"Transport work, recorded in a fictional project portfolio.",2025
+Hartlepool Cornerstone Community Initiative 006,project,Culture|Community care,Hartlepool,"Culture work, recorded in a fictional project portfolio.",2026
+Gateshead Bridgewater Community Initiative 007,project,Young people|Health,Gateshead,"Young people work, recorded in a fictional project portfolio.",2021
+Newcastle Hearth Community Initiative 008,project,Energy|Food,Newcastle,"Energy work, recorded in a fictional project portfolio.",2022
+Sunderland Meadow Community Initiative 009,project,Community care|Health,Sunderland,"Community care work, recorded in a fictional project portfolio.",2023
+Middlesbrough Highfield Community Initiative 010,project,Learning|Housing,Middlesbrough,"Learning work, recorded in a fictional project portfolio.",2024
+Darlington Lantern Community Initiative 011,project,Food|Nature,Darlington,"Food work, recorded in a fictional project portfolio.",2025
+Durham Riverside Community Initiative 012,project,Health|Transport,Durham,"Health work, recorded in a fictional project portfolio.",2026
+Hartlepool Northbank Community Initiative 013,project,Housing|Energy,Hartlepool,"Housing work, recorded in a fictional project portfolio.",2021
+Gateshead Seedling Community Initiative 014,project,Nature|Young people,Gateshead,"Nature work, recorded in a fictional project portfolio.",2022
+Newcastle Cedar Community Initiative 015,project,Transport|Energy,Newcastle,"Transport work, recorded in a fictional project portfolio.",2023
+Sunderland Hilltop Community Initiative 016,project,Culture|Community care,Sunderland,"Culture work, recorded in a fictional project portfolio.",2024
+Middlesbrough Tideway Community Initiative 017,project,Young people|Learning,Middlesbrough,"Young people work, recorded in a fictional project portfolio.",2025
+Darlington Foundry Community Initiative 018,project,Energy|Food,Darlington,"Energy work, recorded in a fictional project portfolio.",2026
+Durham Bracken Community Initiative 019,project,Community care|Nature,Durham,"Community care work, recorded in a fictional project portfolio.",2021
+Hartlepool Harbour Community Initiative 020,project,Learning|Housing,Hartlepool,"Learning work, recorded in a fictional project portfolio.",2022
+Gateshead Mosaic Community Initiative 021,project,Food|Nature,Gateshead,"Food work, recorded in a fictional project portfolio.",2023
+Newcastle Beacon Community Initiative 022,project,Health|Transport,Newcastle,"Health work, recorded in a fictional project portfolio.",2024
+Sunderland Willow Community Initiative 023,project,Housing|Culture,Sunderland,"Housing work, recorded in a fictional project portfolio.",2025
+Middlesbrough Cornerstone Community Initiative 024,project,Nature|Young people,Middlesbrough,"Nature work, recorded in a fictional project portfolio.",2026
+Darlington Bridgewater Community Initiative 025,project,Transport|Learning,Darlington,"Transport work, recorded in a fictional project portfolio.",2021
+Durham Hearth Community Initiative 026,project,Culture|Community care,Durham,"Culture work, recorded in a fictional project portfolio.",2022
+Hartlepool Meadow Community Initiative 027,project,Young people|Learning,Hartlepool,"Young people work, recorded in a fictional project portfolio.",2023
+Gateshead Highfield Community Initiative 028,project,Energy|Food,Gateshead,"Energy work, recorded in a fictional project portfolio.",2024
+Newcastle Lantern Community Initiative 029,project,Community care|Health,Newcastle,"Community care work, recorded in a fictional project portfolio.",2025
+Sunderland Riverside Community Initiative 030,project,Learning|Housing,Sunderland,"Learning work, recorded in a fictional project portfolio.",2026
+Middlesbrough Northbank Community Initiative 031,project,Food|Culture,Middlesbrough,"Food work, recorded in a fictional project portfolio.",2021
+Darlington Seedling Community Initiative 032,project,Health|Transport,Darlington,"Health work, recorded in a fictional project portfolio.",2022
+Durham Cedar Community Initiative 033,project,Housing|Culture,Durham,"Housing work, recorded in a fictional project portfolio.",2023
+Hartlepool Hilltop Community Initiative 034,project,Nature|Young people,Hartlepool,"Nature work, recorded in a fictional project portfolio.",2024
+Gateshead Tideway Community Initiative 035,project,Transport|Energy,Gateshead,"Transport work, recorded in a fictional project portfolio.",2025
+Newcastle Foundry Community Initiative 036,project,Culture|Community care,Newcastle,"Culture work, recorded in a fictional project portfolio.",2026
+Sunderland Bracken Community Initiative 037,project,Young people|Health,Sunderland,"Young people work, recorded in a fictional project portfolio.",2021
+Middlesbrough Harbour Community Initiative 038,project,Energy|Food,Middlesbrough,"Energy work, recorded in a fictional project portfolio.",2022
+Darlington Mosaic Community Initiative 039,project,Community care|Health,Darlington,"Community care work, recorded in a fictional project portfolio.",2023
+Durham Beacon Community Initiative 040,project,Learning|Housing,Durham,"Learning work, recorded in a fictional project portfolio.",2024
+Hartlepool Willow Community Initiative 041,project,Food|Nature,Hartlepool,"Food work, recorded in a fictional project portfolio.",2025
+Gateshead Cornerstone Community Initiative 042,project,Health|Transport,Gateshead,"Health work, recorded in a fictional project portfolio.",2026
+Newcastle Bridgewater Community Initiative 043,project,Housing|Energy,Newcastle,"Housing work, recorded in a fictional project portfolio.",2021
+Sunderland Hearth Community Initiative 044,project,Nature|Young people,Sunderland,"Nature work, recorded in a fictional project portfolio.",2022
+Middlesbrough Meadow Community Initiative 045,project,Transport|Energy,Middlesbrough,"Transport work, recorded in a fictional project portfolio.",2023
+Darlington Highfield Community Initiative 046,project,Culture|Community care,Darlington,"Culture work, recorded in a fictional project portfolio.",2024
+Durham Lantern Community Initiative 047,project,Young people|Learning,Durham,"Young people work, recorded in a fictional project portfolio.",2025
+Hartlepool Riverside Community Initiative 048,project,Energy|Food,Hartlepool,"Energy work, recorded in a fictional project portfolio.",2026
+Gateshead Northbank Community Initiative 049,project,Community care|Nature,Gateshead,"Community care work, recorded in a fictional project portfolio.",2021
+Newcastle Seedling Community Initiative 050,project,Learning|Housing,Newcastle,"Learning work, recorded in a fictional project portfolio.",2022
+Sunderland Cedar Community Initiative 051,project,Food|Nature,Sunderland,"Food work, recorded in a fictional project portfolio.",2023
+Middlesbrough Hilltop Community Initiative 052,project,Health|Transport,Middlesbrough,"Health work, recorded in a fictional project portfolio.",2024
+Darlington Tideway Community Initiative 053,project,Housing|Culture,Darlington,"Housing work, recorded in a fictional project portfolio.",2025
+Durham Foundry Community Initiative 054,project,Nature|Young people,Durham,"Nature work, recorded in a fictional project portfolio.",2026
+Hartlepool Bracken Community Initiative 055,project,Transport|Learning,Hartlepool,"Transport work, recorded in a fictional project portfolio.",2021
+Gateshead Harbour Community Initiative 056,project,Culture|Community care,Gateshead,"Culture work, recorded in a fictional project portfolio.",2022
+Newcastle Mosaic Community Initiative 057,project,Young people|Learning,Newcastle,"Young people work, recorded in a fictional project portfolio.",2023
+Sunderland Beacon Community Initiative 058,project,Energy|Food,Sunderland,"Energy work, recorded in a fictional project portfolio.",2024
+Middlesbrough Willow Community Initiative 059,project,Community care|Health,Middlesbrough,"Community care work, recorded in a fictional project portfolio.",2025
+Darlington Cornerstone Community Initiative 060,project,Learning|Housing,Darlington,"Learning work, recorded in a fictional project portfolio.",2026
+Durham Bridgewater Community Initiative 061,project,Food|Culture,Durham,"Food work, recorded in a fictional project portfolio.",2021
+Hartlepool Hearth Community Initiative 062,project,Health|Transport,Hartlepool,"Health work, recorded in a fictional project portfolio.",2022
+Gateshead Meadow Community Initiative 063,project,Housing|Culture,Gateshead,"Housing work, recorded in a fictional project portfolio.",2023
+Newcastle Highfield Community Initiative 064,project,Nature|Young people,Newcastle,"Nature work, recorded in a fictional project portfolio.",2024
+Sunderland Lantern Community Initiative 065,project,Transport|Energy,Sunderland,"Transport work, recorded in a fictional project portfolio.",2025
+Middlesbrough Riverside Community Initiative 066,project,Culture|Community care,Middlesbrough,"Culture work, recorded in a fictional project portfolio.",2026
+Darlington Northbank Community Initiative 067,project,Young people|Health,Darlington,"Young people work, recorded in a fictional project portfolio.",2021
+Durham Seedling Community Initiative 068,project,Energy|Food,Durham,"Energy work, recorded in a fictional project portfolio.",2022
+Hartlepool Cedar Community Initiative 069,project,Community care|Health,Hartlepool,"Community care work, recorded in a fictional project portfolio.",2023
+Gateshead Hilltop Community Initiative 070,project,Learning|Housing,Gateshead,"Learning work, recorded in a fictional project portfolio.",2024
+Newcastle Tideway Community Initiative 071,project,Food|Nature,Newcastle,"Food work, recorded in a fictional project portfolio.",2025
+Sunderland Foundry Community Initiative 072,project,Health|Transport,Sunderland,"Health work, recorded in a fictional project portfolio.",2026
+Middlesbrough Bracken Community Initiative 073,project,Housing|Energy,Middlesbrough,"Housing work, recorded in a fictional project portfolio.",2021
+Darlington Harbour Community Initiative 074,project,Nature|Young people,Darlington,"Nature work, recorded in a fictional project portfolio.",2022
+Durham Mosaic Community Initiative 075,project,Transport|Energy,Durham,"Transport work, recorded in a fictional project portfolio.",2023
+Hartlepool Beacon Community Initiative 076,project,Culture|Community care,Hartlepool,"Culture work, recorded in a fictional project portfolio.",2024
+Gateshead Willow Community Initiative 077,project,Young people|Learning,Gateshead,"Young people work, recorded in a fictional project portfolio.",2025
+Newcastle Cornerstone Community Initiative 078,project,Energy|Food,Newcastle,"Energy work, recorded in a fictional project portfolio.",2026
+Sunderland Bridgewater Community Initiative 079,project,Community care|Nature,Sunderland,"Community care work, recorded in a fictional project portfolio.",2021
+Middlesbrough Hearth Community Initiative 080,project,Learning|Housing,Middlesbrough,"Learning work, recorded in a fictional project portfolio.",2022
+Darlington Meadow Community Initiative 081,project,Food|Nature,Darlington,"Food work, recorded in a fictional project portfolio.",2023
+Durham Highfield Community Initiative 082,project,Health|Transport,Durham,"Health work, recorded in a fictional project portfolio.",2024
+Hartlepool Lantern Community Initiative 083,project,Housing|Culture,Hartlepool,"Housing work, recorded in a fictional project portfolio.",2025
+Gateshead Riverside Community Initiative 084,project,Nature|Young people,Gateshead,"Nature work, recorded in a fictional project portfolio.",2026
+Newcastle Northbank Community Initiative 085,project,Transport|Learning,Newcastle,"Transport work, recorded in a fictional project portfolio.",2021
+Sunderland Seedling Community Initiative 086,project,Culture|Community care,Sunderland,"Culture work, recorded in a fictional project portfolio.",2022
+Middlesbrough Cedar Community Initiative 087,project,Young people|Learning,Middlesbrough,"Young people work, recorded in a fictional project portfolio.",2023
+Darlington Hilltop Community Initiative 088,project,Energy|Food,Darlington,"Energy work, recorded in a fictional project portfolio.",2024
+Durham Tideway Community Initiative 089,project,Community care|Health,Durham,"Community care work, recorded in a fictional project portfolio.",2025
+Hartlepool Foundry Community Initiative 090,project,Learning|Housing,Hartlepool,"Learning work, recorded in a fictional project portfolio.",2026
+Gateshead Bracken Community Initiative 091,project,Food|Culture,Gateshead,"Food work, recorded in a fictional project portfolio.",2021
+Newcastle Harbour Community Initiative 092,project,Health|Transport,Newcastle,"Health work, recorded in a fictional project portfolio.",2022
+Sunderland Mosaic Community Initiative 093,project,Housing|Culture,Sunderland,"Housing work, recorded in a fictional project portfolio.",2023
+Middlesbrough Beacon Community Initiative 094,project,Nature|Young people,Middlesbrough,"Nature work, recorded in a fictional project portfolio.",2024
+Darlington Willow Community Initiative 095,project,Transport|Energy,Darlington,"Transport work, recorded in a fictional project portfolio.",2025
+Durham Cornerstone Community Initiative 096,project,Culture|Community care,Durham,"Culture work, recorded in a fictional project portfolio.",2026
+Hartlepool Bridgewater Community Initiative 097,project,Young people|Health,Hartlepool,"Young people work, recorded in a fictional project portfolio.",2021
+Gateshead Hearth Community Initiative 098,project,Energy|Food,Gateshead,"Energy work, recorded in a fictional project portfolio.",2022
+Newcastle Meadow Community Initiative 099,project,Community care|Health,Newcastle,"Community care work, recorded in a fictional project portfolio.",2023
+Sunderland Highfield Community Initiative 100,project,Learning|Housing,Sunderland,"Learning work, recorded in a fictional project portfolio.",2024
+Middlesbrough Lantern Community Initiative 101,project,Food|Nature,Middlesbrough,"Food work, recorded in a fictional project portfolio.",2025
+Darlington Riverside Community Initiative 102,project,Health|Transport,Darlington,"Health work, recorded in a fictional project portfolio.",2026
+Durham Northbank Community Initiative 103,project,Housing|Energy,Durham,"Housing work, recorded in a fictional project portfolio.",2021
+Hartlepool Seedling Community Initiative 104,project,Nature|Young people,Hartlepool,"Nature work, recorded in a fictional project portfolio.",2022
+Gateshead Cedar Community Initiative 105,project,Transport|Energy,Gateshead,"Transport work, recorded in a fictional project portfolio.",2023
+Newcastle Hilltop Community Initiative 106,project,Culture|Community care,Newcastle,"Culture work, recorded in a fictional project portfolio.",2024
+Sunderland Tideway Community Initiative 107,project,Young people|Learning,Sunderland,"Young people work, recorded in a fictional project portfolio.",2025
+Middlesbrough Foundry Community Initiative 108,project,Energy|Food,Middlesbrough,"Energy work, recorded in a fictional project portfolio.",2026
+Darlington Bracken Community Initiative 109,project,Community care|Nature,Darlington,"Community care work, recorded in a fictional project portfolio.",2021
+Durham Harbour Community Initiative 110,project,Learning|Housing,Durham,"Learning work, recorded in a fictional project portfolio.",2022
+Hartlepool Mosaic Community Initiative 111,project,Food|Nature,Hartlepool,"Food work, recorded in a fictional project portfolio.",2023
+Gateshead Beacon Community Initiative 112,project,Health|Transport,Gateshead,"Health work, recorded in a fictional project portfolio.",2024
+Newcastle Willow Community Initiative 113,project,Housing|Culture,Newcastle,"Housing work, recorded in a fictional project portfolio.",2025
+Sunderland Cornerstone Community Initiative 114,project,Nature|Young people,Sunderland,"Nature work, recorded in a fictional project portfolio.",2026
+Middlesbrough Bridgewater Community Initiative 115,project,Transport|Learning,Middlesbrough,"Transport work, recorded in a fictional project portfolio.",2021
+Darlington Hearth Community Initiative 116,project,Culture|Community care,Darlington,"Culture work, recorded in a fictional project portfolio.",2022
+Durham Meadow Community Initiative 117,project,Young people|Learning,Durham,"Young people work, recorded in a fictional project portfolio.",2023
+Hartlepool Highfield Community Initiative 118,project,Energy|Food,Hartlepool,"Energy work, recorded in a fictional project portfolio.",2024
+Gateshead Lantern Community Initiative 119,project,Community care|Health,Gateshead,"Community care work, recorded in a fictional project portfolio.",2025
+Newcastle Riverside Community Initiative 120,project,Learning|Housing,Newcastle,"Learning work, recorded in a fictional project portfolio.",2026
+Sunderland Northbank Community Initiative 121,project,Food|Culture,Sunderland,"Food work, recorded in a fictional project portfolio.",2021
+Middlesbrough Seedling Community Initiative 122,project,Health|Transport,Middlesbrough,"Health work, recorded in a fictional project portfolio.",2022
+Darlington Cedar Community Initiative 123,project,Housing|Culture,Darlington,"Housing work, recorded in a fictional project portfolio.",2023
+Durham Hilltop Community Initiative 124,project,Nature|Young people,Durham,"Nature work, recorded in a fictional project portfolio.",2024
+Hartlepool Tideway Community Initiative 125,project,Transport|Energy,Hartlepool,"Transport work, recorded in a fictional project portfolio.",2025
+Gateshead Foundry Community Initiative 126,project,Culture|Community care,Gateshead,"Culture work, recorded in a fictional project portfolio.",2026
+Newcastle Bracken Community Initiative 127,project,Young people|Health,Newcastle,"Young people work, recorded in a fictional project portfolio.",2021
+Sunderland Harbour Community Initiative 128,project,Energy|Food,Sunderland,"Energy work, recorded in a fictional project portfolio.",2022
+Middlesbrough Mosaic Community Initiative 129,project,Community care|Health,Middlesbrough,"Community care work, recorded in a fictional project portfolio.",2023
+Darlington Beacon Community Initiative 130,project,Learning|Housing,Darlington,"Learning work, recorded in a fictional project portfolio.",2024
+Durham Willow Community Initiative 131,project,Food|Nature,Durham,"Food work, recorded in a fictional project portfolio.",2025
+Hartlepool Cornerstone Community Initiative 132,project,Health|Transport,Hartlepool,"Health work, recorded in a fictional project portfolio.",2026
+Gateshead Bridgewater Community Initiative 133,project,Housing|Energy,Gateshead,"Housing work, recorded in a fictional project portfolio.",2021
+Newcastle Hearth Community Initiative 134,project,Nature|Young people,Newcastle,"Nature work, recorded in a fictional project portfolio.",2022
+Sunderland Meadow Community Initiative 135,project,Transport|Energy,Sunderland,"Transport work, recorded in a fictional project portfolio.",2023
+Middlesbrough Highfield Community Initiative 136,project,Culture|Community care,Middlesbrough,"Culture work, recorded in a fictional project portfolio.",2024
+Darlington Lantern Community Initiative 137,project,Young people|Learning,Darlington,"Young people work, recorded in a fictional project portfolio.",2025
+Durham Riverside Community Initiative 138,project,Energy|Food,Durham,"Energy work, recorded in a fictional project portfolio.",2026
+Hartlepool Northbank Community Initiative 139,project,Community care|Nature,Hartlepool,"Community care work, recorded in a fictional project portfolio.",2021
+Gateshead Seedling Community Initiative 140,project,Learning|Housing,Gateshead,"Learning work, recorded in a fictional project portfolio.",2022
+Newcastle Cedar Community Initiative 141,project,Food|Nature,Newcastle,"Food work, recorded in a fictional project portfolio.",2023
+Sunderland Hilltop Community Initiative 142,project,Health|Transport,Sunderland,"Health work, recorded in a fictional project portfolio.",2024
+Middlesbrough Tideway Community Initiative 143,project,Housing|Culture,Middlesbrough,"Housing work, recorded in a fictional project portfolio.",2025
+Darlington Foundry Community Initiative 144,project,Nature|Young people,Darlington,"Nature work, recorded in a fictional project portfolio.",2026
+Durham Bracken Community Initiative 145,project,Transport|Learning,Durham,"Transport work, recorded in a fictional project portfolio.",2021
+Hartlepool Harbour Community Initiative 146,project,Culture|Community care,Hartlepool,"Culture work, recorded in a fictional project portfolio.",2022
+Gateshead Mosaic Community Initiative 147,project,Young people|Learning,Gateshead,"Young people work, recorded in a fictional project portfolio.",2023
+Newcastle Beacon Community Initiative 148,project,Energy|Food,Newcastle,"Energy work, recorded in a fictional project portfolio.",2024
+Sunderland Willow Community Initiative 149,project,Community care|Health,Sunderland,"Community care work, recorded in a fictional project portfolio.",2025
+Middlesbrough Cornerstone Community Initiative 150,project,Learning|Housing,Middlesbrough,"Learning work, recorded in a fictional project portfolio.",2026
+Darlington Bridgewater Community Initiative 151,project,Food|Culture,Darlington,"Food work, recorded in a fictional project portfolio.",2021
+Durham Hearth Community Initiative 152,project,Health|Transport,Durham,"Health work, recorded in a fictional project portfolio.",2022
+Hartlepool Meadow Community Initiative 153,project,Housing|Culture,Hartlepool,"Housing work, recorded in a fictional project portfolio.",2023
+Gateshead Highfield Community Initiative 154,project,Nature|Young people,Gateshead,"Nature work, recorded in a fictional project portfolio.",2024
+Newcastle Lantern Community Initiative 155,project,Transport|Energy,Newcastle,"Transport work, recorded in a fictional project portfolio.",2025
+Sunderland Riverside Community Initiative 156,project,Culture|Community care,Sunderland,"Culture work, recorded in a fictional project portfolio.",2026
+Middlesbrough Northbank Community Initiative 157,project,Young people|Health,Middlesbrough,"Young people work, recorded in a fictional project portfolio.",2021
+Darlington Seedling Community Initiative 158,project,Energy|Food,Darlington,"Energy work, recorded in a fictional project portfolio.",2022
+Durham Cedar Community Initiative 159,project,Community care|Health,Durham,"Community care work, recorded in a fictional project portfolio.",2023
+Hartlepool Hilltop Community Initiative 160,project,Learning|Housing,Hartlepool,"Learning work, recorded in a fictional project portfolio.",2024
+Gateshead Tideway Community Initiative 161,project,Food|Nature,Gateshead,"Food work, recorded in a fictional project portfolio.",2025
+Newcastle Foundry Community Initiative 162,project,Health|Transport,Newcastle,"Health work, recorded in a fictional project portfolio.",2026
+Sunderland Bracken Community Initiative 163,project,Housing|Energy,Sunderland,"Housing work, recorded in a fictional project portfolio.",2021
+Middlesbrough Harbour Community Initiative 164,project,Nature|Young people,Middlesbrough,"Nature work, recorded in a fictional project portfolio.",2022
+Darlington Mosaic Community Initiative 165,project,Transport|Energy,Darlington,"Transport work, recorded in a fictional project portfolio.",2023
+Durham Beacon Community Initiative 166,project,Culture|Community care,Durham,"Culture work, recorded in a fictional project portfolio.",2024
+Hartlepool Willow Community Initiative 167,project,Young people|Learning,Hartlepool,"Young people work, recorded in a fictional project portfolio.",2025
+Gateshead Cornerstone Community Initiative 168,project,Energy|Food,Gateshead,"Energy work, recorded in a fictional project portfolio.",2026
+Newcastle Bridgewater Community Initiative 169,project,Community care|Nature,Newcastle,"Community care work, recorded in a fictional project portfolio.",2021
+Sunderland Hearth Community Initiative 170,project,Learning|Housing,Sunderland,"Learning work, recorded in a fictional project portfolio.",2022
+Middlesbrough Meadow Community Initiative 171,project,Food|Nature,Middlesbrough,"Food work, recorded in a fictional project portfolio.",2023
+Darlington Highfield Community Initiative 172,project,Health|Transport,Darlington,"Health work, recorded in a fictional project portfolio.",2024
+Durham Lantern Community Initiative 173,project,Housing|Culture,Durham,"Housing work, recorded in a fictional project portfolio.",2025
+Hartlepool Riverside Community Initiative 174,project,Nature|Young people,Hartlepool,"Nature work, recorded in a fictional project portfolio.",2026
+Gateshead Northbank Community Initiative 175,project,Transport|Learning,Gateshead,"Transport work, recorded in a fictional project portfolio.",2021
+Newcastle Seedling Community Initiative 176,project,Culture|Community care,Newcastle,"Culture work, recorded in a fictional project portfolio.",2022
+Sunderland Cedar Community Initiative 177,project,Young people|Learning,Sunderland,"Young people work, recorded in a fictional project portfolio.",2023
+Middlesbrough Hilltop Community Initiative 178,project,Energy|Food,Middlesbrough,"Energy work, recorded in a fictional project portfolio.",2024
+Darlington Tideway Community Initiative 179,project,Community care|Health,Darlington,"Community care work, recorded in a fictional project portfolio.",2025
+Durham Foundry Community Initiative 180,project,Learning|Housing,Durham,"Learning work, recorded in a fictional project portfolio.",2026
+Hartlepool Bracken Community Initiative 181,project,Food|Culture,Hartlepool,"Food work, recorded in a fictional project portfolio.",2021
+Gateshead Harbour Community Initiative 182,project,Health|Transport,Gateshead,"Health work, recorded in a fictional project portfolio.",2022
+Newcastle Mosaic Community Initiative 183,project,Housing|Culture,Newcastle,"Housing work, recorded in a fictional project portfolio.",2023
+Sunderland Beacon Community Initiative 184,project,Nature|Young people,Sunderland,"Nature work, recorded in a fictional project portfolio.",2024
+Middlesbrough Willow Community Initiative 185,project,Transport|Energy,Middlesbrough,"Transport work, recorded in a fictional project portfolio.",2025
+Darlington Cornerstone Community Initiative 186,project,Culture|Community care,Darlington,"Culture work, recorded in a fictional project portfolio.",2026
+Durham Bridgewater Community Initiative 187,project,Young people|Health,Durham,"Young people work, recorded in a fictional project portfolio.",2021
+Hartlepool Hearth Community Initiative 188,project,Energy|Food,Hartlepool,"Energy work, recorded in a fictional project portfolio.",2022
+Gateshead Meadow Community Initiative 189,project,Community care|Health,Gateshead,"Community care work, recorded in a fictional project portfolio.",2023
+Newcastle Highfield Community Initiative 190,project,Learning|Housing,Newcastle,"Learning work, recorded in a fictional project portfolio.",2024
+Sunderland Lantern Community Initiative 191,project,Food|Nature,Sunderland,"Food work, recorded in a fictional project portfolio.",2025
+Middlesbrough Riverside Community Initiative 192,project,Health|Transport,Middlesbrough,"Health work, recorded in a fictional project portfolio.",2026
+Darlington Northbank Community Initiative 193,project,Housing|Energy,Darlington,"Housing work, recorded in a fictional project portfolio.",2021
+Durham Seedling Community Initiative 194,project,Nature|Young people,Durham,"Nature work, recorded in a fictional project portfolio.",2022
+Hartlepool Cedar Community Initiative 195,project,Transport|Energy,Hartlepool,"Transport work, recorded in a fictional project portfolio.",2023
+Gateshead Hilltop Community Initiative 196,project,Culture|Community care,Gateshead,"Culture work, recorded in a fictional project portfolio.",2024
+Newcastle Tideway Community Initiative 197,project,Young people|Learning,Newcastle,"Young people work, recorded in a fictional project portfolio.",2025
+Sunderland Foundry Community Initiative 198,project,Energy|Food,Sunderland,"Energy work, recorded in a fictional project portfolio.",2026
+Middlesbrough Bracken Community Initiative 199,project,Community care|Nature,Middlesbrough,"Community care work, recorded in a fictional project portfolio.",2021
+Darlington Harbour Community Initiative 200,project,Learning|Housing,Darlington,"Learning work, recorded in a fictional project portfolio.",2022
+Durham Mosaic Community Initiative 201,project,Food|Nature,Durham,"Food work, recorded in a fictional project portfolio.",2023
+Hartlepool Beacon Community Initiative 202,project,Health|Transport,Hartlepool,"Health work, recorded in a fictional project portfolio.",2024
+Gateshead Willow Community Initiative 203,project,Housing|Culture,Gateshead,"Housing work, recorded in a fictional project portfolio.",2025
+Newcastle Cornerstone Community Initiative 204,project,Nature|Young people,Newcastle,"Nature work, recorded in a fictional project portfolio.",2026
+Sunderland Bridgewater Community Initiative 205,project,Transport|Learning,Sunderland,"Transport work, recorded in a fictional project portfolio.",2021
+Middlesbrough Hearth Community Initiative 206,project,Culture|Community care,Middlesbrough,"Culture work, recorded in a fictional project portfolio.",2022
+Darlington Meadow Community Initiative 207,project,Young people|Learning,Darlington,"Young people work, recorded in a fictional project portfolio.",2023
+Durham Highfield Community Initiative 208,project,Energy|Food,Durham,"Energy work, recorded in a fictional project portfolio.",2024
+Hartlepool Lantern Community Initiative 209,project,Community care|Health,Hartlepool,"Community care work, recorded in a fictional project portfolio.",2025
+Gateshead Riverside Community Initiative 210,project,Learning|Housing,Gateshead,"Learning work, recorded in a fictional project portfolio.",2026
+Newcastle Northbank Community Initiative 211,project,Food|Culture,Newcastle,"Food work, recorded in a fictional project portfolio.",2021
+Sunderland Seedling Community Initiative 212,project,Health|Transport,Sunderland,"Health work, recorded in a fictional project portfolio.",2022
+Middlesbrough Cedar Community Initiative 213,project,Housing|Culture,Middlesbrough,"Housing work, recorded in a fictional project portfolio.",2023
+Darlington Hilltop Community Initiative 214,project,Nature|Young people,Darlington,"Nature work, recorded in a fictional project portfolio.",2024
+Durham Tideway Community Initiative 215,project,Transport|Energy,Durham,"Transport work, recorded in a fictional project portfolio.",2025
+Hartlepool Foundry Community Initiative 216,project,Culture|Community care,Hartlepool,"Culture work, recorded in a fictional project portfolio.",2026
+Gateshead Bracken Community Initiative 217,project,Young people|Health,Gateshead,"Young people work, recorded in a fictional project portfolio.",2021
+Newcastle Harbour Community Initiative 218,project,Energy|Food,Newcastle,"Energy work, recorded in a fictional project portfolio.",2022
+Sunderland Mosaic Community Initiative 219,project,Community care|Health,Sunderland,"Community care work, recorded in a fictional project portfolio.",2023
+Middlesbrough Beacon Community Initiative 220,project,Learning|Housing,Middlesbrough,"Learning work, recorded in a fictional project portfolio.",2024
+Darlington Willow Community Initiative 221,project,Food|Nature,Darlington,"Food work, recorded in a fictional project portfolio.",2025
+Durham Cornerstone Community Initiative 222,project,Health|Transport,Durham,"Health work, recorded in a fictional project portfolio.",2026
+Hartlepool Bridgewater Community Initiative 223,project,Housing|Energy,Hartlepool,"Housing work, recorded in a fictional project portfolio.",2021
+Gateshead Hearth Community Initiative 224,project,Nature|Young people,Gateshead,"Nature work, recorded in a fictional project portfolio.",2022
+Newcastle Meadow Community Initiative 225,project,Transport|Energy,Newcastle,"Transport work, recorded in a fictional project portfolio.",2023
+Sunderland Highfield Community Initiative 226,project,Culture|Community care,Sunderland,"Culture work, recorded in a fictional project portfolio.",2024
+Middlesbrough Lantern Community Initiative 227,project,Young people|Learning,Middlesbrough,"Young people work, recorded in a fictional project portfolio.",2025
+Darlington Riverside Community Initiative 228,project,Energy|Food,Darlington,"Energy work, recorded in a fictional project portfolio.",2026
+Durham Northbank Community Initiative 229,project,Community care|Nature,Durham,"Community care work, recorded in a fictional project portfolio.",2021
+Hartlepool Seedling Community Initiative 230,project,Learning|Housing,Hartlepool,"Learning work, recorded in a fictional project portfolio.",2022
+Gateshead Cedar Community Initiative 231,project,Food|Nature,Gateshead,"Food work, recorded in a fictional project portfolio.",2023
+Newcastle Hilltop Community Initiative 232,project,Health|Transport,Newcastle,"Health work, recorded in a fictional project portfolio.",2024
+Sunderland Tideway Community Initiative 233,project,Housing|Culture,Sunderland,"Housing work, recorded in a fictional project portfolio.",2025
+Middlesbrough Foundry Community Initiative 234,project,Nature|Young people,Middlesbrough,"Nature work, recorded in a fictional project portfolio.",2026
+Darlington Bracken Community Initiative 235,project,Transport|Learning,Darlington,"Transport work, recorded in a fictional project portfolio.",2021
+Durham Harbour Community Initiative 236,project,Culture|Community care,Durham,"Culture work, recorded in a fictional project portfolio.",2022
+Hartlepool Mosaic Community Initiative 237,project,Young people|Learning,Hartlepool,"Young people work, recorded in a fictional project portfolio.",2023
+Gateshead Beacon Community Initiative 238,project,Energy|Food,Gateshead,"Energy work, recorded in a fictional project portfolio.",2024
+Newcastle Willow Community Initiative 239,project,Community care|Health,Newcastle,"Community care work, recorded in a fictional project portfolio.",2025
+Sunderland Cornerstone Community Initiative 240,project,Learning|Housing,Sunderland,"Learning work, recorded in a fictional project portfolio.",2026
+Middlesbrough Bridgewater Community Initiative 241,project,Food|Culture,Middlesbrough,"Food work, recorded in a fictional project portfolio.",2021
+Darlington Hearth Community Initiative 242,project,Health|Transport,Darlington,"Health work, recorded in a fictional project portfolio.",2022
+Durham Meadow Community Initiative 243,project,Housing|Culture,Durham,"Housing work, recorded in a fictional project portfolio.",2023
+Hartlepool Highfield Community Initiative 244,project,Nature|Young people,Hartlepool,"Nature work, recorded in a fictional project portfolio.",2024
+Gateshead Lantern Community Initiative 245,project,Transport|Energy,Gateshead,"Transport work, recorded in a fictional project portfolio.",2025
+Newcastle Riverside Community Initiative 246,project,Culture|Community care,Newcastle,"Culture work, recorded in a fictional project portfolio.",2026
+Sunderland Northbank Community Initiative 247,project,Young people|Health,Sunderland,"Young people work, recorded in a fictional project portfolio.",2021
+Middlesbrough Seedling Community Initiative 248,project,Energy|Food,Middlesbrough,"Energy work, recorded in a fictional project portfolio.",2022
+Darlington Cedar Community Initiative 249,project,Community care|Health,Darlington,"Community care work, recorded in a fictional project portfolio.",2023
+Durham Hilltop Community Initiative 250,project,Learning|Housing,Durham,"Learning work, recorded in a fictional project portfolio.",2024
+Hartlepool Tideway Community Initiative 251,project,Food|Nature,Hartlepool,"Food work, recorded in a fictional project portfolio.",2025
+Gateshead Foundry Community Initiative 252,project,Health|Transport,Gateshead,"Health work, recorded in a fictional project portfolio.",2026
+Newcastle Bracken Community Initiative 253,project,Housing|Energy,Newcastle,"Housing work, recorded in a fictional project portfolio.",2021
+Sunderland Harbour Community Initiative 254,project,Nature|Young people,Sunderland,"Nature work, recorded in a fictional project portfolio.",2022
+Middlesbrough Mosaic Community Initiative 255,project,Transport|Energy,Middlesbrough,"Transport work, recorded in a fictional project portfolio.",2023
+Darlington Beacon Community Initiative 256,project,Culture|Community care,Darlington,"Culture work, recorded in a fictional project portfolio.",2024
+Durham Willow Community Initiative 257,project,Young people|Learning,Durham,"Young people work, recorded in a fictional project portfolio.",2025
+Hartlepool Cornerstone Community Initiative 258,project,Energy|Food,Hartlepool,"Energy work, recorded in a fictional project portfolio.",2026
+Gateshead Bridgewater Community Initiative 259,project,Community care|Nature,Gateshead,"Community care work, recorded in a fictional project portfolio.",2021
+Newcastle Hearth Community Initiative 260,project,Learning|Housing,Newcastle,"Learning work, recorded in a fictional project portfolio.",2022
+Sunderland Meadow Community Initiative 261,project,Food|Nature,Sunderland,"Food work, recorded in a fictional project portfolio.",2023
+Middlesbrough Highfield Community Initiative 262,project,Health|Transport,Middlesbrough,"Health work, recorded in a fictional project portfolio.",2024
+Darlington Lantern Community Initiative 263,project,Housing|Culture,Darlington,"Housing work, recorded in a fictional project portfolio.",2025
+Durham Riverside Community Initiative 264,project,Nature|Young people,Durham,"Nature work, recorded in a fictional project portfolio.",2026
+Hartlepool Northbank Community Initiative 265,project,Transport|Learning,Hartlepool,"Transport work, recorded in a fictional project portfolio.",2021
+Gateshead Seedling Community Initiative 266,project,Culture|Community care,Gateshead,"Culture work, recorded in a fictional project portfolio.",2022
+Newcastle Cedar Community Initiative 267,project,Young people|Learning,Newcastle,"Young people work, recorded in a fictional project portfolio.",2023
+Sunderland Hilltop Community Initiative 268,project,Energy|Food,Sunderland,"Energy work, recorded in a fictional project portfolio.",2024
+Middlesbrough Tideway Community Initiative 269,project,Community care|Health,Middlesbrough,"Community care work, recorded in a fictional project portfolio.",2025
+Darlington Foundry Community Initiative 270,project,Learning|Housing,Darlington,"Learning work, recorded in a fictional project portfolio.",2026
+Durham Bracken Community Initiative 271,project,Food|Culture,Durham,"Food work, recorded in a fictional project portfolio.",2021
+Hartlepool Harbour Community Initiative 272,project,Health|Transport,Hartlepool,"Health work, recorded in a fictional project portfolio.",2022
+Gateshead Mosaic Community Initiative 273,project,Housing|Culture,Gateshead,"Housing work, recorded in a fictional project portfolio.",2023
+Newcastle Beacon Community Initiative 274,project,Nature|Young people,Newcastle,"Nature work, recorded in a fictional project portfolio.",2024
+Sunderland Willow Community Initiative 275,project,Transport|Energy,Sunderland,"Transport work, recorded in a fictional project portfolio.",2025
+Middlesbrough Cornerstone Community Initiative 276,project,Culture|Community care,Middlesbrough,"Culture work, recorded in a fictional project portfolio.",2026
+Darlington Bridgewater Community Initiative 277,project,Young people|Health,Darlington,"Young people work, recorded in a fictional project portfolio.",2021
+Durham Hearth Community Initiative 278,project,Energy|Food,Durham,"Energy work, recorded in a fictional project portfolio.",2022
+Hartlepool Meadow Community Initiative 279,project,Community care|Health,Hartlepool,"Community care work, recorded in a fictional project portfolio.",2023
+Gateshead Highfield Community Initiative 280,project,Learning|Housing,Gateshead,"Learning work, recorded in a fictional project portfolio.",2024
+Newcastle Lantern Community Initiative 281,project,Food|Nature,Newcastle,"Food work, recorded in a fictional project portfolio.",2025
+Sunderland Riverside Community Initiative 282,project,Health|Transport,Sunderland,"Health work, recorded in a fictional project portfolio.",2026
+Middlesbrough Northbank Community Initiative 283,project,Housing|Energy,Middlesbrough,"Housing work, recorded in a fictional project portfolio.",2021
+Darlington Seedling Community Initiative 284,project,Nature|Young people,Darlington,"Nature work, recorded in a fictional project portfolio.",2022
+Durham Cedar Community Initiative 285,project,Transport|Energy,Durham,"Transport work, recorded in a fictional project portfolio.",2023
