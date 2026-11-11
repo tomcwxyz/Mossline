@@ -87,11 +87,28 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
   },[graph]);
   const connections=useMemo(()=>graph.edges.filter(isRecorded),[graph.edges]);
   const query=search.toLocaleLowerCase("en-GB").trim();
-  const records=useMemo(()=>graph.nodes.filter(n=>!query||[n.label,n.type,n.region??"",...n.tags]
-    .some(v=>v.toLocaleLowerCase("en-GB").includes(query))),[graph.nodes,query]);
-  const links=useMemo(()=>connections.filter(e=>!query||[
-    known.get(e.source)?.label??"",known.get(e.target)?.label??"",e.type
-  ].some(v=>v.toLocaleLowerCase("en-GB").includes(query))),[connections,known,query]);
+  const records=useMemo(()=>{
+    const matched=graph.nodes.filter(n=>!query||[n.label,n.type,n.region??"",...n.tags]
+      .some(v=>v.toLocaleLowerCase("en-GB").includes(query)));
+    // New records should be visible immediately, not hidden on page 9.
+    return [...matched.filter(n=>n.origin?.system==="edit").reverse(),
+      ...matched.filter(n=>n.origin?.system!=="edit")];
+  },[graph.nodes,query]);
+  const links=useMemo(()=>{
+    const matched=connections.filter(e=>!query||[
+      known.get(e.source)?.label??"",known.get(e.target)?.label??"",e.type
+    ].some(v=>v.toLocaleLowerCase("en-GB").includes(query)));
+    // Draw a link, see the new row at the top of the Connections table.
+    return [...matched.filter(e=>e.origin?.system==="edit").reverse(),
+      ...matched.filter(e=>e.origin?.system!=="edit")];
+  },[connections,known,query]);
+  const pinned=tab==="records"&&selectedId&&!records.slice(0,limit).some(n=>n.id===selectedId)
+    ? records.find(n=>n.id===selectedId):undefined;
+  const shownRecords=pinned?[pinned,...records.slice(0,limit)]:records.slice(0,limit);
+  const lastNodeId=lastEdit?.op.kind==="update-node"?lastEdit.op.id:
+    lastEdit?.op.kind==="add-node"?lastEdit.op.node.id:null;
+  const lastEdgeId=lastEdit?.op.kind==="update-edge"?lastEdit.op.id:
+    lastEdit?.op.kind==="add-edge"?lastEdit.op.edge.id:null;
   const shown=tab==="records"?records:links;
   function nodeEdit(node:GraphNode,key:keyof NodeFields,next:string|NodeType|string[]){
     const old=nodeValues(node,[key]);
@@ -125,7 +142,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
       {tab==="records"?<table className="ml-data-table"><thead><tr>
         <th scope="col">Record</th><th scope="col">Type</th><th scope="col">Place</th>
         <th scope="col">Themes</th><th scope="col">Links</th><th scope="col">Source</th>
-      </tr></thead><tbody>{records.slice(0,limit).map(n=><tr key={n.id} className={selectedId===n.id?"is-selected":undefined}>
+      </tr></thead><tbody>{shownRecords.map(n=><tr key={n.id} className={[selectedId===n.id?"is-selected":"",lastNodeId===n.id?"is-updated":""].filter(Boolean).join(" ")}>
         <td className="ml-data-name"><div className="ml-data-named">
           <button type="button" className="ml-data-locate" aria-label={"Show "+n.label+" in the graph"}
             onClick={()=>onPick(n.id)} title="Find in the graph">◎</button>
@@ -144,7 +161,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
       <table className="ml-data-table"><thead><tr>
         <th scope="col">From</th><th scope="col">To</th><th scope="col">Relationship</th>
         <th scope="col">Direction</th><th scope="col">Source</th>{editable&&<th scope="col">Change</th>}
-      </tr></thead><tbody>{links.slice(0,limit).map(e=><tr key={e.id}>
+      </tr></thead><tbody>{links.slice(0,limit).map(e=><tr key={e.id} className={lastEdgeId===e.id?"is-updated":undefined}>
         <td><button type="button" className="ml-data-record-link" onClick={()=>onPick(e.source)}>
           {known.get(e.source)?.label??e.source}</button></td>
         <td><button type="button" className="ml-data-record-link" onClick={()=>onPick(e.target)}>
@@ -166,7 +183,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
       {!shown.length&&<p className="ml-data-none">No matching {tab==="records"?"records":"connections"}. Clear the search or change the filters above.</p>}
     </div>
     <footer className="ml-data-foot">
-      <span>Showing {Math.min(shown.length,limit).toLocaleString("en-GB")} of {shown.length.toLocaleString("en-GB")} · {editable?
+      <span>Showing {Math.min(shown.length,limit).toLocaleString("en-GB")} of {shown.length.toLocaleString("en-GB")}{pinned?" · plus the selected record":""} · {editable?
         "Click a cell to change it; Enter or click away to apply.":"Read-only source-backed data."}</span>
       {shown.length>limit&&<button type="button" className="ml-link-button" onClick={()=>setLimit(n=>n+pageSize)}>Show more</button>}
       {editable&&lastEdit&&!lastEdit.undone&&<button type="button" className="ml-link-button ml-data-undo"
