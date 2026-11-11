@@ -27,9 +27,9 @@ test("record and relationship tables are interpreted as one dataset",()=>{
   assert.equal(canReviewDirectly(tables,[],[],plan(tables),false),true);
 });
 
-test("links without a matching record table cannot create an empty map",()=>{
+test("standalone links can be reviewed as relationships with source-mentioned endpoints",()=>{
   const tables=[table("links.csv","From,To,Relationship\nAlice,Bob,works with\n")];
-  assert.equal(canReviewDirectly(tables,[],[],plan(tables),false),false);
+  assert.equal(canReviewDirectly(tables,[],[],plan(tables),false),true);
   assert.equal(canReviewDirectly(tables,[],[],plan(tables),true),true);
 });
 
