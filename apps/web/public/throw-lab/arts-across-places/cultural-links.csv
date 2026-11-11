@@ -1,0 +1,359 @@
+From,To,Relationship,Direction,Since
+Newcastle Bracken Gallery 001,Darlington Foundry Hall 018,joint event,mutual,2021
+Sunderland Harbour Hall 002,Gateshead Mosaic Gallery 021,shared programme,mutual,2022
+Middlesbrough Mosaic Venue 003,Middlesbrough Cornerstone Studio 024,shared programme,mutual,2023
+Darlington Beacon Studio 004,Hartlepool Meadow Venue 027,joint event,mutual,2024
+Durham Willow Gallery 005,Sunderland Riverside Hall 030,shared programme,mutual,2025
+Hartlepool Cornerstone Hall 006,Durham Cedar Gallery 033,shared programme,mutual,2021
+Gateshead Bridgewater Venue 007,Newcastle Foundry Studio 036,joint event,mutual,2022
+Newcastle Hearth Studio 008,Darlington Mosaic Venue 039,shared programme,mutual,2023
+Sunderland Meadow Gallery 009,Gateshead Cornerstone Hall 042,shared programme,mutual,2024
+Middlesbrough Highfield Hall 010,Middlesbrough Meadow Gallery 045,joint event,mutual,2025
+Darlington Lantern Venue 011,Hartlepool Riverside Studio 048,shared programme,mutual,2021
+Durham Riverside Studio 012,Sunderland Cedar Venue 051,shared programme,mutual,2022
+Hartlepool Northbank Gallery 013,Durham Foundry Hall 054,joint event,mutual,2023
+Gateshead Seedling Hall 014,Newcastle Mosaic Gallery 057,shared programme,mutual,2024
+Newcastle Cedar Venue 015,Darlington Cornerstone Studio 060,shared programme,mutual,2025
+Sunderland Hilltop Studio 016,Gateshead Meadow Venue 063,joint event,mutual,2021
+Middlesbrough Tideway Gallery 017,Middlesbrough Riverside Hall 066,shared programme,mutual,2022
+Darlington Foundry Hall 018,Hartlepool Cedar Gallery 069,shared programme,mutual,2023
+Durham Bracken Venue 019,Sunderland Foundry Studio 072,joint event,mutual,2024
+Hartlepool Harbour Studio 020,Durham Mosaic Venue 075,shared programme,mutual,2025
+Gateshead Mosaic Gallery 021,Newcastle Cornerstone Hall 078,shared programme,mutual,2021
+Newcastle Beacon Hall 022,Darlington Meadow Gallery 081,joint event,mutual,2022
+Sunderland Willow Venue 023,Gateshead Riverside Studio 084,shared programme,mutual,2023
+Middlesbrough Cornerstone Studio 024,Middlesbrough Cedar Venue 087,shared programme,mutual,2024
+Darlington Bridgewater Gallery 025,Hartlepool Foundry Hall 090,joint event,mutual,2025
+Durham Hearth Hall 026,Sunderland Mosaic Gallery 093,shared programme,mutual,2021
+Hartlepool Meadow Venue 027,Durham Cornerstone Studio 096,shared programme,mutual,2022
+Gateshead Highfield Studio 028,Newcastle Meadow Venue 099,joint event,mutual,2023
+Newcastle Lantern Gallery 029,Darlington Riverside Hall 102,shared programme,mutual,2024
+Sunderland Riverside Hall 030,Gateshead Cedar Gallery 105,shared programme,mutual,2025
+Middlesbrough Northbank Venue 031,Middlesbrough Foundry Studio 108,joint event,mutual,2021
+Darlington Seedling Studio 032,Hartlepool Mosaic Venue 111,shared programme,mutual,2022
+Durham Cedar Gallery 033,Sunderland Cornerstone Hall 114,shared programme,mutual,2023
+Hartlepool Hilltop Hall 034,Durham Meadow Gallery 117,joint event,mutual,2024
+Gateshead Tideway Venue 035,Newcastle Riverside Studio 120,shared programme,mutual,2025
+Newcastle Foundry Studio 036,Darlington Cedar Venue 123,shared programme,mutual,2021
+Sunderland Bracken Gallery 037,Gateshead Foundry Hall 126,joint event,mutual,2022
+Middlesbrough Harbour Hall 038,Middlesbrough Mosaic Gallery 129,shared programme,mutual,2023
+Darlington Mosaic Venue 039,Hartlepool Cornerstone Studio 132,shared programme,mutual,2024
+Durham Beacon Studio 040,Sunderland Meadow Venue 135,joint event,mutual,2025
+Hartlepool Willow Gallery 041,Durham Riverside Hall 138,shared programme,mutual,2021
+Gateshead Cornerstone Hall 042,Newcastle Cedar Gallery 141,shared programme,mutual,2022
+Newcastle Bridgewater Venue 043,Darlington Foundry Studio 144,joint event,mutual,2023
+Sunderland Hearth Studio 044,Sunderland Harbour Hall 002,shared programme,mutual,2024
+Middlesbrough Meadow Gallery 045,Durham Willow Gallery 005,shared programme,mutual,2025
+Darlington Highfield Hall 046,Newcastle Hearth Studio 008,joint event,mutual,2021
+Durham Lantern Venue 047,Darlington Lantern Venue 011,shared programme,mutual,2022
+Hartlepool Riverside Studio 048,Gateshead Seedling Hall 014,shared programme,mutual,2023
+Gateshead Northbank Gallery 049,Middlesbrough Tideway Gallery 017,joint event,mutual,2024
+Newcastle Seedling Hall 050,Hartlepool Harbour Studio 020,shared programme,mutual,2025
+Sunderland Cedar Venue 051,Sunderland Willow Venue 023,shared programme,mutual,2021
+Middlesbrough Hilltop Studio 052,Durham Hearth Hall 026,joint event,mutual,2022
+Darlington Tideway Gallery 053,Newcastle Lantern Gallery 029,shared programme,mutual,2023
+Durham Foundry Hall 054,Darlington Seedling Studio 032,shared programme,mutual,2024
+Hartlepool Bracken Venue 055,Gateshead Tideway Venue 035,joint event,mutual,2025
+Gateshead Harbour Studio 056,Middlesbrough Harbour Hall 038,shared programme,mutual,2021
+Newcastle Mosaic Gallery 057,Hartlepool Willow Gallery 041,shared programme,mutual,2022
+Sunderland Beacon Hall 058,Sunderland Hearth Studio 044,joint event,mutual,2023
+Middlesbrough Willow Venue 059,Durham Lantern Venue 047,shared programme,mutual,2024
+Darlington Cornerstone Studio 060,Newcastle Seedling Hall 050,shared programme,mutual,2025
+Durham Bridgewater Gallery 061,Darlington Tideway Gallery 053,joint event,mutual,2021
+Hartlepool Hearth Hall 062,Gateshead Harbour Studio 056,shared programme,mutual,2022
+Gateshead Meadow Venue 063,Middlesbrough Willow Venue 059,shared programme,mutual,2023
+Newcastle Highfield Studio 064,Hartlepool Hearth Hall 062,joint event,mutual,2024
+Sunderland Lantern Gallery 065,Sunderland Lantern Gallery 065,shared programme,mutual,2025
+Middlesbrough Riverside Hall 066,Durham Seedling Studio 068,shared programme,mutual,2021
+Darlington Northbank Venue 067,Newcastle Tideway Venue 071,joint event,mutual,2022
+Durham Seedling Studio 068,Darlington Harbour Hall 074,shared programme,mutual,2023
+Hartlepool Cedar Gallery 069,Gateshead Willow Gallery 077,shared programme,mutual,2024
+Gateshead Hilltop Hall 070,Middlesbrough Hearth Studio 080,joint event,mutual,2025
+Newcastle Tideway Venue 071,Hartlepool Lantern Venue 083,shared programme,mutual,2021
+Sunderland Foundry Studio 072,Sunderland Seedling Hall 086,shared programme,mutual,2022
+Middlesbrough Bracken Gallery 073,Durham Tideway Gallery 089,joint event,mutual,2023
+Darlington Harbour Hall 074,Newcastle Harbour Studio 092,shared programme,mutual,2024
+Durham Mosaic Venue 075,Darlington Willow Venue 095,shared programme,mutual,2025
+Hartlepool Beacon Studio 076,Gateshead Hearth Hall 098,joint event,mutual,2021
+Gateshead Willow Gallery 077,Middlesbrough Lantern Gallery 101,shared programme,mutual,2022
+Newcastle Cornerstone Hall 078,Hartlepool Seedling Studio 104,shared programme,mutual,2023
+Sunderland Bridgewater Venue 079,Sunderland Tideway Venue 107,joint event,mutual,2024
+Middlesbrough Hearth Studio 080,Durham Harbour Hall 110,shared programme,mutual,2025
+Darlington Meadow Gallery 081,Newcastle Willow Gallery 113,shared programme,mutual,2021
+Durham Highfield Hall 082,Darlington Hearth Studio 116,joint event,mutual,2022
+Hartlepool Lantern Venue 083,Gateshead Lantern Venue 119,shared programme,mutual,2023
+Gateshead Riverside Studio 084,Middlesbrough Seedling Hall 122,shared programme,mutual,2024
+Newcastle Northbank Gallery 085,Hartlepool Tideway Gallery 125,joint event,mutual,2025
+Sunderland Seedling Hall 086,Sunderland Harbour Studio 128,shared programme,mutual,2021
+Middlesbrough Cedar Venue 087,Durham Willow Venue 131,shared programme,mutual,2022
+Darlington Hilltop Studio 088,Newcastle Hearth Hall 134,joint event,mutual,2023
+Durham Tideway Gallery 089,Darlington Lantern Gallery 137,shared programme,mutual,2024
+Hartlepool Foundry Hall 090,Gateshead Seedling Studio 140,shared programme,mutual,2025
+Gateshead Bracken Venue 091,Middlesbrough Tideway Venue 143,joint event,mutual,2021
+Newcastle Harbour Studio 092,Newcastle Bracken Gallery 001,shared programme,mutual,2022
+Sunderland Mosaic Gallery 093,Darlington Beacon Studio 004,shared programme,mutual,2023
+Middlesbrough Beacon Hall 094,Gateshead Bridgewater Venue 007,joint event,mutual,2024
+Darlington Willow Venue 095,Middlesbrough Highfield Hall 010,shared programme,mutual,2025
+Durham Cornerstone Studio 096,Hartlepool Northbank Gallery 013,shared programme,mutual,2021
+Hartlepool Bridgewater Gallery 097,Sunderland Hilltop Studio 016,joint event,mutual,2022
+Gateshead Hearth Hall 098,Durham Bracken Venue 019,shared programme,mutual,2023
+Newcastle Meadow Venue 099,Newcastle Beacon Hall 022,shared programme,mutual,2024
+Sunderland Highfield Studio 100,Darlington Bridgewater Gallery 025,joint event,mutual,2025
+Middlesbrough Lantern Gallery 101,Gateshead Highfield Studio 028,shared programme,mutual,2021
+Darlington Riverside Hall 102,Middlesbrough Northbank Venue 031,shared programme,mutual,2022
+Durham Northbank Venue 103,Hartlepool Hilltop Hall 034,joint event,mutual,2023
+Hartlepool Seedling Studio 104,Sunderland Bracken Gallery 037,shared programme,mutual,2024
+Gateshead Cedar Gallery 105,Durham Beacon Studio 040,shared programme,mutual,2025
+Newcastle Hilltop Hall 106,Newcastle Bridgewater Venue 043,joint event,mutual,2021
+Sunderland Tideway Venue 107,Darlington Highfield Hall 046,shared programme,mutual,2022
+Middlesbrough Foundry Studio 108,Gateshead Northbank Gallery 049,shared programme,mutual,2023
+Darlington Bracken Gallery 109,Middlesbrough Hilltop Studio 052,joint event,mutual,2024
+Durham Harbour Hall 110,Hartlepool Bracken Venue 055,shared programme,mutual,2025
+Hartlepool Mosaic Venue 111,Sunderland Beacon Hall 058,shared programme,mutual,2021
+Gateshead Beacon Studio 112,Durham Bridgewater Gallery 061,joint event,mutual,2022
+Newcastle Willow Gallery 113,Newcastle Highfield Studio 064,shared programme,mutual,2023
+Sunderland Cornerstone Hall 114,Darlington Northbank Venue 067,shared programme,mutual,2024
+Middlesbrough Bridgewater Venue 115,Gateshead Hilltop Hall 070,joint event,mutual,2025
+Darlington Hearth Studio 116,Middlesbrough Bracken Gallery 073,shared programme,mutual,2021
+Durham Meadow Gallery 117,Hartlepool Beacon Studio 076,shared programme,mutual,2022
+Hartlepool Highfield Hall 118,Sunderland Bridgewater Venue 079,joint event,mutual,2023
+Gateshead Lantern Venue 119,Durham Highfield Hall 082,shared programme,mutual,2024
+Newcastle Riverside Studio 120,Newcastle Northbank Gallery 085,shared programme,mutual,2025
+Sunderland Northbank Gallery 121,Darlington Hilltop Studio 088,joint event,mutual,2021
+Middlesbrough Seedling Hall 122,Gateshead Bracken Venue 091,shared programme,mutual,2022
+Darlington Cedar Venue 123,Middlesbrough Beacon Hall 094,shared programme,mutual,2023
+Durham Hilltop Studio 124,Hartlepool Bridgewater Gallery 097,joint event,mutual,2024
+Hartlepool Tideway Gallery 125,Sunderland Highfield Studio 100,shared programme,mutual,2025
+Gateshead Foundry Hall 126,Durham Northbank Venue 103,shared programme,mutual,2021
+Newcastle Bracken Venue 127,Newcastle Hilltop Hall 106,joint event,mutual,2022
+Sunderland Harbour Studio 128,Darlington Bracken Gallery 109,shared programme,mutual,2023
+Middlesbrough Mosaic Gallery 129,Gateshead Beacon Studio 112,shared programme,mutual,2024
+Darlington Beacon Hall 130,Middlesbrough Bridgewater Venue 115,joint event,mutual,2025
+Durham Willow Venue 131,Hartlepool Highfield Hall 118,shared programme,mutual,2021
+Hartlepool Cornerstone Studio 132,Sunderland Northbank Gallery 121,shared programme,mutual,2022
+Gateshead Bridgewater Gallery 133,Durham Hilltop Studio 124,joint event,mutual,2023
+Newcastle Hearth Hall 134,Newcastle Bracken Venue 127,shared programme,mutual,2024
+Sunderland Meadow Venue 135,Darlington Beacon Hall 130,shared programme,mutual,2025
+Middlesbrough Highfield Studio 136,Gateshead Bridgewater Gallery 133,joint event,mutual,2021
+Darlington Lantern Gallery 137,Middlesbrough Highfield Studio 136,shared programme,mutual,2022
+Durham Riverside Hall 138,Hartlepool Northbank Venue 139,shared programme,mutual,2023
+Hartlepool Northbank Venue 139,Sunderland Hilltop Hall 142,joint event,mutual,2024
+Gateshead Seedling Studio 140,Durham Bracken Gallery 145,shared programme,mutual,2025
+Newcastle Cedar Gallery 141,Middlesbrough Mosaic Venue 003,shared programme,mutual,2021
+Sunderland Hilltop Hall 142,Hartlepool Cornerstone Hall 006,joint event,mutual,2022
+Middlesbrough Tideway Venue 143,Sunderland Meadow Gallery 009,shared programme,mutual,2023
+Darlington Foundry Studio 144,Durham Riverside Studio 012,shared programme,mutual,2024
+Durham Bracken Gallery 145,Newcastle Cedar Venue 015,joint event,mutual,2025
+Newcastle Bracken Gallery 001,Darlington Foundry Hall 018,shared programme,mutual,2021
+Sunderland Harbour Hall 002,Gateshead Mosaic Gallery 021,shared programme,mutual,2022
+Middlesbrough Mosaic Venue 003,Middlesbrough Cornerstone Studio 024,joint event,mutual,2023
+Darlington Beacon Studio 004,Hartlepool Meadow Venue 027,shared programme,mutual,2024
+Durham Willow Gallery 005,Sunderland Riverside Hall 030,shared programme,mutual,2025
+Hartlepool Cornerstone Hall 006,Durham Cedar Gallery 033,joint event,mutual,2021
+Gateshead Bridgewater Venue 007,Newcastle Foundry Studio 036,shared programme,mutual,2022
+Newcastle Hearth Studio 008,Darlington Mosaic Venue 039,shared programme,mutual,2023
+Sunderland Meadow Gallery 009,Gateshead Cornerstone Hall 042,joint event,mutual,2024
+Middlesbrough Highfield Hall 010,Middlesbrough Meadow Gallery 045,shared programme,mutual,2025
+Darlington Lantern Venue 011,Hartlepool Riverside Studio 048,shared programme,mutual,2021
+Durham Riverside Studio 012,Sunderland Cedar Venue 051,joint event,mutual,2022
+Hartlepool Northbank Gallery 013,Durham Foundry Hall 054,shared programme,mutual,2023
+Gateshead Seedling Hall 014,Newcastle Mosaic Gallery 057,shared programme,mutual,2024
+Newcastle Cedar Venue 015,Darlington Cornerstone Studio 060,joint event,mutual,2025
+Sunderland Hilltop Studio 016,Gateshead Meadow Venue 063,shared programme,mutual,2021
+Middlesbrough Tideway Gallery 017,Middlesbrough Riverside Hall 066,shared programme,mutual,2022
+Darlington Foundry Hall 018,Hartlepool Cedar Gallery 069,joint event,mutual,2023
+Durham Bracken Venue 019,Sunderland Foundry Studio 072,shared programme,mutual,2024
+Hartlepool Harbour Studio 020,Durham Mosaic Venue 075,shared programme,mutual,2025
+Gateshead Mosaic Gallery 021,Newcastle Cornerstone Hall 078,joint event,mutual,2021
+Newcastle Beacon Hall 022,Darlington Meadow Gallery 081,shared programme,mutual,2022
+Sunderland Willow Venue 023,Gateshead Riverside Studio 084,shared programme,mutual,2023
+Middlesbrough Cornerstone Studio 024,Middlesbrough Cedar Venue 087,joint event,mutual,2024
+Darlington Bridgewater Gallery 025,Hartlepool Foundry Hall 090,shared programme,mutual,2025
+Durham Hearth Hall 026,Sunderland Mosaic Gallery 093,shared programme,mutual,2021
+Hartlepool Meadow Venue 027,Durham Cornerstone Studio 096,joint event,mutual,2022
+Gateshead Highfield Studio 028,Newcastle Meadow Venue 099,shared programme,mutual,2023
+Newcastle Lantern Gallery 029,Darlington Riverside Hall 102,shared programme,mutual,2024
+Sunderland Riverside Hall 030,Gateshead Cedar Gallery 105,joint event,mutual,2025
+Middlesbrough Northbank Venue 031,Middlesbrough Foundry Studio 108,shared programme,mutual,2021
+Darlington Seedling Studio 032,Hartlepool Mosaic Venue 111,shared programme,mutual,2022
+Durham Cedar Gallery 033,Sunderland Cornerstone Hall 114,joint event,mutual,2023
+Hartlepool Hilltop Hall 034,Durham Meadow Gallery 117,shared programme,mutual,2024
+Gateshead Tideway Venue 035,Newcastle Riverside Studio 120,shared programme,mutual,2025
+Newcastle Foundry Studio 036,Darlington Cedar Venue 123,joint event,mutual,2021
+Sunderland Bracken Gallery 037,Gateshead Foundry Hall 126,shared programme,mutual,2022
+Middlesbrough Harbour Hall 038,Middlesbrough Mosaic Gallery 129,shared programme,mutual,2023
+Darlington Mosaic Venue 039,Hartlepool Cornerstone Studio 132,joint event,mutual,2024
+Durham Beacon Studio 040,Sunderland Meadow Venue 135,shared programme,mutual,2025
+Hartlepool Willow Gallery 041,Durham Riverside Hall 138,shared programme,mutual,2021
+Gateshead Cornerstone Hall 042,Newcastle Cedar Gallery 141,joint event,mutual,2022
+Newcastle Bridgewater Venue 043,Darlington Foundry Studio 144,shared programme,mutual,2023
+Sunderland Hearth Studio 044,Sunderland Harbour Hall 002,shared programme,mutual,2024
+Middlesbrough Meadow Gallery 045,Durham Willow Gallery 005,joint event,mutual,2025
+Darlington Highfield Hall 046,Newcastle Hearth Studio 008,shared programme,mutual,2021
+Durham Lantern Venue 047,Darlington Lantern Venue 011,shared programme,mutual,2022
+Hartlepool Riverside Studio 048,Gateshead Seedling Hall 014,joint event,mutual,2023
+Gateshead Northbank Gallery 049,Middlesbrough Tideway Gallery 017,shared programme,mutual,2024
+Newcastle Seedling Hall 050,Hartlepool Harbour Studio 020,shared programme,mutual,2025
+Sunderland Cedar Venue 051,Sunderland Willow Venue 023,joint event,mutual,2021
+Middlesbrough Hilltop Studio 052,Durham Hearth Hall 026,shared programme,mutual,2022
+Darlington Tideway Gallery 053,Newcastle Lantern Gallery 029,shared programme,mutual,2023
+Durham Foundry Hall 054,Darlington Seedling Studio 032,joint event,mutual,2024
+Hartlepool Bracken Venue 055,Gateshead Tideway Venue 035,shared programme,mutual,2025
+Gateshead Harbour Studio 056,Middlesbrough Harbour Hall 038,shared programme,mutual,2021
+Newcastle Mosaic Gallery 057,Hartlepool Willow Gallery 041,joint event,mutual,2022
+Sunderland Beacon Hall 058,Sunderland Hearth Studio 044,shared programme,mutual,2023
+Middlesbrough Willow Venue 059,Durham Lantern Venue 047,shared programme,mutual,2024
+Darlington Cornerstone Studio 060,Newcastle Seedling Hall 050,joint event,mutual,2025
+Durham Bridgewater Gallery 061,Darlington Tideway Gallery 053,shared programme,mutual,2021
+Hartlepool Hearth Hall 062,Gateshead Harbour Studio 056,shared programme,mutual,2022
+Gateshead Meadow Venue 063,Middlesbrough Willow Venue 059,joint event,mutual,2023
+Newcastle Highfield Studio 064,Hartlepool Hearth Hall 062,shared programme,mutual,2024
+Sunderland Lantern Gallery 065,Sunderland Lantern Gallery 065,shared programme,mutual,2025
+Fictional Arts Promoter 001,Darlington Beacon Studio 004,hosts activity at,directed,2021
+Fictional Arts Promoter 002,Newcastle Cedar Venue 015,hosts activity at,directed,2022
+Fictional Arts Promoter 003,Durham Hearth Hall 026,hosts activity at,directed,2023
+Fictional Arts Promoter 004,Sunderland Bracken Gallery 037,hosts activity at,directed,2024
+Fictional Arts Promoter 005,Hartlepool Riverside Studio 048,hosts activity at,directed,2025
+Fictional Arts Promoter 006,Middlesbrough Willow Venue 059,hosts activity at,directed,2021
+Fictional Arts Promoter 007,Gateshead Hilltop Hall 070,hosts activity at,directed,2022
+Fictional Arts Promoter 008,Darlington Meadow Gallery 081,hosts activity at,directed,2023
+Fictional Arts Promoter 009,Newcastle Harbour Studio 092,hosts activity at,directed,2024
+Fictional Arts Promoter 010,Durham Northbank Venue 103,hosts activity at,directed,2025
+Fictional Arts Promoter 011,Sunderland Cornerstone Hall 114,hosts activity at,directed,2021
+Fictional Arts Promoter 012,Hartlepool Tideway Gallery 125,hosts activity at,directed,2022
+Fictional Arts Promoter 013,Middlesbrough Highfield Studio 136,hosts activity at,directed,2023
+Fictional Arts Promoter 014,Sunderland Harbour Hall 002,hosts activity at,directed,2024
+Fictional Arts Promoter 015,Hartlepool Northbank Gallery 013,hosts activity at,directed,2025
+Fictional Arts Promoter 016,Middlesbrough Cornerstone Studio 024,hosts activity at,directed,2021
+Fictional Arts Promoter 017,Gateshead Tideway Venue 035,hosts activity at,directed,2022
+Fictional Arts Promoter 018,Darlington Highfield Hall 046,hosts activity at,directed,2023
+Fictional Arts Promoter 019,Newcastle Mosaic Gallery 057,hosts activity at,directed,2024
+Fictional Arts Promoter 020,Durham Seedling Studio 068,hosts activity at,directed,2025
+Fictional Arts Promoter 021,Sunderland Bridgewater Venue 079,hosts activity at,directed,2021
+Fictional Arts Promoter 022,Hartlepool Foundry Hall 090,hosts activity at,directed,2022
+Fictional Arts Promoter 023,Middlesbrough Lantern Gallery 101,hosts activity at,directed,2023
+Fictional Arts Promoter 024,Gateshead Beacon Studio 112,hosts activity at,directed,2024
+Fictional Arts Promoter 001,Darlington Cedar Venue 123,hosts activity at,directed,2025
+Fictional Arts Promoter 002,Newcastle Hearth Hall 134,hosts activity at,directed,2021
+Fictional Arts Promoter 003,Durham Bracken Gallery 145,hosts activity at,directed,2022
+Fictional Arts Promoter 004,Darlington Lantern Venue 011,hosts activity at,directed,2023
+Fictional Arts Promoter 005,Newcastle Beacon Hall 022,hosts activity at,directed,2024
+Fictional Arts Promoter 006,Durham Cedar Gallery 033,hosts activity at,directed,2025
+Fictional Arts Promoter 007,Sunderland Hearth Studio 044,hosts activity at,directed,2021
+Fictional Arts Promoter 008,Hartlepool Bracken Venue 055,hosts activity at,directed,2022
+Fictional Arts Promoter 009,Middlesbrough Riverside Hall 066,hosts activity at,directed,2023
+Fictional Arts Promoter 010,Gateshead Willow Gallery 077,hosts activity at,directed,2024
+Fictional Arts Promoter 011,Darlington Hilltop Studio 088,hosts activity at,directed,2025
+Fictional Arts Promoter 012,Newcastle Meadow Venue 099,hosts activity at,directed,2021
+Fictional Arts Promoter 013,Durham Harbour Hall 110,hosts activity at,directed,2022
+Fictional Arts Promoter 014,Sunderland Northbank Gallery 121,hosts activity at,directed,2023
+Fictional Arts Promoter 015,Hartlepool Cornerstone Studio 132,hosts activity at,directed,2024
+Fictional Arts Promoter 016,Middlesbrough Tideway Venue 143,hosts activity at,directed,2025
+Fictional Arts Promoter 017,Sunderland Meadow Gallery 009,hosts activity at,directed,2021
+Fictional Arts Promoter 018,Hartlepool Harbour Studio 020,hosts activity at,directed,2022
+Fictional Arts Promoter 019,Middlesbrough Northbank Venue 031,hosts activity at,directed,2023
+Fictional Arts Promoter 020,Gateshead Cornerstone Hall 042,hosts activity at,directed,2024
+Fictional Arts Promoter 021,Darlington Tideway Gallery 053,hosts activity at,directed,2025
+Fictional Arts Promoter 022,Newcastle Highfield Studio 064,hosts activity at,directed,2021
+Fictional Arts Promoter 023,Durham Mosaic Venue 075,hosts activity at,directed,2022
+Fictional Arts Promoter 024,Sunderland Seedling Hall 086,hosts activity at,directed,2023
+Fictional Arts Promoter 001,Hartlepool Bridgewater Gallery 097,hosts activity at,directed,2024
+Fictional Arts Promoter 002,Middlesbrough Foundry Studio 108,hosts activity at,directed,2025
+Fictional Arts Promoter 003,Gateshead Lantern Venue 119,hosts activity at,directed,2021
+Fictional Arts Promoter 004,Darlington Beacon Hall 130,hosts activity at,directed,2022
+Fictional Arts Promoter 005,Newcastle Cedar Gallery 141,hosts activity at,directed,2023
+Fictional Arts Promoter 006,Gateshead Bridgewater Venue 007,hosts activity at,directed,2024
+Fictional Arts Promoter 007,Darlington Foundry Hall 018,hosts activity at,directed,2025
+Fictional Arts Promoter 008,Newcastle Lantern Gallery 029,hosts activity at,directed,2021
+Fictional Arts Promoter 009,Durham Beacon Studio 040,hosts activity at,directed,2022
+Fictional Arts Promoter 010,Sunderland Cedar Venue 051,hosts activity at,directed,2023
+Fictional Arts Promoter 011,Hartlepool Hearth Hall 062,hosts activity at,directed,2024
+Fictional Arts Promoter 012,Middlesbrough Bracken Gallery 073,hosts activity at,directed,2025
+Fictional Arts Promoter 013,Gateshead Riverside Studio 084,hosts activity at,directed,2021
+Fictional Arts Promoter 014,Darlington Willow Venue 095,hosts activity at,directed,2022
+Fictional Arts Promoter 015,Newcastle Hilltop Hall 106,hosts activity at,directed,2023
+Fictional Arts Promoter 016,Durham Meadow Gallery 117,hosts activity at,directed,2024
+Fictional Arts Promoter 017,Sunderland Harbour Studio 128,hosts activity at,directed,2025
+Fictional Arts Promoter 018,Hartlepool Northbank Venue 139,hosts activity at,directed,2021
+Fictional Arts Promoter 019,Durham Willow Gallery 005,hosts activity at,directed,2022
+Fictional Arts Promoter 020,Sunderland Hilltop Studio 016,hosts activity at,directed,2023
+Fictional Arts Promoter 021,Hartlepool Meadow Venue 027,hosts activity at,directed,2024
+Fictional Arts Promoter 022,Middlesbrough Harbour Hall 038,hosts activity at,directed,2025
+Fictional Arts Promoter 023,Gateshead Northbank Gallery 049,hosts activity at,directed,2021
+Fictional Arts Promoter 024,Darlington Cornerstone Studio 060,hosts activity at,directed,2022
+Fictional Arts Promoter 001,Newcastle Tideway Venue 071,hosts activity at,directed,2023
+Fictional Arts Promoter 002,Durham Highfield Hall 082,hosts activity at,directed,2024
+Fictional Arts Promoter 003,Sunderland Mosaic Gallery 093,hosts activity at,directed,2025
+Fictional Arts Promoter 004,Hartlepool Seedling Studio 104,hosts activity at,directed,2021
+Fictional Arts Promoter 005,Middlesbrough Bridgewater Venue 115,hosts activity at,directed,2022
+Fictional Arts Promoter 006,Gateshead Foundry Hall 126,hosts activity at,directed,2023
+Fictional Arts Promoter 007,Darlington Lantern Gallery 137,hosts activity at,directed,2024
+Fictional Arts Promoter 008,Middlesbrough Mosaic Venue 003,hosts activity at,directed,2025
+Fictional Arts Promoter 009,Gateshead Seedling Hall 014,hosts activity at,directed,2021
+Fictional Arts Promoter 010,Darlington Bridgewater Gallery 025,hosts activity at,directed,2022
+Fictional Arts Promoter 011,Newcastle Foundry Studio 036,hosts activity at,directed,2023
+Fictional Arts Promoter 012,Durham Lantern Venue 047,hosts activity at,directed,2024
+Fictional Arts Promoter 013,Sunderland Beacon Hall 058,hosts activity at,directed,2025
+Fictional Arts Promoter 014,Hartlepool Cedar Gallery 069,hosts activity at,directed,2021
+Fictional Arts Promoter 015,Middlesbrough Hearth Studio 080,hosts activity at,directed,2022
+Fictional Arts Promoter 016,Gateshead Bracken Venue 091,hosts activity at,directed,2023
+Fictional Arts Promoter 017,Darlington Riverside Hall 102,hosts activity at,directed,2024
+Fictional Arts Promoter 018,Newcastle Willow Gallery 113,hosts activity at,directed,2025
+Fictional Arts Promoter 019,Durham Hilltop Studio 124,hosts activity at,directed,2021
+Fictional Arts Promoter 020,Sunderland Meadow Venue 135,hosts activity at,directed,2022
+Fictional Arts Promoter 021,Newcastle Bracken Gallery 001,hosts activity at,directed,2023
+Fictional Arts Promoter 022,Durham Riverside Studio 012,hosts activity at,directed,2024
+Fictional Arts Promoter 023,Sunderland Willow Venue 023,hosts activity at,directed,2025
+Fictional Arts Promoter 024,Hartlepool Hilltop Hall 034,hosts activity at,directed,2021
+Fictional Arts Promoter 001,Middlesbrough Meadow Gallery 045,hosts activity at,directed,2022
+Fictional Arts Promoter 002,Gateshead Harbour Studio 056,hosts activity at,directed,2023
+Fictional Arts Promoter 003,Darlington Northbank Venue 067,hosts activity at,directed,2024
+Fictional Arts Promoter 004,Newcastle Cornerstone Hall 078,hosts activity at,directed,2025
+Fictional Arts Promoter 005,Durham Tideway Gallery 089,hosts activity at,directed,2021
+Fictional Arts Promoter 006,Sunderland Highfield Studio 100,hosts activity at,directed,2022
+Fictional Arts Promoter 007,Hartlepool Mosaic Venue 111,hosts activity at,directed,2023
+Fictional Arts Promoter 008,Middlesbrough Seedling Hall 122,hosts activity at,directed,2024
+Fictional Arts Promoter 009,Gateshead Bridgewater Gallery 133,hosts activity at,directed,2025
+Fictional Arts Promoter 010,Darlington Foundry Studio 144,hosts activity at,directed,2021
+Fictional Arts Promoter 011,Middlesbrough Highfield Hall 010,hosts activity at,directed,2022
+Fictional Arts Promoter 012,Gateshead Mosaic Gallery 021,hosts activity at,directed,2023
+Fictional Arts Promoter 013,Darlington Seedling Studio 032,hosts activity at,directed,2024
+Fictional Arts Promoter 014,Newcastle Bridgewater Venue 043,hosts activity at,directed,2025
+Fictional Arts Promoter 015,Durham Foundry Hall 054,hosts activity at,directed,2021
+Fictional Arts Promoter 016,Sunderland Lantern Gallery 065,hosts activity at,directed,2022
+Fictional Arts Promoter 017,Hartlepool Beacon Studio 076,hosts activity at,directed,2023
+Fictional Arts Promoter 018,Middlesbrough Cedar Venue 087,hosts activity at,directed,2024
+Fictional Arts Promoter 019,Gateshead Hearth Hall 098,hosts activity at,directed,2025
+Fictional Arts Promoter 020,Darlington Bracken Gallery 109,hosts activity at,directed,2021
+Fictional Arts Promoter 021,Newcastle Riverside Studio 120,hosts activity at,directed,2022
+Fictional Arts Promoter 022,Durham Willow Venue 131,hosts activity at,directed,2023
+Fictional Arts Promoter 023,Sunderland Hilltop Hall 142,hosts activity at,directed,2024
+Fictional Arts Promoter 024,Newcastle Hearth Studio 008,hosts activity at,directed,2025
+Newcastle Bracken Gallery 001,Hartlepool Bracken Venue 055,touring route,directed,2024
+Durham Willow Gallery 005,Middlesbrough Willow Venue 059,touring route,directed,2024
+Sunderland Meadow Gallery 009,Gateshead Meadow Venue 063,touring route,directed,2024
+Hartlepool Northbank Gallery 013,Darlington Northbank Venue 067,touring route,directed,2024
+Middlesbrough Tideway Gallery 017,Newcastle Tideway Venue 071,touring route,directed,2024
+Gateshead Mosaic Gallery 021,Durham Mosaic Venue 075,touring route,directed,2024
+Darlington Bridgewater Gallery 025,Sunderland Bridgewater Venue 079,touring route,directed,2024
+Newcastle Lantern Gallery 029,Hartlepool Lantern Venue 083,touring route,directed,2024
+Durham Cedar Gallery 033,Middlesbrough Cedar Venue 087,touring route,directed,2024
+Sunderland Bracken Gallery 037,Gateshead Bracken Venue 091,touring route,directed,2024
+Hartlepool Willow Gallery 041,Darlington Willow Venue 095,touring route,directed,2024
+Middlesbrough Meadow Gallery 045,Newcastle Meadow Venue 099,touring route,directed,2024
+Gateshead Northbank Gallery 049,Durham Northbank Venue 103,touring route,directed,2024
+Darlington Tideway Gallery 053,Sunderland Tideway Venue 107,touring route,directed,2024
+Newcastle Mosaic Gallery 057,Hartlepool Mosaic Venue 111,touring route,directed,2024
+Durham Bridgewater Gallery 061,Middlesbrough Bridgewater Venue 115,touring route,directed,2024
+Sunderland Lantern Gallery 065,Gateshead Lantern Venue 119,touring route,directed,2024
+Hartlepool Cedar Gallery 069,Darlington Cedar Venue 123,touring route,directed,2024
+Middlesbrough Bracken Gallery 073,Newcastle Bracken Venue 127,touring route,directed,2024
+Gateshead Willow Gallery 077,Durham Willow Venue 131,touring route,directed,2024
+Darlington Meadow Gallery 081,Sunderland Meadow Venue 135,touring route,directed,2024
+Newcastle Northbank Gallery 085,Hartlepool Northbank Venue 139,touring route,directed,2024
+Durham Tideway Gallery 089,Middlesbrough Tideway Venue 143,touring route,directed,2024
+Sunderland Mosaic Gallery 093,Sunderland Harbour Hall 002,touring route,directed,2024
+Hartlepool Bridgewater Gallery 097,Hartlepool Cornerstone Hall 006,touring route,directed,2024
+Middlesbrough Lantern Gallery 101,Middlesbrough Highfield Hall 010,touring route,directed,2024
+Gateshead Cedar Gallery 105,Gateshead Seedling Hall 014,touring route,directed,2024
+Darlington Bracken Gallery 109,Darlington Foundry Hall 018,touring route,directed,2024
