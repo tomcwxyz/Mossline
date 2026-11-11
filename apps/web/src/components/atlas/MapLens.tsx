@@ -309,6 +309,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         // Direct edit on the map, without going through a separate editing mode.
         // Prevent default double-click zoom only when a source-backed point is hit.
         map.on("dblclick", event => {
+          if(!map)return;
           const hit=map.queryRenderedFeatures(event.point,{layers:["records","places"]})[0];
           if(hit && editNode.current){
             event.preventDefault();
