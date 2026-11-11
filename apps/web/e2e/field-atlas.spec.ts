@@ -24,7 +24,7 @@ test("Field Atlas keeps selection and filters across five lenses and in the URL"
   await page.locator(".ml-data-toggle").click();
   const first=page.locator(".ml-data-table tbody tr").first();
   const name=await first.locator(".ml-data-cell-edit").innerText();
-  await first.click();
+  await first.locator(".ml-data-locate").click();
   await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   const url=new URL(page.url());
   expect(url.searchParams.get("record")).toBeTruthy();
