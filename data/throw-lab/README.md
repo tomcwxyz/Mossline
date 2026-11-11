@@ -6,6 +6,30 @@ A deliberately awkward, completely fictional set of inputs that answers one ques
 
 This is the executable companion to [the product decision](../../docs/THROW_SEE_EDIT.md).
 
+## Larger, explorable datasets
+
+The [eight richer examples](./rich-catalogue.json) are the **primary experiences** on the
+[Throw Lab page](/throw-lab). They use the normal Mossy import worker and
+the very same source CSV/JSON files available to download. They include
+connected communities, geographical arts networks, six years of grants,
+food supply routes, volunteer sessions, wildlife observations, thematic
+project records and a mixed CSV/JSON network. Their patterns are intentional
+and recorded in the source data: no decorative, disconnected mock diagrams.
+
+The source assets live in `apps/web/public/throw-lab/` and are built
+deterministically from `generate-rich.mjs`:
+
+```sh
+node data/throw-lab/generate-rich.mjs
+npm run test
+```
+
+`packages/graph-core/test/throw-lab-rich.test.ts` checks imported record
+counts, recorded links, provenance and linked geography (or deliberately
+no links). The gallery's **Explore in Mossy** links open the actual source
+files as a *new*, unsaved import review. The visitor must choose to create
+the map; nothing is silently written.
+
 ## What is recorded
 
 [`catalogue.json`](./catalogue.json) tracks **60 distinct cases in six structural families**:
@@ -18,7 +42,7 @@ This is the executable companion to [the product decision](../../docs/THROW_SEE_
 
 Each case describes its input, ideal first view, what the user should be able to edit, and one kind of mistake Mossy must never make. The current catalogue includes **24 small, executable text/JSON fixtures** and **36 explicitly unimplemented/untested scenarios**. Do not mistake the size of this catalogue for the number of capabilities shipped.
 
-The executable cases are deliberately embedded in the manifest so a tester can inspect the input without generating a workbook or installing an external fixture package. They use wholly invented names and identifiers; never add real contact or confidential data to the repository.
+The original small executable cases are deliberately embedded in the manifest so a tester can inspect the input without generating a workbook or installing an external fixture package. They use wholly invented names and identifiers; never add real contact or confidential data to the repository.
 
 ## Run
 
