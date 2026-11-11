@@ -28,7 +28,7 @@ async function person(browser:Browser){
   return context.newPage();
 }
 const findRecord=async(page:Page,name:string)=>{
-  await page.getByRole("button",{name:/Browse records/}).click();
+  await page.locator(".ml-data-toggle").click();
   await page.locator(".ml-search input").fill(name);
 };
 
