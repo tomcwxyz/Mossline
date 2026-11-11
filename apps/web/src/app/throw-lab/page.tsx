@@ -50,7 +50,7 @@ export default function ThrowLabPage(){
           </div>
         </div>
         <div className="ml-start-example-grid">
-          {runnable.map((item,index)=><article key={item.id} className={"ml-start-example"+(index===0?" is-featured":"")}>
+          {runnable.map(item=><article key={item.id} className="ml-start-example">
             <div className="ml-start-example-copy">
               <p className="ml-start-eyebrow">{familyName(item.family)} · {item.format}</p>
               <h3>{item.title}</h3>
