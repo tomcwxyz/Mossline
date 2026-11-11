@@ -135,12 +135,19 @@ test("a suggested spreadsheet gets a review and can be reinterpreted",async({pag
   await expect(page.getByRole("combobox",{name:"Read as"})).toBeVisible();
 });
 
-test("a relationship-only CSV never claims to create a complete network",async({page})=>{
+test("a standalone relationship CSV reveals real links between minimal, editable endpoints",async({page})=>{
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.locator(".ml-add-drop input[type=file]").setInputFiles({
-    name:"links.csv",mimeType:"text/csv",buffer:Buffer.from("From,To,Relationship\nAlice,Bob,helps\n")
+    name:"links.csv",mimeType:"text/csv",
+    buffer:Buffer.from("From,To,Relationship\nAlice,Bob,helps\nBob,Charlie,works with\n")
   });
-  await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
-  await expect(page.getByRole("button",{name:/Check what this adds/})).toBeDisabled();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.locator(".ml-add-totals")).toContainText("3new records");
+  await expect(page.locator(".ml-add-totals")).toContainText("2new recorded links");
+  await expect(page.getByText(/Their identities and types have not been verified/)).toBeVisible();
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.locator(".ml-dataset summary small")).toContainText("3 records · 2 recorded links");
+  await page.getByRole("button",{name:"Edit"}).click();
+  await expect(page.getByRole("button",{name:"Done"})).toBeVisible();
 });
