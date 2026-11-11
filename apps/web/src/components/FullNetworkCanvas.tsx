@@ -1,5 +1,7 @@
 "use client";
 
+import {drawNetworkLabels} from "../lib/network-labels";
+
 import {useEffect,useMemo,useRef,useState,type PointerEvent as ReactPointerEvent} from "react";
 import {focusFullNetwork,atlasDetailLevel,visibleAtlasNodeLabels,canvasPixelRatio,
   buildSmoothStrokeVertices,STROKE_STRIDE,
@@ -451,15 +453,7 @@ export function FullNetworkCanvas({geometry,selectedId,onSelect,onUnavailable,
        if(!selection){
          const labels=visibleAtlasNodeLabels(geometry,c.zoom,
            c.offsetX,c.offsetY,w,h,w<650?8:26);
-         for(const node of labels){
-           const isHub=geometry.degreeSizes[node.index]>9;
-           context.fillStyle=isHub?"rgba(20,56,43,.89)":"rgba(21,48,41,.77)";
-           context.font=isHub?"600 11px system-ui":"10px system-ui";
-           const tw=context.measureText(node.label).width;
-           context.fillRect(node.x-3,node.y-2,tw+10,18);
-           context.fillStyle=isHub?"#f2e6b7":"#d5e5d0";
-           context.fillText(node.label,node.x+2,node.y+11);
-         }
+         drawNetworkLabels(context,labels,index=>geometry.degreeSizes[index]>9,w,h,c.zoom);
        }
        if(!selection)return;
        const i=selection.nodeIndex;
