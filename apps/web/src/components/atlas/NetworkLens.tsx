@@ -549,7 +549,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       </g>
     </svg>
     <div ref={container} className="ml-sigma-viewport" role="img"
-      aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
+      aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Open Data for the accessible record list.`}/>
     <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
@@ -568,7 +568,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       {status === "laying-out" ? "Arranging by recorded links… · " : ""}
       {graph.nodes.length.toLocaleString("en-GB")} records · {recorded.toLocaleString("en-GB")} recorded links
       {mode === "network" && <> · {suggestions.toLocaleString("en-GB")} suggestions</>}
-      {status === "error" && " · This device cannot draw the network; Browse records lists everything."}
+      {status === "error" && " · This device cannot draw the network; Data lists every record."}
     </p>
   </section>;
 }
