@@ -1,10 +1,11 @@
 import type {Metadata} from "next";
 import catalogueData from "../../../../../data/throw-lab/catalogue.json";
 import {Wordmark} from "../../components/atlas/Wordmark";
+import {RICH_LAB_EXAMPLES} from "../../lib/throw-lab-examples";
 
 export const metadata:Metadata={
   title:"Throw Lab · Mossy",
-  description:"Real fictional files to test how Mossy reads lists, relationships, measurements, places and mixed data. See what already works and what's next."
+  description:"Explore rich fictional source datasets in Mossy, from connected communities and food routes to grants, cultural geography and wildlife."
 };
 
 type Case={
@@ -37,19 +38,55 @@ export default function ThrowLabPage(){
       <section className="ml-showcase-intro">
         <p className="ml-start-eyebrow">Try something unexpected</p>
         <h1>What can you throw at Mossy?</h1>
-        <p>A workbench of entirely fictional datasets. Each one has an intended result and a specific mistake Mossy must avoid. Download the actual source, add it in Mossy, and see whether it makes sense.</p>
-        <p><strong>{runnable.length} engine-tested input cases</strong> and {gaps.length} tracked gaps. Being able to import a file does not yet guarantee the ideal chart or interpretation works. This is a transparent alpha, not a compatibility claim.</p>
+        <p>A workbench of entirely fictional datasets. Start with the larger worlds below: each has enough records, relationships and variation to find something interesting. Explore the actual files in Mossy, then change how they're read.</p>
+        <p><strong>{RICH_LAB_EXAMPLES.length} substantial datasets</strong>, {runnable.length} small engine-tested input cases and {gaps.length} tracked gaps. This is a transparent alpha: being able to read a source doesn't mean every ideal visualisation is ready yet.</p>
         <a className="ml-solid ml-account-button" href="/">Open Mossy to add a file →</a>
+      </section>
+      <section aria-labelledby="lab-rich">
+        <div className="ml-start-examples-head">
+          <div>
+            <p className="ml-start-eyebrow">Start exploring</p>
+            <h2 id="lab-rich">Eight richer worlds to investigate</h2>
+            <p>Hundreds of source records per example. Some form real recorded networks, some belong on maps, and some have no links at all. They use the same import journey as your own files.</p>
+          </div>
+        </div>
+        <div className="ml-start-example-grid ml-throw-rich-grid">
+          {RICH_LAB_EXAMPLES.map((item,index)=><article key={item.id} className="ml-start-example ml-throw-rich-card">
+            <div className="ml-start-example-copy">
+              <p className="ml-start-eyebrow">{String(index+1).padStart(2,"0")} / {item.group}</p>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <p className="ml-example-facts">{item.stats}</p>
+              <div className="ml-throw-patterns">
+                <strong>Things worth looking for</strong>
+                <ul>{item.observations.map(pattern=><li key={pattern}>{pattern}</li>)}</ul>
+              </div>
+              <p><strong>Try:</strong> {item.whatToTry}</p>
+              <p className="ml-small"><strong>Remember:</strong> {item.caveat}</p>
+              <div className="ml-start-example-actions">
+                <a href={"/?throw="+encodeURIComponent(item.id)} className="ml-example-open">Explore in Mossy →</a>
+                <details className="ml-example-download">
+                  <summary>Download source files</summary>
+                  {item.files.map(file=><a href={file.path} download={file.name} key={file.path}>
+                    {file.name} · {file.rows.toLocaleString("en-GB")} rows</a>)}
+                  <small>Open the files together to preserve relationships across sources.</small>
+                </details>
+              </div>
+            </div>
+          </article>)}
+        </div>
       </section>
       <section aria-labelledby="lab-ready">
         <div className="ml-start-examples-head">
           <div>
-            <p className="ml-start-eyebrow">Actual raw inputs</p>
-            <h2 id="lab-ready">Try the files</h2>
-            <p>Use the download links, then drop the file or files into <strong>Add your data</strong>. Some examples intentionally need better charting or interpretation; that is part of what we are testing.</p>
+            <p className="ml-start-eyebrow">For checking the details</p>
+            <h2 id="lab-ready">Small parser tests</h2>
+            <p>These intentionally small fixtures catch particular import mistakes. They aren't intended to be an impressive map or network; use the larger examples above for that.</p>
           </div>
         </div>
-        <div className="ml-start-example-grid">
+        <details className="ml-throw-small">
+          <summary>Show all {runnable.length} small source fixtures</summary>
+          <div className="ml-start-example-grid">
           {runnable.map(item=><article key={item.id} className="ml-start-example">
             <div className="ml-start-example-copy">
               <p className="ml-start-eyebrow">{familyName(item.family)} · {item.format}</p>
@@ -64,7 +101,8 @@ export default function ThrowLabPage(){
               </details>
             </div>
           </article>)}
-        </div>
+          </div>
+        </details>
       </section>
       <section className="ml-showcase-community" aria-labelledby="lab-gaps">
         <p className="ml-start-eyebrow">The honest backlog</p>
