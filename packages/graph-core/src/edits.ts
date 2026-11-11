@@ -1,6 +1,7 @@
 import { strToU8, zipSync } from "fflate";
 import { z } from "zod";
 import { edgePolarity, readPolarity, type Polarity } from "./systems";
+import { readAtlasLocation } from "./geography";
 import {
   graphEdgeSchema, graphNodeSchema, nodeTypeSchema, parseGraphDocument,
   type GraphDocument, type GraphEdge, type GraphNode, type NodeType, type SourceOrigin
@@ -14,7 +15,9 @@ import {
  */
 const nodeFields = z.object({
   label: z.string().min(1).max(200), type: nodeTypeSchema, description: z.string().max(4000),
-  region: z.string().max(200), tags: z.array(z.string().max(80)).max(40), postcode: z.string().max(12)
+  region: z.string().max(200), tags: z.array(z.string().max(80)).max(40), postcode: z.string().max(12),
+  /** A deliberate manual location override, distinct from source-provided coordinates. */
+  location: z.object({latitude:z.number().min(-90).max(90),longitude:z.number().min(-180).max(180)}).nullable()
 }).partial();
 const edgeFields = z.object({
   type: z.string().min(1).max(120), direction: z.enum(["directed", "undirected", "mutual"]),
@@ -77,6 +80,12 @@ function nodeWith(node: GraphNode, set: NodeFields): GraphNode {
   if (set.type !== undefined) next.type = set.type;
   if (set.description !== undefined) { if (set.description) next.description = set.description; else delete next.description; }
   if (set.region !== undefined) { if (set.region) next.region = set.region; else delete next.region; }
+  if (set.location !== undefined) {
+    // The source's original Latitude/Longitude fields stay intact. A separate
+    // Atlas location always takes precedence, and is fully undoable.
+    next.properties!["Atlas location"] = set.location===null?""
+      :set.location.latitude+", "+set.location.longitude;
+  }
   if (set.postcode !== undefined) {
     if (set.postcode) next.properties!.Postcode = set.postcode; else delete next.properties!.Postcode;
     // A new postcode needs a fresh approximate place; the old one no longer applies.
@@ -105,6 +114,7 @@ export function nodeValues(node: GraphNode, keys: (keyof NodeFields)[]): NodeFie
     else if (k === "type") out.type = node.type;
     else if (k === "description") out.description = node.description ?? "";
     else if (k === "region") out.region = node.region ?? "";
+    else if (k === "location") out.location = readAtlasLocation(node);
   }
   return out;
 }
