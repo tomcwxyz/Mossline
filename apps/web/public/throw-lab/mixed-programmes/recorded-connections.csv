@@ -1,356 +1,356 @@
 From,To,Relationship,Direction
-Hartlepool Cornerstone Social Group 006,Newcastle Food Initiative 001,shares resources with,directed
-Sunderland Meadow Social Group 009,Sunderland Health Initiative 002,helps deliver,directed
-Durham Riverside Social Group 012,Middlesbrough Housing Initiative 003,helps deliver,directed
-Newcastle Cedar Social Group 015,Darlington Nature Initiative 004,helps deliver,directed
-Darlington Foundry Social Group 018,Durham Transport Initiative 005,shares resources with,directed
-Gateshead Mosaic Social Group 021,Hartlepool Culture Initiative 006,helps deliver,directed
-Middlesbrough Cornerstone Social Group 024,Gateshead Young people Initiative 007,helps deliver,directed
-Hartlepool Meadow Social Group 027,Newcastle Energy Initiative 008,helps deliver,directed
-Sunderland Riverside Social Group 030,Sunderland Community care Initiative 009,shares resources with,directed
-Durham Cedar Social Group 033,Middlesbrough Learning Initiative 010,helps deliver,directed
-Newcastle Foundry Social Group 036,Darlington Food Initiative 011,helps deliver,directed
-Darlington Mosaic Social Group 039,Durham Health Initiative 012,helps deliver,directed
-Gateshead Cornerstone Social Group 042,Hartlepool Housing Initiative 013,shares resources with,directed
-Middlesbrough Meadow Social Group 045,Gateshead Nature Initiative 014,helps deliver,directed
-Hartlepool Riverside Social Group 048,Newcastle Transport Initiative 015,helps deliver,directed
-Sunderland Cedar Social Group 051,Sunderland Culture Initiative 016,helps deliver,directed
-Durham Foundry Social Group 054,Middlesbrough Young people Initiative 017,shares resources with,directed
-Newcastle Mosaic Social Group 057,Darlington Energy Initiative 018,helps deliver,directed
-Darlington Cornerstone Social Group 060,Durham Community care Initiative 019,helps deliver,directed
-Gateshead Meadow Social Group 063,Hartlepool Learning Initiative 020,helps deliver,directed
-Middlesbrough Riverside Social Group 066,Gateshead Food Initiative 021,shares resources with,directed
-Hartlepool Cedar Social Group 069,Newcastle Health Initiative 022,helps deliver,directed
-Sunderland Foundry Social Group 072,Sunderland Housing Initiative 023,helps deliver,directed
-Durham Mosaic Social Group 075,Middlesbrough Nature Initiative 024,helps deliver,directed
-Newcastle Cornerstone Social Group 078,Darlington Transport Initiative 025,shares resources with,directed
-Darlington Meadow Social Group 081,Durham Culture Initiative 026,helps deliver,directed
-Gateshead Riverside Social Group 084,Hartlepool Young people Initiative 027,helps deliver,directed
-Middlesbrough Cedar Social Group 087,Gateshead Energy Initiative 028,helps deliver,directed
-Hartlepool Foundry Social Group 090,Newcastle Community care Initiative 029,shares resources with,directed
-Sunderland Mosaic Social Group 093,Sunderland Learning Initiative 030,helps deliver,directed
-Sunderland Harbour Social Group 002,Middlesbrough Food Initiative 031,helps deliver,directed
-Durham Willow Social Group 005,Darlington Health Initiative 032,helps deliver,directed
-Newcastle Hearth Social Group 008,Durham Housing Initiative 033,shares resources with,directed
-Darlington Lantern Social Group 011,Hartlepool Nature Initiative 034,helps deliver,directed
-Gateshead Seedling Social Group 014,Gateshead Transport Initiative 035,helps deliver,directed
-Middlesbrough Tideway Social Group 017,Newcastle Culture Initiative 036,helps deliver,directed
-Hartlepool Harbour Social Group 020,Sunderland Young people Initiative 037,shares resources with,directed
-Sunderland Willow Social Group 023,Middlesbrough Energy Initiative 038,helps deliver,directed
-Durham Hearth Social Group 026,Darlington Community care Initiative 039,helps deliver,directed
-Newcastle Lantern Social Group 029,Durham Learning Initiative 040,helps deliver,directed
-Darlington Seedling Social Group 032,Hartlepool Food Initiative 041,shares resources with,directed
-Gateshead Tideway Social Group 035,Gateshead Health Initiative 042,helps deliver,directed
-Middlesbrough Harbour Social Group 038,Newcastle Housing Initiative 043,helps deliver,directed
-Hartlepool Willow Social Group 041,Sunderland Nature Initiative 044,helps deliver,directed
-Sunderland Hearth Social Group 044,Middlesbrough Transport Initiative 045,shares resources with,directed
-Durham Lantern Social Group 047,Darlington Culture Initiative 046,helps deliver,directed
-Newcastle Seedling Social Group 050,Durham Young people Initiative 047,helps deliver,directed
-Darlington Tideway Social Group 053,Hartlepool Energy Initiative 048,helps deliver,directed
-Gateshead Harbour Social Group 056,Gateshead Community care Initiative 049,shares resources with,directed
-Middlesbrough Willow Social Group 059,Newcastle Learning Initiative 050,helps deliver,directed
-Hartlepool Hearth Social Group 062,Sunderland Food Initiative 051,helps deliver,directed
-Sunderland Lantern Social Group 065,Middlesbrough Health Initiative 052,helps deliver,directed
-Durham Seedling Social Group 068,Darlington Housing Initiative 053,shares resources with,directed
-Newcastle Tideway Social Group 071,Durham Nature Initiative 054,helps deliver,directed
-Darlington Harbour Social Group 074,Hartlepool Transport Initiative 055,helps deliver,directed
-Gateshead Willow Social Group 077,Gateshead Culture Initiative 056,helps deliver,directed
-Middlesbrough Hearth Social Group 080,Newcastle Young people Initiative 057,shares resources with,directed
-Hartlepool Lantern Social Group 083,Sunderland Energy Initiative 058,helps deliver,directed
-Sunderland Seedling Social Group 086,Middlesbrough Community care Initiative 059,helps deliver,directed
-Durham Tideway Social Group 089,Darlington Learning Initiative 060,helps deliver,directed
-Newcastle Harbour Social Group 092,Durham Food Initiative 061,shares resources with,directed
-Newcastle Bracken Social Group 001,Hartlepool Health Initiative 062,helps deliver,directed
-Darlington Beacon Social Group 004,Gateshead Housing Initiative 063,helps deliver,directed
-Gateshead Bridgewater Social Group 007,Newcastle Nature Initiative 064,helps deliver,directed
-Middlesbrough Highfield Social Group 010,Sunderland Transport Initiative 065,shares resources with,directed
-Hartlepool Northbank Social Group 013,Middlesbrough Culture Initiative 066,helps deliver,directed
-Sunderland Hilltop Social Group 016,Darlington Young people Initiative 067,helps deliver,directed
-Durham Bracken Social Group 019,Durham Energy Initiative 068,helps deliver,directed
-Newcastle Beacon Social Group 022,Hartlepool Community care Initiative 069,shares resources with,directed
-Darlington Bridgewater Social Group 025,Gateshead Learning Initiative 070,helps deliver,directed
-Gateshead Highfield Social Group 028,Newcastle Food Initiative 071,helps deliver,directed
-Middlesbrough Northbank Social Group 031,Sunderland Health Initiative 072,helps deliver,directed
-Hartlepool Hilltop Social Group 034,Middlesbrough Housing Initiative 073,shares resources with,directed
-Sunderland Bracken Social Group 037,Darlington Nature Initiative 074,helps deliver,directed
-Durham Beacon Social Group 040,Durham Transport Initiative 075,helps deliver,directed
-Newcastle Bridgewater Social Group 043,Hartlepool Culture Initiative 076,helps deliver,directed
-Darlington Highfield Social Group 046,Newcastle Food Initiative 001,shares resources with,directed
-Gateshead Northbank Social Group 049,Sunderland Health Initiative 002,helps deliver,directed
-Middlesbrough Hilltop Social Group 052,Middlesbrough Housing Initiative 003,helps deliver,directed
-Hartlepool Bracken Social Group 055,Darlington Nature Initiative 004,helps deliver,directed
-Sunderland Beacon Social Group 058,Durham Transport Initiative 005,shares resources with,directed
-Durham Bridgewater Social Group 061,Hartlepool Culture Initiative 006,helps deliver,directed
-Newcastle Highfield Social Group 064,Gateshead Young people Initiative 007,helps deliver,directed
-Darlington Northbank Social Group 067,Newcastle Energy Initiative 008,helps deliver,directed
-Gateshead Hilltop Social Group 070,Sunderland Community care Initiative 009,shares resources with,directed
-Middlesbrough Bracken Social Group 073,Middlesbrough Learning Initiative 010,helps deliver,directed
-Hartlepool Beacon Social Group 076,Darlington Food Initiative 011,helps deliver,directed
-Sunderland Bridgewater Social Group 079,Durham Health Initiative 012,helps deliver,directed
-Durham Highfield Social Group 082,Hartlepool Housing Initiative 013,shares resources with,directed
-Newcastle Northbank Social Group 085,Gateshead Nature Initiative 014,helps deliver,directed
-Darlington Hilltop Social Group 088,Newcastle Transport Initiative 015,helps deliver,directed
-Gateshead Bracken Social Group 091,Sunderland Culture Initiative 016,helps deliver,directed
-Middlesbrough Beacon Social Group 094,Middlesbrough Young people Initiative 017,shares resources with,directed
-Middlesbrough Mosaic Social Group 003,Darlington Energy Initiative 018,helps deliver,directed
-Hartlepool Cornerstone Social Group 006,Durham Community care Initiative 019,helps deliver,directed
-Sunderland Meadow Social Group 009,Hartlepool Learning Initiative 020,helps deliver,directed
-Durham Riverside Social Group 012,Gateshead Food Initiative 021,shares resources with,directed
-Newcastle Cedar Social Group 015,Newcastle Health Initiative 022,helps deliver,directed
-Darlington Foundry Social Group 018,Sunderland Housing Initiative 023,helps deliver,directed
-Gateshead Mosaic Social Group 021,Middlesbrough Nature Initiative 024,helps deliver,directed
-Middlesbrough Cornerstone Social Group 024,Darlington Transport Initiative 025,shares resources with,directed
-Hartlepool Meadow Social Group 027,Durham Culture Initiative 026,helps deliver,directed
-Sunderland Riverside Social Group 030,Hartlepool Young people Initiative 027,helps deliver,directed
-Durham Cedar Social Group 033,Gateshead Energy Initiative 028,helps deliver,directed
-Newcastle Foundry Social Group 036,Newcastle Community care Initiative 029,shares resources with,directed
-Darlington Mosaic Social Group 039,Sunderland Learning Initiative 030,helps deliver,directed
-Gateshead Cornerstone Social Group 042,Middlesbrough Food Initiative 031,helps deliver,directed
-Middlesbrough Meadow Social Group 045,Darlington Health Initiative 032,helps deliver,directed
-Hartlepool Riverside Social Group 048,Durham Housing Initiative 033,shares resources with,directed
-Sunderland Cedar Social Group 051,Hartlepool Nature Initiative 034,helps deliver,directed
-Durham Foundry Social Group 054,Gateshead Transport Initiative 035,helps deliver,directed
-Newcastle Mosaic Social Group 057,Newcastle Culture Initiative 036,helps deliver,directed
-Darlington Cornerstone Social Group 060,Sunderland Young people Initiative 037,shares resources with,directed
-Gateshead Meadow Social Group 063,Middlesbrough Energy Initiative 038,helps deliver,directed
-Middlesbrough Riverside Social Group 066,Darlington Community care Initiative 039,helps deliver,directed
-Hartlepool Cedar Social Group 069,Durham Learning Initiative 040,helps deliver,directed
-Sunderland Foundry Social Group 072,Hartlepool Food Initiative 041,shares resources with,directed
-Durham Mosaic Social Group 075,Gateshead Health Initiative 042,helps deliver,directed
-Newcastle Cornerstone Social Group 078,Newcastle Housing Initiative 043,helps deliver,directed
-Darlington Meadow Social Group 081,Sunderland Nature Initiative 044,helps deliver,directed
-Gateshead Riverside Social Group 084,Middlesbrough Transport Initiative 045,shares resources with,directed
-Middlesbrough Cedar Social Group 087,Darlington Culture Initiative 046,helps deliver,directed
-Hartlepool Foundry Social Group 090,Durham Young people Initiative 047,helps deliver,directed
-Sunderland Mosaic Social Group 093,Hartlepool Energy Initiative 048,helps deliver,directed
-Sunderland Harbour Social Group 002,Gateshead Community care Initiative 049,shares resources with,directed
-Durham Willow Social Group 005,Newcastle Learning Initiative 050,helps deliver,directed
-Newcastle Hearth Social Group 008,Sunderland Food Initiative 051,helps deliver,directed
-Darlington Lantern Social Group 011,Middlesbrough Health Initiative 052,helps deliver,directed
-Gateshead Seedling Social Group 014,Darlington Housing Initiative 053,shares resources with,directed
-Middlesbrough Tideway Social Group 017,Durham Nature Initiative 054,helps deliver,directed
-Hartlepool Harbour Social Group 020,Hartlepool Transport Initiative 055,helps deliver,directed
-Sunderland Willow Social Group 023,Gateshead Culture Initiative 056,helps deliver,directed
-Durham Hearth Social Group 026,Newcastle Young people Initiative 057,shares resources with,directed
-Newcastle Lantern Social Group 029,Sunderland Energy Initiative 058,helps deliver,directed
-Darlington Seedling Social Group 032,Middlesbrough Community care Initiative 059,helps deliver,directed
-Gateshead Tideway Social Group 035,Darlington Learning Initiative 060,helps deliver,directed
-Middlesbrough Harbour Social Group 038,Durham Food Initiative 061,shares resources with,directed
-Hartlepool Willow Social Group 041,Hartlepool Health Initiative 062,helps deliver,directed
-Sunderland Hearth Social Group 044,Gateshead Housing Initiative 063,helps deliver,directed
-Durham Lantern Social Group 047,Newcastle Nature Initiative 064,helps deliver,directed
-Newcastle Seedling Social Group 050,Sunderland Transport Initiative 065,shares resources with,directed
-Darlington Tideway Social Group 053,Middlesbrough Culture Initiative 066,helps deliver,directed
-Gateshead Harbour Social Group 056,Darlington Young people Initiative 067,helps deliver,directed
-Middlesbrough Willow Social Group 059,Durham Energy Initiative 068,helps deliver,directed
-Hartlepool Hearth Social Group 062,Hartlepool Community care Initiative 069,shares resources with,directed
-Sunderland Lantern Social Group 065,Gateshead Learning Initiative 070,helps deliver,directed
-Durham Seedling Social Group 068,Newcastle Food Initiative 071,helps deliver,directed
-Newcastle Tideway Social Group 071,Sunderland Health Initiative 072,helps deliver,directed
-Darlington Harbour Social Group 074,Middlesbrough Housing Initiative 073,shares resources with,directed
-Gateshead Willow Social Group 077,Darlington Nature Initiative 074,helps deliver,directed
-Middlesbrough Hearth Social Group 080,Durham Transport Initiative 075,helps deliver,directed
-Hartlepool Lantern Social Group 083,Hartlepool Culture Initiative 076,helps deliver,directed
-Sunderland Seedling Social Group 086,Newcastle Food Initiative 001,shares resources with,directed
-Durham Tideway Social Group 089,Sunderland Health Initiative 002,helps deliver,directed
-Newcastle Harbour Social Group 092,Middlesbrough Housing Initiative 003,helps deliver,directed
-Newcastle Bracken Social Group 001,Darlington Nature Initiative 004,helps deliver,directed
-Darlington Beacon Social Group 004,Durham Transport Initiative 005,shares resources with,directed
-Gateshead Bridgewater Social Group 007,Hartlepool Culture Initiative 006,helps deliver,directed
-Middlesbrough Highfield Social Group 010,Gateshead Young people Initiative 007,helps deliver,directed
-Hartlepool Northbank Social Group 013,Newcastle Energy Initiative 008,helps deliver,directed
-Sunderland Hilltop Social Group 016,Sunderland Community care Initiative 009,shares resources with,directed
-Durham Bracken Social Group 019,Middlesbrough Learning Initiative 010,helps deliver,directed
-Newcastle Beacon Social Group 022,Darlington Food Initiative 011,helps deliver,directed
-Darlington Bridgewater Social Group 025,Durham Health Initiative 012,helps deliver,directed
-Gateshead Highfield Social Group 028,Hartlepool Housing Initiative 013,shares resources with,directed
-Middlesbrough Northbank Social Group 031,Gateshead Nature Initiative 014,helps deliver,directed
-Hartlepool Hilltop Social Group 034,Newcastle Transport Initiative 015,helps deliver,directed
-Sunderland Bracken Social Group 037,Sunderland Culture Initiative 016,helps deliver,directed
-Durham Beacon Social Group 040,Middlesbrough Young people Initiative 017,shares resources with,directed
-Newcastle Bridgewater Social Group 043,Darlington Energy Initiative 018,helps deliver,directed
-Darlington Highfield Social Group 046,Durham Community care Initiative 019,helps deliver,directed
-Gateshead Northbank Social Group 049,Hartlepool Learning Initiative 020,helps deliver,directed
-Middlesbrough Hilltop Social Group 052,Gateshead Food Initiative 021,shares resources with,directed
-Hartlepool Bracken Social Group 055,Newcastle Health Initiative 022,helps deliver,directed
-Sunderland Beacon Social Group 058,Sunderland Housing Initiative 023,helps deliver,directed
-Durham Bridgewater Social Group 061,Middlesbrough Nature Initiative 024,helps deliver,directed
-Newcastle Highfield Social Group 064,Darlington Transport Initiative 025,shares resources with,directed
-Darlington Northbank Social Group 067,Durham Culture Initiative 026,helps deliver,directed
-Gateshead Hilltop Social Group 070,Hartlepool Young people Initiative 027,helps deliver,directed
-Middlesbrough Bracken Social Group 073,Gateshead Energy Initiative 028,helps deliver,directed
-Hartlepool Beacon Social Group 076,Newcastle Community care Initiative 029,shares resources with,directed
-Sunderland Bridgewater Social Group 079,Sunderland Learning Initiative 030,helps deliver,directed
-Durham Highfield Social Group 082,Middlesbrough Food Initiative 031,helps deliver,directed
-Newcastle Northbank Social Group 085,Darlington Health Initiative 032,helps deliver,directed
-Darlington Hilltop Social Group 088,Durham Housing Initiative 033,shares resources with,directed
-Gateshead Bracken Social Group 091,Hartlepool Nature Initiative 034,helps deliver,directed
-Middlesbrough Beacon Social Group 094,Gateshead Transport Initiative 035,helps deliver,directed
-Middlesbrough Mosaic Social Group 003,Newcastle Culture Initiative 036,helps deliver,directed
-Hartlepool Cornerstone Social Group 006,Sunderland Young people Initiative 037,shares resources with,directed
-Sunderland Meadow Social Group 009,Middlesbrough Energy Initiative 038,helps deliver,directed
-Durham Riverside Social Group 012,Darlington Community care Initiative 039,helps deliver,directed
-Newcastle Cedar Social Group 015,Durham Learning Initiative 040,helps deliver,directed
-Darlington Foundry Social Group 018,Hartlepool Food Initiative 041,shares resources with,directed
-Gateshead Mosaic Social Group 021,Gateshead Health Initiative 042,helps deliver,directed
-Middlesbrough Cornerstone Social Group 024,Newcastle Housing Initiative 043,helps deliver,directed
-Hartlepool Meadow Social Group 027,Sunderland Nature Initiative 044,helps deliver,directed
-Sunderland Riverside Social Group 030,Middlesbrough Transport Initiative 045,shares resources with,directed
-Durham Cedar Social Group 033,Darlington Culture Initiative 046,helps deliver,directed
-Newcastle Foundry Social Group 036,Durham Young people Initiative 047,helps deliver,directed
-Darlington Mosaic Social Group 039,Hartlepool Energy Initiative 048,helps deliver,directed
-Gateshead Cornerstone Social Group 042,Gateshead Community care Initiative 049,shares resources with,directed
-Middlesbrough Meadow Social Group 045,Newcastle Learning Initiative 050,helps deliver,directed
-Hartlepool Riverside Social Group 048,Sunderland Food Initiative 051,helps deliver,directed
-Sunderland Cedar Social Group 051,Middlesbrough Health Initiative 052,helps deliver,directed
-Durham Foundry Social Group 054,Darlington Housing Initiative 053,shares resources with,directed
-Newcastle Mosaic Social Group 057,Durham Nature Initiative 054,helps deliver,directed
-Darlington Cornerstone Social Group 060,Hartlepool Transport Initiative 055,helps deliver,directed
-Gateshead Meadow Social Group 063,Gateshead Culture Initiative 056,helps deliver,directed
-Middlesbrough Riverside Social Group 066,Newcastle Young people Initiative 057,shares resources with,directed
-Hartlepool Cedar Social Group 069,Sunderland Energy Initiative 058,helps deliver,directed
-Sunderland Foundry Social Group 072,Middlesbrough Community care Initiative 059,helps deliver,directed
-Durham Mosaic Social Group 075,Darlington Learning Initiative 060,helps deliver,directed
-Newcastle Cornerstone Social Group 078,Durham Food Initiative 061,shares resources with,directed
-Darlington Meadow Social Group 081,Hartlepool Health Initiative 062,helps deliver,directed
-Gateshead Riverside Social Group 084,Gateshead Housing Initiative 063,helps deliver,directed
-Middlesbrough Cedar Social Group 087,Newcastle Nature Initiative 064,helps deliver,directed
-Hartlepool Foundry Social Group 090,Sunderland Transport Initiative 065,shares resources with,directed
-Sunderland Mosaic Social Group 093,Middlesbrough Culture Initiative 066,helps deliver,directed
-Sunderland Harbour Social Group 002,Darlington Young people Initiative 067,helps deliver,directed
-Durham Willow Social Group 005,Durham Energy Initiative 068,helps deliver,directed
-Newcastle Hearth Social Group 008,Hartlepool Community care Initiative 069,shares resources with,directed
-Darlington Lantern Social Group 011,Gateshead Learning Initiative 070,helps deliver,directed
-Gateshead Seedling Social Group 014,Newcastle Food Initiative 071,helps deliver,directed
-Middlesbrough Tideway Social Group 017,Sunderland Health Initiative 072,helps deliver,directed
-Hartlepool Harbour Social Group 020,Middlesbrough Housing Initiative 073,shares resources with,directed
-Sunderland Willow Social Group 023,Darlington Nature Initiative 074,helps deliver,directed
-Durham Hearth Social Group 026,Durham Transport Initiative 075,helps deliver,directed
-Newcastle Lantern Social Group 029,Hartlepool Culture Initiative 076,helps deliver,directed
-Darlington Seedling Social Group 032,Newcastle Food Initiative 001,shares resources with,directed
-Gateshead Tideway Social Group 035,Sunderland Health Initiative 002,helps deliver,directed
-Middlesbrough Harbour Social Group 038,Middlesbrough Housing Initiative 003,helps deliver,directed
-Hartlepool Willow Social Group 041,Darlington Nature Initiative 004,helps deliver,directed
-Sunderland Hearth Social Group 044,Durham Transport Initiative 005,shares resources with,directed
-Durham Lantern Social Group 047,Hartlepool Culture Initiative 006,helps deliver,directed
-Newcastle Seedling Social Group 050,Gateshead Young people Initiative 007,helps deliver,directed
-Darlington Tideway Social Group 053,Newcastle Energy Initiative 008,helps deliver,directed
-Gateshead Harbour Social Group 056,Sunderland Community care Initiative 009,shares resources with,directed
-Middlesbrough Willow Social Group 059,Middlesbrough Learning Initiative 010,helps deliver,directed
-Hartlepool Hearth Social Group 062,Darlington Food Initiative 011,helps deliver,directed
-Sunderland Lantern Social Group 065,Durham Health Initiative 012,helps deliver,directed
-Durham Seedling Social Group 068,Hartlepool Housing Initiative 013,shares resources with,directed
-Newcastle Tideway Social Group 071,Gateshead Nature Initiative 014,helps deliver,directed
-Darlington Harbour Social Group 074,Newcastle Transport Initiative 015,helps deliver,directed
-Gateshead Willow Social Group 077,Sunderland Culture Initiative 016,helps deliver,directed
-Middlesbrough Hearth Social Group 080,Middlesbrough Young people Initiative 017,shares resources with,directed
-Hartlepool Lantern Social Group 083,Darlington Energy Initiative 018,helps deliver,directed
-Sunderland Seedling Social Group 086,Durham Community care Initiative 019,helps deliver,directed
-Durham Tideway Social Group 089,Hartlepool Learning Initiative 020,helps deliver,directed
-Newcastle Harbour Social Group 092,Gateshead Food Initiative 021,shares resources with,directed
-Newcastle Bracken Social Group 001,Newcastle Health Initiative 022,helps deliver,directed
-Darlington Beacon Social Group 004,Sunderland Housing Initiative 023,helps deliver,directed
-Gateshead Bridgewater Social Group 007,Middlesbrough Nature Initiative 024,helps deliver,directed
-Middlesbrough Highfield Social Group 010,Darlington Transport Initiative 025,shares resources with,directed
-Hartlepool Northbank Social Group 013,Durham Culture Initiative 026,helps deliver,directed
-Sunderland Hilltop Social Group 016,Hartlepool Young people Initiative 027,helps deliver,directed
-Durham Bracken Social Group 019,Gateshead Energy Initiative 028,helps deliver,directed
-Newcastle Beacon Social Group 022,Newcastle Community care Initiative 029,shares resources with,directed
-Darlington Bridgewater Social Group 025,Sunderland Learning Initiative 030,helps deliver,directed
-Gateshead Highfield Social Group 028,Middlesbrough Food Initiative 031,helps deliver,directed
-Middlesbrough Northbank Social Group 031,Darlington Health Initiative 032,helps deliver,directed
-Hartlepool Hilltop Social Group 034,Durham Housing Initiative 033,shares resources with,directed
-Sunderland Bracken Social Group 037,Hartlepool Nature Initiative 034,helps deliver,directed
-Durham Beacon Social Group 040,Gateshead Transport Initiative 035,helps deliver,directed
-Newcastle Bridgewater Social Group 043,Newcastle Culture Initiative 036,helps deliver,directed
-Darlington Highfield Social Group 046,Sunderland Young people Initiative 037,shares resources with,directed
-Gateshead Northbank Social Group 049,Middlesbrough Energy Initiative 038,helps deliver,directed
-Middlesbrough Hilltop Social Group 052,Darlington Community care Initiative 039,helps deliver,directed
-Hartlepool Bracken Social Group 055,Durham Learning Initiative 040,helps deliver,directed
-Sunderland Beacon Social Group 058,Hartlepool Food Initiative 041,shares resources with,directed
-Durham Bridgewater Social Group 061,Gateshead Health Initiative 042,helps deliver,directed
-Newcastle Highfield Social Group 064,Newcastle Housing Initiative 043,helps deliver,directed
-Darlington Northbank Social Group 067,Sunderland Nature Initiative 044,helps deliver,directed
-Gateshead Hilltop Social Group 070,Middlesbrough Transport Initiative 045,shares resources with,directed
-Middlesbrough Bracken Social Group 073,Darlington Culture Initiative 046,helps deliver,directed
-Hartlepool Beacon Social Group 076,Durham Young people Initiative 047,helps deliver,directed
-Sunderland Bridgewater Social Group 079,Hartlepool Energy Initiative 048,helps deliver,directed
-Durham Highfield Social Group 082,Gateshead Community care Initiative 049,shares resources with,directed
-Newcastle Northbank Social Group 085,Newcastle Learning Initiative 050,helps deliver,directed
-Darlington Hilltop Social Group 088,Sunderland Food Initiative 051,helps deliver,directed
-Gateshead Bracken Social Group 091,Middlesbrough Health Initiative 052,helps deliver,directed
-Newcastle Bracken Social Group 001,Middlesbrough Cornerstone Social Group 024,works with,mutual
-Sunderland Harbour Social Group 002,Middlesbrough Northbank Social Group 031,works with,mutual
-Middlesbrough Mosaic Social Group 003,Middlesbrough Harbour Social Group 038,works with,mutual
-Darlington Beacon Social Group 004,Middlesbrough Meadow Social Group 045,works with,mutual
-Durham Willow Social Group 005,Middlesbrough Hilltop Social Group 052,works with,mutual
-Hartlepool Cornerstone Social Group 006,Middlesbrough Willow Social Group 059,works with,mutual
-Gateshead Bridgewater Social Group 007,Middlesbrough Riverside Social Group 066,works with,mutual
-Newcastle Hearth Social Group 008,Middlesbrough Bracken Social Group 073,works with,mutual
-Sunderland Meadow Social Group 009,Middlesbrough Hearth Social Group 080,works with,mutual
-Middlesbrough Highfield Social Group 010,Middlesbrough Cedar Social Group 087,works with,mutual
-Darlington Lantern Social Group 011,Middlesbrough Beacon Social Group 094,works with,mutual
-Durham Riverside Social Group 012,Gateshead Bridgewater Social Group 007,works with,mutual
-Hartlepool Northbank Social Group 013,Gateshead Seedling Social Group 014,works with,mutual
-Gateshead Seedling Social Group 014,Gateshead Mosaic Social Group 021,works with,mutual
-Newcastle Cedar Social Group 015,Gateshead Highfield Social Group 028,works with,mutual
-Sunderland Hilltop Social Group 016,Gateshead Tideway Social Group 035,works with,mutual
-Middlesbrough Tideway Social Group 017,Gateshead Cornerstone Social Group 042,works with,mutual
-Darlington Foundry Social Group 018,Gateshead Northbank Social Group 049,works with,mutual
-Durham Bracken Social Group 019,Gateshead Harbour Social Group 056,works with,mutual
-Hartlepool Harbour Social Group 020,Gateshead Meadow Social Group 063,works with,mutual
-Gateshead Mosaic Social Group 021,Gateshead Hilltop Social Group 070,works with,mutual
-Newcastle Beacon Social Group 022,Gateshead Willow Social Group 077,works with,mutual
-Sunderland Willow Social Group 023,Gateshead Riverside Social Group 084,works with,mutual
-Middlesbrough Cornerstone Social Group 024,Gateshead Bracken Social Group 091,works with,mutual
-Darlington Bridgewater Social Group 025,Darlington Beacon Social Group 004,works with,mutual
-Durham Hearth Social Group 026,Darlington Lantern Social Group 011,works with,mutual
-Hartlepool Meadow Social Group 027,Darlington Foundry Social Group 018,works with,mutual
-Gateshead Highfield Social Group 028,Darlington Bridgewater Social Group 025,works with,mutual
-Newcastle Lantern Social Group 029,Darlington Seedling Social Group 032,works with,mutual
-Sunderland Riverside Social Group 030,Darlington Mosaic Social Group 039,works with,mutual
-Middlesbrough Northbank Social Group 031,Darlington Highfield Social Group 046,works with,mutual
-Darlington Seedling Social Group 032,Darlington Tideway Social Group 053,works with,mutual
-Durham Cedar Social Group 033,Darlington Cornerstone Social Group 060,works with,mutual
-Hartlepool Hilltop Social Group 034,Darlington Northbank Social Group 067,works with,mutual
-Gateshead Tideway Social Group 035,Darlington Harbour Social Group 074,works with,mutual
-Newcastle Foundry Social Group 036,Darlington Meadow Social Group 081,works with,mutual
-Sunderland Bracken Social Group 037,Darlington Hilltop Social Group 088,works with,mutual
-Middlesbrough Harbour Social Group 038,Newcastle Bracken Social Group 001,works with,mutual
-Darlington Mosaic Social Group 039,Newcastle Hearth Social Group 008,works with,mutual
-Durham Beacon Social Group 040,Newcastle Cedar Social Group 015,works with,mutual
-Hartlepool Willow Social Group 041,Newcastle Beacon Social Group 022,works with,mutual
-Gateshead Cornerstone Social Group 042,Newcastle Lantern Social Group 029,works with,mutual
-Newcastle Bridgewater Social Group 043,Newcastle Foundry Social Group 036,works with,mutual
-Sunderland Hearth Social Group 044,Newcastle Bridgewater Social Group 043,works with,mutual
-Middlesbrough Meadow Social Group 045,Newcastle Seedling Social Group 050,works with,mutual
-Darlington Highfield Social Group 046,Newcastle Mosaic Social Group 057,works with,mutual
-Durham Lantern Social Group 047,Newcastle Highfield Social Group 064,works with,mutual
-Hartlepool Riverside Social Group 048,Newcastle Tideway Social Group 071,works with,mutual
-Gateshead Northbank Social Group 049,Newcastle Cornerstone Social Group 078,works with,mutual
-Newcastle Seedling Social Group 050,Newcastle Northbank Social Group 085,works with,mutual
-Sunderland Cedar Social Group 051,Newcastle Harbour Social Group 092,works with,mutual
-Middlesbrough Hilltop Social Group 052,Durham Willow Social Group 005,works with,mutual
-Darlington Tideway Social Group 053,Durham Riverside Social Group 012,works with,mutual
-Durham Foundry Social Group 054,Durham Bracken Social Group 019,works with,mutual
-Hartlepool Bracken Social Group 055,Durham Hearth Social Group 026,works with,mutual
-Gateshead Harbour Social Group 056,Durham Cedar Social Group 033,works with,mutual
-Newcastle Mosaic Social Group 057,Durham Beacon Social Group 040,works with,mutual
-Sunderland Beacon Social Group 058,Durham Lantern Social Group 047,works with,mutual
-Middlesbrough Willow Social Group 059,Durham Foundry Social Group 054,works with,mutual
-Darlington Cornerstone Social Group 060,Durham Bridgewater Social Group 061,works with,mutual
-Durham Bridgewater Social Group 061,Durham Seedling Social Group 068,works with,mutual
-Hartlepool Hearth Social Group 062,Durham Mosaic Social Group 075,works with,mutual
-Gateshead Meadow Social Group 063,Durham Highfield Social Group 082,works with,mutual
-Newcastle Highfield Social Group 064,Durham Tideway Social Group 089,works with,mutual
-Sunderland Lantern Social Group 065,Sunderland Harbour Social Group 002,works with,mutual
-Middlesbrough Riverside Social Group 066,Sunderland Meadow Social Group 009,works with,mutual
-Darlington Northbank Social Group 067,Sunderland Hilltop Social Group 016,works with,mutual
-Durham Seedling Social Group 068,Sunderland Willow Social Group 023,works with,mutual
-Hartlepool Cedar Social Group 069,Sunderland Riverside Social Group 030,works with,mutual
-Gateshead Hilltop Social Group 070,Sunderland Bracken Social Group 037,works with,mutual
-Newcastle Tideway Social Group 071,Sunderland Hearth Social Group 044,works with,mutual
-Sunderland Foundry Social Group 072,Sunderland Cedar Social Group 051,works with,mutual
-Middlesbrough Bracken Social Group 073,Sunderland Beacon Social Group 058,works with,mutual
-Darlington Harbour Social Group 074,Sunderland Lantern Social Group 065,works with,mutual
-Durham Mosaic Social Group 075,Sunderland Foundry Social Group 072,works with,mutual
+Accra Cornerstone Social Group 006,,shares resources with,directed
+Kathmandu Meadow Social Group 009,,helps deliver,directed
+Vancouver Riverside Social Group 012,,helps deliver,directed
+London Cedar Social Group 015,,helps deliver,directed
+Nairobi Foundry Social Group 018,,shares resources with,directed
+Lagos Mosaic Social Group 021,,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,,helps deliver,directed
+Berlin Meadow Social Group 027,,helps deliver,directed
+Manchester Riverside Social Group 030,,shares resources with,directed
+Kampala Cedar Social Group 033,,helps deliver,directed
+Mumbai Foundry Social Group 036,,helps deliver,directed
+Buenos Aires Mosaic Social Group 039,,helps deliver,directed
+Oslo Cornerstone Social Group 042,,shares resources with,directed
+Amsterdam Meadow Social Group 045,,helps deliver,directed
+Accra Riverside Social Group 048,,helps deliver,directed
+Kathmandu Cedar Social Group 051,,helps deliver,directed
+Vancouver Foundry Social Group 054,,shares resources with,directed
+London Mosaic Social Group 057,,helps deliver,directed
+Nairobi Cornerstone Social Group 060,,helps deliver,directed
+Lagos Meadow Social Group 063,,helps deliver,directed
+Johannesburg Riverside Social Group 066,,shares resources with,directed
+Berlin Cedar Social Group 069,,helps deliver,directed
+Manchester Foundry Social Group 072,,helps deliver,directed
+Kampala Mosaic Social Group 075,,helps deliver,directed
+Mumbai Cornerstone Social Group 078,,shares resources with,directed
+Buenos Aires Meadow Social Group 081,,helps deliver,directed
+Oslo Riverside Social Group 084,,helps deliver,directed
+Amsterdam Cedar Social Group 087,,helps deliver,directed
+Accra Foundry Social Group 090,,shares resources with,directed
+Kathmandu Mosaic Social Group 093,,helps deliver,directed
+Manchester Harbour Social Group 002,,helps deliver,directed
+Kampala Willow Social Group 005,,helps deliver,directed
+Mumbai Hearth Social Group 008,,shares resources with,directed
+Buenos Aires Lantern Social Group 011,,helps deliver,directed
+Oslo Seedling Social Group 014,,helps deliver,directed
+Amsterdam Tideway Social Group 017,,helps deliver,directed
+Accra Harbour Social Group 020,,shares resources with,directed
+Kathmandu Willow Social Group 023,,helps deliver,directed
+Vancouver Hearth Social Group 026,,helps deliver,directed
+London Lantern Social Group 029,,helps deliver,directed
+Nairobi Seedling Social Group 032,,shares resources with,directed
+Lagos Tideway Social Group 035,,helps deliver,directed
+Johannesburg Harbour Social Group 038,,helps deliver,directed
+Berlin Willow Social Group 041,,helps deliver,directed
+Manchester Hearth Social Group 044,,shares resources with,directed
+Kampala Lantern Social Group 047,,helps deliver,directed
+Mumbai Seedling Social Group 050,,helps deliver,directed
+Buenos Aires Tideway Social Group 053,,helps deliver,directed
+Oslo Harbour Social Group 056,,shares resources with,directed
+Amsterdam Willow Social Group 059,,helps deliver,directed
+Accra Hearth Social Group 062,,helps deliver,directed
+Kathmandu Lantern Social Group 065,,helps deliver,directed
+Vancouver Seedling Social Group 068,,shares resources with,directed
+London Tideway Social Group 071,,helps deliver,directed
+Nairobi Harbour Social Group 074,,helps deliver,directed
+Lagos Willow Social Group 077,,helps deliver,directed
+Johannesburg Hearth Social Group 080,,shares resources with,directed
+Berlin Lantern Social Group 083,,helps deliver,directed
+Manchester Seedling Social Group 086,,helps deliver,directed
+Kampala Tideway Social Group 089,,helps deliver,directed
+Mumbai Harbour Social Group 092,,shares resources with,directed
+London Bracken Social Group 001,,helps deliver,directed
+Nairobi Beacon Social Group 004,,helps deliver,directed
+Lagos Bridgewater Social Group 007,,helps deliver,directed
+Johannesburg Highfield Social Group 010,,shares resources with,directed
+Berlin Northbank Social Group 013,,helps deliver,directed
+Manchester Hilltop Social Group 016,,helps deliver,directed
+Kampala Bracken Social Group 019,,helps deliver,directed
+Mumbai Beacon Social Group 022,,shares resources with,directed
+Buenos Aires Bridgewater Social Group 025,,helps deliver,directed
+Oslo Highfield Social Group 028,,helps deliver,directed
+Amsterdam Northbank Social Group 031,,helps deliver,directed
+Accra Hilltop Social Group 034,,shares resources with,directed
+Kathmandu Bracken Social Group 037,,helps deliver,directed
+Vancouver Beacon Social Group 040,,helps deliver,directed
+London Bridgewater Social Group 043,,helps deliver,directed
+Nairobi Highfield Social Group 046,,shares resources with,directed
+Lagos Northbank Social Group 049,,helps deliver,directed
+Johannesburg Hilltop Social Group 052,,helps deliver,directed
+Berlin Bracken Social Group 055,,helps deliver,directed
+Manchester Beacon Social Group 058,,shares resources with,directed
+Kampala Bridgewater Social Group 061,,helps deliver,directed
+Mumbai Highfield Social Group 064,,helps deliver,directed
+Buenos Aires Northbank Social Group 067,,helps deliver,directed
+Oslo Hilltop Social Group 070,,shares resources with,directed
+Amsterdam Bracken Social Group 073,,helps deliver,directed
+Accra Beacon Social Group 076,,helps deliver,directed
+Kathmandu Bridgewater Social Group 079,,helps deliver,directed
+Vancouver Highfield Social Group 082,,shares resources with,directed
+London Northbank Social Group 085,,helps deliver,directed
+Nairobi Hilltop Social Group 088,,helps deliver,directed
+Lagos Bracken Social Group 091,,helps deliver,directed
+Johannesburg Beacon Social Group 094,,shares resources with,directed
+Amsterdam Mosaic Social Group 003,,helps deliver,directed
+Accra Cornerstone Social Group 006,,helps deliver,directed
+Kathmandu Meadow Social Group 009,,helps deliver,directed
+Vancouver Riverside Social Group 012,,shares resources with,directed
+London Cedar Social Group 015,,helps deliver,directed
+Nairobi Foundry Social Group 018,,helps deliver,directed
+Lagos Mosaic Social Group 021,,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,,shares resources with,directed
+Berlin Meadow Social Group 027,,helps deliver,directed
+Manchester Riverside Social Group 030,,helps deliver,directed
+Kampala Cedar Social Group 033,,helps deliver,directed
+Mumbai Foundry Social Group 036,,shares resources with,directed
+Buenos Aires Mosaic Social Group 039,,helps deliver,directed
+Oslo Cornerstone Social Group 042,,helps deliver,directed
+Amsterdam Meadow Social Group 045,,helps deliver,directed
+Accra Riverside Social Group 048,,shares resources with,directed
+Kathmandu Cedar Social Group 051,,helps deliver,directed
+Vancouver Foundry Social Group 054,,helps deliver,directed
+London Mosaic Social Group 057,,helps deliver,directed
+Nairobi Cornerstone Social Group 060,,shares resources with,directed
+Lagos Meadow Social Group 063,,helps deliver,directed
+Johannesburg Riverside Social Group 066,,helps deliver,directed
+Berlin Cedar Social Group 069,,helps deliver,directed
+Manchester Foundry Social Group 072,,shares resources with,directed
+Kampala Mosaic Social Group 075,,helps deliver,directed
+Mumbai Cornerstone Social Group 078,,helps deliver,directed
+Buenos Aires Meadow Social Group 081,,helps deliver,directed
+Oslo Riverside Social Group 084,,shares resources with,directed
+Amsterdam Cedar Social Group 087,,helps deliver,directed
+Accra Foundry Social Group 090,,helps deliver,directed
+Kathmandu Mosaic Social Group 093,,helps deliver,directed
+Manchester Harbour Social Group 002,,shares resources with,directed
+Kampala Willow Social Group 005,,helps deliver,directed
+Mumbai Hearth Social Group 008,,helps deliver,directed
+Buenos Aires Lantern Social Group 011,,helps deliver,directed
+Oslo Seedling Social Group 014,,shares resources with,directed
+Amsterdam Tideway Social Group 017,,helps deliver,directed
+Accra Harbour Social Group 020,,helps deliver,directed
+Kathmandu Willow Social Group 023,,helps deliver,directed
+Vancouver Hearth Social Group 026,,shares resources with,directed
+London Lantern Social Group 029,,helps deliver,directed
+Nairobi Seedling Social Group 032,,helps deliver,directed
+Lagos Tideway Social Group 035,,helps deliver,directed
+Johannesburg Harbour Social Group 038,,shares resources with,directed
+Berlin Willow Social Group 041,,helps deliver,directed
+Manchester Hearth Social Group 044,,helps deliver,directed
+Kampala Lantern Social Group 047,,helps deliver,directed
+Mumbai Seedling Social Group 050,,shares resources with,directed
+Buenos Aires Tideway Social Group 053,,helps deliver,directed
+Oslo Harbour Social Group 056,,helps deliver,directed
+Amsterdam Willow Social Group 059,,helps deliver,directed
+Accra Hearth Social Group 062,,shares resources with,directed
+Kathmandu Lantern Social Group 065,,helps deliver,directed
+Vancouver Seedling Social Group 068,,helps deliver,directed
+London Tideway Social Group 071,,helps deliver,directed
+Nairobi Harbour Social Group 074,,shares resources with,directed
+Lagos Willow Social Group 077,,helps deliver,directed
+Johannesburg Hearth Social Group 080,,helps deliver,directed
+Berlin Lantern Social Group 083,,helps deliver,directed
+Manchester Seedling Social Group 086,,shares resources with,directed
+Kampala Tideway Social Group 089,,helps deliver,directed
+Mumbai Harbour Social Group 092,,helps deliver,directed
+London Bracken Social Group 001,,helps deliver,directed
+Nairobi Beacon Social Group 004,,shares resources with,directed
+Lagos Bridgewater Social Group 007,,helps deliver,directed
+Johannesburg Highfield Social Group 010,,helps deliver,directed
+Berlin Northbank Social Group 013,,helps deliver,directed
+Manchester Hilltop Social Group 016,,shares resources with,directed
+Kampala Bracken Social Group 019,,helps deliver,directed
+Mumbai Beacon Social Group 022,,helps deliver,directed
+Buenos Aires Bridgewater Social Group 025,,helps deliver,directed
+Oslo Highfield Social Group 028,,shares resources with,directed
+Amsterdam Northbank Social Group 031,,helps deliver,directed
+Accra Hilltop Social Group 034,,helps deliver,directed
+Kathmandu Bracken Social Group 037,,helps deliver,directed
+Vancouver Beacon Social Group 040,,shares resources with,directed
+London Bridgewater Social Group 043,,helps deliver,directed
+Nairobi Highfield Social Group 046,,helps deliver,directed
+Lagos Northbank Social Group 049,,helps deliver,directed
+Johannesburg Hilltop Social Group 052,,shares resources with,directed
+Berlin Bracken Social Group 055,,helps deliver,directed
+Manchester Beacon Social Group 058,,helps deliver,directed
+Kampala Bridgewater Social Group 061,,helps deliver,directed
+Mumbai Highfield Social Group 064,,shares resources with,directed
+Buenos Aires Northbank Social Group 067,,helps deliver,directed
+Oslo Hilltop Social Group 070,,helps deliver,directed
+Amsterdam Bracken Social Group 073,,helps deliver,directed
+Accra Beacon Social Group 076,,shares resources with,directed
+Kathmandu Bridgewater Social Group 079,,helps deliver,directed
+Vancouver Highfield Social Group 082,,helps deliver,directed
+London Northbank Social Group 085,,helps deliver,directed
+Nairobi Hilltop Social Group 088,,shares resources with,directed
+Lagos Bracken Social Group 091,,helps deliver,directed
+Johannesburg Beacon Social Group 094,,helps deliver,directed
+Amsterdam Mosaic Social Group 003,,helps deliver,directed
+Accra Cornerstone Social Group 006,,shares resources with,directed
+Kathmandu Meadow Social Group 009,,helps deliver,directed
+Vancouver Riverside Social Group 012,,helps deliver,directed
+London Cedar Social Group 015,,helps deliver,directed
+Nairobi Foundry Social Group 018,,shares resources with,directed
+Lagos Mosaic Social Group 021,,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,,helps deliver,directed
+Berlin Meadow Social Group 027,,helps deliver,directed
+Manchester Riverside Social Group 030,,shares resources with,directed
+Kampala Cedar Social Group 033,,helps deliver,directed
+Mumbai Foundry Social Group 036,,helps deliver,directed
+Buenos Aires Mosaic Social Group 039,,helps deliver,directed
+Oslo Cornerstone Social Group 042,,shares resources with,directed
+Amsterdam Meadow Social Group 045,,helps deliver,directed
+Accra Riverside Social Group 048,,helps deliver,directed
+Kathmandu Cedar Social Group 051,,helps deliver,directed
+Vancouver Foundry Social Group 054,,shares resources with,directed
+London Mosaic Social Group 057,,helps deliver,directed
+Nairobi Cornerstone Social Group 060,,helps deliver,directed
+Lagos Meadow Social Group 063,,helps deliver,directed
+Johannesburg Riverside Social Group 066,,shares resources with,directed
+Berlin Cedar Social Group 069,,helps deliver,directed
+Manchester Foundry Social Group 072,,helps deliver,directed
+Kampala Mosaic Social Group 075,,helps deliver,directed
+Mumbai Cornerstone Social Group 078,,shares resources with,directed
+Buenos Aires Meadow Social Group 081,,helps deliver,directed
+Oslo Riverside Social Group 084,,helps deliver,directed
+Amsterdam Cedar Social Group 087,,helps deliver,directed
+Accra Foundry Social Group 090,,shares resources with,directed
+Kathmandu Mosaic Social Group 093,,helps deliver,directed
+Manchester Harbour Social Group 002,,helps deliver,directed
+Kampala Willow Social Group 005,,helps deliver,directed
+Mumbai Hearth Social Group 008,,shares resources with,directed
+Buenos Aires Lantern Social Group 011,,helps deliver,directed
+Oslo Seedling Social Group 014,,helps deliver,directed
+Amsterdam Tideway Social Group 017,,helps deliver,directed
+Accra Harbour Social Group 020,,shares resources with,directed
+Kathmandu Willow Social Group 023,,helps deliver,directed
+Vancouver Hearth Social Group 026,,helps deliver,directed
+London Lantern Social Group 029,,helps deliver,directed
+Nairobi Seedling Social Group 032,,shares resources with,directed
+Lagos Tideway Social Group 035,,helps deliver,directed
+Johannesburg Harbour Social Group 038,,helps deliver,directed
+Berlin Willow Social Group 041,,helps deliver,directed
+Manchester Hearth Social Group 044,,shares resources with,directed
+Kampala Lantern Social Group 047,,helps deliver,directed
+Mumbai Seedling Social Group 050,,helps deliver,directed
+Buenos Aires Tideway Social Group 053,,helps deliver,directed
+Oslo Harbour Social Group 056,,shares resources with,directed
+Amsterdam Willow Social Group 059,,helps deliver,directed
+Accra Hearth Social Group 062,,helps deliver,directed
+Kathmandu Lantern Social Group 065,,helps deliver,directed
+Vancouver Seedling Social Group 068,,shares resources with,directed
+London Tideway Social Group 071,,helps deliver,directed
+Nairobi Harbour Social Group 074,,helps deliver,directed
+Lagos Willow Social Group 077,,helps deliver,directed
+Johannesburg Hearth Social Group 080,,shares resources with,directed
+Berlin Lantern Social Group 083,,helps deliver,directed
+Manchester Seedling Social Group 086,,helps deliver,directed
+Kampala Tideway Social Group 089,,helps deliver,directed
+Mumbai Harbour Social Group 092,,shares resources with,directed
+London Bracken Social Group 001,,helps deliver,directed
+Nairobi Beacon Social Group 004,,helps deliver,directed
+Lagos Bridgewater Social Group 007,,helps deliver,directed
+Johannesburg Highfield Social Group 010,,shares resources with,directed
+Berlin Northbank Social Group 013,,helps deliver,directed
+Manchester Hilltop Social Group 016,,helps deliver,directed
+Kampala Bracken Social Group 019,,helps deliver,directed
+Mumbai Beacon Social Group 022,,shares resources with,directed
+Buenos Aires Bridgewater Social Group 025,,helps deliver,directed
+Oslo Highfield Social Group 028,,helps deliver,directed
+Amsterdam Northbank Social Group 031,,helps deliver,directed
+Accra Hilltop Social Group 034,,shares resources with,directed
+Kathmandu Bracken Social Group 037,,helps deliver,directed
+Vancouver Beacon Social Group 040,,helps deliver,directed
+London Bridgewater Social Group 043,,helps deliver,directed
+Nairobi Highfield Social Group 046,,shares resources with,directed
+Lagos Northbank Social Group 049,,helps deliver,directed
+Johannesburg Hilltop Social Group 052,,helps deliver,directed
+Berlin Bracken Social Group 055,,helps deliver,directed
+Manchester Beacon Social Group 058,,shares resources with,directed
+Kampala Bridgewater Social Group 061,,helps deliver,directed
+Mumbai Highfield Social Group 064,,helps deliver,directed
+Buenos Aires Northbank Social Group 067,,helps deliver,directed
+Oslo Hilltop Social Group 070,,shares resources with,directed
+Amsterdam Bracken Social Group 073,,helps deliver,directed
+Accra Beacon Social Group 076,,helps deliver,directed
+Kathmandu Bridgewater Social Group 079,,helps deliver,directed
+Vancouver Highfield Social Group 082,,shares resources with,directed
+London Northbank Social Group 085,,helps deliver,directed
+Nairobi Hilltop Social Group 088,,helps deliver,directed
+Lagos Bracken Social Group 091,,helps deliver,directed
+London Bracken Social Group 001,Johannesburg Cornerstone Social Group 024,works with,mutual
+Manchester Harbour Social Group 002,Amsterdam Northbank Social Group 031,works with,mutual
+Amsterdam Mosaic Social Group 003,Johannesburg Harbour Social Group 038,works with,mutual
+Nairobi Beacon Social Group 004,Amsterdam Meadow Social Group 045,works with,mutual
+Kampala Willow Social Group 005,Johannesburg Hilltop Social Group 052,works with,mutual
+Accra Cornerstone Social Group 006,Amsterdam Willow Social Group 059,works with,mutual
+Lagos Bridgewater Social Group 007,Johannesburg Riverside Social Group 066,works with,mutual
+Mumbai Hearth Social Group 008,Amsterdam Bracken Social Group 073,works with,mutual
+Kathmandu Meadow Social Group 009,Johannesburg Hearth Social Group 080,works with,mutual
+Johannesburg Highfield Social Group 010,Amsterdam Cedar Social Group 087,works with,mutual
+Buenos Aires Lantern Social Group 011,Johannesburg Beacon Social Group 094,works with,mutual
+Vancouver Riverside Social Group 012,Lagos Bridgewater Social Group 007,works with,mutual
+Berlin Northbank Social Group 013,Oslo Seedling Social Group 014,works with,mutual
+Oslo Seedling Social Group 014,Lagos Mosaic Social Group 021,works with,mutual
+London Cedar Social Group 015,Oslo Highfield Social Group 028,works with,mutual
+Manchester Hilltop Social Group 016,Lagos Tideway Social Group 035,works with,mutual
+Amsterdam Tideway Social Group 017,Oslo Cornerstone Social Group 042,works with,mutual
+Nairobi Foundry Social Group 018,Lagos Northbank Social Group 049,works with,mutual
+Kampala Bracken Social Group 019,Oslo Harbour Social Group 056,works with,mutual
+Accra Harbour Social Group 020,Lagos Meadow Social Group 063,works with,mutual
+Lagos Mosaic Social Group 021,Oslo Hilltop Social Group 070,works with,mutual
+Mumbai Beacon Social Group 022,Lagos Willow Social Group 077,works with,mutual
+Kathmandu Willow Social Group 023,Oslo Riverside Social Group 084,works with,mutual
+Johannesburg Cornerstone Social Group 024,Lagos Bracken Social Group 091,works with,mutual
+Buenos Aires Bridgewater Social Group 025,Nairobi Beacon Social Group 004,works with,mutual
+Vancouver Hearth Social Group 026,Buenos Aires Lantern Social Group 011,works with,mutual
+Berlin Meadow Social Group 027,Nairobi Foundry Social Group 018,works with,mutual
+Oslo Highfield Social Group 028,Buenos Aires Bridgewater Social Group 025,works with,mutual
+London Lantern Social Group 029,Nairobi Seedling Social Group 032,works with,mutual
+Manchester Riverside Social Group 030,Buenos Aires Mosaic Social Group 039,works with,mutual
+Amsterdam Northbank Social Group 031,Nairobi Highfield Social Group 046,works with,mutual
+Nairobi Seedling Social Group 032,Buenos Aires Tideway Social Group 053,works with,mutual
+Kampala Cedar Social Group 033,Nairobi Cornerstone Social Group 060,works with,mutual
+Accra Hilltop Social Group 034,Buenos Aires Northbank Social Group 067,works with,mutual
+Lagos Tideway Social Group 035,Nairobi Harbour Social Group 074,works with,mutual
+Mumbai Foundry Social Group 036,Buenos Aires Meadow Social Group 081,works with,mutual
+Kathmandu Bracken Social Group 037,Nairobi Hilltop Social Group 088,works with,mutual
+Johannesburg Harbour Social Group 038,London Bracken Social Group 001,works with,mutual
+Buenos Aires Mosaic Social Group 039,Mumbai Hearth Social Group 008,works with,mutual
+Vancouver Beacon Social Group 040,London Cedar Social Group 015,works with,mutual
+Berlin Willow Social Group 041,Mumbai Beacon Social Group 022,works with,mutual
+Oslo Cornerstone Social Group 042,London Lantern Social Group 029,works with,mutual
+London Bridgewater Social Group 043,Mumbai Foundry Social Group 036,works with,mutual
+Manchester Hearth Social Group 044,London Bridgewater Social Group 043,works with,mutual
+Amsterdam Meadow Social Group 045,Mumbai Seedling Social Group 050,works with,mutual
+Nairobi Highfield Social Group 046,London Mosaic Social Group 057,works with,mutual
+Kampala Lantern Social Group 047,Mumbai Highfield Social Group 064,works with,mutual
+Accra Riverside Social Group 048,London Tideway Social Group 071,works with,mutual
+Lagos Northbank Social Group 049,Mumbai Cornerstone Social Group 078,works with,mutual
+Mumbai Seedling Social Group 050,London Northbank Social Group 085,works with,mutual
+Kathmandu Cedar Social Group 051,Mumbai Harbour Social Group 092,works with,mutual
+Johannesburg Hilltop Social Group 052,Kampala Willow Social Group 005,works with,mutual
+Buenos Aires Tideway Social Group 053,Vancouver Riverside Social Group 012,works with,mutual
+Vancouver Foundry Social Group 054,Kampala Bracken Social Group 019,works with,mutual
+Berlin Bracken Social Group 055,Vancouver Hearth Social Group 026,works with,mutual
+Oslo Harbour Social Group 056,Kampala Cedar Social Group 033,works with,mutual
+London Mosaic Social Group 057,Vancouver Beacon Social Group 040,works with,mutual
+Manchester Beacon Social Group 058,Kampala Lantern Social Group 047,works with,mutual
+Amsterdam Willow Social Group 059,Vancouver Foundry Social Group 054,works with,mutual
+Nairobi Cornerstone Social Group 060,Kampala Bridgewater Social Group 061,works with,mutual
+Kampala Bridgewater Social Group 061,Vancouver Seedling Social Group 068,works with,mutual
+Accra Hearth Social Group 062,Kampala Mosaic Social Group 075,works with,mutual
+Lagos Meadow Social Group 063,Vancouver Highfield Social Group 082,works with,mutual
+Mumbai Highfield Social Group 064,Kampala Tideway Social Group 089,works with,mutual
+Kathmandu Lantern Social Group 065,Manchester Harbour Social Group 002,works with,mutual
+Johannesburg Riverside Social Group 066,Kathmandu Meadow Social Group 009,works with,mutual
+Buenos Aires Northbank Social Group 067,Manchester Hilltop Social Group 016,works with,mutual
+Vancouver Seedling Social Group 068,Kathmandu Willow Social Group 023,works with,mutual
+Berlin Cedar Social Group 069,Manchester Riverside Social Group 030,works with,mutual
+Oslo Hilltop Social Group 070,Kathmandu Bracken Social Group 037,works with,mutual
+London Tideway Social Group 071,Manchester Hearth Social Group 044,works with,mutual
+Manchester Foundry Social Group 072,Kathmandu Cedar Social Group 051,works with,mutual
+Amsterdam Bracken Social Group 073,Manchester Beacon Social Group 058,works with,mutual
+Nairobi Harbour Social Group 074,Kathmandu Lantern Social Group 065,works with,mutual
+Kampala Mosaic Social Group 075,Manchester Foundry Social Group 072,works with,mutual
