@@ -73,7 +73,7 @@ test("Geography remains a connected map, with recorded links shown by default",a
 test("Throw Lab makes raw fictional inputs and unsupported cases visible",async({page})=>{
   await page.goto("/throw-lab");
   await expect(page.getByRole("heading",{level:1,name:"What can you throw at Mossy?"})).toBeVisible();
-  await expect(page.getByText("24 engine-tested input cases")).toBeVisible();
+  await expect(page.getByText(/24 small engine-tested input cases/)).toBeVisible();
   await expect(page.getByText(/36 tracked gaps/)).toBeVisible();
   await expect(page.locator(".ml-throw-rich-card")).toHaveCount(8);
   await expect(page.locator(".ml-throw-small .ml-start-example")).toHaveCount(24);
