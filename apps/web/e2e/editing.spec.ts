@@ -86,7 +86,8 @@ test("one editable data view changes the graph, and a graph connection appears i
   await expect(page.locator(".ml-inspector h2")).toHaveText("Grant funding");
   // No global Edit mode is needed to create a connection.
   await page.getByRole("button",{name:"Connect",exact:true}).click();
-  await page.locator(".ml-data-toggle").click();
+  // Data stays visible while connecting, so either endpoint can be chosen in the
+  // drawing or from a keyboard-accessible row.
   const candidates=page.locator(".ml-data-table tbody tr");
   await candidates.filter({hasText:"Cooking skills"}).first().locator(".ml-data-locate").click();
   const connection=page.getByRole("complementary",{name:"Draw a connection"});
