@@ -78,7 +78,7 @@ test("one editable data view changes the graph, and a graph connection appears i
   await records.getByRole("textbox",{name:"name of Grant funding"}).fill("Funder support");
   await records.getByRole("textbox",{name:"name of Grant funding"}).press("Enter");
   await expect(records).toContainText("Funder support");
-  await funding.getByRole("button",{name:"Show Funder support in the graph"}).click();
+  await records.getByRole("button",{name:"Show Funder support in the graph"}).click();
   await expect(page.locator(".ml-inspector h2")).toHaveText("Funder support");
   // The change is not a separate table copy: undo restores the graph and the table.
   await page.getByRole("button",{name:"Undo last change"}).click();
