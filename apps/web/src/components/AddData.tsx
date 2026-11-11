@@ -165,13 +165,13 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
     if(source.length>8_000_000){
       setError("That paste is too large. Save it as a file and drop it here instead.");return;
     }
-    const isJson=/^[\\[{]/.test(source);
-    const first=source.split(/\\r?\\n/)[0];
-    if(!isJson && (!/[\\r\\n]/.test(source)||!/[\\t,;]/.test(first))){
+    const isJson=/^[\[{]/.test(source);
+    const first=source.split(/\r?\n/)[0];
+    if(!isJson && (!/[\r\n]/.test(source)||!/[\t,;]/.test(first))){
       setError("Paste a table with a heading row and at least one data row, or paste JSON. Free-form documents aren't supported here yet.");
       return;
     }
-    const name=isJson?"pasted-data.json":source.includes("\\t")?"pasted-data.tsv":"pasted-data.csv";
+    const name=isJson?"pasted-data.json":source.includes("\t")?"pasted-data.tsv":"pasted-data.csv";
     readFiles([new File([source],name,{type:isJson?"application/json":"text/plain"})],"Pasted data");
   }
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); readFiles(Array.from(event.dataTransfer.files)); };
@@ -289,7 +289,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             <span>Paste a table copied from a spreadsheet, CSV or JSON</span>
           </label>
           <textarea id="ml-add-pasted-data" rows={5} value={pasted}
-            placeholder={"Name,Theme\\nFood club,Food\\nRepair shed,Climate"}
+            placeholder={"Name,Theme\nFood club,Food\nRepair shed,Climate"}
             onChange={e=>setPasted(e.target.value)} />
           <p className="ml-small">Include the header row. Mossy reads this in your browser.
             For free-form reports, notes and transcripts, source-grounded extraction is still being developed.</p>
