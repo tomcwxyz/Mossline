@@ -47,16 +47,17 @@ export default function ThrowLabPage(){
           <div>
             <p className="ml-start-eyebrow">Start exploring</p>
             <h2 id="lab-rich">Eight richer worlds to investigate</h2>
-            <p>Hundreds of source records per example. Some form real recorded networks, some belong on maps, and some have no links at all. They use the same import journey as your own files.</p>
+            <p>Hundreds of source records per example, now spread deliberately across the UK, the United States and multiple countries and continents. Some form recorded networks; others belong on maps or have no links at all. Every example uses the same import journey as your own files.</p>
           </div>
         </div>
         <div className="ml-start-example-grid ml-throw-rich-grid">
           {RICH_LAB_EXAMPLES.map((item,index)=><article key={item.id} className="ml-start-example ml-throw-rich-card">
             <div className="ml-start-example-copy">
-              <p className="ml-start-eyebrow">{String(index+1).padStart(2,"0")} / {item.group}</p>
+              <p className="ml-start-eyebrow">{String(index+1).padStart(2,"0")} / {item.group} · {item.geography.label}</p>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <p className="ml-example-facts">{item.stats}</p>
+              <p className="ml-small"><strong>Geography:</strong> {item.geography.cities} city anchors · {item.geography.countries.length} {item.geography.countries.length===1?"country":"countries"}. Locations are fictional and placed near real city centres.</p>
               <div className="ml-throw-patterns">
                 <strong>Things worth looking for</strong>
                 <ul>{item.observations.map(pattern=><li key={pattern}>{pattern}</li>)}</ul>
