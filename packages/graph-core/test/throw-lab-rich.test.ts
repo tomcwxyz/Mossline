@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {applySources,parseGraphDocument,readDelimited,readJson,recogniseTable,
-  placedCoordinates,fundingFlows,type PlannedTable,type GraphDocument} from "../src/index.ts";
+  placedCoordinates,fundingFlows,recordedYear,type PlannedTable,type GraphDocument} from "../src/index.ts";
 
 type RichExample={id:string;title:string;files:{name:string;path:string;rows:number}[];
  expectedRecords:number;expectedLinks:number;idealFirstView:string;stats:string};
@@ -63,6 +63,11 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
   if(item.id==="funding-in-motion"){
     assert.equal(fundingFlows(graph).length,720);
     assert.ok(graph.edges.every(e=>e.direction==="directed"));
+  }
+  if(item.id==="volunteer-calendar"){
+    assert.equal(graph.edges.filter(edge=>recordedYear(edge)!==null).length,320,
+      "All dated events must carry their source dates into the timeline");
+    assert.equal(new Set(graph.edges.map(recordedYear)).size,4);
   }
   if(item.id==="wildlife-sightings"){
     assert.equal(graph.edges.length,0,"observation lists must not generate fake relationships");
