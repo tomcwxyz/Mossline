@@ -450,7 +450,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     map.getCanvas().setAttribute("aria-label",
       `Map: ${(located.length - approximate).toLocaleString("en-GB")} records plotted from their source coordinates` +
       (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") +
-      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Use Browse records for a list.`);
+      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Open Data for the accessible record list.`);
     // The selected record gets a name card, as a map would label a feature.
     focusMarkers.current.forEach(m => m.remove()); focusMarkers.current = [];
     const sel = selectedNode ? located.find(p => p.node.id === selectedNode.id) : null;
@@ -670,7 +670,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
-      <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>
+      <p>{located.length.toLocaleString("en-GB")} records have a place; Data lists them all.</p>
       {error && <small>{error}</small>}
     </div>}
     {inset && !narrow && <svg className="ml-map-inset" viewBox={`0 0 ${inset.width} ${inset.height}`} aria-hidden="true">
@@ -718,7 +718,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         {unplacedOpen && <>
           <p>Kept here in the margin rather than guessed from a name or region. A postcode or coordinates in your data would place them.</p>
           <ul>{unplaced.slice(0, 3).map(n => <li key={n.id}><button type="button" onClick={() => pick.current(n.id)}>{n.label}</button></li>)}
-            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Browse</button></li>}</ul>
+            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Data</button></li>}</ul>
         </>}
       </section>}
     </div>
