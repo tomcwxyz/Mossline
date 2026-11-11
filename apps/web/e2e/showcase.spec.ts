@@ -76,6 +76,11 @@ test("Throw Lab makes raw fictional inputs and unsupported cases visible",async(
   await expect(page.getByText(/24 small engine-tested input cases/)).toBeVisible();
   await expect(page.getByText(/36 tracked gaps/)).toBeVisible();
   await expect(page.locator(".ml-throw-rich-card")).toHaveCount(8);
+  await expect(page.locator(".ml-throw-rich-card").filter({hasText:"The Neighbourhood Web"})).toContainText("UK-wide");
+  await expect(page.locator(".ml-throw-rich-card").filter({hasText:"After Hours"})).toContainText("Europe-wide");
+  await expect(page.locator(".ml-throw-rich-card").filter({hasText:"Six Years of Community Funding"})).toContainText("United States-wide");
+  await expect(page.locator(".ml-throw-rich-card").filter({hasText:"How Food Moves"})).toContainText("Canada, United States and Mexico");
+  await expect(page.locator(".ml-throw-rich-card").filter({hasText:"Living Places"})).toContainText("15 countries");
   await expect(page.locator(".ml-throw-small .ml-start-example")).toHaveCount(24);
   await page.locator(".ml-throw-small > summary").click();
   const bare=page.locator(".ml-throw-small .ml-start-example").filter({hasText:"Only From, To and Relationship"});
