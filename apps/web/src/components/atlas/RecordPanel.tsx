@@ -114,7 +114,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
         <button type="button" onClick={() => onPick(n.id)}><TypeMark type={n.type}/><span>{n.label}</span>
           <small>{degree} recorded</small></button></li>)}</ul>
     </>}
-    <p className="ml-hint">Or press <kbd>/</kbd> to search, or open <strong>Browse records</strong> for a full list.</p>
+    <p className="ml-hint">Or press <kbd>/</kbd> to search, or open <strong>Data</strong> to see and edit every record.</p>
     <div className="ml-grammar-note">
       <p><span className="ml-key-ink"/> Solid lines are recorded in your source.</p>
       <p><span className="ml-key-pencil"/> Dotted lines are suggestions, not facts.</p>
