@@ -1,531 +1,531 @@
 From,To,Relationship,Direction,Since
-Newcastle Bracken Growers 001,Gateshead Community Kitchen 007,supplies,directed,2022
-Sunderland Harbour Growers 002,Durham Community Kitchen 019,supplies,directed,2023
-Middlesbrough Mosaic Growers 003,Hartlepool Community Kitchen 027,supplies,directed,2024
-Darlington Beacon Growers 004,Newcastle Community Kitchen 043,supplies,directed,2025
-Durham Willow Growers 005,Sunderland Community Kitchen 058,supplies,directed,2022
-Hartlepool Cornerstone Growers 006,Sunderland Community Kitchen 072,supplies,directed,2023
-Gateshead Bridgewater Growers 007,Newcastle Community Kitchen 085,supplies,directed,2024
-Newcastle Hearth Growers 008,Gateshead Community Kitchen 007,supplies,directed,2025
-Sunderland Meadow Growers 009,Darlington Community Kitchen 025,supplies,directed,2022
-Middlesbrough Highfield Growers 010,Sunderland Community Kitchen 037,supplies,directed,2023
-Darlington Lantern Growers 011,Sunderland Community Kitchen 051,supplies,directed,2024
-Durham Riverside Growers 012,Newcastle Community Kitchen 064,supplies,directed,2025
-Hartlepool Northbank Growers 013,Darlington Community Kitchen 074,supplies,directed,2022
-Gateshead Seedling Growers 014,Middlesbrough Community Kitchen 003,supplies,directed,2023
-Newcastle Cedar Growers 015,Gateshead Community Kitchen 014,supplies,directed,2024
-Sunderland Hilltop Growers 016,Gateshead Community Kitchen 028,supplies,directed,2025
-Middlesbrough Tideway Growers 017,Newcastle Community Kitchen 043,supplies,directed,2022
-Darlington Foundry Growers 018,Hartlepool Community Kitchen 055,supplies,directed,2023
-Durham Bracken Growers 019,Newcastle Community Kitchen 071,supplies,directed,2024
-Hartlepool Harbour Growers 020,Sunderland Community Kitchen 079,supplies,directed,2025
-Gateshead Mosaic Growers 021,Gateshead Community Kitchen 007,supplies,directed,2022
-Newcastle Beacon Growers 022,Darlington Community Kitchen 025,supplies,directed,2023
-Sunderland Willow Growers 023,Gateshead Community Kitchen 035,supplies,directed,2024
-Middlesbrough Cornerstone Growers 024,Sunderland Community Kitchen 051,supplies,directed,2025
-Darlington Bridgewater Growers 025,Gateshead Community Kitchen 063,supplies,directed,2022
-Durham Hearth Growers 026,Middlesbrough Community Kitchen 073,supplies,directed,2023
-Hartlepool Meadow Growers 027,Durham Community Kitchen 005,supplies,directed,2024
-Gateshead Highfield Growers 028,Gateshead Community Kitchen 014,supplies,directed,2025
-Newcastle Lantern Growers 029,Durham Community Kitchen 026,supplies,directed,2022
-Sunderland Riverside Growers 030,Middlesbrough Community Kitchen 038,supplies,directed,2023
-Middlesbrough Northbank Growers 031,Darlington Community Kitchen 053,supplies,directed,2024
-Darlington Seedling Growers 032,Darlington Community Kitchen 067,supplies,directed,2025
-Durham Cedar Growers 033,Darlington Community Kitchen 081,supplies,directed,2022
-Hartlepool Hilltop Growers 034,Darlington Community Kitchen 011,supplies,directed,2023
-Gateshead Tideway Growers 035,Durham Community Kitchen 019,supplies,directed,2024
-Newcastle Foundry Growers 036,Darlington Community Kitchen 032,supplies,directed,2025
-Sunderland Bracken Growers 037,Hartlepool Community Kitchen 048,supplies,directed,2022
-Middlesbrough Harbour Growers 038,Sunderland Community Kitchen 058,supplies,directed,2023
-Darlington Mosaic Growers 039,Darlington Community Kitchen 074,supplies,directed,2024
-Durham Beacon Growers 040,Darlington Community Kitchen 004,supplies,directed,2025
-Hartlepool Willow Growers 041,Darlington Community Kitchen 011,supplies,directed,2022
-Gateshead Cornerstone Growers 042,Hartlepool Community Kitchen 027,supplies,directed,2023
-Newcastle Bridgewater Growers 043,Sunderland Community Kitchen 037,supplies,directed,2024
-Sunderland Hearth Growers 044,Gateshead Community Kitchen 056,supplies,directed,2025
-Middlesbrough Meadow Growers 045,Newcastle Community Kitchen 064,supplies,directed,2022
-Darlington Highfield Growers 046,Darlington Community Kitchen 081,supplies,directed,2023
-Durham Lantern Growers 047,Newcastle Community Kitchen 008,supplies,directed,2024
-Hartlepool Riverside Growers 048,Darlington Community Kitchen 018,supplies,directed,2025
-Gateshead Northbank Growers 049,Newcastle Community Kitchen 036,supplies,directed,2022
-Newcastle Seedling Growers 050,Durham Community Kitchen 047,supplies,directed,2023
-Sunderland Cedar Growers 051,Sunderland Community Kitchen 058,supplies,directed,2024
-Middlesbrough Hilltop Growers 052,Sunderland Community Kitchen 072,supplies,directed,2025
-Darlington Tideway Growers 053,Middlesbrough Community Kitchen 003,supplies,directed,2022
-Durham Foundry Growers 054,Newcastle Community Kitchen 015,supplies,directed,2023
-Hartlepool Bracken Growers 055,Sunderland Community Kitchen 023,supplies,directed,2024
-Gateshead Harbour Growers 056,Middlesbrough Community Kitchen 038,supplies,directed,2025
-Newcastle Mosaic Growers 057,Middlesbrough Community Kitchen 052,supplies,directed,2022
-Sunderland Beacon Growers 058,Sunderland Community Kitchen 065,supplies,directed,2023
-Middlesbrough Willow Growers 059,Hartlepool Community Kitchen 076,supplies,directed,2024
-Darlington Cornerstone Growers 060,Newcastle Community Kitchen 008,supplies,directed,2025
-Durham Bridgewater Growers 061,Darlington Community Kitchen 018,supplies,directed,2022
-Hartlepool Hearth Growers 062,Middlesbrough Community Kitchen 031,supplies,directed,2023
-Gateshead Meadow Growers 063,Darlington Community Kitchen 046,supplies,directed,2024
-Newcastle Highfield Growers 064,Durham Community Kitchen 061,supplies,directed,2025
-Sunderland Lantern Growers 065,Durham Community Kitchen 068,supplies,directed,2022
-Middlesbrough Riverside Growers 066,Gateshead Community Kitchen 084,supplies,directed,2023
-Darlington Northbank Growers 067,Darlington Community Kitchen 011,supplies,directed,2024
-Durham Seedling Growers 068,Middlesbrough Community Kitchen 024,supplies,directed,2025
-Hartlepool Cedar Growers 069,Gateshead Community Kitchen 035,supplies,directed,2022
-Gateshead Hilltop Growers 070,Middlesbrough Community Kitchen 052,supplies,directed,2023
-Newcastle Tideway Growers 071,Gateshead Community Kitchen 063,supplies,directed,2024
-Sunderland Foundry Growers 072,Newcastle Community Kitchen 078,supplies,directed,2025
-Middlesbrough Bracken Growers 073,Darlington Community Kitchen 004,supplies,directed,2022
-Darlington Harbour Growers 074,Gateshead Community Kitchen 021,supplies,directed,2023
-Durham Mosaic Growers 075,Hartlepool Community Kitchen 034,supplies,directed,2024
-Hartlepool Beacon Growers 076,Durham Community Kitchen 047,supplies,directed,2025
-Gateshead Willow Growers 077,Darlington Community Kitchen 060,supplies,directed,2022
-Newcastle Cornerstone Growers 078,Durham Community Kitchen 068,supplies,directed,2023
-Sunderland Bridgewater Growers 079,Newcastle Community Kitchen 085,supplies,directed,2024
-Middlesbrough Hearth Growers 080,Sunderland Community Kitchen 009,supplies,directed,2025
-Darlington Meadow Growers 081,Darlington Community Kitchen 025,supplies,directed,2022
-Durham Highfield Growers 082,Hartlepool Community Kitchen 034,supplies,directed,2023
-Hartlepool Lantern Growers 083,Durham Community Kitchen 047,supplies,directed,2024
-Gateshead Riverside Growers 084,Newcastle Community Kitchen 064,supplies,directed,2025
-Newcastle Northbank Growers 085,Middlesbrough Community Kitchen 073,supplies,directed,2022
-Sunderland Seedling Growers 086,Middlesbrough Community Kitchen 003,supplies,directed,2023
-Middlesbrough Cedar Growers 087,Hartlepool Community Kitchen 020,supplies,directed,2024
-Darlington Hilltop Growers 088,Sunderland Community Kitchen 030,supplies,directed,2025
-Durham Tideway Growers 089,Hartlepool Community Kitchen 041,supplies,directed,2022
-Hartlepool Foundry Growers 090,Sunderland Community Kitchen 058,supplies,directed,2023
-Gateshead Bracken Growers 091,Sunderland Community Kitchen 072,supplies,directed,2024
-Newcastle Harbour Growers 092,Hartlepool Community Kitchen 083,supplies,directed,2025
-Sunderland Mosaic Growers 093,Newcastle Community Kitchen 008,supplies,directed,2022
-Middlesbrough Beacon Growers 094,Sunderland Community Kitchen 023,supplies,directed,2023
-Darlington Willow Growers 095,Newcastle Community Kitchen 036,supplies,directed,2024
-Newcastle Bracken Growers 001,Sunderland Community Kitchen 051,supplies,directed,2025
-Sunderland Harbour Growers 002,Sunderland Community Kitchen 065,supplies,directed,2022
-Middlesbrough Mosaic Growers 003,Durham Community Kitchen 075,supplies,directed,2023
-Darlington Beacon Growers 004,Sunderland Community Kitchen 002,supplies,directed,2024
-Durham Willow Growers 005,Darlington Community Kitchen 018,supplies,directed,2025
-Hartlepool Cornerstone Growers 006,Durham Community Kitchen 026,supplies,directed,2022
-Gateshead Bridgewater Growers 007,Durham Community Kitchen 040,supplies,directed,2023
-Newcastle Hearth Growers 008,Hartlepool Community Kitchen 055,supplies,directed,2024
-Sunderland Meadow Growers 009,Durham Community Kitchen 068,supplies,directed,2025
-Middlesbrough Highfield Growers 010,Durham Community Kitchen 082,supplies,directed,2022
-Darlington Lantern Growers 011,Darlington Community Kitchen 011,supplies,directed,2023
-Durham Riverside Growers 012,Middlesbrough Community Kitchen 024,supplies,directed,2024
-Hartlepool Northbank Growers 013,Middlesbrough Community Kitchen 038,supplies,directed,2025
-Gateshead Seedling Growers 014,Newcastle Community Kitchen 050,supplies,directed,2022
-Newcastle Cedar Growers 015,Sunderland Community Kitchen 058,supplies,directed,2023
-Sunderland Hilltop Growers 016,Newcastle Community Kitchen 071,supplies,directed,2024
-Middlesbrough Tideway Growers 017,Darlington Community Kitchen 004,supplies,directed,2025
-Darlington Foundry Growers 018,Sunderland Community Kitchen 016,supplies,directed,2022
-Durham Bracken Growers 019,Middlesbrough Community Kitchen 031,supplies,directed,2023
-Hartlepool Harbour Growers 020,Middlesbrough Community Kitchen 038,supplies,directed,2024
-Gateshead Mosaic Growers 021,Gateshead Community Kitchen 056,supplies,directed,2025
-Newcastle Beacon Growers 022,Newcastle Community Kitchen 064,supplies,directed,2022
-Sunderland Willow Growers 023,Durham Community Kitchen 082,supplies,directed,2023
-Middlesbrough Cornerstone Growers 024,Newcastle Community Kitchen 008,supplies,directed,2024
-Darlington Bridgewater Growers 025,Middlesbrough Community Kitchen 024,supplies,directed,2025
-Durham Hearth Growers 026,Darlington Community Kitchen 032,supplies,directed,2022
-Hartlepool Meadow Growers 027,Sunderland Community Kitchen 044,supplies,directed,2023
-Gateshead Highfield Growers 028,Gateshead Community Kitchen 063,supplies,directed,2024
-Newcastle Lantern Growers 029,Middlesbrough Community Kitchen 073,supplies,directed,2025
-Sunderland Riverside Growers 030,Newcastle Community Kitchen 085,supplies,directed,2022
-Middlesbrough Northbank Growers 031,Hartlepool Community Kitchen 013,supplies,directed,2023
-Darlington Seedling Growers 032,Durham Community Kitchen 026,supplies,directed,2024
-Durham Cedar Growers 033,Gateshead Community Kitchen 042,supplies,directed,2025
-Hartlepool Hilltop Growers 034,Gateshead Community Kitchen 056,supplies,directed,2022
-Gateshead Tideway Growers 035,Darlington Community Kitchen 067,supplies,directed,2023
-Newcastle Foundry Growers 036,Darlington Community Kitchen 081,supplies,directed,2024
-Sunderland Bracken Growers 037,Newcastle Community Kitchen 008,supplies,directed,2025
-Middlesbrough Harbour Growers 038,Sunderland Community Kitchen 023,supplies,directed,2022
-Darlington Mosaic Growers 039,Sunderland Community Kitchen 030,supplies,directed,2023
-Durham Beacon Growers 040,Gateshead Community Kitchen 049,supplies,directed,2024
-Hartlepool Willow Growers 041,Middlesbrough Community Kitchen 059,supplies,directed,2025
-Gateshead Cornerstone Growers 042,Sunderland Community Kitchen 072,supplies,directed,2022
-Newcastle Bridgewater Growers 043,Sunderland Community Kitchen 002,supplies,directed,2023
-Sunderland Hearth Growers 044,Newcastle Community Kitchen 015,supplies,directed,2024
-Middlesbrough Meadow Growers 045,Middlesbrough Community Kitchen 024,supplies,directed,2025
-Darlington Highfield Growers 046,Sunderland Community Kitchen 037,supplies,directed,2022
-Durham Lantern Growers 047,Middlesbrough Community Kitchen 052,supplies,directed,2023
-Hartlepool Riverside Growers 048,Hartlepool Community Kitchen 062,supplies,directed,2024
-Gateshead Northbank Growers 049,Middlesbrough Community Kitchen 080,supplies,directed,2025
-Newcastle Seedling Growers 050,Hartlepool Community Kitchen 006,supplies,directed,2022
-Sunderland Cedar Growers 051,Hartlepool Community Kitchen 020,supplies,directed,2023
-Middlesbrough Hilltop Growers 052,Middlesbrough Community Kitchen 031,supplies,directed,2024
-Darlington Tideway Growers 053,Darlington Community Kitchen 046,supplies,directed,2025
-Durham Foundry Growers 054,Durham Community Kitchen 061,supplies,directed,2022
-Hartlepool Bracken Growers 055,Darlington Community Kitchen 074,supplies,directed,2023
-Gateshead Harbour Growers 056,Newcastle Community Kitchen 001,supplies,directed,2024
-Newcastle Mosaic Growers 057,Hartlepool Community Kitchen 013,supplies,directed,2025
-Sunderland Beacon Growers 058,Hartlepool Community Kitchen 027,supplies,directed,2022
-Middlesbrough Willow Growers 059,Sunderland Community Kitchen 037,supplies,directed,2023
-Darlington Cornerstone Growers 060,Newcastle Community Kitchen 050,supplies,directed,2024
-Durham Bridgewater Growers 061,Middlesbrough Community Kitchen 066,supplies,directed,2025
-Hartlepool Hearth Growers 062,Middlesbrough Community Kitchen 080,supplies,directed,2022
-Gateshead Meadow Growers 063,Middlesbrough Community Kitchen 003,supplies,directed,2023
-Newcastle Highfield Growers 064,Newcastle Community Kitchen 015,supplies,directed,2024
-Sunderland Lantern Growers 065,Gateshead Community Kitchen 028,supplies,directed,2025
-Middlesbrough Riverside Growers 066,Durham Community Kitchen 047,supplies,directed,2022
-Darlington Northbank Growers 067,Middlesbrough Community Kitchen 059,supplies,directed,2023
-Durham Seedling Growers 068,Middlesbrough Community Kitchen 073,supplies,directed,2024
-Hartlepool Cedar Growers 069,Gateshead Community Kitchen 084,supplies,directed,2025
-Gateshead Hilltop Growers 070,Middlesbrough Community Kitchen 010,supplies,directed,2022
-Newcastle Tideway Growers 071,Newcastle Community Kitchen 022,supplies,directed,2023
-Sunderland Foundry Growers 072,Newcastle Community Kitchen 036,supplies,directed,2024
-Middlesbrough Bracken Growers 073,Gateshead Community Kitchen 049,supplies,directed,2025
-Darlington Harbour Growers 074,Durham Community Kitchen 061,supplies,directed,2022
-Durham Mosaic Growers 075,Gateshead Community Kitchen 077,supplies,directed,2023
-Hartlepool Beacon Growers 076,Newcastle Community Kitchen 001,supplies,directed,2024
-Gateshead Willow Growers 077,Middlesbrough Community Kitchen 017,supplies,directed,2025
-Newcastle Cornerstone Growers 078,Newcastle Community Kitchen 029,supplies,directed,2022
-Sunderland Bridgewater Growers 079,Middlesbrough Community Kitchen 045,supplies,directed,2023
-Middlesbrough Hearth Growers 080,Middlesbrough Community Kitchen 059,supplies,directed,2024
-Darlington Meadow Growers 081,Middlesbrough Community Kitchen 066,supplies,directed,2025
-Durham Highfield Growers 082,Darlington Community Kitchen 081,supplies,directed,2022
-Hartlepool Lantern Growers 083,Newcastle Community Kitchen 008,supplies,directed,2023
-Gateshead Riverside Growers 084,Middlesbrough Community Kitchen 024,supplies,directed,2024
-Newcastle Northbank Growers 085,Newcastle Community Kitchen 036,supplies,directed,2025
-Sunderland Seedling Growers 086,Middlesbrough Community Kitchen 052,supplies,directed,2022
-Middlesbrough Cedar Growers 087,Durham Community Kitchen 061,supplies,directed,2023
-Darlington Hilltop Growers 088,Middlesbrough Community Kitchen 073,supplies,directed,2024
-Durham Tideway Growers 089,Newcastle Community Kitchen 001,supplies,directed,2025
-Hartlepool Foundry Growers 090,Newcastle Community Kitchen 015,supplies,directed,2022
-Gateshead Bracken Growers 091,Gateshead Community Kitchen 028,supplies,directed,2023
-Newcastle Harbour Growers 092,Durham Community Kitchen 040,supplies,directed,2024
-Sunderland Mosaic Growers 093,Gateshead Community Kitchen 056,supplies,directed,2025
-Middlesbrough Beacon Growers 094,Middlesbrough Community Kitchen 066,supplies,directed,2022
-Darlington Willow Growers 095,Newcastle Community Kitchen 078,supplies,directed,2023
-Newcastle Bracken Growers 001,Newcastle Community Kitchen 008,supplies,directed,2024
-Sunderland Harbour Growers 002,Middlesbrough Community Kitchen 024,supplies,directed,2025
-Middlesbrough Mosaic Growers 003,Sunderland Community Kitchen 037,supplies,directed,2022
-Darlington Beacon Growers 004,Darlington Community Kitchen 046,supplies,directed,2023
-Durham Willow Growers 005,Newcastle Community Kitchen 064,supplies,directed,2024
-Hartlepool Cornerstone Growers 006,Gateshead Community Kitchen 077,supplies,directed,2025
-Gateshead Bridgewater Growers 007,Newcastle Community Kitchen 001,supplies,directed,2022
-Newcastle Hearth Growers 008,Durham Community Kitchen 012,supplies,directed,2023
-Sunderland Meadow Growers 009,Newcastle Community Kitchen 029,supplies,directed,2024
-Middlesbrough Highfield Growers 010,Durham Community Kitchen 040,supplies,directed,2025
-Darlington Lantern Growers 011,Sunderland Community Kitchen 051,supplies,directed,2022
-Durham Riverside Growers 012,Darlington Community Kitchen 067,supplies,directed,2023
-Hartlepool Northbank Growers 013,Newcastle Community Kitchen 078,supplies,directed,2024
-Gateshead Seedling Growers 014,Gateshead Community Kitchen 007,supplies,directed,2025
-Newcastle Cedar Growers 015,Newcastle Community Kitchen 022,supplies,directed,2022
-Sunderland Hilltop Growers 016,Hartlepool Community Kitchen 034,supplies,directed,2023
-Middlesbrough Tideway Growers 017,Darlington Community Kitchen 046,supplies,directed,2024
-Darlington Foundry Growers 018,Darlington Community Kitchen 060,supplies,directed,2025
-Durham Bracken Growers 019,Gateshead Community Kitchen 070,supplies,directed,2022
-Hartlepool Harbour Growers 020,Newcastle Community Kitchen 001,supplies,directed,2023
-Gateshead Mosaic Growers 021,Gateshead Community Kitchen 014,supplies,directed,2024
-Newcastle Beacon Growers 022,Gateshead Community Kitchen 028,supplies,directed,2025
-Sunderland Willow Growers 023,Sunderland Community Kitchen 037,supplies,directed,2022
-Middlesbrough Cornerstone Growers 024,Hartlepool Community Kitchen 055,supplies,directed,2023
-Darlington Bridgewater Growers 025,Hartlepool Community Kitchen 069,supplies,directed,2024
-Durham Hearth Growers 026,Newcastle Community Kitchen 078,supplies,directed,2025
-Hartlepool Meadow Growers 027,Durham Community Kitchen 005,supplies,directed,2022
-Gateshead Highfield Growers 028,Hartlepool Community Kitchen 020,supplies,directed,2023
-Newcastle Lantern Growers 029,Hartlepool Community Kitchen 034,supplies,directed,2024
-Sunderland Riverside Growers 030,Middlesbrough Community Kitchen 045,supplies,directed,2025
-Middlesbrough Northbank Growers 031,Newcastle Community Kitchen 057,supplies,directed,2022
-Darlington Seedling Growers 032,Hartlepool Community Kitchen 069,supplies,directed,2023
-Durham Cedar Growers 033,Newcastle Community Kitchen 001,supplies,directed,2024
-Hartlepool Hilltop Growers 034,Hartlepool Community Kitchen 013,supplies,directed,2025
-Gateshead Tideway Growers 035,Gateshead Community Kitchen 028,supplies,directed,2022
-Newcastle Foundry Growers 036,Darlington Community Kitchen 039,supplies,directed,2023
-Sunderland Bracken Growers 037,Darlington Community Kitchen 053,supplies,directed,2024
-Middlesbrough Harbour Growers 038,Durham Community Kitchen 068,supplies,directed,2025
-Darlington Mosaic Growers 039,Newcastle Community Kitchen 078,supplies,directed,2022
-Durham Beacon Growers 040,Gateshead Community Kitchen 007,supplies,directed,2023
-Hartlepool Willow Growers 041,Darlington Community Kitchen 018,supplies,directed,2024
-Gateshead Cornerstone Growers 042,Darlington Community Kitchen 032,supplies,directed,2025
-Newcastle Bridgewater Growers 043,Newcastle Community Kitchen 043,supplies,directed,2022
-Sunderland Hearth Growers 044,Middlesbrough Community Kitchen 059,supplies,directed,2023
-Middlesbrough Meadow Growers 045,Sunderland Community Kitchen 072,supplies,directed,2024
-Darlington Highfield Growers 046,Darlington Community Kitchen 081,supplies,directed,2025
-Durham Lantern Growers 047,Hartlepool Community Kitchen 013,supplies,directed,2022
-Hartlepool Riverside Growers 048,Sunderland Community Kitchen 023,supplies,directed,2023
-Gateshead Northbank Growers 049,Darlington Community Kitchen 039,supplies,directed,2024
-Newcastle Seedling Growers 050,Darlington Community Kitchen 053,supplies,directed,2025
-Sunderland Cedar Growers 051,Darlington Community Kitchen 067,supplies,directed,2022
-Middlesbrough Hilltop Growers 052,Durham Community Kitchen 075,supplies,directed,2023
-Darlington Tideway Growers 053,Newcastle Community Kitchen 008,supplies,directed,2024
-Durham Foundry Growers 054,Middlesbrough Community Kitchen 017,supplies,directed,2025
-Hartlepool Bracken Growers 055,Newcastle Community Kitchen 029,supplies,directed,2022
-Gateshead Harbour Growers 056,Hartlepool Community Kitchen 041,supplies,directed,2023
-Newcastle Mosaic Growers 057,Newcastle Community Kitchen 057,supplies,directed,2024
-Sunderland Beacon Growers 058,Darlington Community Kitchen 067,supplies,directed,2025
-Middlesbrough Willow Growers 059,Darlington Community Kitchen 081,supplies,directed,2022
-Darlington Cornerstone Growers 060,Middlesbrough Community Kitchen 010,supplies,directed,2023
-Durham Bridgewater Growers 061,Gateshead Community Kitchen 021,supplies,directed,2024
-Hartlepool Hearth Growers 062,Gateshead Community Kitchen 035,supplies,directed,2025
-Gateshead Meadow Growers 063,Durham Community Kitchen 047,supplies,directed,2022
-Newcastle Highfield Growers 064,Newcastle Community Kitchen 064,supplies,directed,2023
-Sunderland Lantern Growers 065,Middlesbrough Community Kitchen 073,supplies,directed,2024
-Middlesbrough Riverside Growers 066,Gateshead Community Kitchen 007,supplies,directed,2025
-Darlington Northbank Growers 067,Gateshead Community Kitchen 014,supplies,directed,2022
-Durham Seedling Growers 068,Newcastle Community Kitchen 029,supplies,directed,2023
-Hartlepool Cedar Growers 069,Sunderland Community Kitchen 044,supplies,directed,2024
-Gateshead Hilltop Growers 070,Newcastle Community Kitchen 057,supplies,directed,2025
-Newcastle Tideway Growers 071,Gateshead Community Kitchen 070,supplies,directed,2022
-Sunderland Foundry Growers 072,Hartlepool Community Kitchen 083,supplies,directed,2023
-Middlesbrough Bracken Growers 073,Middlesbrough Community Kitchen 010,supplies,directed,2024
-Darlington Harbour Growers 074,Middlesbrough Community Kitchen 024,supplies,directed,2025
-Durham Mosaic Growers 075,Hartlepool Community Kitchen 034,supplies,directed,2022
-Hartlepool Beacon Growers 076,Durham Community Kitchen 047,supplies,directed,2023
-Gateshead Willow Growers 077,Gateshead Community Kitchen 063,supplies,directed,2024
-Newcastle Cornerstone Growers 078,Darlington Community Kitchen 074,supplies,directed,2025
-Sunderland Bridgewater Growers 079,Middlesbrough Community Kitchen 003,supplies,directed,2022
-Middlesbrough Hearth Growers 080,Gateshead Community Kitchen 014,supplies,directed,2023
-Darlington Meadow Growers 081,Gateshead Community Kitchen 028,supplies,directed,2024
-Durham Highfield Growers 082,Darlington Community Kitchen 039,supplies,directed,2025
-Hartlepool Lantern Growers 083,Darlington Community Kitchen 053,supplies,directed,2022
-Gateshead Riverside Growers 084,Newcastle Community Kitchen 071,supplies,directed,2023
-Newcastle Northbank Growers 085,Middlesbrough Community Kitchen 080,supplies,directed,2024
-Sunderland Seedling Growers 086,Durham Community Kitchen 012,supplies,directed,2025
-Middlesbrough Cedar Growers 087,Hartlepool Community Kitchen 020,supplies,directed,2022
-Darlington Hilltop Growers 088,Durham Community Kitchen 033,supplies,directed,2023
-Durham Tideway Growers 089,Newcastle Community Kitchen 050,supplies,directed,2024
-Hartlepool Foundry Growers 090,Darlington Community Kitchen 060,supplies,directed,2025
-Gateshead Bracken Growers 091,Newcastle Community Kitchen 071,supplies,directed,2022
-Newcastle Harbour Growers 092,Darlington Community Kitchen 004,supplies,directed,2023
-Sunderland Mosaic Growers 093,Middlesbrough Community Kitchen 017,supplies,directed,2024
-Middlesbrough Beacon Growers 094,Hartlepool Community Kitchen 027,supplies,directed,2025
-Darlington Willow Growers 095,Darlington Community Kitchen 039,supplies,directed,2022
-Newcastle Bracken Growers 001,Middlesbrough Community Kitchen 052,supplies,directed,2023
-Sunderland Harbour Growers 002,Newcastle Community Kitchen 064,supplies,directed,2024
-Middlesbrough Mosaic Growers 003,Durham Community Kitchen 082,supplies,directed,2025
-Darlington Beacon Growers 004,Hartlepool Community Kitchen 006,supplies,directed,2022
-Durham Willow Growers 005,Durham Community Kitchen 019,supplies,directed,2023
-Newcastle Bracken Growers 001,Newcastle Food Hub 001,delivers to,directed,2023
-Newcastle Hearth Growers 008,Sunderland Food Hub 002,delivers to,directed,2024
-Newcastle Cedar Growers 015,Middlesbrough Food Hub 003,delivers to,directed,2025
-Newcastle Beacon Growers 022,Darlington Food Hub 004,delivers to,directed,2023
-Newcastle Lantern Growers 029,Durham Food Hub 005,delivers to,directed,2024
-Newcastle Foundry Growers 036,Hartlepool Food Hub 006,delivers to,directed,2025
-Newcastle Bridgewater Growers 043,Gateshead Food Hub 007,delivers to,directed,2023
-Newcastle Seedling Growers 050,Newcastle Food Hub 008,delivers to,directed,2024
-Newcastle Mosaic Growers 057,Sunderland Food Hub 009,delivers to,directed,2025
-Newcastle Highfield Growers 064,Middlesbrough Food Hub 010,delivers to,directed,2023
-Newcastle Tideway Growers 071,Darlington Food Hub 011,delivers to,directed,2024
-Newcastle Cornerstone Growers 078,Durham Food Hub 012,delivers to,directed,2025
-Newcastle Northbank Growers 085,Hartlepool Food Hub 013,delivers to,directed,2023
-Newcastle Harbour Growers 092,Gateshead Food Hub 014,delivers to,directed,2024
-Darlington Beacon Growers 004,Newcastle Food Hub 015,delivers to,directed,2025
-Darlington Lantern Growers 011,Sunderland Food Hub 016,delivers to,directed,2023
-Darlington Foundry Growers 018,Middlesbrough Food Hub 017,delivers to,directed,2024
-Darlington Bridgewater Growers 025,Darlington Food Hub 018,delivers to,directed,2025
-Darlington Seedling Growers 032,Durham Food Hub 019,delivers to,directed,2023
-Darlington Mosaic Growers 039,Hartlepool Food Hub 020,delivers to,directed,2024
-Darlington Highfield Growers 046,Gateshead Food Hub 021,delivers to,directed,2025
-Darlington Tideway Growers 053,Newcastle Food Hub 022,delivers to,directed,2023
-Darlington Cornerstone Growers 060,Newcastle Food Hub 001,delivers to,directed,2024
-Darlington Northbank Growers 067,Sunderland Food Hub 002,delivers to,directed,2025
-Darlington Harbour Growers 074,Middlesbrough Food Hub 003,delivers to,directed,2023
-Darlington Meadow Growers 081,Darlington Food Hub 004,delivers to,directed,2024
-Darlington Hilltop Growers 088,Durham Food Hub 005,delivers to,directed,2025
-Darlington Willow Growers 095,Hartlepool Food Hub 006,delivers to,directed,2023
-Gateshead Bridgewater Growers 007,Gateshead Food Hub 007,delivers to,directed,2024
-Gateshead Seedling Growers 014,Newcastle Food Hub 008,delivers to,directed,2025
-Gateshead Mosaic Growers 021,Sunderland Food Hub 009,delivers to,directed,2023
-Gateshead Highfield Growers 028,Middlesbrough Food Hub 010,delivers to,directed,2024
-Gateshead Tideway Growers 035,Darlington Food Hub 011,delivers to,directed,2025
-Gateshead Cornerstone Growers 042,Durham Food Hub 012,delivers to,directed,2023
-Gateshead Northbank Growers 049,Hartlepool Food Hub 013,delivers to,directed,2024
-Gateshead Harbour Growers 056,Gateshead Food Hub 014,delivers to,directed,2025
-Gateshead Meadow Growers 063,Newcastle Food Hub 015,delivers to,directed,2023
-Gateshead Hilltop Growers 070,Sunderland Food Hub 016,delivers to,directed,2024
-Gateshead Willow Growers 077,Middlesbrough Food Hub 017,delivers to,directed,2025
-Gateshead Riverside Growers 084,Darlington Food Hub 018,delivers to,directed,2023
-Gateshead Bracken Growers 091,Durham Food Hub 019,delivers to,directed,2024
-Middlesbrough Mosaic Growers 003,Hartlepool Food Hub 020,delivers to,directed,2025
-Middlesbrough Highfield Growers 010,Gateshead Food Hub 021,delivers to,directed,2023
-Middlesbrough Tideway Growers 017,Newcastle Food Hub 022,delivers to,directed,2024
-Middlesbrough Cornerstone Growers 024,Newcastle Food Hub 001,delivers to,directed,2025
-Middlesbrough Northbank Growers 031,Sunderland Food Hub 002,delivers to,directed,2023
-Middlesbrough Harbour Growers 038,Middlesbrough Food Hub 003,delivers to,directed,2024
-Middlesbrough Meadow Growers 045,Darlington Food Hub 004,delivers to,directed,2025
-Middlesbrough Hilltop Growers 052,Durham Food Hub 005,delivers to,directed,2023
-Middlesbrough Willow Growers 059,Hartlepool Food Hub 006,delivers to,directed,2024
-Middlesbrough Riverside Growers 066,Gateshead Food Hub 007,delivers to,directed,2025
-Middlesbrough Bracken Growers 073,Newcastle Food Hub 008,delivers to,directed,2023
-Middlesbrough Hearth Growers 080,Sunderland Food Hub 009,delivers to,directed,2024
-Middlesbrough Cedar Growers 087,Middlesbrough Food Hub 010,delivers to,directed,2025
-Middlesbrough Beacon Growers 094,Darlington Food Hub 011,delivers to,directed,2023
-Hartlepool Cornerstone Growers 006,Durham Food Hub 012,delivers to,directed,2024
-Hartlepool Northbank Growers 013,Hartlepool Food Hub 013,delivers to,directed,2025
-Hartlepool Harbour Growers 020,Gateshead Food Hub 014,delivers to,directed,2023
-Hartlepool Meadow Growers 027,Newcastle Food Hub 015,delivers to,directed,2024
-Hartlepool Hilltop Growers 034,Sunderland Food Hub 016,delivers to,directed,2025
-Hartlepool Willow Growers 041,Middlesbrough Food Hub 017,delivers to,directed,2023
-Hartlepool Riverside Growers 048,Darlington Food Hub 018,delivers to,directed,2024
-Hartlepool Bracken Growers 055,Durham Food Hub 019,delivers to,directed,2025
-Hartlepool Hearth Growers 062,Hartlepool Food Hub 020,delivers to,directed,2023
-Hartlepool Cedar Growers 069,Gateshead Food Hub 021,delivers to,directed,2024
-Hartlepool Beacon Growers 076,Newcastle Food Hub 022,delivers to,directed,2025
-Hartlepool Lantern Growers 083,Newcastle Food Hub 001,delivers to,directed,2023
-Hartlepool Foundry Growers 090,Sunderland Food Hub 002,delivers to,directed,2024
-Sunderland Harbour Growers 002,Middlesbrough Food Hub 003,delivers to,directed,2025
-Sunderland Meadow Growers 009,Darlington Food Hub 004,delivers to,directed,2023
-Sunderland Hilltop Growers 016,Durham Food Hub 005,delivers to,directed,2024
-Sunderland Willow Growers 023,Hartlepool Food Hub 006,delivers to,directed,2025
-Sunderland Riverside Growers 030,Gateshead Food Hub 007,delivers to,directed,2023
-Sunderland Bracken Growers 037,Newcastle Food Hub 008,delivers to,directed,2024
-Sunderland Hearth Growers 044,Sunderland Food Hub 009,delivers to,directed,2025
-Sunderland Cedar Growers 051,Middlesbrough Food Hub 010,delivers to,directed,2023
-Sunderland Beacon Growers 058,Darlington Food Hub 011,delivers to,directed,2024
-Sunderland Lantern Growers 065,Durham Food Hub 012,delivers to,directed,2025
-Sunderland Foundry Growers 072,Hartlepool Food Hub 013,delivers to,directed,2023
-Sunderland Bridgewater Growers 079,Gateshead Food Hub 014,delivers to,directed,2024
-Sunderland Seedling Growers 086,Newcastle Food Hub 015,delivers to,directed,2025
-Sunderland Mosaic Growers 093,Sunderland Food Hub 016,delivers to,directed,2023
-Durham Willow Growers 005,Middlesbrough Food Hub 017,delivers to,directed,2024
-Durham Riverside Growers 012,Darlington Food Hub 018,delivers to,directed,2025
-Durham Bracken Growers 019,Durham Food Hub 019,delivers to,directed,2023
-Durham Hearth Growers 026,Hartlepool Food Hub 020,delivers to,directed,2024
-Durham Cedar Growers 033,Gateshead Food Hub 021,delivers to,directed,2025
-Durham Beacon Growers 040,Newcastle Food Hub 022,delivers to,directed,2023
-Durham Lantern Growers 047,Newcastle Food Hub 001,delivers to,directed,2024
-Durham Foundry Growers 054,Sunderland Food Hub 002,delivers to,directed,2025
-Durham Bridgewater Growers 061,Middlesbrough Food Hub 003,delivers to,directed,2023
-Durham Seedling Growers 068,Darlington Food Hub 004,delivers to,directed,2024
-Durham Mosaic Growers 075,Durham Food Hub 005,delivers to,directed,2025
-Durham Highfield Growers 082,Hartlepool Food Hub 006,delivers to,directed,2023
-Durham Tideway Growers 089,Gateshead Food Hub 007,delivers to,directed,2024
-Newcastle Bracken Growers 001,Newcastle Food Hub 008,delivers to,directed,2025
-Newcastle Hearth Growers 008,Sunderland Food Hub 009,delivers to,directed,2023
-Newcastle Cedar Growers 015,Middlesbrough Food Hub 010,delivers to,directed,2024
-Newcastle Beacon Growers 022,Darlington Food Hub 011,delivers to,directed,2025
-Newcastle Lantern Growers 029,Durham Food Hub 012,delivers to,directed,2023
-Newcastle Foundry Growers 036,Hartlepool Food Hub 013,delivers to,directed,2024
-Newcastle Bridgewater Growers 043,Gateshead Food Hub 014,delivers to,directed,2025
-Newcastle Seedling Growers 050,Newcastle Food Hub 015,delivers to,directed,2023
-Newcastle Mosaic Growers 057,Sunderland Food Hub 016,delivers to,directed,2024
-Newcastle Highfield Growers 064,Middlesbrough Food Hub 017,delivers to,directed,2025
-Newcastle Tideway Growers 071,Darlington Food Hub 018,delivers to,directed,2023
-Newcastle Cornerstone Growers 078,Durham Food Hub 019,delivers to,directed,2024
-Newcastle Northbank Growers 085,Hartlepool Food Hub 020,delivers to,directed,2025
-Newcastle Harbour Growers 092,Gateshead Food Hub 021,delivers to,directed,2023
-Darlington Beacon Growers 004,Newcastle Food Hub 022,delivers to,directed,2024
-Darlington Lantern Growers 011,Newcastle Food Hub 001,delivers to,directed,2025
-Darlington Foundry Growers 018,Sunderland Food Hub 002,delivers to,directed,2023
-Darlington Bridgewater Growers 025,Middlesbrough Food Hub 003,delivers to,directed,2024
-Darlington Seedling Growers 032,Darlington Food Hub 004,delivers to,directed,2025
-Darlington Mosaic Growers 039,Durham Food Hub 005,delivers to,directed,2023
-Darlington Highfield Growers 046,Hartlepool Food Hub 006,delivers to,directed,2024
-Darlington Tideway Growers 053,Gateshead Food Hub 007,delivers to,directed,2025
-Darlington Cornerstone Growers 060,Newcastle Food Hub 008,delivers to,directed,2023
-Darlington Northbank Growers 067,Sunderland Food Hub 009,delivers to,directed,2024
-Darlington Harbour Growers 074,Middlesbrough Food Hub 010,delivers to,directed,2025
-Darlington Meadow Growers 081,Darlington Food Hub 011,delivers to,directed,2023
-Darlington Hilltop Growers 088,Durham Food Hub 012,delivers to,directed,2024
-Darlington Willow Growers 095,Hartlepool Food Hub 013,delivers to,directed,2025
-Gateshead Bridgewater Growers 007,Gateshead Food Hub 014,delivers to,directed,2023
-Gateshead Seedling Growers 014,Newcastle Food Hub 015,delivers to,directed,2024
-Gateshead Mosaic Growers 021,Sunderland Food Hub 016,delivers to,directed,2025
-Gateshead Highfield Growers 028,Middlesbrough Food Hub 017,delivers to,directed,2023
-Gateshead Tideway Growers 035,Darlington Food Hub 018,delivers to,directed,2024
-Gateshead Cornerstone Growers 042,Durham Food Hub 019,delivers to,directed,2025
-Gateshead Northbank Growers 049,Hartlepool Food Hub 020,delivers to,directed,2023
-Gateshead Harbour Growers 056,Gateshead Food Hub 021,delivers to,directed,2024
-Gateshead Meadow Growers 063,Newcastle Food Hub 022,delivers to,directed,2025
-Gateshead Hilltop Growers 070,Newcastle Food Hub 001,delivers to,directed,2023
-Gateshead Willow Growers 077,Sunderland Food Hub 002,delivers to,directed,2024
-Gateshead Riverside Growers 084,Middlesbrough Food Hub 003,delivers to,directed,2025
-Gateshead Bracken Growers 091,Darlington Food Hub 004,delivers to,directed,2023
-Middlesbrough Mosaic Growers 003,Durham Food Hub 005,delivers to,directed,2024
-Middlesbrough Highfield Growers 010,Hartlepool Food Hub 006,delivers to,directed,2025
-Middlesbrough Tideway Growers 017,Gateshead Food Hub 007,delivers to,directed,2023
-Middlesbrough Cornerstone Growers 024,Newcastle Food Hub 008,delivers to,directed,2024
-Middlesbrough Northbank Growers 031,Sunderland Food Hub 009,delivers to,directed,2025
-Middlesbrough Harbour Growers 038,Middlesbrough Food Hub 010,delivers to,directed,2023
-Middlesbrough Meadow Growers 045,Darlington Food Hub 011,delivers to,directed,2024
-Middlesbrough Hilltop Growers 052,Durham Food Hub 012,delivers to,directed,2025
-Middlesbrough Willow Growers 059,Hartlepool Food Hub 013,delivers to,directed,2023
-Middlesbrough Riverside Growers 066,Gateshead Food Hub 014,delivers to,directed,2024
-Middlesbrough Bracken Growers 073,Newcastle Food Hub 015,delivers to,directed,2025
-Middlesbrough Hearth Growers 080,Sunderland Food Hub 016,delivers to,directed,2023
-Middlesbrough Cedar Growers 087,Middlesbrough Food Hub 017,delivers to,directed,2024
-Middlesbrough Beacon Growers 094,Darlington Food Hub 018,delivers to,directed,2025
-Hartlepool Cornerstone Growers 006,Durham Food Hub 019,delivers to,directed,2023
-Hartlepool Northbank Growers 013,Hartlepool Food Hub 020,delivers to,directed,2024
-Hartlepool Harbour Growers 020,Gateshead Food Hub 021,delivers to,directed,2025
-Hartlepool Meadow Growers 027,Newcastle Food Hub 022,delivers to,directed,2023
-Hartlepool Hilltop Growers 034,Newcastle Food Hub 001,delivers to,directed,2024
-Hartlepool Willow Growers 041,Sunderland Food Hub 002,delivers to,directed,2025
-Hartlepool Riverside Growers 048,Middlesbrough Food Hub 003,delivers to,directed,2023
-Hartlepool Bracken Growers 055,Darlington Food Hub 004,delivers to,directed,2024
-Hartlepool Hearth Growers 062,Durham Food Hub 005,delivers to,directed,2025
-Hartlepool Cedar Growers 069,Hartlepool Food Hub 006,delivers to,directed,2023
-Newcastle Food Hub 001,Middlesbrough Community Kitchen 003,distributes to,directed,2023
-Sunderland Food Hub 002,Durham Community Kitchen 012,distributes to,directed,2024
-Middlesbrough Food Hub 003,Gateshead Community Kitchen 021,distributes to,directed,2025
-Darlington Food Hub 004,Sunderland Community Kitchen 030,distributes to,directed,2023
-Durham Food Hub 005,Darlington Community Kitchen 039,distributes to,directed,2024
-Hartlepool Food Hub 006,Hartlepool Community Kitchen 048,distributes to,directed,2025
-Gateshead Food Hub 007,Newcastle Community Kitchen 057,distributes to,directed,2023
-Newcastle Food Hub 008,Middlesbrough Community Kitchen 066,distributes to,directed,2024
-Sunderland Food Hub 009,Durham Community Kitchen 075,distributes to,directed,2025
-Middlesbrough Food Hub 010,Gateshead Community Kitchen 084,distributes to,directed,2023
-Darlington Food Hub 011,Newcastle Community Kitchen 008,distributes to,directed,2024
-Durham Food Hub 012,Middlesbrough Community Kitchen 017,distributes to,directed,2025
-Hartlepool Food Hub 013,Durham Community Kitchen 026,distributes to,directed,2023
-Gateshead Food Hub 014,Gateshead Community Kitchen 035,distributes to,directed,2024
-Newcastle Food Hub 015,Sunderland Community Kitchen 044,distributes to,directed,2025
-Sunderland Food Hub 016,Darlington Community Kitchen 053,distributes to,directed,2023
-Middlesbrough Food Hub 017,Hartlepool Community Kitchen 062,distributes to,directed,2024
-Darlington Food Hub 018,Newcastle Community Kitchen 071,distributes to,directed,2025
-Durham Food Hub 019,Middlesbrough Community Kitchen 080,distributes to,directed,2023
-Hartlepool Food Hub 020,Darlington Community Kitchen 004,distributes to,directed,2024
-Gateshead Food Hub 021,Hartlepool Community Kitchen 013,distributes to,directed,2025
-Newcastle Food Hub 022,Newcastle Community Kitchen 022,distributes to,directed,2023
-Newcastle Food Hub 001,Middlesbrough Community Kitchen 031,distributes to,directed,2024
-Sunderland Food Hub 002,Durham Community Kitchen 040,distributes to,directed,2025
-Middlesbrough Food Hub 003,Gateshead Community Kitchen 049,distributes to,directed,2023
-Darlington Food Hub 004,Sunderland Community Kitchen 058,distributes to,directed,2024
-Durham Food Hub 005,Darlington Community Kitchen 067,distributes to,directed,2025
-Hartlepool Food Hub 006,Hartlepool Community Kitchen 076,distributes to,directed,2023
-Gateshead Food Hub 007,Newcastle Community Kitchen 085,distributes to,directed,2024
-Newcastle Food Hub 008,Sunderland Community Kitchen 009,distributes to,directed,2025
-Sunderland Food Hub 009,Darlington Community Kitchen 018,distributes to,directed,2023
-Middlesbrough Food Hub 010,Hartlepool Community Kitchen 027,distributes to,directed,2024
-Darlington Food Hub 011,Newcastle Community Kitchen 036,distributes to,directed,2025
-Durham Food Hub 012,Middlesbrough Community Kitchen 045,distributes to,directed,2023
-Hartlepool Food Hub 013,Durham Community Kitchen 054,distributes to,directed,2024
-Gateshead Food Hub 014,Gateshead Community Kitchen 063,distributes to,directed,2025
-Newcastle Food Hub 015,Sunderland Community Kitchen 072,distributes to,directed,2023
-Sunderland Food Hub 016,Darlington Community Kitchen 081,distributes to,directed,2024
-Middlesbrough Food Hub 017,Durham Community Kitchen 005,distributes to,directed,2025
-Darlington Food Hub 018,Gateshead Community Kitchen 014,distributes to,directed,2023
-Durham Food Hub 019,Sunderland Community Kitchen 023,distributes to,directed,2024
-Hartlepool Food Hub 020,Darlington Community Kitchen 032,distributes to,directed,2025
-Gateshead Food Hub 021,Hartlepool Community Kitchen 041,distributes to,directed,2023
-Newcastle Food Hub 022,Newcastle Community Kitchen 050,distributes to,directed,2024
-Newcastle Food Hub 001,Middlesbrough Community Kitchen 059,distributes to,directed,2025
-Sunderland Food Hub 002,Durham Community Kitchen 068,distributes to,directed,2023
-Middlesbrough Food Hub 003,Gateshead Community Kitchen 077,distributes to,directed,2024
-Darlington Food Hub 004,Newcastle Community Kitchen 001,distributes to,directed,2025
-Durham Food Hub 005,Middlesbrough Community Kitchen 010,distributes to,directed,2023
-Hartlepool Food Hub 006,Durham Community Kitchen 019,distributes to,directed,2024
-Gateshead Food Hub 007,Gateshead Community Kitchen 028,distributes to,directed,2025
-Newcastle Food Hub 008,Sunderland Community Kitchen 037,distributes to,directed,2023
-Sunderland Food Hub 009,Darlington Community Kitchen 046,distributes to,directed,2024
-Middlesbrough Food Hub 010,Hartlepool Community Kitchen 055,distributes to,directed,2025
-Darlington Food Hub 011,Newcastle Community Kitchen 064,distributes to,directed,2023
-Durham Food Hub 012,Middlesbrough Community Kitchen 073,distributes to,directed,2024
-Hartlepool Food Hub 013,Durham Community Kitchen 082,distributes to,directed,2025
-Gateshead Food Hub 014,Hartlepool Community Kitchen 006,distributes to,directed,2023
-Newcastle Food Hub 015,Newcastle Community Kitchen 015,distributes to,directed,2024
-Sunderland Food Hub 016,Middlesbrough Community Kitchen 024,distributes to,directed,2025
-Middlesbrough Food Hub 017,Durham Community Kitchen 033,distributes to,directed,2023
-Darlington Food Hub 018,Gateshead Community Kitchen 042,distributes to,directed,2024
-Durham Food Hub 019,Sunderland Community Kitchen 051,distributes to,directed,2025
-Hartlepool Food Hub 020,Darlington Community Kitchen 060,distributes to,directed,2023
-Gateshead Food Hub 021,Hartlepool Community Kitchen 069,distributes to,directed,2024
-Newcastle Food Hub 022,Newcastle Community Kitchen 078,distributes to,directed,2025
-Newcastle Food Hub 001,Sunderland Community Kitchen 002,distributes to,directed,2023
-Sunderland Food Hub 002,Darlington Community Kitchen 011,distributes to,directed,2024
-Middlesbrough Food Hub 003,Hartlepool Community Kitchen 020,distributes to,directed,2025
-Darlington Food Hub 004,Newcastle Community Kitchen 029,distributes to,directed,2023
-Durham Food Hub 005,Middlesbrough Community Kitchen 038,distributes to,directed,2024
-Hartlepool Food Hub 006,Durham Community Kitchen 047,distributes to,directed,2025
-Gateshead Food Hub 007,Gateshead Community Kitchen 056,distributes to,directed,2023
-Newcastle Food Hub 008,Sunderland Community Kitchen 065,distributes to,directed,2024
-Sunderland Food Hub 009,Darlington Community Kitchen 074,distributes to,directed,2025
-Middlesbrough Food Hub 010,Hartlepool Community Kitchen 083,distributes to,directed,2023
-Darlington Food Hub 011,Gateshead Community Kitchen 007,distributes to,directed,2024
-Durham Food Hub 012,Sunderland Community Kitchen 016,distributes to,directed,2025
-Hartlepool Food Hub 013,Darlington Community Kitchen 025,distributes to,directed,2023
-Gateshead Food Hub 014,Hartlepool Community Kitchen 034,distributes to,directed,2024
+Vancouver Bracken Growers 001,Guadalajara Community Kitchen 007,supplies,directed,2022
+Toronto Harbour Growers 002,Guadalajara Community Kitchen 019,supplies,directed,2023
+Montreal Mosaic Growers 003,Montreal Community Kitchen 027,supplies,directed,2024
+Calgary Beacon Growers 004,Guadalajara Community Kitchen 043,supplies,directed,2025
+Mexico City Willow Growers 005,"Chicago, IL Community Kitchen 058",supplies,directed,2022
+Monterrey Cornerstone Growers 006,"Austin, TX Community Kitchen 072",supplies,directed,2023
+Guadalajara Bridgewater Growers 007,Vancouver Community Kitchen 085,supplies,directed,2024
+Oaxaca Hearth Growers 008,Guadalajara Community Kitchen 007,supplies,directed,2025
+"Seattle, WA Meadow Growers 009",Vancouver Community Kitchen 025,supplies,directed,2022
+"Chicago, IL Highfield Growers 010",Vancouver Community Kitchen 037,supplies,directed,2023
+"Los Angeles, CA Lantern Growers 011",Montreal Community Kitchen 051,supplies,directed,2024
+"Austin, TX Riverside Growers 012",Calgary Community Kitchen 064,supplies,directed,2025
+Vancouver Northbank Growers 013,Toronto Community Kitchen 074,supplies,directed,2022
+Toronto Seedling Growers 014,Montreal Community Kitchen 003,supplies,directed,2023
+Montreal Cedar Growers 015,Toronto Community Kitchen 014,supplies,directed,2024
+Calgary Hilltop Growers 016,Calgary Community Kitchen 028,supplies,directed,2025
+Mexico City Tideway Growers 017,Guadalajara Community Kitchen 043,supplies,directed,2022
+Monterrey Foundry Growers 018,Guadalajara Community Kitchen 055,supplies,directed,2023
+Guadalajara Bracken Growers 019,"Los Angeles, CA Community Kitchen 071",supplies,directed,2024
+Oaxaca Harbour Growers 020,Guadalajara Community Kitchen 079,supplies,directed,2025
+"Seattle, WA Mosaic Growers 021",Guadalajara Community Kitchen 007,supplies,directed,2022
+"Chicago, IL Beacon Growers 022",Vancouver Community Kitchen 025,supplies,directed,2023
+"Los Angeles, CA Willow Growers 023","Los Angeles, CA Community Kitchen 035",supplies,directed,2024
+"Austin, TX Cornerstone Growers 024",Montreal Community Kitchen 051,supplies,directed,2025
+Vancouver Bridgewater Growers 025,Montreal Community Kitchen 063,supplies,directed,2022
+Toronto Hearth Growers 026,Vancouver Community Kitchen 073,supplies,directed,2023
+Montreal Meadow Growers 027,Mexico City Community Kitchen 005,supplies,directed,2024
+Calgary Highfield Growers 028,Toronto Community Kitchen 014,supplies,directed,2025
+Mexico City Lantern Growers 029,Toronto Community Kitchen 026,supplies,directed,2022
+Monterrey Riverside Growers 030,Toronto Community Kitchen 038,supplies,directed,2023
+Guadalajara Northbank Growers 031,Mexico City Community Kitchen 053,supplies,directed,2024
+Oaxaca Seedling Growers 032,Guadalajara Community Kitchen 067,supplies,directed,2025
+"Seattle, WA Cedar Growers 033","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Chicago, IL Hilltop Growers 034","Los Angeles, CA Community Kitchen 011",supplies,directed,2023
+"Los Angeles, CA Tideway Growers 035",Guadalajara Community Kitchen 019,supplies,directed,2024
+"Austin, TX Foundry Growers 036",Oaxaca Community Kitchen 032,supplies,directed,2025
+Vancouver Bracken Growers 037,"Austin, TX Community Kitchen 048",supplies,directed,2022
+Toronto Harbour Growers 038,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Montreal Mosaic Growers 039,Toronto Community Kitchen 074,supplies,directed,2024
+Calgary Beacon Growers 040,Calgary Community Kitchen 004,supplies,directed,2025
+Mexico City Willow Growers 041,"Los Angeles, CA Community Kitchen 011",supplies,directed,2022
+Monterrey Cornerstone Growers 042,Montreal Community Kitchen 027,supplies,directed,2023
+Guadalajara Bridgewater Growers 043,Vancouver Community Kitchen 037,supplies,directed,2024
+Oaxaca Hearth Growers 044,Oaxaca Community Kitchen 056,supplies,directed,2025
+"Seattle, WA Meadow Growers 045",Calgary Community Kitchen 064,supplies,directed,2022
+"Chicago, IL Highfield Growers 046","Seattle, WA Community Kitchen 081",supplies,directed,2023
+"Los Angeles, CA Lantern Growers 047",Oaxaca Community Kitchen 008,supplies,directed,2024
+"Austin, TX Riverside Growers 048",Monterrey Community Kitchen 018,supplies,directed,2025
+Vancouver Northbank Growers 049,"Austin, TX Community Kitchen 036",supplies,directed,2022
+Toronto Seedling Growers 050,"Los Angeles, CA Community Kitchen 047",supplies,directed,2023
+Montreal Cedar Growers 051,"Chicago, IL Community Kitchen 058",supplies,directed,2024
+Calgary Hilltop Growers 052,"Austin, TX Community Kitchen 072",supplies,directed,2025
+Mexico City Tideway Growers 053,Montreal Community Kitchen 003,supplies,directed,2022
+Monterrey Foundry Growers 054,Montreal Community Kitchen 015,supplies,directed,2023
+Guadalajara Bracken Growers 055,"Los Angeles, CA Community Kitchen 023",supplies,directed,2024
+Oaxaca Harbour Growers 056,Toronto Community Kitchen 038,supplies,directed,2025
+"Seattle, WA Mosaic Growers 057",Calgary Community Kitchen 052,supplies,directed,2022
+"Chicago, IL Beacon Growers 058",Mexico City Community Kitchen 065,supplies,directed,2023
+"Los Angeles, CA Willow Growers 059",Calgary Community Kitchen 076,supplies,directed,2024
+"Austin, TX Cornerstone Growers 060",Oaxaca Community Kitchen 008,supplies,directed,2025
+Vancouver Bridgewater Growers 061,Monterrey Community Kitchen 018,supplies,directed,2022
+Toronto Hearth Growers 062,Guadalajara Community Kitchen 031,supplies,directed,2023
+Montreal Meadow Growers 063,"Chicago, IL Community Kitchen 046",supplies,directed,2024
+Calgary Highfield Growers 064,Vancouver Community Kitchen 061,supplies,directed,2025
+Mexico City Lantern Growers 065,Oaxaca Community Kitchen 068,supplies,directed,2022
+Monterrey Riverside Growers 066,"Austin, TX Community Kitchen 084",supplies,directed,2023
+Guadalajara Northbank Growers 067,"Los Angeles, CA Community Kitchen 011",supplies,directed,2024
+Oaxaca Seedling Growers 068,"Austin, TX Community Kitchen 024",supplies,directed,2025
+"Seattle, WA Cedar Growers 069","Los Angeles, CA Community Kitchen 035",supplies,directed,2022
+"Chicago, IL Hilltop Growers 070",Calgary Community Kitchen 052,supplies,directed,2023
+"Los Angeles, CA Tideway Growers 071",Montreal Community Kitchen 063,supplies,directed,2024
+"Austin, TX Foundry Growers 072",Monterrey Community Kitchen 078,supplies,directed,2025
+Vancouver Bracken Growers 073,Calgary Community Kitchen 004,supplies,directed,2022
+Toronto Harbour Growers 074,"Seattle, WA Community Kitchen 021",supplies,directed,2023
+Montreal Mosaic Growers 075,"Chicago, IL Community Kitchen 034",supplies,directed,2024
+Calgary Beacon Growers 076,"Los Angeles, CA Community Kitchen 047",supplies,directed,2025
+Mexico City Willow Growers 077,"Austin, TX Community Kitchen 060",supplies,directed,2022
+Monterrey Cornerstone Growers 078,Oaxaca Community Kitchen 068,supplies,directed,2023
+Guadalajara Bridgewater Growers 079,Vancouver Community Kitchen 085,supplies,directed,2024
+Oaxaca Hearth Growers 080,"Seattle, WA Community Kitchen 009",supplies,directed,2025
+"Seattle, WA Meadow Growers 081",Vancouver Community Kitchen 025,supplies,directed,2022
+"Chicago, IL Highfield Growers 082","Chicago, IL Community Kitchen 034",supplies,directed,2023
+"Los Angeles, CA Lantern Growers 083","Los Angeles, CA Community Kitchen 047",supplies,directed,2024
+"Austin, TX Riverside Growers 084",Calgary Community Kitchen 064,supplies,directed,2025
+Vancouver Northbank Growers 085,Vancouver Community Kitchen 073,supplies,directed,2022
+Toronto Seedling Growers 086,Montreal Community Kitchen 003,supplies,directed,2023
+Montreal Cedar Growers 087,Oaxaca Community Kitchen 020,supplies,directed,2024
+Calgary Hilltop Growers 088,Monterrey Community Kitchen 030,supplies,directed,2025
+Mexico City Tideway Growers 089,Mexico City Community Kitchen 041,supplies,directed,2022
+Monterrey Foundry Growers 090,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Guadalajara Bracken Growers 091,"Austin, TX Community Kitchen 072",supplies,directed,2024
+Oaxaca Harbour Growers 092,"Los Angeles, CA Community Kitchen 083",supplies,directed,2025
+"Seattle, WA Mosaic Growers 093",Oaxaca Community Kitchen 008,supplies,directed,2022
+"Chicago, IL Beacon Growers 094","Los Angeles, CA Community Kitchen 023",supplies,directed,2023
+"Los Angeles, CA Willow Growers 095","Austin, TX Community Kitchen 036",supplies,directed,2024
+Vancouver Bracken Growers 001,Montreal Community Kitchen 051,supplies,directed,2025
+Toronto Harbour Growers 002,Mexico City Community Kitchen 065,supplies,directed,2022
+Montreal Mosaic Growers 003,Montreal Community Kitchen 075,supplies,directed,2023
+Calgary Beacon Growers 004,Toronto Community Kitchen 002,supplies,directed,2024
+Mexico City Willow Growers 005,Monterrey Community Kitchen 018,supplies,directed,2025
+Monterrey Cornerstone Growers 006,Toronto Community Kitchen 026,supplies,directed,2022
+Guadalajara Bridgewater Growers 007,Calgary Community Kitchen 040,supplies,directed,2023
+Oaxaca Hearth Growers 008,Guadalajara Community Kitchen 055,supplies,directed,2024
+"Seattle, WA Meadow Growers 009",Oaxaca Community Kitchen 068,supplies,directed,2025
+"Chicago, IL Highfield Growers 010","Chicago, IL Community Kitchen 082",supplies,directed,2022
+"Los Angeles, CA Lantern Growers 011","Los Angeles, CA Community Kitchen 011",supplies,directed,2023
+"Austin, TX Riverside Growers 012","Austin, TX Community Kitchen 024",supplies,directed,2024
+Vancouver Northbank Growers 013,Toronto Community Kitchen 038,supplies,directed,2025
+Toronto Seedling Growers 014,Toronto Community Kitchen 050,supplies,directed,2022
+Montreal Cedar Growers 015,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Calgary Hilltop Growers 016,"Los Angeles, CA Community Kitchen 071",supplies,directed,2024
+Mexico City Tideway Growers 017,Calgary Community Kitchen 004,supplies,directed,2025
+Monterrey Foundry Growers 018,Calgary Community Kitchen 016,supplies,directed,2022
+Guadalajara Bracken Growers 019,Guadalajara Community Kitchen 031,supplies,directed,2023
+Oaxaca Harbour Growers 020,Toronto Community Kitchen 038,supplies,directed,2024
+"Seattle, WA Mosaic Growers 021",Oaxaca Community Kitchen 056,supplies,directed,2025
+"Chicago, IL Beacon Growers 022",Calgary Community Kitchen 064,supplies,directed,2022
+"Los Angeles, CA Willow Growers 023","Chicago, IL Community Kitchen 082",supplies,directed,2023
+"Austin, TX Cornerstone Growers 024",Oaxaca Community Kitchen 008,supplies,directed,2024
+Vancouver Bridgewater Growers 025,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Toronto Hearth Growers 026,Oaxaca Community Kitchen 032,supplies,directed,2022
+Montreal Meadow Growers 027,Oaxaca Community Kitchen 044,supplies,directed,2023
+Calgary Highfield Growers 028,Montreal Community Kitchen 063,supplies,directed,2024
+Mexico City Lantern Growers 029,Vancouver Community Kitchen 073,supplies,directed,2025
+Monterrey Riverside Growers 030,Vancouver Community Kitchen 085,supplies,directed,2022
+Guadalajara Northbank Growers 031,Vancouver Community Kitchen 013,supplies,directed,2023
+Oaxaca Seedling Growers 032,Toronto Community Kitchen 026,supplies,directed,2024
+"Seattle, WA Cedar Growers 033",Monterrey Community Kitchen 042,supplies,directed,2025
+"Chicago, IL Hilltop Growers 034",Oaxaca Community Kitchen 056,supplies,directed,2022
+"Los Angeles, CA Tideway Growers 035",Guadalajara Community Kitchen 067,supplies,directed,2023
+"Austin, TX Foundry Growers 036","Seattle, WA Community Kitchen 081",supplies,directed,2024
+Vancouver Bracken Growers 037,Oaxaca Community Kitchen 008,supplies,directed,2025
+Toronto Harbour Growers 038,"Los Angeles, CA Community Kitchen 023",supplies,directed,2022
+Montreal Mosaic Growers 039,Monterrey Community Kitchen 030,supplies,directed,2023
+Calgary Beacon Growers 040,Vancouver Community Kitchen 049,supplies,directed,2024
+Mexico City Willow Growers 041,"Los Angeles, CA Community Kitchen 059",supplies,directed,2025
+Monterrey Cornerstone Growers 042,"Austin, TX Community Kitchen 072",supplies,directed,2022
+Guadalajara Bridgewater Growers 043,Toronto Community Kitchen 002,supplies,directed,2023
+Oaxaca Hearth Growers 044,Montreal Community Kitchen 015,supplies,directed,2024
+"Seattle, WA Meadow Growers 045","Austin, TX Community Kitchen 024",supplies,directed,2025
+"Chicago, IL Highfield Growers 046",Vancouver Community Kitchen 037,supplies,directed,2022
+"Los Angeles, CA Lantern Growers 047",Calgary Community Kitchen 052,supplies,directed,2023
+"Austin, TX Riverside Growers 048",Toronto Community Kitchen 062,supplies,directed,2024
+Vancouver Northbank Growers 049,Oaxaca Community Kitchen 080,supplies,directed,2025
+Toronto Seedling Growers 050,Monterrey Community Kitchen 006,supplies,directed,2022
+Montreal Cedar Growers 051,Oaxaca Community Kitchen 020,supplies,directed,2023
+Calgary Hilltop Growers 052,Guadalajara Community Kitchen 031,supplies,directed,2024
+Mexico City Tideway Growers 053,"Chicago, IL Community Kitchen 046",supplies,directed,2025
+Monterrey Foundry Growers 054,Vancouver Community Kitchen 061,supplies,directed,2022
+Guadalajara Bracken Growers 055,Toronto Community Kitchen 074,supplies,directed,2023
+Oaxaca Harbour Growers 056,Vancouver Community Kitchen 001,supplies,directed,2024
+"Seattle, WA Mosaic Growers 057",Vancouver Community Kitchen 013,supplies,directed,2025
+"Chicago, IL Beacon Growers 058",Montreal Community Kitchen 027,supplies,directed,2022
+"Los Angeles, CA Willow Growers 059",Vancouver Community Kitchen 037,supplies,directed,2023
+"Austin, TX Cornerstone Growers 060",Toronto Community Kitchen 050,supplies,directed,2024
+Vancouver Bridgewater Growers 061,Monterrey Community Kitchen 066,supplies,directed,2025
+Toronto Hearth Growers 062,Oaxaca Community Kitchen 080,supplies,directed,2022
+Montreal Meadow Growers 063,Montreal Community Kitchen 003,supplies,directed,2023
+Calgary Highfield Growers 064,Montreal Community Kitchen 015,supplies,directed,2024
+Mexico City Lantern Growers 065,Calgary Community Kitchen 028,supplies,directed,2025
+Monterrey Riverside Growers 066,"Los Angeles, CA Community Kitchen 047",supplies,directed,2022
+Guadalajara Northbank Growers 067,"Los Angeles, CA Community Kitchen 059",supplies,directed,2023
+Oaxaca Seedling Growers 068,Vancouver Community Kitchen 073,supplies,directed,2024
+"Seattle, WA Cedar Growers 069","Austin, TX Community Kitchen 084",supplies,directed,2025
+"Chicago, IL Hilltop Growers 070","Chicago, IL Community Kitchen 010",supplies,directed,2022
+"Los Angeles, CA Tideway Growers 071","Chicago, IL Community Kitchen 022",supplies,directed,2023
+"Austin, TX Foundry Growers 072","Austin, TX Community Kitchen 036",supplies,directed,2024
+Vancouver Bracken Growers 073,Vancouver Community Kitchen 049,supplies,directed,2025
+Toronto Harbour Growers 074,Vancouver Community Kitchen 061,supplies,directed,2022
+Montreal Mosaic Growers 075,Mexico City Community Kitchen 077,supplies,directed,2023
+Calgary Beacon Growers 076,Vancouver Community Kitchen 001,supplies,directed,2024
+Mexico City Willow Growers 077,Mexico City Community Kitchen 017,supplies,directed,2025
+Monterrey Cornerstone Growers 078,Mexico City Community Kitchen 029,supplies,directed,2022
+Guadalajara Bridgewater Growers 079,"Seattle, WA Community Kitchen 045",supplies,directed,2023
+Oaxaca Hearth Growers 080,"Los Angeles, CA Community Kitchen 059",supplies,directed,2024
+"Seattle, WA Meadow Growers 081",Monterrey Community Kitchen 066,supplies,directed,2025
+"Chicago, IL Highfield Growers 082","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Los Angeles, CA Lantern Growers 083",Oaxaca Community Kitchen 008,supplies,directed,2023
+"Austin, TX Riverside Growers 084","Austin, TX Community Kitchen 024",supplies,directed,2024
+Vancouver Northbank Growers 085,"Austin, TX Community Kitchen 036",supplies,directed,2025
+Toronto Seedling Growers 086,Calgary Community Kitchen 052,supplies,directed,2022
+Montreal Cedar Growers 087,Vancouver Community Kitchen 061,supplies,directed,2023
+Calgary Hilltop Growers 088,Vancouver Community Kitchen 073,supplies,directed,2024
+Mexico City Tideway Growers 089,Vancouver Community Kitchen 001,supplies,directed,2025
+Monterrey Foundry Growers 090,Montreal Community Kitchen 015,supplies,directed,2022
+Guadalajara Bracken Growers 091,Calgary Community Kitchen 028,supplies,directed,2023
+Oaxaca Harbour Growers 092,Calgary Community Kitchen 040,supplies,directed,2024
+"Seattle, WA Mosaic Growers 093",Oaxaca Community Kitchen 056,supplies,directed,2025
+"Chicago, IL Beacon Growers 094",Monterrey Community Kitchen 066,supplies,directed,2022
+"Los Angeles, CA Willow Growers 095",Monterrey Community Kitchen 078,supplies,directed,2023
+Vancouver Bracken Growers 001,Oaxaca Community Kitchen 008,supplies,directed,2024
+Toronto Harbour Growers 002,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Montreal Mosaic Growers 003,Vancouver Community Kitchen 037,supplies,directed,2022
+Calgary Beacon Growers 004,"Chicago, IL Community Kitchen 046",supplies,directed,2023
+Mexico City Willow Growers 005,Calgary Community Kitchen 064,supplies,directed,2024
+Monterrey Cornerstone Growers 006,Mexico City Community Kitchen 077,supplies,directed,2025
+Guadalajara Bridgewater Growers 007,Vancouver Community Kitchen 001,supplies,directed,2022
+Oaxaca Hearth Growers 008,"Austin, TX Community Kitchen 012",supplies,directed,2023
+"Seattle, WA Meadow Growers 009",Mexico City Community Kitchen 029,supplies,directed,2024
+"Chicago, IL Highfield Growers 010",Calgary Community Kitchen 040,supplies,directed,2025
+"Los Angeles, CA Lantern Growers 011",Montreal Community Kitchen 051,supplies,directed,2022
+"Austin, TX Riverside Growers 012",Guadalajara Community Kitchen 067,supplies,directed,2023
+Vancouver Northbank Growers 013,Monterrey Community Kitchen 078,supplies,directed,2024
+Toronto Seedling Growers 014,Guadalajara Community Kitchen 007,supplies,directed,2025
+Montreal Cedar Growers 015,"Chicago, IL Community Kitchen 022",supplies,directed,2022
+Calgary Hilltop Growers 016,"Chicago, IL Community Kitchen 034",supplies,directed,2023
+Mexico City Tideway Growers 017,"Chicago, IL Community Kitchen 046",supplies,directed,2024
+Monterrey Foundry Growers 018,"Austin, TX Community Kitchen 060",supplies,directed,2025
+Guadalajara Bracken Growers 019,"Chicago, IL Community Kitchen 070",supplies,directed,2022
+Oaxaca Harbour Growers 020,Vancouver Community Kitchen 001,supplies,directed,2023
+"Seattle, WA Mosaic Growers 021",Toronto Community Kitchen 014,supplies,directed,2024
+"Chicago, IL Beacon Growers 022",Calgary Community Kitchen 028,supplies,directed,2025
+"Los Angeles, CA Willow Growers 023",Vancouver Community Kitchen 037,supplies,directed,2022
+"Austin, TX Cornerstone Growers 024",Guadalajara Community Kitchen 055,supplies,directed,2023
+Vancouver Bridgewater Growers 025,"Seattle, WA Community Kitchen 069",supplies,directed,2024
+Toronto Hearth Growers 026,Monterrey Community Kitchen 078,supplies,directed,2025
+Montreal Meadow Growers 027,Mexico City Community Kitchen 005,supplies,directed,2022
+Calgary Highfield Growers 028,Oaxaca Community Kitchen 020,supplies,directed,2023
+Mexico City Lantern Growers 029,"Chicago, IL Community Kitchen 034",supplies,directed,2024
+Monterrey Riverside Growers 030,"Seattle, WA Community Kitchen 045",supplies,directed,2025
+Guadalajara Northbank Growers 031,"Seattle, WA Community Kitchen 057",supplies,directed,2022
+Oaxaca Seedling Growers 032,"Seattle, WA Community Kitchen 069",supplies,directed,2023
+"Seattle, WA Cedar Growers 033",Vancouver Community Kitchen 001,supplies,directed,2024
+"Chicago, IL Hilltop Growers 034",Vancouver Community Kitchen 013,supplies,directed,2025
+"Los Angeles, CA Tideway Growers 035",Calgary Community Kitchen 028,supplies,directed,2022
+"Austin, TX Foundry Growers 036",Montreal Community Kitchen 039,supplies,directed,2023
+Vancouver Bracken Growers 037,Mexico City Community Kitchen 053,supplies,directed,2024
+Toronto Harbour Growers 038,Oaxaca Community Kitchen 068,supplies,directed,2025
+Montreal Mosaic Growers 039,Monterrey Community Kitchen 078,supplies,directed,2022
+Calgary Beacon Growers 040,Guadalajara Community Kitchen 007,supplies,directed,2023
+Mexico City Willow Growers 041,Monterrey Community Kitchen 018,supplies,directed,2024
+Monterrey Cornerstone Growers 042,Oaxaca Community Kitchen 032,supplies,directed,2025
+Guadalajara Bridgewater Growers 043,Guadalajara Community Kitchen 043,supplies,directed,2022
+Oaxaca Hearth Growers 044,"Los Angeles, CA Community Kitchen 059",supplies,directed,2023
+"Seattle, WA Meadow Growers 045","Austin, TX Community Kitchen 072",supplies,directed,2024
+"Chicago, IL Highfield Growers 046","Seattle, WA Community Kitchen 081",supplies,directed,2025
+"Los Angeles, CA Lantern Growers 047",Vancouver Community Kitchen 013,supplies,directed,2022
+"Austin, TX Riverside Growers 048","Los Angeles, CA Community Kitchen 023",supplies,directed,2023
+Vancouver Northbank Growers 049,Montreal Community Kitchen 039,supplies,directed,2024
+Toronto Seedling Growers 050,Mexico City Community Kitchen 053,supplies,directed,2025
+Montreal Cedar Growers 051,Guadalajara Community Kitchen 067,supplies,directed,2022
+Calgary Hilltop Growers 052,Montreal Community Kitchen 075,supplies,directed,2023
+Mexico City Tideway Growers 053,Oaxaca Community Kitchen 008,supplies,directed,2024
+Monterrey Foundry Growers 054,Mexico City Community Kitchen 017,supplies,directed,2025
+Guadalajara Bracken Growers 055,Mexico City Community Kitchen 029,supplies,directed,2022
+Oaxaca Harbour Growers 056,Mexico City Community Kitchen 041,supplies,directed,2023
+"Seattle, WA Mosaic Growers 057","Seattle, WA Community Kitchen 057",supplies,directed,2024
+"Chicago, IL Beacon Growers 058",Guadalajara Community Kitchen 067,supplies,directed,2025
+"Los Angeles, CA Willow Growers 059","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Austin, TX Cornerstone Growers 060","Chicago, IL Community Kitchen 010",supplies,directed,2023
+Vancouver Bridgewater Growers 061,"Seattle, WA Community Kitchen 021",supplies,directed,2024
+Toronto Hearth Growers 062,"Los Angeles, CA Community Kitchen 035",supplies,directed,2025
+Montreal Meadow Growers 063,"Los Angeles, CA Community Kitchen 047",supplies,directed,2022
+Calgary Highfield Growers 064,Calgary Community Kitchen 064,supplies,directed,2023
+Mexico City Lantern Growers 065,Vancouver Community Kitchen 073,supplies,directed,2024
+Monterrey Riverside Growers 066,Guadalajara Community Kitchen 007,supplies,directed,2025
+Guadalajara Northbank Growers 067,Toronto Community Kitchen 014,supplies,directed,2022
+Oaxaca Seedling Growers 068,Mexico City Community Kitchen 029,supplies,directed,2023
+"Seattle, WA Cedar Growers 069",Oaxaca Community Kitchen 044,supplies,directed,2024
+"Chicago, IL Hilltop Growers 070","Seattle, WA Community Kitchen 057",supplies,directed,2025
+"Los Angeles, CA Tideway Growers 071","Chicago, IL Community Kitchen 070",supplies,directed,2022
+"Austin, TX Foundry Growers 072","Los Angeles, CA Community Kitchen 083",supplies,directed,2023
+Vancouver Bracken Growers 073,"Chicago, IL Community Kitchen 010",supplies,directed,2024
+Toronto Harbour Growers 074,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Montreal Mosaic Growers 075,"Chicago, IL Community Kitchen 034",supplies,directed,2022
+Calgary Beacon Growers 076,"Los Angeles, CA Community Kitchen 047",supplies,directed,2023
+Mexico City Willow Growers 077,Montreal Community Kitchen 063,supplies,directed,2024
+Monterrey Cornerstone Growers 078,Toronto Community Kitchen 074,supplies,directed,2025
+Guadalajara Bridgewater Growers 079,Montreal Community Kitchen 003,supplies,directed,2022
+Oaxaca Hearth Growers 080,Toronto Community Kitchen 014,supplies,directed,2023
+"Seattle, WA Meadow Growers 081",Calgary Community Kitchen 028,supplies,directed,2024
+"Chicago, IL Highfield Growers 082",Montreal Community Kitchen 039,supplies,directed,2025
+"Los Angeles, CA Lantern Growers 083",Mexico City Community Kitchen 053,supplies,directed,2022
+"Austin, TX Riverside Growers 084","Los Angeles, CA Community Kitchen 071",supplies,directed,2023
+Vancouver Northbank Growers 085,Oaxaca Community Kitchen 080,supplies,directed,2024
+Toronto Seedling Growers 086,"Austin, TX Community Kitchen 012",supplies,directed,2025
+Montreal Cedar Growers 087,Oaxaca Community Kitchen 020,supplies,directed,2022
+Calgary Hilltop Growers 088,"Seattle, WA Community Kitchen 033",supplies,directed,2023
+Mexico City Tideway Growers 089,Toronto Community Kitchen 050,supplies,directed,2024
+Monterrey Foundry Growers 090,"Austin, TX Community Kitchen 060",supplies,directed,2025
+Guadalajara Bracken Growers 091,"Los Angeles, CA Community Kitchen 071",supplies,directed,2022
+Oaxaca Harbour Growers 092,Calgary Community Kitchen 004,supplies,directed,2023
+"Seattle, WA Mosaic Growers 093",Mexico City Community Kitchen 017,supplies,directed,2024
+"Chicago, IL Beacon Growers 094",Montreal Community Kitchen 027,supplies,directed,2025
+"Los Angeles, CA Willow Growers 095",Montreal Community Kitchen 039,supplies,directed,2022
+Vancouver Bracken Growers 001,Calgary Community Kitchen 052,supplies,directed,2023
+Toronto Harbour Growers 002,Calgary Community Kitchen 064,supplies,directed,2024
+Montreal Mosaic Growers 003,"Chicago, IL Community Kitchen 082",supplies,directed,2025
+Calgary Beacon Growers 004,Monterrey Community Kitchen 006,supplies,directed,2022
+Mexico City Willow Growers 005,Guadalajara Community Kitchen 019,supplies,directed,2023
+Vancouver Bracken Growers 001,Vancouver Food Hub 001,delivers to,directed,2023
+Oaxaca Hearth Growers 008,Toronto Food Hub 002,delivers to,directed,2024
+Montreal Cedar Growers 015,Montreal Food Hub 003,delivers to,directed,2025
+"Chicago, IL Beacon Growers 022",Calgary Food Hub 004,delivers to,directed,2023
+Mexico City Lantern Growers 029,Mexico City Food Hub 005,delivers to,directed,2024
+"Austin, TX Foundry Growers 036",Monterrey Food Hub 006,delivers to,directed,2025
+Guadalajara Bridgewater Growers 043,Guadalajara Food Hub 007,delivers to,directed,2023
+Toronto Seedling Growers 050,Oaxaca Food Hub 008,delivers to,directed,2024
+"Seattle, WA Mosaic Growers 057","Seattle, WA Food Hub 009",delivers to,directed,2025
+Calgary Highfield Growers 064,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Los Angeles, CA Tideway Growers 071","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Monterrey Cornerstone Growers 078,"Austin, TX Food Hub 012",delivers to,directed,2025
+Vancouver Northbank Growers 085,Vancouver Food Hub 013,delivers to,directed,2023
+Oaxaca Harbour Growers 092,Toronto Food Hub 014,delivers to,directed,2024
+Calgary Beacon Growers 004,Montreal Food Hub 015,delivers to,directed,2025
+"Los Angeles, CA Lantern Growers 011",Calgary Food Hub 016,delivers to,directed,2023
+Monterrey Foundry Growers 018,Mexico City Food Hub 017,delivers to,directed,2024
+Vancouver Bridgewater Growers 025,Monterrey Food Hub 018,delivers to,directed,2025
+Oaxaca Seedling Growers 032,Guadalajara Food Hub 019,delivers to,directed,2023
+Montreal Mosaic Growers 039,Oaxaca Food Hub 020,delivers to,directed,2024
+"Chicago, IL Highfield Growers 046","Seattle, WA Food Hub 021",delivers to,directed,2025
+Mexico City Tideway Growers 053,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Austin, TX Cornerstone Growers 060",Vancouver Food Hub 001,delivers to,directed,2024
+Guadalajara Northbank Growers 067,Toronto Food Hub 002,delivers to,directed,2025
+Toronto Harbour Growers 074,Montreal Food Hub 003,delivers to,directed,2023
+"Seattle, WA Meadow Growers 081",Calgary Food Hub 004,delivers to,directed,2024
+Calgary Hilltop Growers 088,Mexico City Food Hub 005,delivers to,directed,2025
+"Los Angeles, CA Willow Growers 095",Monterrey Food Hub 006,delivers to,directed,2023
+Guadalajara Bridgewater Growers 007,Guadalajara Food Hub 007,delivers to,directed,2024
+Toronto Seedling Growers 014,Oaxaca Food Hub 008,delivers to,directed,2025
+"Seattle, WA Mosaic Growers 021","Seattle, WA Food Hub 009",delivers to,directed,2023
+Calgary Highfield Growers 028,"Chicago, IL Food Hub 010",delivers to,directed,2024
+"Los Angeles, CA Tideway Growers 035","Los Angeles, CA Food Hub 011",delivers to,directed,2025
+Monterrey Cornerstone Growers 042,"Austin, TX Food Hub 012",delivers to,directed,2023
+Vancouver Northbank Growers 049,Vancouver Food Hub 013,delivers to,directed,2024
+Oaxaca Harbour Growers 056,Toronto Food Hub 014,delivers to,directed,2025
+Montreal Meadow Growers 063,Montreal Food Hub 015,delivers to,directed,2023
+"Chicago, IL Hilltop Growers 070",Calgary Food Hub 016,delivers to,directed,2024
+Mexico City Willow Growers 077,Mexico City Food Hub 017,delivers to,directed,2025
+"Austin, TX Riverside Growers 084",Monterrey Food Hub 018,delivers to,directed,2023
+Guadalajara Bracken Growers 091,Guadalajara Food Hub 019,delivers to,directed,2024
+Montreal Mosaic Growers 003,Oaxaca Food Hub 020,delivers to,directed,2025
+"Chicago, IL Highfield Growers 010","Seattle, WA Food Hub 021",delivers to,directed,2023
+Mexico City Tideway Growers 017,"Chicago, IL Food Hub 022",delivers to,directed,2024
+"Austin, TX Cornerstone Growers 024",Vancouver Food Hub 001,delivers to,directed,2025
+Guadalajara Northbank Growers 031,Toronto Food Hub 002,delivers to,directed,2023
+Toronto Harbour Growers 038,Montreal Food Hub 003,delivers to,directed,2024
+"Seattle, WA Meadow Growers 045",Calgary Food Hub 004,delivers to,directed,2025
+Calgary Hilltop Growers 052,Mexico City Food Hub 005,delivers to,directed,2023
+"Los Angeles, CA Willow Growers 059",Monterrey Food Hub 006,delivers to,directed,2024
+Monterrey Riverside Growers 066,Guadalajara Food Hub 007,delivers to,directed,2025
+Vancouver Bracken Growers 073,Oaxaca Food Hub 008,delivers to,directed,2023
+Oaxaca Hearth Growers 080,"Seattle, WA Food Hub 009",delivers to,directed,2024
+Montreal Cedar Growers 087,"Chicago, IL Food Hub 010",delivers to,directed,2025
+"Chicago, IL Beacon Growers 094","Los Angeles, CA Food Hub 011",delivers to,directed,2023
+Monterrey Cornerstone Growers 006,"Austin, TX Food Hub 012",delivers to,directed,2024
+Vancouver Northbank Growers 013,Vancouver Food Hub 013,delivers to,directed,2025
+Oaxaca Harbour Growers 020,Toronto Food Hub 014,delivers to,directed,2023
+Montreal Meadow Growers 027,Montreal Food Hub 015,delivers to,directed,2024
+"Chicago, IL Hilltop Growers 034",Calgary Food Hub 016,delivers to,directed,2025
+Mexico City Willow Growers 041,Mexico City Food Hub 017,delivers to,directed,2023
+"Austin, TX Riverside Growers 048",Monterrey Food Hub 018,delivers to,directed,2024
+Guadalajara Bracken Growers 055,Guadalajara Food Hub 019,delivers to,directed,2025
+Toronto Hearth Growers 062,Oaxaca Food Hub 020,delivers to,directed,2023
+"Seattle, WA Cedar Growers 069","Seattle, WA Food Hub 021",delivers to,directed,2024
+Calgary Beacon Growers 076,"Chicago, IL Food Hub 022",delivers to,directed,2025
+"Los Angeles, CA Lantern Growers 083",Vancouver Food Hub 001,delivers to,directed,2023
+Monterrey Foundry Growers 090,Toronto Food Hub 002,delivers to,directed,2024
+Toronto Harbour Growers 002,Montreal Food Hub 003,delivers to,directed,2025
+"Seattle, WA Meadow Growers 009",Calgary Food Hub 004,delivers to,directed,2023
+Calgary Hilltop Growers 016,Mexico City Food Hub 005,delivers to,directed,2024
+"Los Angeles, CA Willow Growers 023",Monterrey Food Hub 006,delivers to,directed,2025
+Monterrey Riverside Growers 030,Guadalajara Food Hub 007,delivers to,directed,2023
+Vancouver Bracken Growers 037,Oaxaca Food Hub 008,delivers to,directed,2024
+Oaxaca Hearth Growers 044,"Seattle, WA Food Hub 009",delivers to,directed,2025
+Montreal Cedar Growers 051,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Chicago, IL Beacon Growers 058","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Mexico City Lantern Growers 065,"Austin, TX Food Hub 012",delivers to,directed,2025
+"Austin, TX Foundry Growers 072",Vancouver Food Hub 013,delivers to,directed,2023
+Guadalajara Bridgewater Growers 079,Toronto Food Hub 014,delivers to,directed,2024
+Toronto Seedling Growers 086,Montreal Food Hub 015,delivers to,directed,2025
+"Seattle, WA Mosaic Growers 093",Calgary Food Hub 016,delivers to,directed,2023
+Mexico City Willow Growers 005,Mexico City Food Hub 017,delivers to,directed,2024
+"Austin, TX Riverside Growers 012",Monterrey Food Hub 018,delivers to,directed,2025
+Guadalajara Bracken Growers 019,Guadalajara Food Hub 019,delivers to,directed,2023
+Toronto Hearth Growers 026,Oaxaca Food Hub 020,delivers to,directed,2024
+"Seattle, WA Cedar Growers 033","Seattle, WA Food Hub 021",delivers to,directed,2025
+Calgary Beacon Growers 040,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Los Angeles, CA Lantern Growers 047",Vancouver Food Hub 001,delivers to,directed,2024
+Monterrey Foundry Growers 054,Toronto Food Hub 002,delivers to,directed,2025
+Vancouver Bridgewater Growers 061,Montreal Food Hub 003,delivers to,directed,2023
+Oaxaca Seedling Growers 068,Calgary Food Hub 004,delivers to,directed,2024
+Montreal Mosaic Growers 075,Mexico City Food Hub 005,delivers to,directed,2025
+"Chicago, IL Highfield Growers 082",Monterrey Food Hub 006,delivers to,directed,2023
+Mexico City Tideway Growers 089,Guadalajara Food Hub 007,delivers to,directed,2024
+Vancouver Bracken Growers 001,Oaxaca Food Hub 008,delivers to,directed,2025
+Oaxaca Hearth Growers 008,"Seattle, WA Food Hub 009",delivers to,directed,2023
+Montreal Cedar Growers 015,"Chicago, IL Food Hub 010",delivers to,directed,2024
+"Chicago, IL Beacon Growers 022","Los Angeles, CA Food Hub 011",delivers to,directed,2025
+Mexico City Lantern Growers 029,"Austin, TX Food Hub 012",delivers to,directed,2023
+"Austin, TX Foundry Growers 036",Vancouver Food Hub 013,delivers to,directed,2024
+Guadalajara Bridgewater Growers 043,Toronto Food Hub 014,delivers to,directed,2025
+Toronto Seedling Growers 050,Montreal Food Hub 015,delivers to,directed,2023
+"Seattle, WA Mosaic Growers 057",Calgary Food Hub 016,delivers to,directed,2024
+Calgary Highfield Growers 064,Mexico City Food Hub 017,delivers to,directed,2025
+"Los Angeles, CA Tideway Growers 071",Monterrey Food Hub 018,delivers to,directed,2023
+Monterrey Cornerstone Growers 078,Guadalajara Food Hub 019,delivers to,directed,2024
+Vancouver Northbank Growers 085,Oaxaca Food Hub 020,delivers to,directed,2025
+Oaxaca Harbour Growers 092,"Seattle, WA Food Hub 021",delivers to,directed,2023
+Calgary Beacon Growers 004,"Chicago, IL Food Hub 022",delivers to,directed,2024
+"Los Angeles, CA Lantern Growers 011",Vancouver Food Hub 001,delivers to,directed,2025
+Monterrey Foundry Growers 018,Toronto Food Hub 002,delivers to,directed,2023
+Vancouver Bridgewater Growers 025,Montreal Food Hub 003,delivers to,directed,2024
+Oaxaca Seedling Growers 032,Calgary Food Hub 004,delivers to,directed,2025
+Montreal Mosaic Growers 039,Mexico City Food Hub 005,delivers to,directed,2023
+"Chicago, IL Highfield Growers 046",Monterrey Food Hub 006,delivers to,directed,2024
+Mexico City Tideway Growers 053,Guadalajara Food Hub 007,delivers to,directed,2025
+"Austin, TX Cornerstone Growers 060",Oaxaca Food Hub 008,delivers to,directed,2023
+Guadalajara Northbank Growers 067,"Seattle, WA Food Hub 009",delivers to,directed,2024
+Toronto Harbour Growers 074,"Chicago, IL Food Hub 010",delivers to,directed,2025
+"Seattle, WA Meadow Growers 081","Los Angeles, CA Food Hub 011",delivers to,directed,2023
+Calgary Hilltop Growers 088,"Austin, TX Food Hub 012",delivers to,directed,2024
+"Los Angeles, CA Willow Growers 095",Vancouver Food Hub 013,delivers to,directed,2025
+Guadalajara Bridgewater Growers 007,Toronto Food Hub 014,delivers to,directed,2023
+Toronto Seedling Growers 014,Montreal Food Hub 015,delivers to,directed,2024
+"Seattle, WA Mosaic Growers 021",Calgary Food Hub 016,delivers to,directed,2025
+Calgary Highfield Growers 028,Mexico City Food Hub 017,delivers to,directed,2023
+"Los Angeles, CA Tideway Growers 035",Monterrey Food Hub 018,delivers to,directed,2024
+Monterrey Cornerstone Growers 042,Guadalajara Food Hub 019,delivers to,directed,2025
+Vancouver Northbank Growers 049,Oaxaca Food Hub 020,delivers to,directed,2023
+Oaxaca Harbour Growers 056,"Seattle, WA Food Hub 021",delivers to,directed,2024
+Montreal Meadow Growers 063,"Chicago, IL Food Hub 022",delivers to,directed,2025
+"Chicago, IL Hilltop Growers 070",Vancouver Food Hub 001,delivers to,directed,2023
+Mexico City Willow Growers 077,Toronto Food Hub 002,delivers to,directed,2024
+"Austin, TX Riverside Growers 084",Montreal Food Hub 003,delivers to,directed,2025
+Guadalajara Bracken Growers 091,Calgary Food Hub 004,delivers to,directed,2023
+Montreal Mosaic Growers 003,Mexico City Food Hub 005,delivers to,directed,2024
+"Chicago, IL Highfield Growers 010",Monterrey Food Hub 006,delivers to,directed,2025
+Mexico City Tideway Growers 017,Guadalajara Food Hub 007,delivers to,directed,2023
+"Austin, TX Cornerstone Growers 024",Oaxaca Food Hub 008,delivers to,directed,2024
+Guadalajara Northbank Growers 031,"Seattle, WA Food Hub 009",delivers to,directed,2025
+Toronto Harbour Growers 038,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Seattle, WA Meadow Growers 045","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Calgary Hilltop Growers 052,"Austin, TX Food Hub 012",delivers to,directed,2025
+"Los Angeles, CA Willow Growers 059",Vancouver Food Hub 013,delivers to,directed,2023
+Monterrey Riverside Growers 066,Toronto Food Hub 014,delivers to,directed,2024
+Vancouver Bracken Growers 073,Montreal Food Hub 015,delivers to,directed,2025
+Oaxaca Hearth Growers 080,Calgary Food Hub 016,delivers to,directed,2023
+Montreal Cedar Growers 087,Mexico City Food Hub 017,delivers to,directed,2024
+"Chicago, IL Beacon Growers 094",Monterrey Food Hub 018,delivers to,directed,2025
+Monterrey Cornerstone Growers 006,Guadalajara Food Hub 019,delivers to,directed,2023
+Vancouver Northbank Growers 013,Oaxaca Food Hub 020,delivers to,directed,2024
+Oaxaca Harbour Growers 020,"Seattle, WA Food Hub 021",delivers to,directed,2025
+Montreal Meadow Growers 027,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Chicago, IL Hilltop Growers 034",Vancouver Food Hub 001,delivers to,directed,2024
+Mexico City Willow Growers 041,Toronto Food Hub 002,delivers to,directed,2025
+"Austin, TX Riverside Growers 048",Montreal Food Hub 003,delivers to,directed,2023
+Guadalajara Bracken Growers 055,Calgary Food Hub 004,delivers to,directed,2024
+Toronto Hearth Growers 062,Mexico City Food Hub 005,delivers to,directed,2025
+"Seattle, WA Cedar Growers 069",Monterrey Food Hub 006,delivers to,directed,2023
+Vancouver Food Hub 001,Montreal Community Kitchen 003,distributes to,directed,2023
+Toronto Food Hub 002,"Austin, TX Community Kitchen 012",distributes to,directed,2024
+Montreal Food Hub 003,"Seattle, WA Community Kitchen 021",distributes to,directed,2025
+Calgary Food Hub 004,Monterrey Community Kitchen 030,distributes to,directed,2023
+Mexico City Food Hub 005,Montreal Community Kitchen 039,distributes to,directed,2024
+Monterrey Food Hub 006,"Austin, TX Community Kitchen 048",distributes to,directed,2025
+Guadalajara Food Hub 007,"Seattle, WA Community Kitchen 057",distributes to,directed,2023
+Oaxaca Food Hub 008,Monterrey Community Kitchen 066,distributes to,directed,2024
+"Seattle, WA Food Hub 009",Montreal Community Kitchen 075,distributes to,directed,2025
+"Chicago, IL Food Hub 010","Austin, TX Community Kitchen 084",distributes to,directed,2023
+"Los Angeles, CA Food Hub 011",Oaxaca Community Kitchen 008,distributes to,directed,2024
+"Austin, TX Food Hub 012",Mexico City Community Kitchen 017,distributes to,directed,2025
+Vancouver Food Hub 013,Toronto Community Kitchen 026,distributes to,directed,2023
+Toronto Food Hub 014,"Los Angeles, CA Community Kitchen 035",distributes to,directed,2024
+Montreal Food Hub 015,Oaxaca Community Kitchen 044,distributes to,directed,2025
+Calgary Food Hub 016,Mexico City Community Kitchen 053,distributes to,directed,2023
+Mexico City Food Hub 017,Toronto Community Kitchen 062,distributes to,directed,2024
+Monterrey Food Hub 018,"Los Angeles, CA Community Kitchen 071",distributes to,directed,2025
+Guadalajara Food Hub 019,Oaxaca Community Kitchen 080,distributes to,directed,2023
+Oaxaca Food Hub 020,Calgary Community Kitchen 004,distributes to,directed,2024
+"Seattle, WA Food Hub 021",Vancouver Community Kitchen 013,distributes to,directed,2025
+"Chicago, IL Food Hub 022","Chicago, IL Community Kitchen 022",distributes to,directed,2023
+Vancouver Food Hub 001,Guadalajara Community Kitchen 031,distributes to,directed,2024
+Toronto Food Hub 002,Calgary Community Kitchen 040,distributes to,directed,2025
+Montreal Food Hub 003,Vancouver Community Kitchen 049,distributes to,directed,2023
+Calgary Food Hub 004,"Chicago, IL Community Kitchen 058",distributes to,directed,2024
+Mexico City Food Hub 005,Guadalajara Community Kitchen 067,distributes to,directed,2025
+Monterrey Food Hub 006,Calgary Community Kitchen 076,distributes to,directed,2023
+Guadalajara Food Hub 007,Vancouver Community Kitchen 085,distributes to,directed,2024
+Oaxaca Food Hub 008,"Seattle, WA Community Kitchen 009",distributes to,directed,2025
+"Seattle, WA Food Hub 009",Monterrey Community Kitchen 018,distributes to,directed,2023
+"Chicago, IL Food Hub 010",Montreal Community Kitchen 027,distributes to,directed,2024
+"Los Angeles, CA Food Hub 011","Austin, TX Community Kitchen 036",distributes to,directed,2025
+"Austin, TX Food Hub 012","Seattle, WA Community Kitchen 045",distributes to,directed,2023
+Vancouver Food Hub 013,Monterrey Community Kitchen 054,distributes to,directed,2024
+Toronto Food Hub 014,Montreal Community Kitchen 063,distributes to,directed,2025
+Montreal Food Hub 015,"Austin, TX Community Kitchen 072",distributes to,directed,2023
+Calgary Food Hub 016,"Seattle, WA Community Kitchen 081",distributes to,directed,2024
+Mexico City Food Hub 017,Mexico City Community Kitchen 005,distributes to,directed,2025
+Monterrey Food Hub 018,Toronto Community Kitchen 014,distributes to,directed,2023
+Guadalajara Food Hub 019,"Los Angeles, CA Community Kitchen 023",distributes to,directed,2024
+Oaxaca Food Hub 020,Oaxaca Community Kitchen 032,distributes to,directed,2025
+"Seattle, WA Food Hub 021",Mexico City Community Kitchen 041,distributes to,directed,2023
+"Chicago, IL Food Hub 022",Toronto Community Kitchen 050,distributes to,directed,2024
+Vancouver Food Hub 001,"Los Angeles, CA Community Kitchen 059",distributes to,directed,2025
+Toronto Food Hub 002,Oaxaca Community Kitchen 068,distributes to,directed,2023
+Montreal Food Hub 003,Mexico City Community Kitchen 077,distributes to,directed,2024
+Calgary Food Hub 004,Vancouver Community Kitchen 001,distributes to,directed,2025
+Mexico City Food Hub 005,"Chicago, IL Community Kitchen 010",distributes to,directed,2023
+Monterrey Food Hub 006,Guadalajara Community Kitchen 019,distributes to,directed,2024
+Guadalajara Food Hub 007,Calgary Community Kitchen 028,distributes to,directed,2025
+Oaxaca Food Hub 008,Vancouver Community Kitchen 037,distributes to,directed,2023
+"Seattle, WA Food Hub 009","Chicago, IL Community Kitchen 046",distributes to,directed,2024
+"Chicago, IL Food Hub 010",Guadalajara Community Kitchen 055,distributes to,directed,2025
+"Los Angeles, CA Food Hub 011",Calgary Community Kitchen 064,distributes to,directed,2023
+"Austin, TX Food Hub 012",Vancouver Community Kitchen 073,distributes to,directed,2024
+Vancouver Food Hub 013,"Chicago, IL Community Kitchen 082",distributes to,directed,2025
+Toronto Food Hub 014,Monterrey Community Kitchen 006,distributes to,directed,2023
+Montreal Food Hub 015,Montreal Community Kitchen 015,distributes to,directed,2024
+Calgary Food Hub 016,"Austin, TX Community Kitchen 024",distributes to,directed,2025
+Mexico City Food Hub 017,"Seattle, WA Community Kitchen 033",distributes to,directed,2023
+Monterrey Food Hub 018,Monterrey Community Kitchen 042,distributes to,directed,2024
+Guadalajara Food Hub 019,Montreal Community Kitchen 051,distributes to,directed,2025
+Oaxaca Food Hub 020,"Austin, TX Community Kitchen 060",distributes to,directed,2023
+"Seattle, WA Food Hub 021","Seattle, WA Community Kitchen 069",distributes to,directed,2024
+"Chicago, IL Food Hub 022",Monterrey Community Kitchen 078,distributes to,directed,2025
+Vancouver Food Hub 001,Toronto Community Kitchen 002,distributes to,directed,2023
+Toronto Food Hub 002,"Los Angeles, CA Community Kitchen 011",distributes to,directed,2024
+Montreal Food Hub 003,Oaxaca Community Kitchen 020,distributes to,directed,2025
+Calgary Food Hub 004,Mexico City Community Kitchen 029,distributes to,directed,2023
+Mexico City Food Hub 005,Toronto Community Kitchen 038,distributes to,directed,2024
+Monterrey Food Hub 006,"Los Angeles, CA Community Kitchen 047",distributes to,directed,2025
+Guadalajara Food Hub 007,Oaxaca Community Kitchen 056,distributes to,directed,2023
+Oaxaca Food Hub 008,Mexico City Community Kitchen 065,distributes to,directed,2024
+"Seattle, WA Food Hub 009",Toronto Community Kitchen 074,distributes to,directed,2025
+"Chicago, IL Food Hub 010","Los Angeles, CA Community Kitchen 083",distributes to,directed,2023
+"Los Angeles, CA Food Hub 011",Guadalajara Community Kitchen 007,distributes to,directed,2024
+"Austin, TX Food Hub 012",Calgary Community Kitchen 016,distributes to,directed,2025
+Vancouver Food Hub 013,Vancouver Community Kitchen 025,distributes to,directed,2023
+Toronto Food Hub 014,"Chicago, IL Community Kitchen 034",distributes to,directed,2024
