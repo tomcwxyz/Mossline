@@ -175,6 +175,6 @@ test("free-form pasted prose is not misrepresented as a verified network",async(
     "Alice helped Bob at the community centre."
   );
   await page.getByRole("button",{name:"Explore pasted data"}).click();
-  await expect(page.getByRole("alert")).toContainText("Paste a table with a heading row");
+  await expect(page.locator(".ml-add-error")).toContainText("Paste a table with a heading row");
   await expect(page.getByRole("heading",{name:"Bring in your data"})).toBeVisible();
 });
