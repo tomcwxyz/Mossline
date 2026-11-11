@@ -75,10 +75,24 @@ test("Throw Lab makes raw fictional inputs and unsupported cases visible",async(
   await expect(page.getByRole("heading",{level:1,name:"What can you throw at Mossy?"})).toBeVisible();
   await expect(page.getByText("24 engine-tested input cases")).toBeVisible();
   await expect(page.getByText(/36 tracked gaps/)).toBeVisible();
-  await expect(page.locator(".ml-start-example")).toHaveCount(24);
+  await expect(page.locator(".ml-throw-rich-card")).toHaveCount(8);
+  await expect(page.locator(".ml-throw-small .ml-start-example")).toHaveCount(24);
   const bare=page.locator(".ml-start-example").filter({hasText:"Only From, To and Relationship"});
   await expect(bare).toHaveCount(1);
   await bare.locator("summary").click();
   await expect(bare.getByRole("link",{name:"connections.csv"})).toHaveAttribute("download","connections.csv");
   await expect(page.getByRole("heading",{name:"What Mossy can't do properly yet"})).toBeVisible();
+});
+
+test("rich Throw Lab data opens the actual sources in an editable review",async({page})=>{
+  test.setTimeout(90_000);
+  await page.goto("/throw-lab");
+  const example=page.locator(".ml-throw-rich-card").filter({hasText:"The Neighbourhood Web"});
+  await expect(example).toContainText("350 recorded links");
+  await example.getByRole("link",{name:/Explore in Mossy/}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible({timeout:40_000});
+  await expect(page.locator(".ml-add-totals")).toContainText("191new records");
+  await expect(page.locator(".ml-add-totals")).toContainText("350new recorded links");
+  await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
+  await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
 });
