@@ -6,6 +6,7 @@ export type RichLabExample = {
   idealFirstView:string;whatToTry:string;caveat:string;
   files:{name:string;path:string;rows:number;bytes:number}[];
   expectedRecords:number;expectedLinks:number;stats:string;observations:string[];
+  geography:{label:string;cities:number;countries:string[]};
 };
 
 export const RICH_LAB_EXAMPLES:readonly RichLabExample[]=data.examples;
