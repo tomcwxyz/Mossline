@@ -81,9 +81,9 @@
           "bytes": 100780
         }
       ],
-      "expectedRecords": 863,
+      "expectedRecords": 862,
       "expectedLinks": 1440,
-      "stats": "720 grants · 18 funders · 125 recipients · 6 years",
+      "stats": "720 grants · 18 funders · 124 recipients · 6 years",
       "observations": [
         "A few large funders dominate",
         "Repeat recipients over time",
