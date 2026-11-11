@@ -21,9 +21,9 @@ async function openExample(page:Page){
 /** Chooses a record from the keyboard-accessible list, as people without a mouse do. */
 async function choose(page:Page,name:string){
   await page.locator(".ml-search input").fill(name);
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list").getByRole("button",{name:new RegExp("^"+name)}).first().click();
-  await page.getByRole("button",{name:"Close list"}).click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody tr").filter({hasText:name}).first().locator(".ml-data-locate").click();
+  await page.getByRole("button",{name:"Close data table"}).click();
   await page.locator(".ml-search-clear").click();
 }
 
