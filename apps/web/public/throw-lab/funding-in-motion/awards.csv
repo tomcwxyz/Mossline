@@ -1,0 +1,721 @@
+Funder,Recipient,Grant ID,Amount,Date,Programme,Currency,Region,Themes
+Northbank Foundation 013,Gateshead Seedling Project Organisation 014,LAB-AWARD-00001,75000,2020-01-01,Local food,GBP,Newcastle,Nature
+Bracken Foundation 001,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00002,1273,2021-06-08,Inclusive culture,GBP,Sunderland,Transport
+Harbour Foundation 002,Newcastle Foundry Project Organisation 036,LAB-AWARD-00003,1346,2022-11-15,Inclusive culture,GBP,Middlesbrough,Culture
+Harbour Foundation 002,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00004,1419,2023-04-22,Young futures,GBP,Darlington,Young people
+Mosaic Foundation 003,Darlington Harbour Project Organisation 074,LAB-AWARD-00005,1492,2024-09-02,Nature recovery,GBP,Durham,Energy
+Beacon Foundation 004,Gateshead Hearth Project Organisation 098,LAB-AWARD-00006,1565,2025-02-09,Nature recovery,GBP,Hartlepool,Community care
+Willow Foundation 005,Durham Meadow Project Organisation 117,LAB-AWARD-00007,1638,2020-07-16,Community transport,GBP,Gateshead,Learning
+Cornerstone Foundation 006,Newcastle Hearth Project Organisation 008,LAB-AWARD-00008,1711,2021-12-23,Local food,GBP,Newcastle,Food
+Bridgewater Foundation 007,Hartlepool Harbour Project Organisation 020,LAB-AWARD-00009,1784,2022-05-03,Inclusive culture,GBP,Sunderland,Health
+Hearth Foundation 008,Durham Beacon Project Organisation 040,LAB-AWARD-00010,1857,2023-10-10,Better homes,GBP,Middlesbrough,Housing
+Tideway Foundation 017,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00011,1930,2024-03-17,Young futures,GBP,Darlington,Nature
+Highfield Foundation 010,Gateshead Willow Project Organisation 077,LAB-AWARD-00012,2003,2025-08-24,Nature recovery,GBP,Durham,Transport
+Bracken Foundation 001,Sunderland Seedling Project Organisation 086,LAB-AWARD-00013,2076,2020-01-04,Nature recovery,GBP,Hartlepool,Culture
+Bracken Foundation 001,Middlesbrough Lantern Project Organisation 101,LAB-AWARD-00014,2149,2021-06-11,Community transport,GBP,Gateshead,Young people
+Harbour Foundation 002,Darlington Cedar Project Organisation 123,LAB-AWARD-00015,2222,2022-11-18,Local food,GBP,Newcastle,Energy
+Harbour Foundation 002,Gateshead Seedling Project Organisation 014,LAB-AWARD-00016,2295,2023-04-25,Healthy neighbourhoods,GBP,Sunderland,Community care
+Mosaic Foundation 003,Sunderland Willow Project Organisation 023,LAB-AWARD-00017,2368,2024-09-05,Inclusive culture,GBP,Middlesbrough,Learning
+Beacon Foundation 004,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00018,76207,2025-02-12,Young futures,GBP,Darlington,Food
+Willow Foundation 005,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00019,2514,2020-07-19,Young futures,GBP,Durham,Health
+Cornerstone Foundation 006,Gateshead Willow Project Organisation 077,LAB-AWARD-00020,2587,2021-12-26,Nature recovery,GBP,Hartlepool,Housing
+Lantern Foundation 011,Gateshead Hearth Project Organisation 098,LAB-AWARD-00021,2660,2022-05-06,Local food,GBP,Gateshead,Nature
+Hearth Foundation 008,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00022,2733,2023-10-13,Healthy neighbourhoods,GBP,Newcastle,Transport
+Meadow Foundation 009,Durham Riverside Project Organisation 012,LAB-AWARD-00023,2806,2024-03-20,Inclusive culture,GBP,Sunderland,Culture
+Highfield Foundation 010,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00024,2879,2025-08-27,Better homes,GBP,Middlesbrough,Young people
+Bracken Foundation 001,Darlington Highfield Project Organisation 046,LAB-AWARD-00025,2952,2020-01-07,Young futures,GBP,Darlington,Energy
+Bracken Foundation 001,Middlesbrough Hilltop Project Organisation 052,LAB-AWARD-00026,3025,2021-06-14,Nature recovery,GBP,Durham,Community care
+Harbour Foundation 002,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00027,3098,2022-11-21,Community transport,GBP,Hartlepool,Learning
+Harbour Foundation 002,Middlesbrough Beacon Project Organisation 094,LAB-AWARD-00028,3171,2023-04-01,Local food,GBP,Gateshead,Food
+Mosaic Foundation 003,Sunderland Tideway Project Organisation 107,LAB-AWARD-00029,3244,2024-09-08,Healthy neighbourhoods,GBP,Newcastle,Health
+Beacon Foundation 004,Darlington Beacon Project Organisation 004,LAB-AWARD-00030,3317,2025-02-15,Inclusive culture,GBP,Sunderland,Housing
+Beacon Foundation 004,Newcastle Cedar Project Organisation 015,LAB-AWARD-00031,3390,2020-07-22,Inclusive culture,GBP,Middlesbrough,Nature
+Cornerstone Foundation 006,Newcastle Lantern Project Organisation 029,LAB-AWARD-00032,3463,2021-12-02,Young futures,GBP,Darlington,Transport
+Bridgewater Foundation 007,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00033,3536,2022-05-09,Nature recovery,GBP,Durham,Culture
+Hearth Foundation 008,Darlington Harbour Project Organisation 074,LAB-AWARD-00034,3609,2023-10-16,Nature recovery,GBP,Hartlepool,Young people
+Meadow Foundation 009,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00035,77414,2024-03-23,Local food,GBP,Gateshead,Energy
+Highfield Foundation 010,Newcastle Meadow Project Organisation 099,LAB-AWARD-00036,3755,2025-08-03,Local food,GBP,Newcastle,Community care
+Bracken Foundation 001,Sunderland Northbank Project Organisation 121,LAB-AWARD-00037,3828,2020-01-10,Inclusive culture,GBP,Sunderland,Learning
+Bracken Foundation 001,Sunderland Meadow Project Organisation 009,LAB-AWARD-00038,3901,2021-06-17,Inclusive culture,GBP,Middlesbrough,Food
+Harbour Foundation 002,Sunderland Riverside Project Organisation 030,LAB-AWARD-00039,3974,2022-11-24,Better homes,GBP,Darlington,Health
+Harbour Foundation 002,Darlington Mosaic Project Organisation 039,LAB-AWARD-00040,4047,2023-04-04,Nature recovery,GBP,Durham,Housing
+Highfield Foundation 010,Gateshead Hilltop Project Organisation 070,LAB-AWARD-00041,4120,2024-09-11,Community transport,GBP,Hartlepool,Nature
+Beacon Foundation 004,Middlesbrough Cedar Project Organisation 087,LAB-AWARD-00042,4193,2025-02-18,Community transport,GBP,Gateshead,Transport
+Willow Foundation 005,Middlesbrough Lantern Project Organisation 101,LAB-AWARD-00043,4266,2020-07-25,Local food,GBP,Newcastle,Culture
+Cornerstone Foundation 006,Gateshead Lantern Project Organisation 119,LAB-AWARD-00044,4339,2021-12-05,Inclusive culture,GBP,Sunderland,Young people
+Bridgewater Foundation 007,Sunderland Harbour Project Organisation 002,LAB-AWARD-00045,4412,2022-05-12,Inclusive culture,GBP,Middlesbrough,Energy
+Hearth Foundation 008,Durham Hearth Project Organisation 026,LAB-AWARD-00046,4485,2023-10-19,Young futures,GBP,Darlington,Community care
+Meadow Foundation 009,Sunderland Bracken Project Organisation 037,LAB-AWARD-00047,4558,2024-03-26,Young futures,GBP,Durham,Learning
+Highfield Foundation 010,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00048,4631,2025-08-06,Community transport,GBP,Hartlepool,Food
+Bracken Foundation 001,Gateshead Willow Project Organisation 077,LAB-AWARD-00049,4704,2020-01-13,Local food,GBP,Gateshead,Health
+Bracken Foundation 001,Durham Tideway Project Organisation 089,LAB-AWARD-00050,4777,2021-06-20,Healthy neighbourhoods,GBP,Newcastle,Housing
+Beacon Foundation 004,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00051,4850,2022-11-27,Healthy neighbourhoods,GBP,Sunderland,Nature
+Harbour Foundation 002,Hartlepool Cornerstone Project Organisation 006,LAB-AWARD-00052,78621,2023-04-07,Better homes,GBP,Middlesbrough,Transport
+Mosaic Foundation 003,Durham Bracken Project Organisation 019,LAB-AWARD-00053,4996,2024-09-14,Better homes,GBP,Darlington,Culture
+Beacon Foundation 004,Middlesbrough Northbank Project Organisation 031,LAB-AWARD-00054,5069,2025-02-21,Young futures,GBP,Durham,Young people
+Willow Foundation 005,Gateshead Northbank Project Organisation 049,LAB-AWARD-00055,5142,2020-07-01,Nature recovery,GBP,Hartlepool,Energy
+Cornerstone Foundation 006,Sunderland Lantern Project Organisation 065,LAB-AWARD-00056,5215,2021-12-08,Local food,GBP,Gateshead,Community care
+Bridgewater Foundation 007,Darlington Meadow Project Organisation 081,LAB-AWARD-00057,5288,2022-05-15,Local food,GBP,Newcastle,Learning
+Hearth Foundation 008,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00058,5361,2023-10-22,Healthy neighbourhoods,GBP,Sunderland,Food
+Meadow Foundation 009,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00059,5434,2024-03-02,Inclusive culture,GBP,Middlesbrough,Health
+Highfield Foundation 010,Durham Riverside Project Organisation 012,LAB-AWARD-00060,5507,2025-08-09,Young futures,GBP,Darlington,Housing
+Foundry Foundation 018,Sunderland Riverside Project Organisation 030,LAB-AWARD-00061,5580,2020-01-16,Nature recovery,GBP,Durham,Nature
+Bracken Foundation 001,Middlesbrough Harbour Project Organisation 038,LAB-AWARD-00062,5653,2021-06-23,Community transport,GBP,Hartlepool,Transport
+Harbour Foundation 002,Sunderland Lantern Project Organisation 065,LAB-AWARD-00063,5726,2022-11-03,Local food,GBP,Gateshead,Culture
+Harbour Foundation 002,Darlington Meadow Project Organisation 081,LAB-AWARD-00064,5799,2023-04-10,Healthy neighbourhoods,GBP,Newcastle,Young people
+Mosaic Foundation 003,Darlington Willow Project Organisation 095,LAB-AWARD-00065,5872,2024-09-17,Healthy neighbourhoods,GBP,Sunderland,Energy
+Beacon Foundation 004,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00066,5945,2025-02-24,Inclusive culture,GBP,Middlesbrough,Community care
+Willow Foundation 005,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00067,6018,2020-07-04,Young futures,GBP,Darlington,Learning
+Cornerstone Foundation 006,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00068,6091,2021-12-11,Young futures,GBP,Durham,Food
+Bridgewater Foundation 007,Hartlepool Willow Project Organisation 041,LAB-AWARD-00069,79828,2022-05-18,Community transport,GBP,Hartlepool,Health
+Hearth Foundation 008,Gateshead Meadow Project Organisation 063,LAB-AWARD-00070,6237,2023-10-25,Local food,GBP,Gateshead,Housing
+Cornerstone Foundation 006,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00071,6310,2024-03-05,Healthy neighbourhoods,GBP,Newcastle,Nature
+Highfield Foundation 010,Sunderland Seedling Project Organisation 086,LAB-AWARD-00072,6383,2025-08-12,Healthy neighbourhoods,GBP,Sunderland,Transport
+Bracken Foundation 001,Sunderland Tideway Project Organisation 107,LAB-AWARD-00073,6456,2020-01-19,Inclusive culture,GBP,Middlesbrough,Culture
+Bracken Foundation 001,Hartlepool Tideway Project Organisation 125,LAB-AWARD-00074,6529,2021-06-26,Better homes,GBP,Darlington,Young people
+Harbour Foundation 002,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00075,6602,2022-11-06,Young futures,GBP,Durham,Energy
+Harbour Foundation 002,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00076,6675,2023-04-13,Nature recovery,GBP,Hartlepool,Community care
+Mosaic Foundation 003,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00077,6748,2024-09-20,Local food,GBP,Gateshead,Learning
+Beacon Foundation 004,Middlesbrough Riverside Project Organisation 066,LAB-AWARD-00078,6821,2025-02-27,Local food,GBP,Newcastle,Food
+Willow Foundation 005,Durham Highfield Project Organisation 082,LAB-AWARD-00079,6894,2020-07-07,Inclusive culture,GBP,Sunderland,Health
+Cornerstone Foundation 006,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00080,6967,2021-12-14,Better homes,GBP,Middlesbrough,Housing
+Tideway Foundation 017,Gateshead Lantern Project Organisation 119,LAB-AWARD-00081,7040,2022-05-21,Better homes,GBP,Darlington,Nature
+Hearth Foundation 008,Newcastle Hearth Project Organisation 008,LAB-AWARD-00082,7113,2023-10-01,Young futures,GBP,Durham,Transport
+Meadow Foundation 009,Middlesbrough Northbank Project Organisation 031,LAB-AWARD-00083,7186,2024-03-08,Nature recovery,GBP,Hartlepool,Culture
+Highfield Foundation 010,Newcastle Seedling Project Organisation 050,LAB-AWARD-00084,7259,2025-08-15,Local food,GBP,Gateshead,Young people
+Bracken Foundation 001,Hartlepool Hearth Project Organisation 062,LAB-AWARD-00085,7332,2020-01-22,Local food,GBP,Newcastle,Energy
+Bracken Foundation 001,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00086,81035,2021-06-02,Inclusive culture,GBP,Sunderland,Community care
+Harbour Foundation 002,Newcastle Harbour Project Organisation 092,LAB-AWARD-00087,7478,2022-11-09,Better homes,GBP,Middlesbrough,Learning
+Harbour Foundation 002,Middlesbrough Foundry Project Organisation 108,LAB-AWARD-00088,7551,2023-04-16,Better homes,GBP,Darlington,Food
+Mosaic Foundation 003,Newcastle Hearth Project Organisation 008,LAB-AWARD-00089,7624,2024-09-23,Nature recovery,GBP,Durham,Health
+Beacon Foundation 004,Durham Bracken Project Organisation 019,LAB-AWARD-00090,7697,2025-02-03,Community transport,GBP,Hartlepool,Housing
+Willow Foundation 005,Hartlepool Willow Project Organisation 041,LAB-AWARD-00091,7770,2020-07-10,Community transport,GBP,Gateshead,Nature
+Cornerstone Foundation 006,Sunderland Beacon Project Organisation 058,LAB-AWARD-00092,7843,2021-12-17,Healthy neighbourhoods,GBP,Newcastle,Transport
+Bridgewater Foundation 007,Sunderland Lantern Project Organisation 065,LAB-AWARD-00093,7916,2022-05-24,Healthy neighbourhoods,GBP,Sunderland,Culture
+Hearth Foundation 008,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00094,7989,2023-10-04,Better homes,GBP,Middlesbrough,Young people
+Meadow Foundation 009,Gateshead Beacon Project Organisation 112,LAB-AWARD-00095,8062,2024-03-11,Young futures,GBP,Darlington,Energy
+Highfield Foundation 010,Darlington Beacon Project Organisation 004,LAB-AWARD-00096,8135,2025-08-18,Nature recovery,GBP,Durham,Community care
+Bracken Foundation 001,Newcastle Hearth Project Organisation 008,LAB-AWARD-00097,8208,2020-01-25,Community transport,GBP,Hartlepool,Learning
+Bracken Foundation 001,Sunderland Bracken Project Organisation 037,LAB-AWARD-00098,8281,2021-06-05,Community transport,GBP,Gateshead,Food
+Harbour Foundation 002,Gateshead Northbank Project Organisation 049,LAB-AWARD-00099,8354,2022-11-12,Healthy neighbourhoods,GBP,Newcastle,Health
+Harbour Foundation 002,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00100,8427,2023-04-19,Healthy neighbourhoods,GBP,Sunderland,Housing
+Cedar Foundation 015,Durham Tideway Project Organisation 089,LAB-AWARD-00101,8500,2024-09-26,Better homes,GBP,Middlesbrough,Nature
+Beacon Foundation 004,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00102,8573,2025-02-06,Young futures,GBP,Darlington,Transport
+Willow Foundation 005,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00103,82242,2020-07-13,Nature recovery,GBP,Durham,Culture
+Cornerstone Foundation 006,Newcastle Cedar Project Organisation 015,LAB-AWARD-00104,8719,2021-12-20,Community transport,GBP,Hartlepool,Young people
+Bridgewater Foundation 007,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00105,8792,2022-05-27,Community transport,GBP,Gateshead,Energy
+Hearth Foundation 008,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00106,8865,2023-10-07,Healthy neighbourhoods,GBP,Newcastle,Community care
+Meadow Foundation 009,Darlington Tideway Project Organisation 053,LAB-AWARD-00107,8938,2024-03-14,Inclusive culture,GBP,Sunderland,Learning
+Highfield Foundation 010,Newcastle Tideway Project Organisation 071,LAB-AWARD-00108,9011,2025-08-21,Inclusive culture,GBP,Middlesbrough,Food
+Bracken Foundation 001,Middlesbrough Cedar Project Organisation 087,LAB-AWARD-00109,9084,2020-01-01,Better homes,GBP,Darlington,Health
+Bracken Foundation 001,Durham Meadow Project Organisation 117,LAB-AWARD-00110,9157,2021-06-08,Young futures,GBP,Durham,Housing
+Willow Foundation 005,Newcastle Hearth Project Organisation 008,LAB-AWARD-00111,9230,2022-11-15,Community transport,GBP,Hartlepool,Nature
+Harbour Foundation 002,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00112,9303,2023-04-22,Local food,GBP,Gateshead,Transport
+Mosaic Foundation 003,Darlington Mosaic Project Organisation 039,LAB-AWARD-00113,9376,2024-09-02,Healthy neighbourhoods,GBP,Newcastle,Culture
+Beacon Foundation 004,Middlesbrough Hilltop Project Organisation 052,LAB-AWARD-00114,9449,2025-02-09,Inclusive culture,GBP,Sunderland,Young people
+Willow Foundation 005,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00115,9522,2020-07-16,Better homes,GBP,Middlesbrough,Energy
+Cornerstone Foundation 006,Sunderland Seedling Project Organisation 086,LAB-AWARD-00116,9595,2021-12-23,Young futures,GBP,Darlington,Community care
+Bridgewater Foundation 007,Darlington Bracken Project Organisation 109,LAB-AWARD-00117,9668,2022-05-03,Nature recovery,GBP,Durham,Learning
+Hearth Foundation 008,Darlington Hearth Project Organisation 116,LAB-AWARD-00118,9741,2023-10-10,Nature recovery,GBP,Hartlepool,Food
+Meadow Foundation 009,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00119,9814,2024-03-17,Community transport,GBP,Gateshead,Health
+Highfield Foundation 010,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00120,83449,2025-08-24,Local food,GBP,Newcastle,Housing
+Cornerstone Foundation 006,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00121,9960,2020-01-04,Healthy neighbourhoods,GBP,Sunderland,Nature
+Bracken Foundation 001,Newcastle Tideway Project Organisation 071,LAB-AWARD-00122,10033,2021-06-11,Better homes,GBP,Middlesbrough,Transport
+Harbour Foundation 002,Durham Highfield Project Organisation 082,LAB-AWARD-00123,10106,2022-11-18,Better homes,GBP,Darlington,Culture
+Harbour Foundation 002,Gateshead Cedar Project Organisation 105,LAB-AWARD-00124,10179,2023-04-25,Young futures,GBP,Durham,Young people
+Mosaic Foundation 003,Newcastle Riverside Project Organisation 120,LAB-AWARD-00125,10252,2024-09-05,Community transport,GBP,Hartlepool,Energy
+Beacon Foundation 004,Middlesbrough Mosaic Project Organisation 003,LAB-AWARD-00126,10325,2025-02-12,Community transport,GBP,Gateshead,Community care
+Willow Foundation 005,Gateshead Highfield Project Organisation 028,LAB-AWARD-00127,10398,2020-07-19,Local food,GBP,Newcastle,Learning
+Cornerstone Foundation 006,Durham Lantern Project Organisation 047,LAB-AWARD-00128,10471,2021-12-26,Inclusive culture,GBP,Sunderland,Food
+Bridgewater Foundation 007,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00129,10544,2022-05-06,Better homes,GBP,Middlesbrough,Health
+Hearth Foundation 008,Darlington Harbour Project Organisation 074,LAB-AWARD-00130,10617,2023-10-13,Better homes,GBP,Darlington,Housing
+Cedar Foundation 015,Durham Tideway Project Organisation 089,LAB-AWARD-00131,10690,2024-03-20,Nature recovery,GBP,Durham,Nature
+Highfield Foundation 010,Durham Meadow Project Organisation 117,LAB-AWARD-00132,10763,2025-08-27,Nature recovery,GBP,Hartlepool,Transport
+Bracken Foundation 001,Newcastle Hearth Project Organisation 008,LAB-AWARD-00133,10836,2020-01-07,Community transport,GBP,Gateshead,Culture
+Bracken Foundation 001,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00134,10909,2021-06-14,Healthy neighbourhoods,GBP,Newcastle,Young people
+Harbour Foundation 002,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00135,10982,2022-11-21,Inclusive culture,GBP,Sunderland,Energy
+Harbour Foundation 002,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00136,11055,2023-04-01,Better homes,GBP,Middlesbrough,Community care
+Mosaic Foundation 003,Darlington Northbank Project Organisation 067,LAB-AWARD-00137,84656,2024-09-08,Better homes,GBP,Darlington,Learning
+Beacon Foundation 004,Middlesbrough Hearth Project Organisation 080,LAB-AWARD-00138,11201,2025-02-15,Nature recovery,GBP,Durham,Food
+Willow Foundation 005,Durham Harbour Project Organisation 110,LAB-AWARD-00139,11274,2020-07-22,Nature recovery,GBP,Hartlepool,Health
+Cornerstone Foundation 006,Durham Meadow Project Organisation 117,LAB-AWARD-00140,11347,2021-12-02,Community transport,GBP,Gateshead,Housing
+Northbank Foundation 013,Darlington Lantern Project Organisation 011,LAB-AWARD-00141,11420,2022-05-09,Healthy neighbourhoods,GBP,Newcastle,Nature
+Hearth Foundation 008,Middlesbrough Northbank Project Organisation 031,LAB-AWARD-00142,11493,2023-10-16,Healthy neighbourhoods,GBP,Sunderland,Transport
+Meadow Foundation 009,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00143,11566,2024-03-23,Better homes,GBP,Middlesbrough,Culture
+Highfield Foundation 010,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00144,11639,2025-08-03,Young futures,GBP,Darlington,Young people
+Bracken Foundation 001,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00145,11712,2020-01-10,Nature recovery,GBP,Durham,Energy
+Bracken Foundation 001,Darlington Willow Project Organisation 095,LAB-AWARD-00146,11785,2021-06-17,Nature recovery,GBP,Hartlepool,Community care
+Harbour Foundation 002,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00147,11858,2022-11-24,Community transport,GBP,Gateshead,Learning
+Harbour Foundation 002,Hartlepool Cornerstone Project Organisation 006,LAB-AWARD-00148,11931,2023-04-04,Local food,GBP,Newcastle,Food
+Mosaic Foundation 003,Sunderland Riverside Project Organisation 030,LAB-AWARD-00149,12004,2024-09-11,Inclusive culture,GBP,Sunderland,Health
+Beacon Foundation 004,Darlington Highfield Project Organisation 046,LAB-AWARD-00150,12077,2025-02-18,Inclusive culture,GBP,Middlesbrough,Housing
+Bracken Foundation 001,Durham Foundry Project Organisation 054,LAB-AWARD-00151,12150,2020-07-25,Better homes,GBP,Darlington,Nature
+Cornerstone Foundation 006,Durham Seedling Project Organisation 068,LAB-AWARD-00152,12223,2021-12-05,Young futures,GBP,Durham,Transport
+Bridgewater Foundation 007,Sunderland Seedling Project Organisation 086,LAB-AWARD-00153,12296,2022-05-12,Community transport,GBP,Hartlepool,Culture
+Hearth Foundation 008,Darlington Bracken Project Organisation 109,LAB-AWARD-00154,85863,2023-10-19,Local food,GBP,Gateshead,Young people
+Meadow Foundation 009,Sunderland Northbank Project Organisation 121,LAB-AWARD-00155,12442,2024-03-26,Healthy neighbourhoods,GBP,Newcastle,Energy
+Highfield Foundation 010,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00156,12515,2025-08-06,Healthy neighbourhoods,GBP,Sunderland,Community care
+Bracken Foundation 001,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00157,12588,2020-01-13,Inclusive culture,GBP,Middlesbrough,Learning
+Bracken Foundation 001,Gateshead Harbour Project Organisation 056,LAB-AWARD-00158,12661,2021-06-20,Better homes,GBP,Darlington,Food
+Harbour Foundation 002,Gateshead Hilltop Project Organisation 070,LAB-AWARD-00159,12734,2022-11-27,Young futures,GBP,Durham,Health
+Harbour Foundation 002,Middlesbrough Hearth Project Organisation 080,LAB-AWARD-00160,12807,2023-04-07,Community transport,GBP,Hartlepool,Housing
+Harbour Foundation 002,Darlington Bracken Project Organisation 109,LAB-AWARD-00161,12880,2024-09-14,Local food,GBP,Gateshead,Nature
+Beacon Foundation 004,Darlington Hearth Project Organisation 116,LAB-AWARD-00162,12953,2025-02-21,Healthy neighbourhoods,GBP,Newcastle,Transport
+Willow Foundation 005,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00163,13026,2020-07-01,Inclusive culture,GBP,Sunderland,Culture
+Cornerstone Foundation 006,Gateshead Highfield Project Organisation 028,LAB-AWARD-00164,13099,2021-12-08,Inclusive culture,GBP,Middlesbrough,Young people
+Bridgewater Foundation 007,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00165,13172,2022-05-15,Young futures,GBP,Darlington,Energy
+Hearth Foundation 008,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00166,13245,2023-10-22,Nature recovery,GBP,Durham,Community care
+Meadow Foundation 009,Darlington Harbour Project Organisation 074,LAB-AWARD-00167,13318,2024-03-02,Community transport,GBP,Hartlepool,Learning
+Highfield Foundation 010,Darlington Riverside Project Organisation 102,LAB-AWARD-00168,13391,2025-08-09,Local food,GBP,Gateshead,Food
+Bracken Foundation 001,Gateshead Beacon Project Organisation 112,LAB-AWARD-00169,13464,2020-01-16,Local food,GBP,Newcastle,Health
+Bracken Foundation 001,Sunderland Meadow Project Organisation 009,LAB-AWARD-00170,13537,2021-06-23,Inclusive culture,GBP,Sunderland,Housing
+Harbour Foundation 002,Sunderland Willow Project Organisation 023,LAB-AWARD-00171,87070,2022-11-03,Inclusive culture,GBP,Middlesbrough,Nature
+Harbour Foundation 002,Darlington Mosaic Project Organisation 039,LAB-AWARD-00172,13683,2023-04-10,Better homes,GBP,Darlington,Transport
+Mosaic Foundation 003,Sunderland Cedar Project Organisation 051,LAB-AWARD-00173,13756,2024-09-17,Young futures,GBP,Durham,Culture
+Beacon Foundation 004,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00174,13829,2025-02-24,Community transport,GBP,Hartlepool,Young people
+Willow Foundation 005,Newcastle Harbour Project Organisation 092,LAB-AWARD-00175,13902,2020-07-04,Local food,GBP,Gateshead,Energy
+Cornerstone Foundation 006,Middlesbrough Foundry Project Organisation 108,LAB-AWARD-00176,13975,2021-12-11,Healthy neighbourhoods,GBP,Newcastle,Community care
+Bridgewater Foundation 007,Hartlepool Tideway Project Organisation 125,LAB-AWARD-00177,14048,2022-05-18,Healthy neighbourhoods,GBP,Sunderland,Learning
+Hearth Foundation 008,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00178,14121,2023-10-25,Better homes,GBP,Middlesbrough,Food
+Meadow Foundation 009,Newcastle Foundry Project Organisation 036,LAB-AWARD-00179,14194,2024-03-05,Better homes,GBP,Darlington,Health
+Highfield Foundation 010,Gateshead Harbour Project Organisation 056,LAB-AWARD-00180,14267,2025-08-12,Nature recovery,GBP,Durham,Housing
+Seedling Foundation 014,Durham Mosaic Project Organisation 075,LAB-AWARD-00181,14340,2020-01-19,Community transport,GBP,Hartlepool,Nature
+Bracken Foundation 001,Darlington Hilltop Project Organisation 088,LAB-AWARD-00182,14413,2021-06-26,Community transport,GBP,Gateshead,Transport
+Harbour Foundation 002,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00183,14486,2022-11-06,Local food,GBP,Newcastle,Culture
+Harbour Foundation 002,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00184,14559,2023-04-13,Inclusive culture,GBP,Sunderland,Young people
+Mosaic Foundation 003,Darlington Beacon Project Organisation 004,LAB-AWARD-00185,14632,2024-09-20,Inclusive culture,GBP,Middlesbrough,Energy
+Beacon Foundation 004,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00186,14705,2025-02-27,Better homes,GBP,Darlington,Community care
+Willow Foundation 005,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00187,14778,2020-07-07,Young futures,GBP,Durham,Learning
+Cornerstone Foundation 006,Sunderland Beacon Project Organisation 058,LAB-AWARD-00188,88277,2021-12-14,Community transport,GBP,Hartlepool,Food
+Bridgewater Foundation 007,Darlington Meadow Project Organisation 081,LAB-AWARD-00189,14924,2022-05-21,Local food,GBP,Gateshead,Health
+Hearth Foundation 008,Newcastle Harbour Project Organisation 092,LAB-AWARD-00190,14997,2023-10-01,Healthy neighbourhoods,GBP,Newcastle,Housing
+Foundry Foundation 018,Darlington Bracken Project Organisation 109,LAB-AWARD-00191,15070,2024-03-08,Inclusive culture,GBP,Sunderland,Nature
+Highfield Foundation 010,Durham Hilltop Project Organisation 124,LAB-AWARD-00192,15143,2025-08-15,Better homes,GBP,Middlesbrough,Transport
+Bracken Foundation 001,Middlesbrough Cornerstone Project Organisation 024,LAB-AWARD-00193,15216,2020-01-22,Young futures,GBP,Darlington,Culture
+Bracken Foundation 001,Darlington Mosaic Project Organisation 039,LAB-AWARD-00194,15289,2021-06-02,Young futures,GBP,Durham,Young people
+Harbour Foundation 002,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00195,15362,2022-11-09,Community transport,GBP,Hartlepool,Energy
+Harbour Foundation 002,Durham Mosaic Project Organisation 075,LAB-AWARD-00196,15435,2023-04-16,Local food,GBP,Gateshead,Community care
+Mosaic Foundation 003,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00197,15508,2024-09-23,Healthy neighbourhoods,GBP,Newcastle,Learning
+Beacon Foundation 004,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00198,15581,2025-02-03,Healthy neighbourhoods,GBP,Sunderland,Food
+Willow Foundation 005,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00199,15654,2020-07-10,Better homes,GBP,Middlesbrough,Health
+Cornerstone Foundation 006,Hartlepool Harbour Project Organisation 020,LAB-AWARD-00200,15727,2021-12-17,Young futures,GBP,Darlington,Housing
+Highfield Foundation 010,Gateshead Tideway Project Organisation 035,LAB-AWARD-00201,15800,2022-05-24,Nature recovery,GBP,Durham,Nature
+Hearth Foundation 008,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00202,15873,2023-10-04,Nature recovery,GBP,Hartlepool,Transport
+Meadow Foundation 009,Sunderland Foundry Project Organisation 072,LAB-AWARD-00203,15946,2024-03-11,Community transport,GBP,Gateshead,Culture
+Highfield Foundation 010,Sunderland Seedling Project Organisation 086,LAB-AWARD-00204,16019,2025-08-18,Healthy neighbourhoods,GBP,Newcastle,Young people
+Bracken Foundation 001,Darlington Riverside Project Organisation 102,LAB-AWARD-00205,89484,2020-01-25,Healthy neighbourhoods,GBP,Sunderland,Energy
+Bracken Foundation 001,Gateshead Beacon Project Organisation 112,LAB-AWARD-00206,16165,2021-06-05,Inclusive culture,GBP,Middlesbrough,Community care
+Harbour Foundation 002,Sunderland Meadow Project Organisation 009,LAB-AWARD-00207,16238,2022-11-12,Better homes,GBP,Darlington,Learning
+Harbour Foundation 002,Middlesbrough Northbank Project Organisation 031,LAB-AWARD-00208,16311,2023-04-19,Young futures,GBP,Durham,Food
+Mosaic Foundation 003,Newcastle Seedling Project Organisation 050,LAB-AWARD-00209,16384,2024-09-26,Community transport,GBP,Hartlepool,Health
+Beacon Foundation 004,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00210,16457,2025-02-06,Local food,GBP,Gateshead,Housing
+Bracken Foundation 001,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00211,16530,2020-07-13,Local food,GBP,Newcastle,Nature
+Cornerstone Foundation 006,Gateshead Bracken Project Organisation 091,LAB-AWARD-00212,16603,2021-12-20,Inclusive culture,GBP,Sunderland,Transport
+Bridgewater Foundation 007,Sunderland Tideway Project Organisation 107,LAB-AWARD-00213,16676,2022-05-27,Inclusive culture,GBP,Middlesbrough,Culture
+Hearth Foundation 008,Darlington Cedar Project Organisation 123,LAB-AWARD-00214,16749,2023-10-07,Young futures,GBP,Darlington,Young people
+Meadow Foundation 009,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00215,16822,2024-03-14,Young futures,GBP,Durham,Energy
+Highfield Foundation 010,Hartlepool Willow Project Organisation 041,LAB-AWARD-00216,16895,2025-08-21,Community transport,GBP,Hartlepool,Community care
+Bracken Foundation 001,Gateshead Northbank Project Organisation 049,LAB-AWARD-00217,16968,2020-01-01,Community transport,GBP,Gateshead,Learning
+Bracken Foundation 001,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00218,17041,2021-06-08,Local food,GBP,Newcastle,Food
+Harbour Foundation 002,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00219,17114,2022-11-15,Inclusive culture,GBP,Sunderland,Health
+Harbour Foundation 002,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00220,17187,2023-04-22,Better homes,GBP,Middlesbrough,Housing
+Cedar Foundation 015,Durham Meadow Project Organisation 117,LAB-AWARD-00221,17260,2024-09-02,Young futures,GBP,Darlington,Nature
+Beacon Foundation 004,Hartlepool Northbank Project Organisation 013,LAB-AWARD-00222,90691,2025-02-09,Young futures,GBP,Durham,Transport
+Willow Foundation 005,Gateshead Highfield Project Organisation 028,LAB-AWARD-00223,17406,2020-07-16,Community transport,GBP,Hartlepool,Culture
+Cornerstone Foundation 006,Darlington Tideway Project Organisation 053,LAB-AWARD-00224,17479,2021-12-23,Community transport,GBP,Gateshead,Young people
+Bridgewater Foundation 007,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00225,17552,2022-05-03,Healthy neighbourhoods,GBP,Newcastle,Energy
+Hearth Foundation 008,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00226,17625,2023-10-10,Healthy neighbourhoods,GBP,Sunderland,Community care
+Meadow Foundation 009,Sunderland Tideway Project Organisation 107,LAB-AWARD-00227,17698,2024-03-17,Better homes,GBP,Middlesbrough,Learning
+Highfield Foundation 010,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00228,17771,2025-08-24,Better homes,GBP,Darlington,Food
+Bracken Foundation 001,Newcastle Hearth Project Organisation 008,LAB-AWARD-00229,17844,2020-01-04,Nature recovery,GBP,Durham,Health
+Bracken Foundation 001,Durham Hearth Project Organisation 026,LAB-AWARD-00230,17917,2021-06-11,Community transport,GBP,Hartlepool,Housing
+Northbank Foundation 013,Darlington Highfield Project Organisation 046,LAB-AWARD-00231,17990,2022-11-18,Community transport,GBP,Gateshead,Nature
+Harbour Foundation 002,Gateshead Meadow Project Organisation 063,LAB-AWARD-00232,18063,2023-04-25,Local food,GBP,Newcastle,Transport
+Mosaic Foundation 003,Darlington Harbour Project Organisation 074,LAB-AWARD-00233,18136,2024-09-05,Healthy neighbourhoods,GBP,Sunderland,Culture
+Beacon Foundation 004,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00234,18209,2025-02-12,Inclusive culture,GBP,Middlesbrough,Young people
+Willow Foundation 005,Gateshead Beacon Project Organisation 112,LAB-AWARD-00235,18282,2020-07-19,Better homes,GBP,Darlington,Energy
+Cornerstone Foundation 006,Sunderland Meadow Project Organisation 009,LAB-AWARD-00236,18355,2021-12-26,Nature recovery,GBP,Durham,Community care
+Bridgewater Foundation 007,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00237,18428,2022-05-06,Nature recovery,GBP,Hartlepool,Learning
+Hearth Foundation 008,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00238,18501,2023-10-13,Local food,GBP,Gateshead,Food
+Meadow Foundation 009,Sunderland Beacon Project Organisation 058,LAB-AWARD-00239,91898,2024-03-20,Healthy neighbourhoods,GBP,Newcastle,Health
+Highfield Foundation 010,Hartlepool Beacon Project Organisation 076,LAB-AWARD-00240,18647,2025-08-27,Inclusive culture,GBP,Sunderland,Housing
+Bridgewater Foundation 007,Gateshead Riverside Project Organisation 084,LAB-AWARD-00241,18720,2020-01-07,Better homes,GBP,Middlesbrough,Nature
+Bracken Foundation 001,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00242,18793,2021-06-14,Young futures,GBP,Darlington,Transport
+Harbour Foundation 002,Darlington Beacon Project Organisation 004,LAB-AWARD-00243,18866,2022-11-21,Nature recovery,GBP,Durham,Culture
+Harbour Foundation 002,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00244,18939,2023-04-01,Community transport,GBP,Hartlepool,Young people
+Mosaic Foundation 003,Middlesbrough Harbour Project Organisation 038,LAB-AWARD-00245,19012,2024-09-08,Community transport,GBP,Gateshead,Energy
+Beacon Foundation 004,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00246,19085,2025-02-15,Healthy neighbourhoods,GBP,Newcastle,Community care
+Willow Foundation 005,Gateshead Hilltop Project Organisation 070,LAB-AWARD-00247,19158,2020-07-22,Healthy neighbourhoods,GBP,Sunderland,Learning
+Cornerstone Foundation 006,Darlington Meadow Project Organisation 081,LAB-AWARD-00248,19231,2021-12-02,Inclusive culture,GBP,Middlesbrough,Food
+Bridgewater Foundation 007,Gateshead Cedar Project Organisation 105,LAB-AWARD-00249,19304,2022-05-09,Better homes,GBP,Darlington,Health
+Hearth Foundation 008,Newcastle Willow Project Organisation 113,LAB-AWARD-00250,19377,2023-10-16,Nature recovery,GBP,Durham,Housing
+Hearth Foundation 008,Gateshead Seedling Project Organisation 014,LAB-AWARD-00251,19450,2024-03-23,Nature recovery,GBP,Hartlepool,Nature
+Highfield Foundation 010,Darlington Seedling Project Organisation 032,LAB-AWARD-00252,19523,2025-08-03,Community transport,GBP,Gateshead,Transport
+Bracken Foundation 001,Sunderland Bracken Project Organisation 037,LAB-AWARD-00253,19596,2020-01-10,Healthy neighbourhoods,GBP,Newcastle,Culture
+Bracken Foundation 001,Middlesbrough Riverside Project Organisation 066,LAB-AWARD-00254,19669,2021-06-17,Healthy neighbourhoods,GBP,Sunderland,Young people
+Harbour Foundation 002,Newcastle Tideway Project Organisation 071,LAB-AWARD-00255,19742,2022-11-24,Inclusive culture,GBP,Middlesbrough,Energy
+Harbour Foundation 002,Newcastle Harbour Project Organisation 092,LAB-AWARD-00256,93105,2023-04-04,Young futures,GBP,Darlington,Community care
+Mosaic Foundation 003,Darlington Hearth Project Organisation 116,LAB-AWARD-00257,19888,2024-09-11,Young futures,GBP,Durham,Learning
+Beacon Foundation 004,Sunderland Harbour Project Organisation 002,LAB-AWARD-00258,19961,2025-02-18,Nature recovery,GBP,Hartlepool,Food
+Willow Foundation 005,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00259,20034,2020-07-25,Local food,GBP,Gateshead,Health
+Cornerstone Foundation 006,Durham Beacon Project Organisation 040,LAB-AWARD-00260,20107,2021-12-05,Local food,GBP,Newcastle,Housing
+Highfield Foundation 010,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00261,20180,2022-05-12,Inclusive culture,GBP,Sunderland,Nature
+Hearth Foundation 008,Durham Seedling Project Organisation 068,LAB-AWARD-00262,20253,2023-10-19,Better homes,GBP,Middlesbrough,Transport
+Meadow Foundation 009,Darlington Meadow Project Organisation 081,LAB-AWARD-00263,20326,2024-03-26,Better homes,GBP,Darlington,Culture
+Highfield Foundation 010,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00264,20399,2025-08-06,Nature recovery,GBP,Durham,Young people
+Bracken Foundation 001,Sunderland Northbank Project Organisation 121,LAB-AWARD-00265,20472,2020-01-13,Community transport,GBP,Hartlepool,Energy
+Bracken Foundation 001,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00266,20545,2021-06-20,Community transport,GBP,Gateshead,Community care
+Harbour Foundation 002,Gateshead Tideway Project Organisation 035,LAB-AWARD-00267,20618,2022-11-27,Local food,GBP,Newcastle,Learning
+Harbour Foundation 002,Darlington Tideway Project Organisation 053,LAB-AWARD-00268,20691,2023-04-07,Healthy neighbourhoods,GBP,Sunderland,Food
+Mosaic Foundation 003,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00269,20764,2024-09-14,Inclusive culture,GBP,Middlesbrough,Health
+Beacon Foundation 004,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00270,20837,2025-02-21,Young futures,GBP,Darlington,Housing
+Harbour Foundation 002,Darlington Riverside Project Organisation 102,LAB-AWARD-00271,20910,2020-07-01,Nature recovery,GBP,Durham,Nature
+Cornerstone Foundation 006,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00272,20983,2021-12-08,Nature recovery,GBP,Hartlepool,Transport
+Bridgewater Foundation 007,Darlington Beacon Project Organisation 004,LAB-AWARD-00273,94312,2022-05-15,Community transport,GBP,Gateshead,Culture
+Hearth Foundation 008,Durham Bracken Project Organisation 019,LAB-AWARD-00274,21129,2023-10-22,Healthy neighbourhoods,GBP,Newcastle,Young people
+Meadow Foundation 009,Newcastle Foundry Project Organisation 036,LAB-AWARD-00275,21202,2024-03-02,Inclusive culture,GBP,Sunderland,Energy
+Highfield Foundation 010,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00276,21275,2025-08-09,Better homes,GBP,Middlesbrough,Community care
+Bracken Foundation 001,Durham Highfield Project Organisation 082,LAB-AWARD-00277,21348,2020-01-16,Better homes,GBP,Darlington,Learning
+Bracken Foundation 001,Darlington Hilltop Project Organisation 088,LAB-AWARD-00278,21421,2021-06-23,Nature recovery,GBP,Durham,Food
+Harbour Foundation 002,Gateshead Beacon Project Organisation 112,LAB-AWARD-00279,21494,2022-11-03,Nature recovery,GBP,Hartlepool,Health
+Harbour Foundation 002,Middlesbrough Mosaic Project Organisation 003,LAB-AWARD-00280,21567,2023-04-10,Community transport,GBP,Gateshead,Housing
+Meadow Foundation 009,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00281,21640,2024-09-17,Local food,GBP,Newcastle,Nature
+Beacon Foundation 004,Durham Beacon Project Organisation 040,LAB-AWARD-00282,21713,2025-02-24,Healthy neighbourhoods,GBP,Sunderland,Transport
+Willow Foundation 005,Darlington Tideway Project Organisation 053,LAB-AWARD-00283,21786,2020-07-04,Better homes,GBP,Middlesbrough,Culture
+Cornerstone Foundation 006,Durham Seedling Project Organisation 068,LAB-AWARD-00284,21859,2021-12-11,Better homes,GBP,Darlington,Young people
+Bridgewater Foundation 007,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00285,21932,2022-05-18,Young futures,GBP,Durham,Energy
+Hearth Foundation 008,Sunderland Highfield Project Organisation 100,LAB-AWARD-00286,22005,2023-10-25,Nature recovery,GBP,Hartlepool,Community care
+Meadow Foundation 009,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00287,22078,2024-03-05,Community transport,GBP,Gateshead,Learning
+Highfield Foundation 010,Middlesbrough Highfield Project Organisation 010,LAB-AWARD-00288,22151,2025-08-12,Healthy neighbourhoods,GBP,Newcastle,Food
+Bracken Foundation 001,Darlington Seedling Project Organisation 032,LAB-AWARD-00289,1224,2020-01-19,Inclusive culture,GBP,Sunderland,Health
+Bracken Foundation 001,Hartlepool Willow Project Organisation 041,LAB-AWARD-00290,95519,2021-06-26,Better homes,GBP,Middlesbrough,Housing
+Foundry Foundation 018,Durham Bridgewater Project Organisation 061,LAB-AWARD-00291,1370,2022-11-06,Young futures,GBP,Darlington,Nature
+Harbour Foundation 002,Gateshead Willow Project Organisation 077,LAB-AWARD-00292,1443,2023-04-13,Young futures,GBP,Durham,Transport
+Mosaic Foundation 003,Durham Cornerstone Project Organisation 096,LAB-AWARD-00293,1516,2024-09-20,Nature recovery,GBP,Hartlepool,Culture
+Beacon Foundation 004,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00294,1589,2025-02-27,Community transport,GBP,Gateshead,Young people
+Willow Foundation 005,Durham Willow Project Organisation 005,LAB-AWARD-00295,1662,2020-07-07,Healthy neighbourhoods,GBP,Newcastle,Energy
+Cornerstone Foundation 006,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00296,1735,2021-12-14,Healthy neighbourhoods,GBP,Sunderland,Community care
+Bridgewater Foundation 007,Newcastle Foundry Project Organisation 036,LAB-AWARD-00297,1808,2022-05-21,Better homes,GBP,Middlesbrough,Learning
+Hearth Foundation 008,Newcastle Seedling Project Organisation 050,LAB-AWARD-00298,1881,2023-10-01,Young futures,GBP,Darlington,Food
+Meadow Foundation 009,Durham Seedling Project Organisation 068,LAB-AWARD-00299,1954,2024-03-08,Young futures,GBP,Durham,Health
+Highfield Foundation 010,Darlington Willow Project Organisation 095,LAB-AWARD-00300,2027,2025-08-15,Nature recovery,GBP,Hartlepool,Housing
+Riverside Foundation 012,Darlington Bracken Project Organisation 109,LAB-AWARD-00301,2100,2020-01-22,Local food,GBP,Gateshead,Nature
+Bracken Foundation 001,Darlington Cedar Project Organisation 123,LAB-AWARD-00302,2173,2021-06-02,Local food,GBP,Newcastle,Transport
+Harbour Foundation 002,Durham Bracken Project Organisation 019,LAB-AWARD-00303,2246,2022-11-09,Inclusive culture,GBP,Sunderland,Culture
+Harbour Foundation 002,Middlesbrough Harbour Project Organisation 038,LAB-AWARD-00304,2319,2023-04-16,Inclusive culture,GBP,Middlesbrough,Young people
+Mosaic Foundation 003,Durham Foundry Project Organisation 054,LAB-AWARD-00305,2392,2024-09-23,Young futures,GBP,Darlington,Energy
+Beacon Foundation 004,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00306,2465,2025-02-03,Young futures,GBP,Durham,Community care
+Willow Foundation 005,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00307,96726,2020-07-10,Community transport,GBP,Hartlepool,Learning
+Cornerstone Foundation 006,Sunderland Tideway Project Organisation 107,LAB-AWARD-00308,2611,2021-12-17,Local food,GBP,Gateshead,Food
+Bridgewater Foundation 007,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00309,2684,2022-05-24,Local food,GBP,Newcastle,Health
+Hearth Foundation 008,Sunderland Meadow Project Organisation 009,LAB-AWARD-00310,2757,2023-10-04,Inclusive culture,GBP,Sunderland,Housing
+Bracken Foundation 001,Gateshead Tideway Project Organisation 035,LAB-AWARD-00311,2830,2024-03-11,Inclusive culture,GBP,Middlesbrough,Nature
+Highfield Foundation 010,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00312,2903,2025-08-18,Better homes,GBP,Darlington,Transport
+Bracken Foundation 001,Hartlepool Hearth Project Organisation 062,LAB-AWARD-00313,2976,2020-01-25,Nature recovery,GBP,Durham,Culture
+Bracken Foundation 001,Hartlepool Beacon Project Organisation 076,LAB-AWARD-00314,3049,2021-06-05,Nature recovery,GBP,Hartlepool,Young people
+Harbour Foundation 002,Newcastle Harbour Project Organisation 092,LAB-AWARD-00315,3122,2022-11-12,Community transport,GBP,Gateshead,Energy
+Harbour Foundation 002,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00316,3195,2023-04-19,Local food,GBP,Newcastle,Community care
+Mosaic Foundation 003,Hartlepool Tideway Project Organisation 125,LAB-AWARD-00317,3268,2024-09-26,Healthy neighbourhoods,GBP,Sunderland,Learning
+Beacon Foundation 004,Durham Hearth Project Organisation 026,LAB-AWARD-00318,3341,2025-02-06,Inclusive culture,GBP,Middlesbrough,Food
+Willow Foundation 005,Durham Beacon Project Organisation 040,LAB-AWARD-00319,3414,2020-07-13,Young futures,GBP,Darlington,Health
+Cornerstone Foundation 006,Hartlepool Hearth Project Organisation 062,LAB-AWARD-00320,3487,2021-12-20,Young futures,GBP,Durham,Housing
+Riverside Foundation 012,Hartlepool Beacon Project Organisation 076,LAB-AWARD-00321,3560,2022-05-27,Community transport,GBP,Hartlepool,Nature
+Hearth Foundation 008,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00322,3633,2023-10-07,Community transport,GBP,Gateshead,Transport
+Meadow Foundation 009,Darlington Bracken Project Organisation 109,LAB-AWARD-00323,3706,2024-03-14,Healthy neighbourhoods,GBP,Newcastle,Culture
+Highfield Foundation 010,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00324,97933,2025-08-21,Inclusive culture,GBP,Sunderland,Young people
+Bracken Foundation 001,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00325,3852,2020-01-01,Better homes,GBP,Middlesbrough,Energy
+Bracken Foundation 001,Durham Hearth Project Organisation 026,LAB-AWARD-00326,3925,2021-06-08,Better homes,GBP,Darlington,Community care
+Harbour Foundation 002,Darlington Tideway Project Organisation 053,LAB-AWARD-00327,3998,2022-11-15,Young futures,GBP,Durham,Learning
+Harbour Foundation 002,Middlesbrough Riverside Project Organisation 066,LAB-AWARD-00328,4071,2023-04-22,Community transport,GBP,Hartlepool,Food
+Mosaic Foundation 003,Newcastle Northbank Project Organisation 085,LAB-AWARD-00329,4144,2024-09-02,Community transport,GBP,Gateshead,Health
+Beacon Foundation 004,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00330,4217,2025-02-09,Healthy neighbourhoods,GBP,Newcastle,Housing
+Willow Foundation 005,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00331,4290,2020-07-16,Inclusive culture,GBP,Sunderland,Nature
+Cornerstone Foundation 006,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00332,4363,2021-12-23,Inclusive culture,GBP,Middlesbrough,Transport
+Bridgewater Foundation 007,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00333,4436,2022-05-03,Better homes,GBP,Darlington,Culture
+Hearth Foundation 008,Newcastle Seedling Project Organisation 050,LAB-AWARD-00334,4509,2023-10-10,Nature recovery,GBP,Durham,Young people
+Meadow Foundation 009,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00335,4582,2024-03-17,Community transport,GBP,Hartlepool,Energy
+Highfield Foundation 010,Newcastle Tideway Project Organisation 071,LAB-AWARD-00336,4655,2025-08-24,Local food,GBP,Gateshead,Community care
+Bracken Foundation 001,Darlington Hilltop Project Organisation 088,LAB-AWARD-00337,4728,2020-01-04,Local food,GBP,Newcastle,Learning
+Bracken Foundation 001,Newcastle Willow Project Organisation 113,LAB-AWARD-00338,4801,2021-06-11,Inclusive culture,GBP,Sunderland,Food
+Harbour Foundation 002,Middlesbrough Mosaic Project Organisation 003,LAB-AWARD-00339,4874,2022-11-18,Inclusive culture,GBP,Middlesbrough,Health
+Harbour Foundation 002,Gateshead Seedling Project Organisation 014,LAB-AWARD-00340,4947,2023-04-25,Young futures,GBP,Darlington,Housing
+Bracken Foundation 001,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00341,99140,2024-09-05,Young futures,GBP,Durham,Nature
+Beacon Foundation 004,Durham Foundry Project Organisation 054,LAB-AWARD-00342,5093,2025-02-12,Community transport,GBP,Hartlepool,Transport
+Willow Foundation 005,Middlesbrough Riverside Project Organisation 066,LAB-AWARD-00343,5166,2020-07-19,Local food,GBP,Gateshead,Culture
+Cornerstone Foundation 006,Newcastle Northbank Project Organisation 085,LAB-AWARD-00344,5239,2021-12-26,Local food,GBP,Newcastle,Young people
+Bridgewater Foundation 007,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00345,5312,2022-05-06,Healthy neighbourhoods,GBP,Sunderland,Energy
+Hearth Foundation 008,Durham Hilltop Project Organisation 124,LAB-AWARD-00346,5385,2023-10-13,Better homes,GBP,Middlesbrough,Community care
+Meadow Foundation 009,Newcastle Cedar Project Organisation 015,LAB-AWARD-00347,5458,2024-03-20,Young futures,GBP,Darlington,Learning
+Highfield Foundation 010,Gateshead Highfield Project Organisation 028,LAB-AWARD-00348,5531,2025-08-27,Nature recovery,GBP,Durham,Food
+Bracken Foundation 001,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00349,5604,2020-01-07,Nature recovery,GBP,Hartlepool,Health
+Bracken Foundation 001,Durham Seedling Project Organisation 068,LAB-AWARD-00350,5677,2021-06-14,Community transport,GBP,Gateshead,Housing
+Meadow Foundation 009,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00351,5750,2022-11-21,Local food,GBP,Newcastle,Nature
+Harbour Foundation 002,Sunderland Highfield Project Organisation 100,LAB-AWARD-00352,5823,2023-04-01,Healthy neighbourhoods,GBP,Sunderland,Transport
+Mosaic Foundation 003,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00353,5896,2024-09-08,Better homes,GBP,Middlesbrough,Culture
+Beacon Foundation 004,Durham Willow Project Organisation 005,LAB-AWARD-00354,5969,2025-02-15,Better homes,GBP,Darlington,Young people
+Willow Foundation 005,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00355,6042,2020-07-22,Nature recovery,GBP,Durham,Energy
+Cornerstone Foundation 006,Darlington Mosaic Project Organisation 039,LAB-AWARD-00356,6115,2021-12-02,Nature recovery,GBP,Hartlepool,Community care
+Bridgewater Foundation 007,Gateshead Meadow Project Organisation 063,LAB-AWARD-00357,6188,2022-05-09,Community transport,GBP,Gateshead,Learning
+Hearth Foundation 008,Darlington Harbour Project Organisation 074,LAB-AWARD-00358,100347,2023-10-16,Local food,GBP,Newcastle,Food
+Meadow Foundation 009,Gateshead Hearth Project Organisation 098,LAB-AWARD-00359,6334,2024-03-23,Inclusive culture,GBP,Sunderland,Health
+Highfield Foundation 010,Sunderland Tideway Project Organisation 107,LAB-AWARD-00360,6407,2025-08-03,Better homes,GBP,Middlesbrough,Housing
+Northbank Foundation 013,Sunderland Northbank Project Organisation 121,LAB-AWARD-00361,6480,2020-01-10,Better homes,GBP,Darlington,Nature
+Bracken Foundation 001,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00362,6553,2021-06-17,Young futures,GBP,Durham,Transport
+Harbour Foundation 002,Middlesbrough Harbour Project Organisation 038,LAB-AWARD-00363,6626,2022-11-24,Nature recovery,GBP,Hartlepool,Culture
+Harbour Foundation 002,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00364,6699,2023-04-04,Local food,GBP,Gateshead,Young people
+Mosaic Foundation 003,Gateshead Willow Project Organisation 077,LAB-AWARD-00365,6772,2024-09-11,Local food,GBP,Newcastle,Energy
+Beacon Foundation 004,Newcastle Harbour Project Organisation 092,LAB-AWARD-00366,6845,2025-02-18,Healthy neighbourhoods,GBP,Sunderland,Community care
+Willow Foundation 005,Sunderland Tideway Project Organisation 107,LAB-AWARD-00367,6918,2020-07-25,Inclusive culture,GBP,Middlesbrough,Learning
+Cornerstone Foundation 006,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00368,6991,2021-12-05,Better homes,GBP,Darlington,Food
+Bridgewater Foundation 007,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00369,7064,2022-05-12,Nature recovery,GBP,Durham,Health
+Hearth Foundation 008,Gateshead Highfield Project Organisation 028,LAB-AWARD-00370,7137,2023-10-19,Nature recovery,GBP,Hartlepool,Housing
+Willow Foundation 005,Sunderland Hearth Project Organisation 044,LAB-AWARD-00371,7210,2024-03-26,Community transport,GBP,Gateshead,Nature
+Highfield Foundation 010,Sunderland Lantern Project Organisation 065,LAB-AWARD-00372,7283,2025-08-06,Healthy neighbourhoods,GBP,Newcastle,Transport
+Bracken Foundation 001,Darlington Hilltop Project Organisation 088,LAB-AWARD-00373,7356,2020-01-13,Inclusive culture,GBP,Sunderland,Culture
+Bracken Foundation 001,Gateshead Cedar Project Organisation 105,LAB-AWARD-00374,7429,2021-06-20,Inclusive culture,GBP,Middlesbrough,Young people
+Harbour Foundation 002,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00375,101554,2022-11-27,Better homes,GBP,Darlington,Energy
+Harbour Foundation 002,Sunderland Meadow Project Organisation 009,LAB-AWARD-00376,7575,2023-04-07,Young futures,GBP,Durham,Community care
+Mosaic Foundation 003,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00377,7648,2024-09-14,Nature recovery,GBP,Hartlepool,Learning
+Beacon Foundation 004,Newcastle Foundry Project Organisation 036,LAB-AWARD-00378,7721,2025-02-21,Local food,GBP,Gateshead,Food
+Willow Foundation 005,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00379,7794,2020-07-01,Local food,GBP,Newcastle,Health
+Cornerstone Foundation 006,Gateshead Willow Project Organisation 077,LAB-AWARD-00380,7867,2021-12-08,Healthy neighbourhoods,GBP,Sunderland,Housing
+Riverside Foundation 012,Middlesbrough Beacon Project Organisation 094,LAB-AWARD-00381,7940,2022-05-15,Inclusive culture,GBP,Middlesbrough,Nature
+Hearth Foundation 008,Newcastle Willow Project Organisation 113,LAB-AWARD-00382,8013,2023-10-22,Better homes,GBP,Darlington,Transport
+Meadow Foundation 009,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00383,8086,2024-03-02,Nature recovery,GBP,Durham,Culture
+Highfield Foundation 010,Durham Bracken Project Organisation 019,LAB-AWARD-00384,8159,2025-08-09,Community transport,GBP,Hartlepool,Young people
+Bracken Foundation 001,Gateshead Tideway Project Organisation 035,LAB-AWARD-00385,8232,2020-01-16,Local food,GBP,Gateshead,Energy
+Bracken Foundation 001,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00386,8305,2021-06-23,Healthy neighbourhoods,GBP,Newcastle,Community care
+Harbour Foundation 002,Sunderland Foundry Project Organisation 072,LAB-AWARD-00387,8378,2022-11-03,Inclusive culture,GBP,Sunderland,Learning
+Harbour Foundation 002,Newcastle Harbour Project Organisation 092,LAB-AWARD-00388,8451,2023-04-10,Inclusive culture,GBP,Middlesbrough,Food
+Mosaic Foundation 003,Durham Harbour Project Organisation 110,LAB-AWARD-00389,8524,2024-09-17,Better homes,GBP,Darlington,Health
+Beacon Foundation 004,Gateshead Lantern Project Organisation 119,LAB-AWARD-00390,8597,2025-02-24,Nature recovery,GBP,Durham,Housing
+Cedar Foundation 015,Gateshead Seedling Project Organisation 014,LAB-AWARD-00391,8670,2020-07-04,Nature recovery,GBP,Hartlepool,Nature
+Cornerstone Foundation 006,Durham Hearth Project Organisation 026,LAB-AWARD-00392,102761,2021-12-11,Local food,GBP,Gateshead,Transport
+Bridgewater Foundation 007,Darlington Tideway Project Organisation 053,LAB-AWARD-00393,8816,2022-05-18,Healthy neighbourhoods,GBP,Newcastle,Culture
+Hearth Foundation 008,Gateshead Meadow Project Organisation 063,LAB-AWARD-00394,8889,2023-10-25,Inclusive culture,GBP,Sunderland,Young people
+Meadow Foundation 009,Darlington Meadow Project Organisation 081,LAB-AWARD-00395,8962,2024-03-05,Better homes,GBP,Middlesbrough,Energy
+Highfield Foundation 010,Newcastle Harbour Project Organisation 092,LAB-AWARD-00396,9035,2025-08-12,Young futures,GBP,Darlington,Community care
+Bracken Foundation 001,Darlington Bracken Project Organisation 109,LAB-AWARD-00397,9108,2020-01-19,Nature recovery,GBP,Durham,Learning
+Bracken Foundation 001,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00398,9181,2021-06-26,Nature recovery,GBP,Hartlepool,Food
+Harbour Foundation 002,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00399,9254,2022-11-06,Local food,GBP,Gateshead,Health
+Harbour Foundation 002,Newcastle Foundry Project Organisation 036,LAB-AWARD-00400,9327,2023-04-13,Local food,GBP,Newcastle,Housing
+Northbank Foundation 013,Gateshead Meadow Project Organisation 063,LAB-AWARD-00401,9400,2024-09-20,Inclusive culture,GBP,Sunderland,Nature
+Beacon Foundation 004,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00402,9473,2025-02-27,Better homes,GBP,Middlesbrough,Transport
+Willow Foundation 005,Newcastle Northbank Project Organisation 085,LAB-AWARD-00403,9546,2020-07-07,Better homes,GBP,Darlington,Culture
+Cornerstone Foundation 006,Newcastle Willow Project Organisation 113,LAB-AWARD-00404,9619,2021-12-14,Nature recovery,GBP,Durham,Young people
+Bridgewater Foundation 007,Hartlepool Tideway Project Organisation 125,LAB-AWARD-00405,9692,2022-05-21,Community transport,GBP,Hartlepool,Energy
+Hearth Foundation 008,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00406,9765,2023-10-01,Local food,GBP,Gateshead,Community care
+Meadow Foundation 009,Hartlepool Willow Project Organisation 041,LAB-AWARD-00407,9838,2024-03-08,Local food,GBP,Newcastle,Learning
+Highfield Foundation 010,Gateshead Northbank Project Organisation 049,LAB-AWARD-00408,9911,2025-08-15,Inclusive culture,GBP,Sunderland,Food
+Bracken Foundation 001,Gateshead Meadow Project Organisation 063,LAB-AWARD-00409,103968,2020-01-22,Inclusive culture,GBP,Middlesbrough,Health
+Bracken Foundation 001,Newcastle Harbour Project Organisation 092,LAB-AWARD-00410,10057,2021-06-02,Better homes,GBP,Darlington,Housing
+Cornerstone Foundation 006,Middlesbrough Lantern Project Organisation 101,LAB-AWARD-00411,10130,2022-11-09,Nature recovery,GBP,Durham,Nature
+Harbour Foundation 002,Sunderland Cornerstone Project Organisation 114,LAB-AWARD-00412,10203,2023-04-16,Community transport,GBP,Hartlepool,Transport
+Mosaic Foundation 003,Middlesbrough Highfield Project Organisation 010,LAB-AWARD-00413,10276,2024-09-23,Community transport,GBP,Gateshead,Culture
+Beacon Foundation 004,Durham Cedar Project Organisation 033,LAB-AWARD-00414,10349,2025-02-03,Local food,GBP,Newcastle,Young people
+Willow Foundation 005,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00415,10422,2020-07-10,Healthy neighbourhoods,GBP,Sunderland,Energy
+Cornerstone Foundation 006,Middlesbrough Riverside Project Organisation 066,LAB-AWARD-00416,10495,2021-12-17,Inclusive culture,GBP,Middlesbrough,Community care
+Bridgewater Foundation 007,Gateshead Willow Project Organisation 077,LAB-AWARD-00417,10568,2022-05-24,Young futures,GBP,Darlington,Learning
+Hearth Foundation 008,Middlesbrough Beacon Project Organisation 094,LAB-AWARD-00418,10641,2023-10-04,Nature recovery,GBP,Durham,Food
+Meadow Foundation 009,Gateshead Lantern Project Organisation 119,LAB-AWARD-00419,10714,2024-03-11,Nature recovery,GBP,Hartlepool,Health
+Highfield Foundation 010,Darlington Beacon Project Organisation 004,LAB-AWARD-00420,10787,2025-08-18,Local food,GBP,Gateshead,Housing
+Harbour Foundation 002,Durham Bracken Project Organisation 019,LAB-AWARD-00421,10860,2020-01-25,Healthy neighbourhoods,GBP,Newcastle,Nature
+Bracken Foundation 001,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00422,10933,2021-06-05,Healthy neighbourhoods,GBP,Sunderland,Transport
+Harbour Foundation 002,Durham Bridgewater Project Organisation 061,LAB-AWARD-00423,11006,2022-11-12,Better homes,GBP,Middlesbrough,Culture
+Harbour Foundation 002,Darlington Meadow Project Organisation 081,LAB-AWARD-00424,11079,2023-04-19,Better homes,GBP,Darlington,Young people
+Mosaic Foundation 003,Gateshead Hearth Project Organisation 098,LAB-AWARD-00425,11152,2024-09-26,Nature recovery,GBP,Durham,Energy
+Beacon Foundation 004,Darlington Riverside Project Organisation 102,LAB-AWARD-00426,105175,2025-02-06,Nature recovery,GBP,Hartlepool,Community care
+Willow Foundation 005,Sunderland Northbank Project Organisation 121,LAB-AWARD-00427,11298,2020-07-13,Community transport,GBP,Gateshead,Learning
+Cornerstone Foundation 006,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00428,11371,2021-12-20,Local food,GBP,Newcastle,Food
+Bridgewater Foundation 007,Middlesbrough Harbour Project Organisation 038,LAB-AWARD-00429,11444,2022-05-27,Healthy neighbourhoods,GBP,Sunderland,Health
+Hearth Foundation 008,Darlington Highfield Project Organisation 046,LAB-AWARD-00430,11517,2023-10-07,Better homes,GBP,Middlesbrough,Housing
+Mosaic Foundation 003,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00431,11590,2024-03-14,Better homes,GBP,Darlington,Nature
+Highfield Foundation 010,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00432,11663,2025-08-21,Nature recovery,GBP,Durham,Transport
+Bracken Foundation 001,Sunderland Highfield Project Organisation 100,LAB-AWARD-00433,11736,2020-01-01,Community transport,GBP,Hartlepool,Culture
+Bracken Foundation 001,Sunderland Cornerstone Project Organisation 114,LAB-AWARD-00434,11809,2021-06-08,Community transport,GBP,Gateshead,Young people
+Harbour Foundation 002,Hartlepool Cornerstone Project Organisation 006,LAB-AWARD-00435,11882,2022-11-15,Healthy neighbourhoods,GBP,Newcastle,Energy
+Harbour Foundation 002,Durham Hearth Project Organisation 026,LAB-AWARD-00436,11955,2023-04-22,Healthy neighbourhoods,GBP,Sunderland,Community care
+Mosaic Foundation 003,Durham Beacon Project Organisation 040,LAB-AWARD-00437,12028,2024-09-02,Better homes,GBP,Middlesbrough,Learning
+Beacon Foundation 004,Sunderland Beacon Project Organisation 058,LAB-AWARD-00438,12101,2025-02-09,Better homes,GBP,Darlington,Food
+Willow Foundation 005,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00439,12174,2020-07-16,Nature recovery,GBP,Durham,Health
+Cornerstone Foundation 006,Durham Tideway Project Organisation 089,LAB-AWARD-00440,12247,2021-12-23,Nature recovery,GBP,Hartlepool,Housing
+Bracken Foundation 001,Gateshead Beacon Project Organisation 112,LAB-AWARD-00441,12320,2022-05-03,Community transport,GBP,Gateshead,Nature
+Hearth Foundation 008,Darlington Lantern Project Organisation 011,LAB-AWARD-00442,12393,2023-10-10,Local food,GBP,Newcastle,Transport
+Meadow Foundation 009,Newcastle Beacon Project Organisation 022,LAB-AWARD-00443,106382,2024-03-17,Inclusive culture,GBP,Sunderland,Culture
+Highfield Foundation 010,Durham Cedar Project Organisation 033,LAB-AWARD-00444,12539,2025-08-24,Better homes,GBP,Middlesbrough,Young people
+Bracken Foundation 001,Gateshead Northbank Project Organisation 049,LAB-AWARD-00445,12612,2020-01-04,Better homes,GBP,Darlington,Energy
+Bracken Foundation 001,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00446,12685,2021-06-11,Young futures,GBP,Durham,Community care
+Harbour Foundation 002,Darlington Willow Project Organisation 095,LAB-AWARD-00447,12758,2022-11-18,Nature recovery,GBP,Hartlepool,Learning
+Harbour Foundation 002,Gateshead Cedar Project Organisation 105,LAB-AWARD-00448,12831,2023-04-25,Community transport,GBP,Gateshead,Food
+Mosaic Foundation 003,Darlington Cedar Project Organisation 123,LAB-AWARD-00449,12904,2024-09-05,Local food,GBP,Newcastle,Health
+Beacon Foundation 004,Newcastle Beacon Project Organisation 022,LAB-AWARD-00450,12977,2025-02-12,Healthy neighbourhoods,GBP,Sunderland,Housing
+Willow Foundation 005,Durham Cedar Project Organisation 033,LAB-AWARD-00451,13050,2020-07-19,Inclusive culture,GBP,Middlesbrough,Nature
+Cornerstone Foundation 006,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00452,13123,2021-12-26,Young futures,GBP,Darlington,Transport
+Bridgewater Foundation 007,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00453,13196,2022-05-06,Young futures,GBP,Durham,Culture
+Hearth Foundation 008,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00454,13269,2023-10-13,Nature recovery,GBP,Hartlepool,Young people
+Meadow Foundation 009,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00455,13342,2024-03-20,Community transport,GBP,Gateshead,Energy
+Highfield Foundation 010,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00456,13415,2025-08-27,Healthy neighbourhoods,GBP,Newcastle,Community care
+Bracken Foundation 001,Darlington Lantern Project Organisation 011,LAB-AWARD-00457,13488,2020-01-07,Healthy neighbourhoods,GBP,Sunderland,Learning
+Bracken Foundation 001,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00458,13561,2021-06-14,Inclusive culture,GBP,Middlesbrough,Food
+Harbour Foundation 002,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00459,13634,2022-11-21,Better homes,GBP,Darlington,Health
+Harbour Foundation 002,Sunderland Lantern Project Organisation 065,LAB-AWARD-00460,107589,2023-04-01,Nature recovery,GBP,Durham,Housing
+Foundry Foundation 018,Durham Mosaic Project Organisation 075,LAB-AWARD-00461,13780,2024-09-08,Community transport,GBP,Hartlepool,Nature
+Beacon Foundation 004,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00462,13853,2025-02-15,Local food,GBP,Gateshead,Transport
+Willow Foundation 005,Sunderland Cornerstone Project Organisation 114,LAB-AWARD-00463,13926,2020-07-22,Local food,GBP,Newcastle,Culture
+Cornerstone Foundation 006,Darlington Beacon Project Organisation 004,LAB-AWARD-00464,13999,2021-12-02,Healthy neighbourhoods,GBP,Sunderland,Young people
+Bridgewater Foundation 007,Newcastle Beacon Project Organisation 022,LAB-AWARD-00465,14072,2022-05-09,Better homes,GBP,Middlesbrough,Energy
+Hearth Foundation 008,Darlington Seedling Project Organisation 032,LAB-AWARD-00466,14145,2023-10-16,Young futures,GBP,Darlington,Community care
+Meadow Foundation 009,Gateshead Northbank Project Organisation 049,LAB-AWARD-00467,14218,2024-03-23,Young futures,GBP,Durham,Learning
+Highfield Foundation 010,Sunderland Foundry Project Organisation 072,LAB-AWARD-00468,14291,2025-08-03,Community transport,GBP,Hartlepool,Food
+Bracken Foundation 001,Middlesbrough Beacon Project Organisation 094,LAB-AWARD-00469,14364,2020-01-10,Local food,GBP,Gateshead,Health
+Bracken Foundation 001,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00470,14437,2021-06-17,Healthy neighbourhoods,GBP,Newcastle,Housing
+Lantern Foundation 011,Newcastle Riverside Project Organisation 120,LAB-AWARD-00471,14510,2022-11-24,Inclusive culture,GBP,Sunderland,Nature
+Harbour Foundation 002,Newcastle Hearth Project Organisation 008,LAB-AWARD-00472,14583,2023-04-04,Better homes,GBP,Middlesbrough,Transport
+Mosaic Foundation 003,Sunderland Riverside Project Organisation 030,LAB-AWARD-00473,14656,2024-09-11,Better homes,GBP,Darlington,Culture
+Beacon Foundation 004,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00474,14729,2025-02-18,Young futures,GBP,Durham,Young people
+Willow Foundation 005,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00475,14802,2020-07-25,Community transport,GBP,Hartlepool,Energy
+Cornerstone Foundation 006,Hartlepool Beacon Project Organisation 076,LAB-AWARD-00476,14875,2021-12-05,Local food,GBP,Gateshead,Community care
+Bridgewater Foundation 007,Gateshead Cedar Project Organisation 105,LAB-AWARD-00477,108796,2022-05-12,Local food,GBP,Newcastle,Learning
+Hearth Foundation 008,Newcastle Willow Project Organisation 113,LAB-AWARD-00478,15021,2023-10-19,Healthy neighbourhoods,GBP,Sunderland,Food
+Meadow Foundation 009,Sunderland Meadow Project Organisation 009,LAB-AWARD-00479,15094,2024-03-26,Better homes,GBP,Middlesbrough,Health
+Highfield Foundation 010,Gateshead Highfield Project Organisation 028,LAB-AWARD-00480,15167,2025-08-06,Young futures,GBP,Darlington,Housing
+Seedling Foundation 014,Hartlepool Riverside Project Organisation 048,LAB-AWARD-00481,15240,2020-01-13,Nature recovery,GBP,Durham,Nature
+Bracken Foundation 001,Sunderland Beacon Project Organisation 058,LAB-AWARD-00482,15313,2021-06-20,Nature recovery,GBP,Hartlepool,Transport
+Harbour Foundation 002,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00483,15386,2022-11-27,Local food,GBP,Gateshead,Culture
+Harbour Foundation 002,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00484,15459,2023-04-07,Healthy neighbourhoods,GBP,Newcastle,Young people
+Mosaic Foundation 003,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00485,15532,2024-09-14,Inclusive culture,GBP,Sunderland,Energy
+Beacon Foundation 004,Hartlepool Cornerstone Project Organisation 006,LAB-AWARD-00486,15605,2025-02-21,Inclusive culture,GBP,Middlesbrough,Community care
+Willow Foundation 005,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00487,15678,2020-07-01,Young futures,GBP,Darlington,Learning
+Cornerstone Foundation 006,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00488,15751,2021-12-08,Nature recovery,GBP,Durham,Food
+Bridgewater Foundation 007,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00489,15824,2022-05-15,Nature recovery,GBP,Hartlepool,Health
+Hearth Foundation 008,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00490,15897,2023-10-22,Community transport,GBP,Gateshead,Housing
+Highfield Foundation 010,Darlington Willow Project Organisation 095,LAB-AWARD-00491,15970,2024-03-02,Local food,GBP,Newcastle,Nature
+Highfield Foundation 010,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00492,16043,2025-08-09,Healthy neighbourhoods,GBP,Sunderland,Transport
+Bracken Foundation 001,Newcastle Riverside Project Organisation 120,LAB-AWARD-00493,16116,2020-01-16,Better homes,GBP,Middlesbrough,Culture
+Bracken Foundation 001,Hartlepool Northbank Project Organisation 013,LAB-AWARD-00494,110003,2021-06-23,Better homes,GBP,Darlington,Young people
+Harbour Foundation 002,Middlesbrough Cornerstone Project Organisation 024,LAB-AWARD-00495,16262,2022-11-03,Nature recovery,GBP,Durham,Energy
+Harbour Foundation 002,Durham Lantern Project Organisation 047,LAB-AWARD-00496,16335,2023-04-10,Community transport,GBP,Hartlepool,Community care
+Mosaic Foundation 003,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00497,16408,2024-09-17,Local food,GBP,Gateshead,Learning
+Beacon Foundation 004,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00498,16481,2025-02-24,Healthy neighbourhoods,GBP,Newcastle,Food
+Willow Foundation 005,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00499,16554,2020-07-04,Inclusive culture,GBP,Sunderland,Health
+Cornerstone Foundation 006,Darlington Hearth Project Organisation 116,LAB-AWARD-00500,16627,2021-12-11,Better homes,GBP,Middlesbrough,Housing
+Northbank Foundation 013,Durham Willow Project Organisation 005,LAB-AWARD-00501,16700,2022-05-18,Better homes,GBP,Darlington,Nature
+Hearth Foundation 008,Darlington Foundry Project Organisation 018,LAB-AWARD-00502,16773,2023-10-25,Nature recovery,GBP,Durham,Transport
+Meadow Foundation 009,Newcastle Bridgewater Project Organisation 043,LAB-AWARD-00503,16846,2024-03-05,Nature recovery,GBP,Hartlepool,Culture
+Highfield Foundation 010,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00504,16919,2025-08-12,Local food,GBP,Gateshead,Young people
+Bracken Foundation 001,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00505,16992,2020-01-19,Healthy neighbourhoods,GBP,Newcastle,Energy
+Bracken Foundation 001,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00506,17065,2021-06-26,Healthy neighbourhoods,GBP,Sunderland,Community care
+Harbour Foundation 002,Gateshead Cedar Project Organisation 105,LAB-AWARD-00507,17138,2022-11-06,Inclusive culture,GBP,Middlesbrough,Learning
+Harbour Foundation 002,Durham Hilltop Project Organisation 124,LAB-AWARD-00508,17211,2023-04-13,Better homes,GBP,Darlington,Food
+Mosaic Foundation 003,Hartlepool Harbour Project Organisation 020,LAB-AWARD-00509,17284,2024-09-20,Nature recovery,GBP,Durham,Health
+Beacon Foundation 004,Darlington Mosaic Project Organisation 039,LAB-AWARD-00510,17357,2025-02-27,Nature recovery,GBP,Hartlepool,Housing
+Hearth Foundation 008,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00511,111210,2020-07-07,Community transport,GBP,Gateshead,Nature
+Cornerstone Foundation 006,Darlington Northbank Project Organisation 067,LAB-AWARD-00512,17503,2021-12-14,Local food,GBP,Newcastle,Transport
+Bridgewater Foundation 007,Gateshead Bracken Project Organisation 091,LAB-AWARD-00513,17576,2022-05-21,Healthy neighbourhoods,GBP,Sunderland,Culture
+Hearth Foundation 008,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00514,17649,2023-10-01,Better homes,GBP,Middlesbrough,Young people
+Meadow Foundation 009,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00515,17722,2024-03-08,Young futures,GBP,Darlington,Energy
+Highfield Foundation 010,Durham Riverside Project Organisation 012,LAB-AWARD-00516,17795,2025-08-15,Nature recovery,GBP,Durham,Community care
+Bracken Foundation 001,Gateshead Highfield Project Organisation 028,LAB-AWARD-00517,17868,2020-01-22,Community transport,GBP,Hartlepool,Learning
+Bracken Foundation 001,Durham Beacon Project Organisation 040,LAB-AWARD-00518,17941,2021-06-02,Community transport,GBP,Gateshead,Food
+Harbour Foundation 002,Newcastle Highfield Project Organisation 064,LAB-AWARD-00519,18014,2022-11-09,Healthy neighbourhoods,GBP,Newcastle,Health
+Harbour Foundation 002,Gateshead Willow Project Organisation 077,LAB-AWARD-00520,18087,2023-04-16,Healthy neighbourhoods,GBP,Sunderland,Housing
+Riverside Foundation 012,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00521,18160,2024-09-23,Inclusive culture,GBP,Middlesbrough,Nature
+Beacon Foundation 004,Durham Harbour Project Organisation 110,LAB-AWARD-00522,18233,2025-02-03,Young futures,GBP,Darlington,Transport
+Willow Foundation 005,Newcastle Bracken Project Organisation 001,LAB-AWARD-00523,18306,2020-07-10,Nature recovery,GBP,Durham,Culture
+Cornerstone Foundation 006,Sunderland Riverside Project Organisation 030,LAB-AWARD-00524,18379,2021-12-17,Nature recovery,GBP,Hartlepool,Young people
+Bridgewater Foundation 007,Newcastle Foundry Project Organisation 036,LAB-AWARD-00525,18452,2022-05-24,Community transport,GBP,Gateshead,Energy
+Hearth Foundation 008,Newcastle Mosaic Project Organisation 057,LAB-AWARD-00526,18525,2023-10-04,Local food,GBP,Newcastle,Community care
+Meadow Foundation 009,Durham Seedling Project Organisation 068,LAB-AWARD-00527,18598,2024-03-11,Inclusive culture,GBP,Sunderland,Learning
+Highfield Foundation 010,Gateshead Hearth Project Organisation 098,LAB-AWARD-00528,112417,2025-08-18,Better homes,GBP,Middlesbrough,Food
+Bracken Foundation 001,Darlington Hearth Project Organisation 116,LAB-AWARD-00529,18744,2020-01-25,Young futures,GBP,Darlington,Health
+Bracken Foundation 001,Sunderland Northbank Project Organisation 121,LAB-AWARD-00530,18817,2021-06-05,Young futures,GBP,Durham,Housing
+Cornerstone Foundation 006,Newcastle Cedar Project Organisation 015,LAB-AWARD-00531,18890,2022-11-12,Community transport,GBP,Hartlepool,Nature
+Harbour Foundation 002,Durham Cedar Project Organisation 033,LAB-AWARD-00532,18963,2023-04-19,Community transport,GBP,Gateshead,Transport
+Mosaic Foundation 003,Durham Foundry Project Organisation 054,LAB-AWARD-00533,19036,2024-09-26,Healthy neighbourhoods,GBP,Newcastle,Culture
+Beacon Foundation 004,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00534,19109,2025-02-06,Healthy neighbourhoods,GBP,Sunderland,Young people
+Willow Foundation 005,Middlesbrough Hearth Project Organisation 080,LAB-AWARD-00535,19182,2020-07-13,Inclusive culture,GBP,Middlesbrough,Energy
+Cornerstone Foundation 006,Durham Northbank Project Organisation 103,LAB-AWARD-00536,19255,2021-12-20,Young futures,GBP,Darlington,Community care
+Bridgewater Foundation 007,Newcastle Willow Project Organisation 113,LAB-AWARD-00537,19328,2022-05-27,Young futures,GBP,Durham,Learning
+Hearth Foundation 008,Middlesbrough Highfield Project Organisation 010,LAB-AWARD-00538,19401,2023-10-07,Nature recovery,GBP,Hartlepool,Food
+Meadow Foundation 009,Darlington Seedling Project Organisation 032,LAB-AWARD-00539,19474,2024-03-14,Local food,GBP,Gateshead,Health
+Highfield Foundation 010,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00540,19547,2025-08-21,Healthy neighbourhoods,GBP,Newcastle,Housing
+Bridgewater Foundation 007,Gateshead Meadow Project Organisation 063,LAB-AWARD-00541,19620,2020-01-01,Healthy neighbourhoods,GBP,Sunderland,Nature
+Bracken Foundation 001,Gateshead Riverside Project Organisation 084,LAB-AWARD-00542,19693,2021-06-08,Better homes,GBP,Middlesbrough,Transport
+Harbour Foundation 002,Gateshead Hearth Project Organisation 098,LAB-AWARD-00543,19766,2022-11-15,Young futures,GBP,Darlington,Culture
+Harbour Foundation 002,Sunderland Cornerstone Project Organisation 114,LAB-AWARD-00544,19839,2023-04-22,Young futures,GBP,Durham,Young people
+Mosaic Foundation 003,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00545,113624,2024-09-02,Community transport,GBP,Hartlepool,Energy
+Beacon Foundation 004,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00546,19985,2025-02-09,Local food,GBP,Gateshead,Community care
+Willow Foundation 005,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00547,20058,2020-07-16,Healthy neighbourhoods,GBP,Newcastle,Learning
+Cornerstone Foundation 006,Sunderland Cedar Project Organisation 051,LAB-AWARD-00548,20131,2021-12-23,Healthy neighbourhoods,GBP,Sunderland,Food
+Bridgewater Foundation 007,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00549,20204,2022-05-03,Inclusive culture,GBP,Middlesbrough,Health
+Hearth Foundation 008,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00550,20277,2023-10-10,Young futures,GBP,Darlington,Housing
+Seedling Foundation 014,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00551,20350,2024-03-17,Nature recovery,GBP,Durham,Nature
+Highfield Foundation 010,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00552,20423,2025-08-24,Community transport,GBP,Hartlepool,Transport
+Bracken Foundation 001,Durham Riverside Project Organisation 012,LAB-AWARD-00553,20496,2020-01-04,Community transport,GBP,Gateshead,Culture
+Bracken Foundation 001,Durham Cedar Project Organisation 033,LAB-AWARD-00554,20569,2021-06-11,Local food,GBP,Newcastle,Young people
+Harbour Foundation 002,Durham Foundry Project Organisation 054,LAB-AWARD-00555,20642,2022-11-18,Inclusive culture,GBP,Sunderland,Energy
+Harbour Foundation 002,Gateshead Meadow Project Organisation 063,LAB-AWARD-00556,20715,2023-04-25,Better homes,GBP,Middlesbrough,Community care
+Mosaic Foundation 003,Hartlepool Foundry Project Organisation 090,LAB-AWARD-00557,20788,2024-09-05,Young futures,GBP,Darlington,Learning
+Beacon Foundation 004,Sunderland Highfield Project Organisation 100,LAB-AWARD-00558,20861,2025-02-12,Nature recovery,GBP,Durham,Food
+Willow Foundation 005,Gateshead Beacon Project Organisation 112,LAB-AWARD-00559,20934,2020-07-19,Community transport,GBP,Hartlepool,Health
+Cornerstone Foundation 006,Newcastle Cedar Project Organisation 015,LAB-AWARD-00560,21007,2021-12-26,Local food,GBP,Gateshead,Housing
+Northbank Foundation 013,Newcastle Lantern Project Organisation 029,LAB-AWARD-00561,21080,2022-05-06,Local food,GBP,Newcastle,Nature
+Hearth Foundation 008,Darlington Highfield Project Organisation 046,LAB-AWARD-00562,114831,2023-10-13,Inclusive culture,GBP,Sunderland,Transport
+Meadow Foundation 009,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00563,21226,2024-03-20,Inclusive culture,GBP,Middlesbrough,Culture
+Highfield Foundation 010,Sunderland Foundry Project Organisation 072,LAB-AWARD-00564,21299,2025-08-27,Young futures,GBP,Darlington,Young people
+Bracken Foundation 001,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00565,21372,2020-01-07,Young futures,GBP,Durham,Energy
+Bracken Foundation 001,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00566,21445,2021-06-14,Nature recovery,GBP,Hartlepool,Community care
+Harbour Foundation 002,Newcastle Bracken Project Organisation 001,LAB-AWARD-00567,21518,2022-11-21,Local food,GBP,Gateshead,Learning
+Harbour Foundation 002,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00568,21591,2023-04-01,Healthy neighbourhoods,GBP,Newcastle,Food
+Mosaic Foundation 003,Durham Cedar Project Organisation 033,LAB-AWARD-00569,21664,2024-09-08,Inclusive culture,GBP,Sunderland,Health
+Beacon Foundation 004,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00570,21737,2025-02-15,Better homes,GBP,Middlesbrough,Housing
+Bracken Foundation 001,Sunderland Foundry Project Organisation 072,LAB-AWARD-00571,21810,2020-07-22,Better homes,GBP,Darlington,Nature
+Cornerstone Foundation 006,Gateshead Bracken Project Organisation 091,LAB-AWARD-00572,21883,2021-12-02,Nature recovery,GBP,Durham,Transport
+Bridgewater Foundation 007,Sunderland Highfield Project Organisation 100,LAB-AWARD-00573,21956,2022-05-09,Community transport,GBP,Hartlepool,Culture
+Hearth Foundation 008,Darlington Cedar Project Organisation 123,LAB-AWARD-00574,22029,2023-10-16,Local food,GBP,Gateshead,Young people
+Meadow Foundation 009,Darlington Foundry Project Organisation 018,LAB-AWARD-00575,22102,2024-03-23,Local food,GBP,Newcastle,Energy
+Highfield Foundation 010,Middlesbrough Northbank Project Organisation 031,LAB-AWARD-00576,22175,2025-08-03,Inclusive culture,GBP,Sunderland,Community care
+Bracken Foundation 001,Darlington Highfield Project Organisation 046,LAB-AWARD-00577,1248,2020-01-10,Inclusive culture,GBP,Middlesbrough,Learning
+Bracken Foundation 001,Durham Seedling Project Organisation 068,LAB-AWARD-00578,1321,2021-06-17,Young futures,GBP,Darlington,Food
+Harbour Foundation 002,Middlesbrough Cedar Project Organisation 087,LAB-AWARD-00579,116038,2022-11-24,Young futures,GBP,Durham,Health
+Harbour Foundation 002,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00580,1467,2023-04-04,Community transport,GBP,Hartlepool,Housing
+Beacon Foundation 004,Durham Hilltop Project Organisation 124,LAB-AWARD-00581,1540,2024-09-11,Local food,GBP,Gateshead,Nature
+Beacon Foundation 004,Durham Riverside Project Organisation 012,LAB-AWARD-00582,1613,2025-02-18,Healthy neighbourhoods,GBP,Newcastle,Transport
+Willow Foundation 005,Darlington Bridgewater Project Organisation 025,LAB-AWARD-00583,1686,2020-07-25,Healthy neighbourhoods,GBP,Sunderland,Culture
+Cornerstone Foundation 006,Gateshead Northbank Project Organisation 049,LAB-AWARD-00584,1759,2021-12-05,Better homes,GBP,Middlesbrough,Young people
+Bridgewater Foundation 007,Sunderland Lantern Project Organisation 065,LAB-AWARD-00585,1832,2022-05-12,Better homes,GBP,Darlington,Energy
+Hearth Foundation 008,Durham Mosaic Project Organisation 075,LAB-AWARD-00586,1905,2023-10-19,Nature recovery,GBP,Durham,Community care
+Meadow Foundation 009,Gateshead Bracken Project Organisation 091,LAB-AWARD-00587,1978,2024-03-26,Nature recovery,GBP,Hartlepool,Learning
+Highfield Foundation 010,Middlesbrough Foundry Project Organisation 108,LAB-AWARD-00588,2051,2025-08-06,Community transport,GBP,Gateshead,Food
+Bracken Foundation 001,Newcastle Bracken Project Organisation 001,LAB-AWARD-00589,2124,2020-01-13,Healthy neighbourhoods,GBP,Newcastle,Health
+Bracken Foundation 001,Hartlepool Meadow Project Organisation 027,LAB-AWARD-00590,2197,2021-06-20,Inclusive culture,GBP,Sunderland,Housing
+Meadow Foundation 009,Darlington Mosaic Project Organisation 039,LAB-AWARD-00591,2270,2022-11-27,Better homes,GBP,Middlesbrough,Nature
+Harbour Foundation 002,Newcastle Seedling Project Organisation 050,LAB-AWARD-00592,2343,2023-04-07,Better homes,GBP,Darlington,Transport
+Mosaic Foundation 003,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00593,2416,2024-09-14,Young futures,GBP,Durham,Culture
+Beacon Foundation 004,Darlington Hilltop Project Organisation 088,LAB-AWARD-00594,2489,2025-02-21,Community transport,GBP,Hartlepool,Young people
+Willow Foundation 005,Newcastle Willow Project Organisation 113,LAB-AWARD-00595,2562,2020-07-01,Local food,GBP,Gateshead,Energy
+Cornerstone Foundation 006,Newcastle Bracken Project Organisation 001,LAB-AWARD-00596,117245,2021-12-08,Healthy neighbourhoods,GBP,Newcastle,Community care
+Bridgewater Foundation 007,Newcastle Beacon Project Organisation 022,LAB-AWARD-00597,2708,2022-05-15,Inclusive culture,GBP,Sunderland,Learning
+Hearth Foundation 008,Durham Hearth Project Organisation 026,LAB-AWARD-00598,2781,2023-10-22,Inclusive culture,GBP,Middlesbrough,Food
+Meadow Foundation 009,Gateshead Harbour Project Organisation 056,LAB-AWARD-00599,2854,2024-03-02,Young futures,GBP,Darlington,Health
+Highfield Foundation 010,Newcastle Highfield Project Organisation 064,LAB-AWARD-00600,2927,2025-08-09,Nature recovery,GBP,Durham,Housing
+Highfield Foundation 010,Darlington Hilltop Project Organisation 088,LAB-AWARD-00601,3000,2020-01-16,Community transport,GBP,Hartlepool,Nature
+Bracken Foundation 001,Sunderland Tideway Project Organisation 107,LAB-AWARD-00602,3073,2021-06-23,Community transport,GBP,Gateshead,Transport
+Harbour Foundation 002,Durham Meadow Project Organisation 117,LAB-AWARD-00603,3146,2022-11-03,Local food,GBP,Newcastle,Culture
+Harbour Foundation 002,Gateshead Bridgewater Project Organisation 007,LAB-AWARD-00604,3219,2023-04-10,Healthy neighbourhoods,GBP,Sunderland,Young people
+Mosaic Foundation 003,Sunderland Riverside Project Organisation 030,LAB-AWARD-00605,3292,2024-09-17,Better homes,GBP,Middlesbrough,Energy
+Beacon Foundation 004,Durham Beacon Project Organisation 040,LAB-AWARD-00606,3365,2025-02-24,Young futures,GBP,Darlington,Community care
+Willow Foundation 005,Darlington Northbank Project Organisation 067,LAB-AWARD-00607,3438,2020-07-04,Young futures,GBP,Durham,Learning
+Cornerstone Foundation 006,Gateshead Hilltop Project Organisation 070,LAB-AWARD-00608,3511,2021-12-11,Nature recovery,GBP,Hartlepool,Food
+Bridgewater Foundation 007,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00609,3584,2022-05-18,Community transport,GBP,Gateshead,Health
+Hearth Foundation 008,Durham Meadow Project Organisation 117,LAB-AWARD-00610,3657,2023-10-25,Local food,GBP,Newcastle,Housing
+Riverside Foundation 012,Durham Hilltop Project Organisation 124,LAB-AWARD-00611,3730,2024-03-05,Inclusive culture,GBP,Sunderland,Nature
+Highfield Foundation 010,Hartlepool Harbour Project Organisation 020,LAB-AWARD-00612,3803,2025-08-12,Better homes,GBP,Middlesbrough,Transport
+Bracken Foundation 001,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00613,118452,2020-01-19,Young futures,GBP,Darlington,Culture
+Bracken Foundation 001,Gateshead Northbank Project Organisation 049,LAB-AWARD-00614,3949,2021-06-26,Nature recovery,GBP,Durham,Young people
+Harbour Foundation 002,Darlington Harbour Project Organisation 074,LAB-AWARD-00615,4022,2022-11-06,Community transport,GBP,Hartlepool,Energy
+Harbour Foundation 002,Darlington Meadow Project Organisation 081,LAB-AWARD-00616,4095,2023-04-13,Community transport,GBP,Gateshead,Community care
+Mosaic Foundation 003,Durham Northbank Project Organisation 103,LAB-AWARD-00617,4168,2024-09-20,Local food,GBP,Newcastle,Learning
+Beacon Foundation 004,Gateshead Lantern Project Organisation 119,LAB-AWARD-00618,4241,2025-02-27,Inclusive culture,GBP,Sunderland,Food
+Willow Foundation 005,Sunderland Meadow Project Organisation 009,LAB-AWARD-00619,4314,2020-07-07,Inclusive culture,GBP,Middlesbrough,Health
+Cornerstone Foundation 006,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00620,4387,2021-12-14,Better homes,GBP,Darlington,Housing
+Riverside Foundation 012,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00621,4460,2022-05-21,Young futures,GBP,Durham,Nature
+Hearth Foundation 008,Middlesbrough Willow Project Organisation 059,LAB-AWARD-00622,4533,2023-10-01,Community transport,GBP,Hartlepool,Transport
+Meadow Foundation 009,Durham Tideway Project Organisation 089,LAB-AWARD-00623,4606,2024-03-08,Community transport,GBP,Gateshead,Culture
+Highfield Foundation 010,Gateshead Cedar Project Organisation 105,LAB-AWARD-00624,4679,2025-08-15,Healthy neighbourhoods,GBP,Newcastle,Young people
+Bracken Foundation 001,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00625,4752,2020-01-22,Inclusive culture,GBP,Sunderland,Energy
+Bracken Foundation 001,Middlesbrough Mosaic Project Organisation 003,LAB-AWARD-00626,4825,2021-06-02,Inclusive culture,GBP,Middlesbrough,Community care
+Harbour Foundation 002,Darlington Seedling Project Organisation 032,LAB-AWARD-00627,4898,2022-11-09,Better homes,GBP,Darlington,Learning
+Harbour Foundation 002,Gateshead Northbank Project Organisation 049,LAB-AWARD-00628,4971,2023-04-16,Young futures,GBP,Durham,Food
+Mosaic Foundation 003,Durham Foundry Project Organisation 054,LAB-AWARD-00629,5044,2024-09-23,Nature recovery,GBP,Hartlepool,Health
+Beacon Foundation 004,Middlesbrough Hearth Project Organisation 080,LAB-AWARD-00630,119659,2025-02-03,Local food,GBP,Gateshead,Housing
+Beacon Foundation 004,Newcastle Harbour Project Organisation 092,LAB-AWARD-00631,5190,2020-07-10,Healthy neighbourhoods,GBP,Newcastle,Nature
+Cornerstone Foundation 006,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00632,5263,2021-12-17,Healthy neighbourhoods,GBP,Sunderland,Transport
+Bridgewater Foundation 007,Newcastle Hearth Project Organisation 008,LAB-AWARD-00633,5336,2022-05-24,Inclusive culture,GBP,Middlesbrough,Culture
+Hearth Foundation 008,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00634,5409,2023-10-04,Young futures,GBP,Darlington,Young people
+Meadow Foundation 009,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00635,5482,2024-03-11,Nature recovery,GBP,Durham,Energy
+Highfield Foundation 010,Darlington Tideway Project Organisation 053,LAB-AWARD-00636,5555,2025-08-18,Nature recovery,GBP,Hartlepool,Community care
+Bracken Foundation 001,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00637,5628,2020-01-25,Local food,GBP,Gateshead,Learning
+Bracken Foundation 001,Gateshead Bracken Project Organisation 091,LAB-AWARD-00638,5701,2021-06-05,Local food,GBP,Newcastle,Food
+Harbour Foundation 002,Hartlepool Seedling Project Organisation 104,LAB-AWARD-00639,5774,2022-11-12,Inclusive culture,GBP,Sunderland,Health
+Harbour Foundation 002,Newcastle Bracken Project Organisation 001,LAB-AWARD-00640,5847,2023-04-19,Inclusive culture,GBP,Middlesbrough,Housing
+Cedar Foundation 015,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00641,5920,2024-09-26,Young futures,GBP,Darlington,Nature
+Beacon Foundation 004,Gateshead Highfield Project Organisation 028,LAB-AWARD-00642,5993,2025-02-06,Nature recovery,GBP,Durham,Transport
+Willow Foundation 005,Durham Beacon Project Organisation 040,LAB-AWARD-00643,6066,2020-07-13,Community transport,GBP,Hartlepool,Culture
+Cornerstone Foundation 006,Gateshead Meadow Project Organisation 063,LAB-AWARD-00644,6139,2021-12-20,Local food,GBP,Gateshead,Young people
+Bridgewater Foundation 007,Darlington Meadow Project Organisation 081,LAB-AWARD-00645,6212,2022-05-27,Healthy neighbourhoods,GBP,Newcastle,Energy
+Hearth Foundation 008,Gateshead Hearth Project Organisation 098,LAB-AWARD-00646,6285,2023-10-07,Healthy neighbourhoods,GBP,Sunderland,Community care
+Meadow Foundation 009,Durham Harbour Project Organisation 110,LAB-AWARD-00647,120866,2024-03-14,Inclusive culture,GBP,Middlesbrough,Learning
+Highfield Foundation 010,Darlington Lantern Project Organisation 011,LAB-AWARD-00648,6431,2025-08-21,Young futures,GBP,Darlington,Food
+Bracken Foundation 001,Middlesbrough Cornerstone Project Organisation 024,LAB-AWARD-00649,6504,2020-01-01,Young futures,GBP,Durham,Health
+Bracken Foundation 001,Sunderland Hearth Project Organisation 044,LAB-AWARD-00650,6577,2021-06-08,Community transport,GBP,Hartlepool,Housing
+Northbank Foundation 013,Darlington Cornerstone Project Organisation 060,LAB-AWARD-00651,6650,2022-11-15,Local food,GBP,Gateshead,Nature
+Harbour Foundation 002,Hartlepool Beacon Project Organisation 076,LAB-AWARD-00652,6723,2023-04-22,Healthy neighbourhoods,GBP,Newcastle,Transport
+Mosaic Foundation 003,Durham Tideway Project Organisation 089,LAB-AWARD-00653,6796,2024-09-02,Inclusive culture,GBP,Sunderland,Culture
+Beacon Foundation 004,Durham Harbour Project Organisation 110,LAB-AWARD-00654,6869,2025-02-09,Better homes,GBP,Middlesbrough,Young people
+Willow Foundation 005,Middlesbrough Mosaic Project Organisation 003,LAB-AWARD-00655,6942,2020-07-16,Young futures,GBP,Darlington,Energy
+Cornerstone Foundation 006,Darlington Foundry Project Organisation 018,LAB-AWARD-00656,7015,2021-12-23,Nature recovery,GBP,Durham,Community care
+Bridgewater Foundation 007,Newcastle Foundry Project Organisation 036,LAB-AWARD-00657,7088,2022-05-03,Nature recovery,GBP,Hartlepool,Learning
+Hearth Foundation 008,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00658,7161,2023-10-10,Community transport,GBP,Gateshead,Food
+Meadow Foundation 009,Middlesbrough Bracken Project Organisation 073,LAB-AWARD-00659,7234,2024-03-17,Local food,GBP,Newcastle,Health
+Highfield Foundation 010,Darlington Hilltop Project Organisation 088,LAB-AWARD-00660,7307,2025-08-24,Inclusive culture,GBP,Sunderland,Housing
+Cedar Foundation 015,Hartlepool Bridgewater Project Organisation 097,LAB-AWARD-00661,7380,2020-01-04,Inclusive culture,GBP,Middlesbrough,Nature
+Bracken Foundation 001,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00662,7453,2021-06-11,Young futures,GBP,Darlington,Transport
+Harbour Foundation 002,Durham Bracken Project Organisation 019,LAB-AWARD-00663,7526,2022-11-18,Nature recovery,GBP,Durham,Culture
+Harbour Foundation 002,Newcastle Beacon Project Organisation 022,LAB-AWARD-00664,122073,2023-04-25,Community transport,GBP,Hartlepool,Young people
+Mosaic Foundation 003,Gateshead Cornerstone Project Organisation 042,LAB-AWARD-00665,7672,2024-09-05,Local food,GBP,Gateshead,Energy
+Beacon Foundation 004,Gateshead Hilltop Project Organisation 070,LAB-AWARD-00666,7745,2025-02-12,Local food,GBP,Newcastle,Community care
+Willow Foundation 005,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00667,7818,2020-07-19,Inclusive culture,GBP,Sunderland,Learning
+Cornerstone Foundation 006,Darlington Riverside Project Organisation 102,LAB-AWARD-00668,7891,2021-12-26,Better homes,GBP,Middlesbrough,Food
+Bridgewater Foundation 007,Middlesbrough Foundry Project Organisation 108,LAB-AWARD-00669,7964,2022-05-06,Better homes,GBP,Darlington,Health
+Hearth Foundation 008,Durham Hilltop Project Organisation 124,LAB-AWARD-00670,8037,2023-10-13,Young futures,GBP,Durham,Housing
+Mosaic Foundation 003,Darlington Foundry Project Organisation 018,LAB-AWARD-00671,8110,2024-03-20,Nature recovery,GBP,Hartlepool,Nature
+Highfield Foundation 010,Hartlepool Hilltop Project Organisation 034,LAB-AWARD-00672,8183,2025-08-27,Local food,GBP,Gateshead,Transport
+Bracken Foundation 001,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00673,8256,2020-01-07,Healthy neighbourhoods,GBP,Newcastle,Culture
+Bracken Foundation 001,Darlington Harbour Project Organisation 074,LAB-AWARD-00674,8329,2021-06-14,Inclusive culture,GBP,Sunderland,Young people
+Harbour Foundation 002,Darlington Willow Project Organisation 095,LAB-AWARD-00675,8402,2022-11-21,Better homes,GBP,Middlesbrough,Energy
+Harbour Foundation 002,Newcastle Willow Project Organisation 113,LAB-AWARD-00676,8475,2023-04-01,Young futures,GBP,Darlington,Community care
+Mosaic Foundation 003,Durham Hilltop Project Organisation 124,LAB-AWARD-00677,8548,2024-09-08,Young futures,GBP,Durham,Learning
+Beacon Foundation 004,Sunderland Hilltop Project Organisation 016,LAB-AWARD-00678,8621,2025-02-15,Nature recovery,GBP,Hartlepool,Food
+Willow Foundation 005,Hartlepool Willow Project Organisation 041,LAB-AWARD-00679,8694,2020-07-22,Community transport,GBP,Gateshead,Health
+Cornerstone Foundation 006,Gateshead Northbank Project Organisation 049,LAB-AWARD-00680,8767,2021-12-02,Local food,GBP,Newcastle,Housing
+Hearth Foundation 008,Durham Bridgewater Project Organisation 061,LAB-AWARD-00681,123280,2022-05-09,Inclusive culture,GBP,Sunderland,Nature
+Hearth Foundation 008,Gateshead Bracken Project Organisation 091,LAB-AWARD-00682,8913,2023-10-16,Better homes,GBP,Middlesbrough,Transport
+Meadow Foundation 009,Durham Northbank Project Organisation 103,LAB-AWARD-00683,8986,2024-03-23,Better homes,GBP,Darlington,Culture
+Highfield Foundation 010,Middlesbrough Bridgewater Project Organisation 115,LAB-AWARD-00684,9059,2025-08-03,Young futures,GBP,Durham,Young people
+Bracken Foundation 001,Hartlepool Northbank Project Organisation 013,LAB-AWARD-00685,9132,2020-01-10,Nature recovery,GBP,Hartlepool,Energy
+Bracken Foundation 001,Sunderland Riverside Project Organisation 030,LAB-AWARD-00686,9205,2021-06-17,Local food,GBP,Gateshead,Community care
+Harbour Foundation 002,Middlesbrough Meadow Project Organisation 045,LAB-AWARD-00687,9278,2022-11-24,Local food,GBP,Newcastle,Learning
+Harbour Foundation 002,Gateshead Meadow Project Organisation 063,LAB-AWARD-00688,9351,2023-04-04,Inclusive culture,GBP,Sunderland,Food
+Mosaic Foundation 003,Sunderland Bridgewater Project Organisation 079,LAB-AWARD-00689,9424,2024-09-11,Better homes,GBP,Middlesbrough,Health
+Beacon Foundation 004,Durham Northbank Project Organisation 103,LAB-AWARD-00690,9497,2025-02-18,Better homes,GBP,Darlington,Housing
+Foundry Foundation 018,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00691,9570,2020-07-25,Young futures,GBP,Durham,Nature
+Cornerstone Foundation 006,Durham Hilltop Project Organisation 124,LAB-AWARD-00692,9643,2021-12-05,Community transport,GBP,Hartlepool,Transport
+Bridgewater Foundation 007,Middlesbrough Tideway Project Organisation 017,LAB-AWARD-00693,9716,2022-05-12,Community transport,GBP,Gateshead,Culture
+Hearth Foundation 008,Sunderland Hearth Project Organisation 044,LAB-AWARD-00694,9789,2023-10-19,Healthy neighbourhoods,GBP,Newcastle,Young people
+Meadow Foundation 009,Gateshead Meadow Project Organisation 063,LAB-AWARD-00695,9862,2024-03-26,Inclusive culture,GBP,Sunderland,Energy
+Highfield Foundation 010,Newcastle Cornerstone Project Organisation 078,LAB-AWARD-00696,9935,2025-08-06,Inclusive culture,GBP,Middlesbrough,Community care
+Bracken Foundation 001,Hartlepool Lantern Project Organisation 083,LAB-AWARD-00697,10008,2020-01-13,Young futures,GBP,Darlington,Learning
+Bracken Foundation 001,Darlington Riverside Project Organisation 102,LAB-AWARD-00698,124487,2021-06-20,Nature recovery,GBP,Durham,Food
+Harbour Foundation 002,Hartlepool Highfield Project Organisation 118,LAB-AWARD-00699,10154,2022-11-27,Nature recovery,GBP,Hartlepool,Health
+Harbour Foundation 002,Darlington Foundry Project Organisation 018,LAB-AWARD-00700,10227,2023-04-07,Community transport,GBP,Gateshead,Housing
+Cedar Foundation 015,Newcastle Lantern Project Organisation 029,LAB-AWARD-00701,10300,2024-09-14,Healthy neighbourhoods,GBP,Newcastle,Nature
+Beacon Foundation 004,Hartlepool Bracken Project Organisation 055,LAB-AWARD-00702,10373,2025-02-21,Healthy neighbourhoods,GBP,Sunderland,Transport
+Willow Foundation 005,Hartlepool Cedar Project Organisation 069,LAB-AWARD-00703,10446,2020-07-01,Inclusive culture,GBP,Middlesbrough,Culture
+Cornerstone Foundation 006,Durham Highfield Project Organisation 082,LAB-AWARD-00704,10519,2021-12-08,Better homes,GBP,Darlington,Young people
+Bridgewater Foundation 007,Darlington Willow Project Organisation 095,LAB-AWARD-00705,10592,2022-05-15,Nature recovery,GBP,Durham,Energy
+Hearth Foundation 008,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00706,10665,2023-10-22,Community transport,GBP,Hartlepool,Community care
+Meadow Foundation 009,Hartlepool Cornerstone Project Organisation 006,LAB-AWARD-00707,10738,2024-03-02,Community transport,GBP,Gateshead,Learning
+Highfield Foundation 010,Gateshead Mosaic Project Organisation 021,LAB-AWARD-00708,10811,2025-08-09,Healthy neighbourhoods,GBP,Newcastle,Food
+Bracken Foundation 001,Newcastle Seedling Project Organisation 050,LAB-AWARD-00709,10884,2020-01-16,Inclusive culture,GBP,Sunderland,Health
+Bracken Foundation 001,Darlington Northbank Project Organisation 067,LAB-AWARD-00710,10957,2021-06-23,Inclusive culture,GBP,Middlesbrough,Housing
+Northbank Foundation 013,Gateshead Riverside Project Organisation 084,LAB-AWARD-00711,11030,2022-11-03,Better homes,GBP,Darlington,Nature
+Harbour Foundation 002,Sunderland Mosaic Project Organisation 093,LAB-AWARD-00712,11103,2023-04-10,Young futures,GBP,Durham,Transport
+Mosaic Foundation 003,Hartlepool Mosaic Project Organisation 111,LAB-AWARD-00713,11176,2024-09-17,Nature recovery,GBP,Hartlepool,Culture
+Beacon Foundation 004,Middlesbrough Seedling Project Organisation 122,LAB-AWARD-00714,11249,2025-02-24,Local food,GBP,Gateshead,Young people
+Willow Foundation 005,Sunderland Willow Project Organisation 023,LAB-AWARD-00715,125694,2020-07-04,Local food,GBP,Newcastle,Energy
+Cornerstone Foundation 006,Darlington Mosaic Project Organisation 039,LAB-AWARD-00716,11395,2021-12-11,Inclusive culture,GBP,Sunderland,Community care
+Bridgewater Foundation 007,Durham Bridgewater Project Organisation 061,LAB-AWARD-00717,11468,2022-05-18,Better homes,GBP,Middlesbrough,Learning
+Hearth Foundation 008,Durham Seedling Project Organisation 068,LAB-AWARD-00718,11541,2023-10-25,Better homes,GBP,Darlington,Food
+Meadow Foundation 009,Durham Tideway Project Organisation 089,LAB-AWARD-00719,11614,2024-03-05,Nature recovery,GBP,Durham,Health
+Highfield Foundation 010,Newcastle Hilltop Project Organisation 106,LAB-AWARD-00720,11687,2025-08-12,Community transport,GBP,Hartlepool,Housing
