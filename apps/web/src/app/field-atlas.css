@@ -1018,7 +1018,8 @@ body { background: var(--ml-paper); color: var(--ml-ink); }
 .ml-edit-changes li.is-stale small { color: var(--ml-danger); }
 .ml-edit-exports { display: grid; gap: 6px; padding-top: 6px; border-top: 1px solid var(--ml-rule); }
 .ml-edit-exports .ml-quiet { min-height: 32px; font-size: 12.5px; text-align: left; }
-.ml-pick-banner { top: 14px; left: 50%; transform: translateX(-50%); z-index: 16; border-color: var(--ml-moss); }
+/* Keep picker instructions below the filter bar, so Browse records remains clickable. */
+.ml-pick-banner { top: 70px; left: 50%; transform: translateX(-50%); z-index: 10; border-color: var(--ml-moss); }
 .ml-pick-banner button { border: 1px solid var(--ml-border-strong); background: var(--ml-surface); border-radius: 6px; padding: 2px 8px; }
 @media (max-width: 720px) {
   .ml-edit-card { top: auto; bottom: 12px; left: 12px; right: 12px; width: auto; max-height: 55%; }
