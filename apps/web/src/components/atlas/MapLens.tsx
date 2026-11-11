@@ -248,7 +248,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         let step = 5;
         map = new ml.Map({
           container: container.current, attributionControl: false, dragRotate: false, pitchWithRotate: false,
-          renderWorldCopies: false, maxZoom: 13, minZoom: 1.5,
+          // National, continental and worldwide examples must be able to zoom
+          // out to their full source extent; fixed regional minimums clip them.
+          renderWorldCopies: false, maxZoom: 13, minZoom: -2,
           style: {
             version: 8,
             sources: {
@@ -396,8 +398,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     for (const p of located) { w = Math.min(w, p.lon); e = Math.max(e, p.lon); s = Math.min(s, p.lat); n = Math.max(n, p.lat); }
     const small = (container.current?.clientWidth ?? 1000) < 700;
     if (w === e && s === n) { map.jumpTo({ center: [w, s], zoom: 8 }); return; }
-    map.fitBounds([[w, s], [e, n]], { padding: small ? { top: 70, bottom: 60, left: 24, right: 70 }
-      : { top: 80, bottom: 70, left: 330, right: 90 }, maxZoom: 9, duration: animate ? 450 : 0 });
+    // A UK local map benefits from room for the inspector and place labels.
+    // That much left padding hides distant countries on international maps.
+    const wideExtent=e-w>45 || n-s>32;
+    map.fitBounds([[w, s], [e, n]], { padding: wideExtent
+      ? (small ? { top: 36, bottom: 36, left: 12, right: 12 }
+        : { top: 56, bottom: 50, left: 48, right: 36 })
+      : (small ? { top: 70, bottom: 60, left: 24, right: 70 }
+        : { top: 80, bottom: 70, left: 330, right: 90 }),
+      maxZoom: 9, duration: animate ? 450 : 0 });
   }
 
   // ---- Names: places from the records, seas and uplands from the gazetteer --
