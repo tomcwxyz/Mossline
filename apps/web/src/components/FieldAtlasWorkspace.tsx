@@ -487,6 +487,19 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setStoryMode(null);setPickingFrom(null);setPicked(null);
   };
   const closeConnect=()=>{setConnectFrom(null);setConnectTo(null);setConnectPicking(false);};
+  // Escape always abandons an unfinished gesture or an unconfirmed
+  // relationship, without writing anything to the edit history.
+  useEffect(()=>{
+    if(!connectPicking&&!connectTo)return;
+    const cancel=(event:KeyboardEvent)=>{
+      if(event.key!=="Escape"||document.querySelector("dialog.ml-lightbox[open]"))return;
+      event.preventDefault();
+      event.stopPropagation();
+      setConnectFrom(null);setConnectTo(null);setConnectPicking(false);
+    };
+    document.addEventListener("keydown",cancel,true);
+    return ()=>document.removeEventListener("keydown",cancel,true);
+  },[connectPicking,connectTo]);
   const finishDrawnConnection=(from:string,to:string)=>{
     if(viewOnly||storyMode||!connectPicking||from===to)return;
     setConnectFrom(from);setConnectTo(to);setConnectPicking(false);
@@ -844,7 +857,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
 
           {connectPicking && <div className="ml-banner ml-pick-banner" role="status">
             {connectFrom?<>Select the second record to connect to <strong>{workingGraph.nodes.find(n=>n.id===connectFrom)?.label}</strong>.</>:
-              <>Drag between two records to connect them, or select the first and second in the drawing or Data.</>}
+              <>Drag between two records to connect them, or select the first and second in the drawing or Data. Nothing is added until you confirm.</>}
             <button type="button" onClick={closeConnect}>Cancel</button>
           </div>}
           {connectFrom&&connectTo&&editing&&<aside className="ml-overlay-card ml-connect-card" aria-label="Draw a connection">
