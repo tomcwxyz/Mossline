@@ -29,6 +29,8 @@ type Props = {
   loops?: FeedbackLoop[]; loopLabel?: Map<string, string>; onLoop?: (id: string) => void;
   /** Present while the map is being edited. */
   editing?: EditingApi | null;
+  /** A fresh request from double-clicking a drawn record, not a second edit state. */
+  editRequest?: { id: string; sequence: number } | null;
 };
 
 const receiptText = (r: SourceOrigin) => r.system === "edit"
@@ -66,11 +68,14 @@ function Receipt({ edge }: { edge: GraphEdge }) {
   return <span className="ml-receipt" title={text}>{text}</span>;
 }
 
-export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop, editing }: Props) {
+export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop, editing, editRequest }: Props) {
   const [showAll, setShowAll] = useState(false);
   /** What is open for editing: the details, a new link, or one link (by ID). */
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => { setOpen(null); }, [node?.id, editing === null || editing === undefined]);
+  useEffect(() => {
+    if(editing && node && editRequest?.id===node.id)setOpen("details");
+  },[editRequest?.sequence,editRequest?.id]);
   useEffect(() => { if (editing?.picked && node) setOpen("link"); }, [editing?.picked, node]);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("");
