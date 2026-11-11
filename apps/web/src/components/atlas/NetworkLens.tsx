@@ -8,6 +8,7 @@ import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
+import {movedToConnect,dragConnection} from "../../lib/connection-gesture";
 
 export interface AtlasRoute { nodeIds: string[]; edgeIds: string[] }
 type Props = {
@@ -349,7 +350,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         renderer.on("moveBody",({event})=>{
           const drag=dragStart.current;
           if(!drag||!connecting.current)return;
-          if(Math.hypot(event.x-drag.x,event.y-drag.y)>7)drag.moved=true;
+          if(movedToConnect(drag,{x:event.x,y:event.y}))drag.moved=true;
           if(drag.moved&&dragPreview.current){
             dragPreview.current.setAttribute("x2",String(event.x));
             dragPreview.current.setAttribute("y2",String(event.y));
@@ -359,13 +360,13 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         renderer.on("upNode",({node,event})=>{
           const drag=dragStart.current;
           if(!drag)return;
-          const complete=drag.moved&&drag.id!==node&&connecting.current;
+          const result=dragConnection(drag.id,node,drag.moved,connecting.current);
           hideDrag();
-          if(complete){
+          if(result){
             event.preventSigmaDefault();
             suppressClick.current=true;
             window.setTimeout(()=>{suppressClick.current=false;},100);
-            onConnect.current?.(drag.id,node);
+            onConnect.current?.(result.from,result.to);
           }
         });
         renderer.on("upStage",hideDrag);
