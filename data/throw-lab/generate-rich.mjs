@@ -78,16 +78,22 @@ function generateRichLab(){
     const rows=[];
     for(let i=0;i<720;i++){
       const funder=funders[i%10===0?num(18):[0,0,1,1,2,3,4,5,6,7,8,9][i%12]];
-      const recipient=recipients[(i*17+num(15))%125];
+      const recipientIndex=(i*17+num(15))%125;
+      const recipient=recipients[recipientIndex];
+      const recipientCity=zones[recipientIndex%zones.length];
+      // Awards are plotted in their recipient's fictional operating city, not
+      // a randomly unrelated city. Repeat awards retain a consistent position.
+      const latitude=(recipientCity[1]+((recipientIndex*3)%13-6)*.001).toFixed(5);
+      const longitude=(recipientCity[2]+((recipientIndex*5)%17-8)*.001).toFixed(5);
       const year=2020+(i%6),month=1+(i*5%12),day=1+(i*7%27);
       const amount=i%17===0?75000+i*71:1200+(i*73%21000);
-      rows.push([funder,recipient,`LAB-AWARD-${String(i+1).padStart(5,"0")}`,amount,`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`,programmes[(i+num(2))%7],"USD",regionOf(i),topics[(i+3)%10],zones[i%zones.length][3]]);
+      rows.push([funder,recipient,`LAB-AWARD-${String(i+1).padStart(5,"0")}`,amount,`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`,programmes[(i+num(2))%7],"USD",regionOf(recipientIndex),topics[(i+3)%10],recipientCity[3],latitude,longitude]);
     }
     add("funding-in-motion","Six Years of Community Funding","Funding",
-      "An invented US-wide grants portfolio with repeated awards, unequal funder reach and changing priorities.",
+      "An invented US-wide grants portfolio with mapped recipient areas, repeated awards, unequal funder reach and changing priorities.",
       "funding / timeline","Compare funders, award amounts, recipients and how the priorities move between years.",
       "Shared recipients or a common funder do not demonstrate organisations working together.",
-      [["awards.csv",csv(["Funder","Recipient","Grant ID","Amount","Date","Programme","Currency","Region","Themes","Country"],rows),rows.length]],
+      [["awards.csv",csv(["Funder","Recipient","Grant ID","Amount","Date","Programme","Currency","Region","Themes","Country","Latitude","Longitude"],rows),rows.length]],
       new Set(rows.map(r=>r[0])).size+new Set(rows.map(r=>r[1])).size+rows.length,rows.length*2,
       `${rows.length} grants · ${funders.length} funders · ${new Set(rows.map(r=>r[1])).size} recipients · 6 years`,
       ["A few large funders dominate","Repeat recipients over time","Small awards sit alongside major investments"]);
