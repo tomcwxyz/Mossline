@@ -94,7 +94,7 @@
       "id": "funding-in-motion",
       "title": "Six Years of Community Funding",
       "group": "Funding",
-      "description": "An invented US-wide grants portfolio with repeated awards, unequal funder reach and changing priorities.",
+      "description": "An invented US-wide grants portfolio with mapped recipient areas, repeated awards, unequal funder reach and changing priorities.",
       "idealFirstView": "funding / timeline",
       "whatToTry": "Compare funders, award amounts, recipients and how the priorities move between years.",
       "caveat": "Shared recipients or a common funder do not demonstrate organisations working together.",
@@ -103,7 +103,7 @@
           "name": "awards.csv",
           "path": "/throw-lab/funding-in-motion/awards.csv",
           "rows": 720,
-          "bytes": 128012
+          "bytes": 142097
         }
       ],
       "expectedRecords": 862,
@@ -297,7 +297,7 @@
           "name": "recorded-connections.csv",
           "path": "/throw-lab/mixed-programmes/recorded-connections.csv",
           "rows": 355,
-          "bytes": 23315
+          "bytes": 32110
         }
       ],
       "expectedRecords": 170,
