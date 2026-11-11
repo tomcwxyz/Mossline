@@ -203,7 +203,7 @@ test("a published story opens on the story, and the map can still be explored",a
 
   // Signing in comes back to this map.
   await page.locator(".ml-share summary").click();
-  await page.getByRole("button",{name:"Publish online…"}).click();
+  await page.getByRole("button",{name:"Publish a shareable copy…"}).click();
   await page.getByRole("link",{name:"Sign in to publish"}).click();
   await page.getByLabel("Email address").fill(email);
   await page.getByRole("button",{name:"Email me a sign-in link"}).click();
@@ -213,7 +213,7 @@ test("a published story opens on the story, and the map can still be explored",a
 
   // A story that isn't ready can't go out.
   await page.locator(".ml-share summary").click();
-  await page.getByRole("button",{name:"Publish online…"}).click();
+  await page.getByRole("button",{name:"Publish a shareable copy…"}).click();
   const card=page.getByRole("complementary",{name:"Publish online"});
   await card.getByLabel("Story").selectOption({label:"“A short tour” · 1 step"});
   await expect(card).toContainText("The story isn't ready to publish");
@@ -224,7 +224,7 @@ test("a published story opens on the story, and the map can still be explored",a
   await page.getByRole("button",{name:/A short tour/}).click();
   await page.getByRole("complementary",{name:"Writing a story"}).getByLabel(/They agreed to be quoted/).check();
   await page.locator(".ml-share summary").click();
-  await page.getByRole("button",{name:"Publish online…"}).click();
+  await page.getByRole("button",{name:"Publish a shareable copy…"}).click();
   await expect(card.getByLabel("Story")).toHaveValue(/story:/);
   await card.getByLabel("Title").fill("A short tour of the kitchen map");
   await card.getByLabel(/I've checked this/).check();
