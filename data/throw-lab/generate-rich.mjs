@@ -83,8 +83,8 @@ function generateRichLab(){
       "funding / timeline","Compare funders, award amounts, recipients and how the priorities move between years.",
       "Shared recipients or a common funder do not demonstrate organisations working together.",
       [["awards.csv",csv(["Funder","Recipient","Grant ID","Amount","Date","Programme","Currency","Region","Themes"],rows),rows.length]],
-      funders.length+recipients.length+rows.length,rows.length*2,
-      `${rows.length} grants · ${funders.length} funders · ${recipients.length} recipients · 6 years`,
+      new Set(rows.map(r=>r[0])).size+new Set(rows.map(r=>r[1])).size+rows.length,rows.length*2,
+      `${rows.length} grants · ${funders.length} funders · ${new Set(rows.map(r=>r[1])).size} recipients · 6 years`,
       ["A few large funders dominate","Repeat recipients over time","Small awards sit alongside major investments"]);
   }
   // 4. Actual producer/recipient links with plausible network bridges, plus positions.
