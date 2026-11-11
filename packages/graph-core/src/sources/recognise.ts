@@ -100,7 +100,10 @@ export function suggestShape(table: SourceTable): Shape | null {
     const labelType = pick(h, ["project", "projectname", "programme", "initiative"]) === label ? "project" : record.type;
     return parseShape({ ...base, name: "Rows naming several records", each: "Each row names " + [label, ...named.map(n => n.col)].join(", ") + ".",
       records: [{ ...record, type: labelType }, ...named.map(n => ({ key: n.t, type: n.t, label: brace(n.col) }))],
-      links: named.map(n => ({ from: "row", to: n.t, type: n.t === "funder" ? "funded by" : n.t === "project" ? "delivers" : "works with" })) });
+      // Co-occurrence in a row is recorded, but its social meaning is NOT.
+      // "Organisation, Project, Funder" does not by itself prove delivery,
+      // partnership or an awarded grant. Keep the link explicitly neutral.
+      links: named.map(n => ({ from: "row", to: n.t, type: "listed together in source" })) });
   }
   return parseShape({ ...base, name: "List of records", each: "Each row is one record named in “" + label + "”.", records: [record], links: [] });
 }
