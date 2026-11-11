@@ -1,13 +1,13 @@
 {
   "version": 1,
   "generated": "2026-11-11",
-  "disclaimer": "All organisations, grants, events, species and relationships are wholly fictional. Real city coordinates are used only as a backdrop. All counts describe intended source interpretations; final visual support is tested separately.",
+  "disclaimer": "All organisations, grants, events, species and relationships are fictional. City centres are illustrative geographic anchors with small synthetic offsets, not real site addresses. Counts describe intended source interpretations, not guaranteed visual support.",
   "examples": [
     {
       "id": "neighbourhood-connections",
       "title": "The Neighbourhood Web",
       "group": "Relationships",
-      "description": "Seven fictional towns, hundreds of community organisations, shared projects and explicit partnerships.",
+      "description": "Fictional community organisations and shared projects spread across England, Scotland, Wales and Northern Ireland.",
       "idealFirstView": "network / map",
       "whatToTry": "Find organisations that bridge otherwise separate areas. Then look at the same recorded links geographically.",
       "caveat": "Closeness on the diagram isn't proof of collaboration; the source only records the links in the table.",
@@ -16,60 +16,85 @@
           "name": "records.csv",
           "path": "/throw-lab/neighbourhood-connections/records.csv",
           "rows": 191,
-          "bytes": 27479
+          "bytes": 33050
         },
         {
           "name": "relationships.csv",
           "path": "/throw-lab/neighbourhood-connections/relationships.csv",
           "rows": 350,
-          "bytes": 31826
+          "bytes": 30462
         }
       ],
       "expectedRecords": 191,
       "expectedLinks": 350,
-      "stats": "191 named records · 350 recorded links · 7 areas",
+      "stats": "191 named records · 350 recorded links · 14 UK cities",
       "observations": [
         "Clusters around activities",
         "A few bridges between distant areas",
         "Some organisations are lightly connected"
-      ]
+      ],
+      "geography": {
+        "label": "UK-wide",
+        "cities": 14,
+        "countries": [
+          "United Kingdom"
+        ]
+      }
     },
     {
       "id": "arts-across-places",
       "title": "After Hours: Culture Across Places",
       "group": "Geography",
-      "description": "Venues, promoters and recorded touring or collaboration links across seven real UK cities; every organisation and relationship is fictional.",
+      "description": "Fictional cultural venues and recorded touring links between cities in twelve European countries.",
       "idealFirstView": "map / network",
       "whatToTry": "Switch between points and connected arcs; trace who bridges different towns.",
-      "caveat": "The venues and promoters are inventions, even though the geographic backdrop uses real city locations.",
+      "caveat": "Venues and promoters are inventions. Their positions are illustrative offsets from real city centres.",
       "files": [
         {
           "name": "venues.csv",
           "path": "/throw-lab/arts-across-places/venues.csv",
           "rows": 169,
-          "bytes": 20207
+          "bytes": 22711
         },
         {
           "name": "cultural-links.csv",
           "path": "/throw-lab/arts-across-places/cultural-links.csv",
           "rows": 358,
-          "bytes": 31354
+          "bytes": 29807
         }
       ],
       "expectedRecords": 169,
       "expectedLinks": 358,
-      "stats": "169 venues and promoters · 358 links · 7 cities",
+      "stats": "169 venues and promoters · 358 links · 12 cities · 12 countries",
       "observations": [
         "Dense local clusters",
         "Cross-city touring links",
         "Some promoters reach several areas"
-      ]
+      ],
+      "geography": {
+        "label": "Europe-wide",
+        "cities": 12,
+        "countries": [
+          "United Kingdom",
+          "Ireland",
+          "France",
+          "Germany",
+          "Netherlands",
+          "Denmark",
+          "Spain",
+          "Portugal",
+          "Italy",
+          "Poland",
+          "Sweden",
+          "Belgium"
+        ]
+      }
     },
     {
       "id": "funding-in-motion",
       "title": "Six Years of Community Funding",
       "group": "Funding",
-      "description": "An invented grants portfolio with repeat awards, unequal funder reach, programme shifts and distinct funding sizes.",
+      "description": "An invented US-wide grants portfolio with repeated awards, unequal funder reach and changing priorities.",
       "idealFirstView": "funding / timeline",
       "whatToTry": "Compare funders, award amounts, recipients and how the priorities move between years.",
       "caveat": "Shared recipients or a common funder do not demonstrate organisations working together.",
@@ -78,23 +103,30 @@
           "name": "awards.csv",
           "path": "/throw-lab/funding-in-motion/awards.csv",
           "rows": 720,
-          "bytes": 100780
+          "bytes": 128012
         }
       ],
       "expectedRecords": 862,
       "expectedLinks": 1440,
-      "stats": "720 grants · 18 funders · 124 recipients · 6 years",
+      "stats": "720 grants · 18 funders · 125 recipients · 6 years",
       "observations": [
         "A few large funders dominate",
         "Repeat recipients over time",
         "Small awards sit alongside major investments"
-      ]
+      ],
+      "geography": {
+        "label": "United States-wide",
+        "cities": 12,
+        "countries": [
+          "United States"
+        ]
+      }
     },
     {
       "id": "food-supply-routes",
       "title": "How Food Moves",
       "group": "Supply chains",
-      "description": "Fictional farms, community kitchens and food hubs with hundreds of explicit supply and distribution routes.",
+      "description": "A fictional supply chain with recorded distribution links across Canada, the United States and Mexico.",
       "idealFirstView": "network / map",
       "whatToTry": "Find fragile hubs, trace recorded routes and compare local clusters to cross-area deliveries.",
       "caveat": "A source-recorded supply relationship isn't evidence of a quantity, value or successful delivery without those fields.",
@@ -103,29 +135,38 @@
           "name": "food-places.csv",
           "path": "/throw-lab/food-supply-routes/food-places.csv",
           "rows": 202,
-          "bytes": 24630
+          "bytes": 29402
         },
         {
           "name": "supply-links.csv",
           "path": "/throw-lab/food-supply-routes/supply-links.csv",
           "rows": 530,
-          "bytes": 44927
+          "bytes": 45397
         }
       ],
       "expectedRecords": 202,
       "expectedLinks": 530,
-      "stats": "202 food sites · 530 recorded routes · 7 places",
+      "stats": "202 food sites · 530 recorded routes · 3 countries",
       "observations": [
         "A handful of distribution hubs",
         "Multi-hop supply chains",
         "Connections between distinct areas"
-      ]
+      ],
+      "geography": {
+        "label": "Canada, United States and Mexico",
+        "cities": 12,
+        "countries": [
+          "Canada",
+          "Mexico",
+          "United States"
+        ]
+      }
     },
     {
       "id": "volunteer-calendar",
       "title": "A Year of Community Activity",
       "group": "Events",
-      "description": "Repeated sessions across four years, with organising bodies, places, topics and participant numbers.",
+      "description": "Fictional activity sessions across the UK over four years, with dates and mapped event locations.",
       "idealFirstView": "network / future timeline",
       "whatToTry": "Explore which organisations appear most often, then compare seasons, topics and attendance once event charting lands.",
       "caveat": "Appearing in a row with an event does not, alone, prove collaboration or wider impact.",
@@ -134,7 +175,7 @@
           "name": "sessions.csv",
           "path": "/throw-lab/volunteer-calendar/sessions.csv",
           "rows": 320,
-          "bytes": 31230
+          "bytes": 46344
         }
       ],
       "expectedRecords": 362,
@@ -144,13 +185,20 @@
         "Activities fluctuate by season",
         "Different types of event",
         "Uneven levels of participation"
-      ]
+      ],
+      "geography": {
+        "label": "UK-wide",
+        "cities": 14,
+        "countries": [
+          "United Kingdom"
+        ]
+      }
     },
     {
       "id": "wildlife-sightings",
       "title": "Living Places: Field Observations",
       "group": "Ecology",
-      "description": "Hundreds of invented species observations at real geographic coordinates, with strong local and seasonal variation.",
+      "description": "Invented field observations across Africa, Asia, Europe, the Americas and Oceania.",
       "idealFirstView": "map / themes",
       "whatToTry": "Explore observation clusters, species concentrations and where the records are sparse.",
       "caveat": "Observations are not proof of species absence elsewhere and don't create relationships between observations.",
@@ -159,7 +207,7 @@
           "name": "observations.csv",
           "path": "/throw-lab/wildlife-sightings/observations.csv",
           "rows": 510,
-          "bytes": 40886
+          "bytes": 50666
         }
       ],
       "expectedRecords": 510,
@@ -169,13 +217,34 @@
         "Concentrations in several places",
         "Uneven species coverage",
         "Source dates available for further charting"
-      ]
+      ],
+      "geography": {
+        "label": "Across continents",
+        "cities": 15,
+        "countries": [
+          "United Kingdom",
+          "Ireland",
+          "France",
+          "Ghana",
+          "Kenya",
+          "South Africa",
+          "India",
+          "Nepal",
+          "Japan",
+          "Australia",
+          "New Zealand",
+          "United States",
+          "Canada",
+          "Brazil",
+          "Colombia"
+        ]
+      }
     },
     {
       "id": "themes-in-common",
       "title": "Common Ground: A Project Portfolio",
       "group": "Themes",
-      "description": "A portfolio of projects across places with overlapping source-given themes and year fields, but no asserted partnerships.",
+      "description": "A UK-wide portfolio of fictional projects with overlapping source-given themes, not inferred partnerships.",
       "idealFirstView": "themes / directory",
       "whatToTry": "See themes that recur, try different groupings and inspect projects within each group.",
       "caveat": "Sharing a tag is not evidence of partnership. No links have been fabricated in this dataset.",
@@ -184,7 +253,7 @@
           "name": "projects.csv",
           "path": "/throw-lab/themes-in-common/projects.csv",
           "rows": 285,
-          "bytes": 41431
+          "bytes": 54895
         }
       ],
       "expectedRecords": 285,
@@ -194,13 +263,20 @@
         "Some themes recur together",
         "Regional variation",
         "No recorded relationships"
-      ]
+      ],
+      "geography": {
+        "label": "UK-wide",
+        "cities": 14,
+        "countries": [
+          "United Kingdom"
+        ]
+      }
     },
     {
       "id": "mixed-programmes",
       "title": "A Patchwork of Projects",
       "group": "Mixed sources",
-      "description": "Different file types forming one picture: a CSV organisation register, nested JSON initiatives and a separate connection list.",
+      "description": "Fictional international programmes across countries, using CSV organisations, JSON initiatives and recorded cross-border links.",
       "idealFirstView": "network / themes",
       "whatToTry": "Compare sources, follow who works across initiatives and inspect the original rows behind the links.",
       "caveat": "Cross-file records must not merge merely because they share a similar name or location.",
@@ -209,19 +285,19 @@
           "name": "organisations.csv",
           "path": "/throw-lab/mixed-programmes/organisations.csv",
           "rows": 94,
-          "bytes": 11373
+          "bytes": 12989
         },
         {
           "name": "initiatives.json",
           "path": "/throw-lab/mixed-programmes/initiatives.json",
           "rows": 76,
-          "bytes": 18187
+          "bytes": 25178
         },
         {
           "name": "recorded-connections.csv",
           "path": "/throw-lab/mixed-programmes/recorded-connections.csv",
           "rows": 355,
-          "bytes": 33470
+          "bytes": 23315
         }
       ],
       "expectedRecords": 170,
@@ -229,9 +305,28 @@
       "stats": "94 organisations · 76 initiatives · 355 explicit links",
       "observations": [
         "Three different source files",
-        "Cross-file relationships",
+        "Cross-border source-recorded connections",
         "Repeated themes and distinct source receipts"
-      ]
+      ],
+      "geography": {
+        "label": "International programmes",
+        "cities": 14,
+        "countries": [
+          "United Kingdom",
+          "Netherlands",
+          "Kenya",
+          "Uganda",
+          "Ghana",
+          "Nigeria",
+          "India",
+          "Nepal",
+          "South Africa",
+          "Argentina",
+          "Canada",
+          "Germany",
+          "Norway"
+        ]
+      }
     }
   ]
 }
