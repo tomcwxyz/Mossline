@@ -1,0 +1,95 @@
+Name,Type,Tags,Region,Latitude,Longitude,Description
+Newcastle Bracken Social Group 001,organisation,Food,Newcastle,54.96168,-1.61380,Fictional community organisation.
+Sunderland Harbour Social Group 002,organisation,Health,Sunderland,54.91005,-1.37225,Fictional community organisation.
+Middlesbrough Mosaic Social Group 003,organisation,Housing,Middlesbrough,54.56404,-1.24439,Fictional community organisation.
+Darlington Beacon Social Group 004,organisation,Nature,Darlington,54.54595,-1.53681,Fictional community organisation.
+Durham Willow Social Group 005,organisation,Transport,Durham,54.77265,-1.57702,Fictional community organisation.
+Hartlepool Cornerstone Social Group 006,organisation,Culture,Hartlepool,54.69807,-1.23022,Fictional community organisation.
+Gateshead Bridgewater Social Group 007,organisation,Young people,Gateshead,54.97111,-1.60321,Fictional community organisation.
+Newcastle Hearth Social Group 008,organisation,Energy,Newcastle,54.97809,-1.63191,Fictional community organisation.
+Sunderland Meadow Social Group 009,organisation,Community care,Sunderland,54.89248,-1.36141,Fictional community organisation.
+Middlesbrough Highfield Social Group 010,organisation,Learning,Middlesbrough,54.57354,-1.23478,Fictional community organisation.
+Darlington Lantern Social Group 011,organisation,Food,Darlington,54.54312,-1.54587,Fictional community organisation.
+Durham Riverside Social Group 012,organisation,Health,Durham,54.78248,-1.59564,Fictional community organisation.
+Hartlepool Northbank Social Group 013,organisation,Housing,Hartlepool,54.69958,-1.23223,Fictional community organisation.
+Gateshead Seedling Social Group 014,organisation,Nature,Gateshead,54.96492,-1.57964,Fictional community organisation.
+Newcastle Cedar Social Group 015,organisation,Transport,Newcastle,54.98022,-1.61291,Fictional community organisation.
+Sunderland Hilltop Social Group 016,organisation,Culture,Sunderland,54.89983,-1.37049,Fictional community organisation.
+Middlesbrough Tideway Social Group 017,organisation,Young people,Middlesbrough,54.58364,-1.24797,Fictional community organisation.
+Darlington Foundry Social Group 018,organisation,Energy,Darlington,54.50663,-1.54750,Fictional community organisation.
+Durham Bracken Social Group 019,organisation,Community care,Durham,54.77428,-1.58832,Fictional community organisation.
+Hartlepool Harbour Social Group 020,organisation,Learning,Hartlepool,54.69791,-1.21615,Fictional community organisation.
+Gateshead Mosaic Social Group 021,organisation,Food,Gateshead,54.97974,-1.60634,Fictional community organisation.
+Newcastle Beacon Social Group 022,organisation,Health,Newcastle,54.98639,-1.60603,Fictional community organisation.
+Sunderland Willow Social Group 023,organisation,Housing,Sunderland,54.92079,-1.37140,Fictional community organisation.
+Middlesbrough Cornerstone Social Group 024,organisation,Nature,Middlesbrough,54.57556,-1.23248,Fictional community organisation.
+Darlington Bridgewater Social Group 025,organisation,Transport,Darlington,54.51470,-1.54201,Fictional community organisation.
+Durham Hearth Social Group 026,organisation,Culture,Durham,54.77100,-1.56427,Fictional community organisation.
+Hartlepool Meadow Social Group 027,organisation,Young people,Hartlepool,54.70545,-1.19169,Fictional community organisation.
+Gateshead Highfield Social Group 028,organisation,Energy,Gateshead,54.95383,-1.58814,Fictional community organisation.
+Newcastle Lantern Social Group 029,organisation,Community care,Newcastle,54.99596,-1.60335,Fictional community organisation.
+Sunderland Riverside Social Group 030,organisation,Learning,Sunderland,54.91414,-1.38333,Fictional community organisation.
+Middlesbrough Northbank Social Group 031,organisation,Food,Middlesbrough,54.56336,-1.23387,Fictional community organisation.
+Darlington Seedling Social Group 032,organisation,Health,Darlington,54.53698,-1.54833,Fictional community organisation.
+Durham Cedar Social Group 033,organisation,Housing,Durham,54.76635,-1.56198,Fictional community organisation.
+Hartlepool Hilltop Social Group 034,organisation,Nature,Hartlepool,54.68625,-1.21766,Fictional community organisation.
+Gateshead Tideway Social Group 035,organisation,Transport,Gateshead,54.94297,-1.58586,Fictional community organisation.
+Newcastle Foundry Social Group 036,organisation,Culture,Newcastle,54.98851,-1.63414,Fictional community organisation.
+Sunderland Bracken Social Group 037,organisation,Young people,Sunderland,54.89837,-1.40420,Fictional community organisation.
+Middlesbrough Harbour Social Group 038,organisation,Energy,Middlesbrough,54.55967,-1.24878,Fictional community organisation.
+Darlington Mosaic Social Group 039,organisation,Community care,Darlington,54.50726,-1.54853,Fictional community organisation.
+Durham Beacon Social Group 040,organisation,Learning,Durham,54.76047,-1.57220,Fictional community organisation.
+Hartlepool Willow Social Group 041,organisation,Food,Hartlepool,54.69802,-1.21543,Fictional community organisation.
+Gateshead Cornerstone Social Group 042,organisation,Health,Gateshead,54.95085,-1.59463,Fictional community organisation.
+Newcastle Bridgewater Social Group 043,organisation,Housing,Newcastle,54.99752,-1.60444,Fictional community organisation.
+Sunderland Hearth Social Group 044,organisation,Nature,Sunderland,54.88488,-1.39364,Fictional community organisation.
+Middlesbrough Meadow Social Group 045,organisation,Transport,Middlesbrough,54.59646,-1.23967,Fictional community organisation.
+Darlington Highfield Social Group 046,organisation,Culture,Darlington,54.54748,-1.55825,Fictional community organisation.
+Durham Lantern Social Group 047,organisation,Young people,Durham,54.77790,-1.55951,Fictional community organisation.
+Hartlepool Riverside Social Group 048,organisation,Energy,Hartlepool,54.68218,-1.22364,Fictional community organisation.
+Gateshead Northbank Social Group 049,organisation,Community care,Gateshead,54.95619,-1.58710,Fictional community organisation.
+Newcastle Seedling Social Group 050,organisation,Learning,Newcastle,54.96054,-1.60273,Fictional community organisation.
+Sunderland Cedar Social Group 051,organisation,Food,Sunderland,54.90454,-1.36142,Fictional community organisation.
+Middlesbrough Hilltop Social Group 052,organisation,Health,Middlesbrough,54.56500,-1.22349,Fictional community organisation.
+Darlington Tideway Social Group 053,organisation,Housing,Darlington,54.52967,-1.57333,Fictional community organisation.
+Durham Foundry Social Group 054,organisation,Nature,Durham,54.75480,-1.56677,Fictional community organisation.
+Hartlepool Bracken Social Group 055,organisation,Transport,Hartlepool,54.68431,-1.21609,Fictional community organisation.
+Gateshead Harbour Social Group 056,organisation,Culture,Gateshead,54.95892,-1.60819,Fictional community organisation.
+Newcastle Mosaic Social Group 057,organisation,Young people,Newcastle,54.99537,-1.62771,Fictional community organisation.
+Sunderland Beacon Social Group 058,organisation,Energy,Sunderland,54.90125,-1.39935,Fictional community organisation.
+Middlesbrough Willow Social Group 059,organisation,Community care,Middlesbrough,54.57623,-1.24920,Fictional community organisation.
+Darlington Cornerstone Social Group 060,organisation,Learning,Darlington,54.53822,-1.55338,Fictional community organisation.
+Durham Bridgewater Social Group 061,organisation,Food,Durham,54.75970,-1.59947,Fictional community organisation.
+Hartlepool Hearth Social Group 062,organisation,Health,Hartlepool,54.68669,-1.21512,Fictional community organisation.
+Gateshead Meadow Social Group 063,organisation,Housing,Gateshead,54.96253,-1.58075,Fictional community organisation.
+Newcastle Highfield Social Group 064,organisation,Nature,Newcastle,54.96654,-1.63865,Fictional community organisation.
+Sunderland Lantern Social Group 065,organisation,Transport,Sunderland,54.92349,-1.38066,Fictional community organisation.
+Middlesbrough Riverside Social Group 066,organisation,Culture,Middlesbrough,54.58357,-1.23216,Fictional community organisation.
+Darlington Northbank Social Group 067,organisation,Young people,Darlington,54.52715,-1.58144,Fictional community organisation.
+Durham Seedling Social Group 068,organisation,Energy,Durham,54.79093,-1.58628,Fictional community organisation.
+Hartlepool Cedar Social Group 069,organisation,Community care,Hartlepool,54.69305,-1.23223,Fictional community organisation.
+Gateshead Hilltop Social Group 070,organisation,Learning,Gateshead,54.96688,-1.60547,Fictional community organisation.
+Newcastle Tideway Social Group 071,organisation,Food,Newcastle,54.98156,-1.60794,Fictional community organisation.
+Sunderland Foundry Social Group 072,organisation,Health,Sunderland,54.89289,-1.37429,Fictional community organisation.
+Middlesbrough Bracken Social Group 073,organisation,Housing,Middlesbrough,54.58393,-1.25000,Fictional community organisation.
+Darlington Harbour Social Group 074,organisation,Nature,Darlington,54.50594,-1.55456,Fictional community organisation.
+Durham Mosaic Social Group 075,organisation,Transport,Durham,54.78658,-1.58608,Fictional community organisation.
+Hartlepool Beacon Social Group 076,organisation,Culture,Hartlepool,54.71161,-1.22003,Fictional community organisation.
+Gateshead Willow Social Group 077,organisation,Young people,Gateshead,54.95438,-1.60378,Fictional community organisation.
+Newcastle Cornerstone Social Group 078,organisation,Energy,Newcastle,54.97122,-1.62263,Fictional community organisation.
+Sunderland Bridgewater Social Group 079,organisation,Community care,Sunderland,54.90371,-1.37083,Fictional community organisation.
+Middlesbrough Hearth Social Group 080,organisation,Learning,Middlesbrough,54.57230,-1.22130,Fictional community organisation.
+Darlington Meadow Social Group 081,organisation,Food,Darlington,54.50611,-1.55331,Fictional community organisation.
+Durham Highfield Social Group 082,organisation,Health,Durham,54.78940,-1.59107,Fictional community organisation.
+Hartlepool Lantern Social Group 083,organisation,Housing,Hartlepool,54.71099,-1.21440,Fictional community organisation.
+Gateshead Riverside Social Group 084,organisation,Nature,Gateshead,54.94175,-1.61303,Fictional community organisation.
+Newcastle Northbank Social Group 085,organisation,Transport,Newcastle,54.99750,-1.61801,Fictional community organisation.
+Sunderland Seedling Social Group 086,organisation,Culture,Sunderland,54.92059,-1.36328,Fictional community organisation.
+Middlesbrough Cedar Social Group 087,organisation,Young people,Middlesbrough,54.58667,-1.23924,Fictional community organisation.
+Darlington Hilltop Social Group 088,organisation,Energy,Darlington,54.50371,-1.55324,Fictional community organisation.
+Durham Tideway Social Group 089,organisation,Community care,Durham,54.77279,-1.55972,Fictional community organisation.
+Hartlepool Foundry Social Group 090,organisation,Learning,Hartlepool,54.69760,-1.21405,Fictional community organisation.
+Gateshead Bracken Social Group 091,organisation,Food,Gateshead,54.94744,-1.59422,Fictional community organisation.
+Newcastle Harbour Social Group 092,organisation,Health,Newcastle,54.96424,-1.62544,Fictional community organisation.
+Sunderland Mosaic Social Group 093,organisation,Housing,Sunderland,54.90569,-1.40226,Fictional community organisation.
+Middlesbrough Beacon Social Group 094,organisation,Nature,Middlesbrough,54.58041,-1.24642,Fictional community organisation.
