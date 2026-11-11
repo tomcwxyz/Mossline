@@ -65,7 +65,7 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
       "Geographic networks need source-recorded connections, not just pins");
   }
   // Test actual imported geography, not just text on a gallery card.
-  if(item.id!=="funding-in-motion"){
+  {
     const positioned=graph.nodes.map(node=>({node,place:readAtlasLocation(node)}))
       .filter((entry):entry is {node:GraphDocument["nodes"][number];place:{latitude:number;longitude:number}}=>!!entry.place);
     assert.ok(positioned.length>=Math.min(150,item.expectedRecords-40),
@@ -77,7 +77,8 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
     const longitudes=positioned.map(entry=>entry.place.longitude);
     const span=Math.max(...longitudes)-Math.min(...longitudes);
     const required=item.id==="wildlife-sightings"||item.id==="mixed-programmes"?150:
-      item.id==="arts-across-places"?25:item.id==="food-supply-routes"?40:4;
+      item.id==="arts-across-places"?25:
+      item.id==="food-supply-routes"||item.id==="funding-in-motion"?40:4;
     assert.ok(span>required,item.id+": map still spans only "+span.toFixed(1)+"° of longitude");
     if(item.geography.countries.length>1&&graph.edges.length>0){
       const byId=new Map(graph.nodes.map(node=>[node.id,node]));
@@ -97,6 +98,13 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
     const col=csv.headings.indexOf("Region"),currency=csv.headings.indexOf("Currency");
     assert.ok(new Set(csv.rows.map(r=>r[col])).size>=10,"awards must span many US cities");
     assert.ok(csv.rows.every(r=>r[currency]==="USD"),"US grant values need their correct currency");
+    const recipientColumn=csv.headings.indexOf("Recipient");
+    assert.ok(csv.rows.every(row=>{
+      const match=row[recipientColumn]?.match(/^(.+?) [^ ]+ Project Organisation \\d+$/);
+      return !!match&&row[col]===match[1]+", United States";
+    }),"Every grant locality must agree with the city named in its recipient");
+    assert.ok(graph.nodes.filter(n=>readAtlasLocation(n)).length>=700,
+      "Grant awards need meaningful US-wide mapped source positions");
   }
   if(item.id==="volunteer-calendar"){
     assert.equal(graph.edges.filter(edge=>recordedYear(edge)!==null).length,320,
