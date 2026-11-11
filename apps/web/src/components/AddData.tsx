@@ -163,8 +163,11 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   /* ---- 2. Plan ------------------------------------------------------------ */
   const update = (name: string, change: Partial<Plan>) => setPlans(p => ({ ...p, [name]: { ...p[name], ...change } }));
   const chosen = tables.filter(t => plans[t.name]?.include);
-  // A links-only table cannot establish records at either end on a new map.
-  const anyRecords = chosen.some(t => plans[t.name].use === "records" &&
+  // In a standalone links table, endpoints explicitly named by the source
+  // become sparse records, not identities inferred from thin air.
+  const mentionedOnly = chosen.length>0 && chosen.every(t=>plans[t.name].use==="records" &&
+    shapeOf(t,plans[t.name]).records.length===0 && shapeOf(t,plans[t.name]).links.length>0);
+  const anyRecords = mentionedOnly || chosen.some(t => plans[t.name].use === "records" &&
     shapeOf(t, plans[t.name]).records.length > 0) ||
     maps.some(m => m.include && m.nodes > 0) || (target === "add" && !!base?.nodes.length);
   function preview() {
@@ -391,8 +394,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             Check what this adds →</button>
         </div>
         {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">
-          Mossy has links but no records to connect them to. Add a table of the people, places or organisations
-          named in those links, or add these links to an existing map. A new map needs records before it can be created.
+          Mossy hasn't found a usable set of records or relationships in the selected files.
+          Try another reading or include a table with names of things or links between them.
         </p>}
       </section>}
 
@@ -402,6 +405,11 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <p className="ml-add-lede">Nothing has been saved yet. {target === "add" ? <>This will change <strong>{baseTitle}</strong>.</> : <>This will create a new map.</>}</p>
           {target === "new" && <label className="ml-add-field ml-add-name"><span>Give your map a name</span>
             <input aria-label="Map name" value={title} maxLength={100} onChange={e => setTitle(e.target.value)}/></label>}
+          {mentionedOnly&&report.totals.newRecords>0&&<p className="ml-add-warn" role="note">
+            These names were mentioned as endpoints of relationships in your file. Mossy has drawn them as
+            minimal records so you can see the connections. Their identities and types have not been verified;
+            you can add details and correct them after importing.
+          </p>}
           {tables.some(t=>!t.matches[plans[t.name]?.match ?? 0]?.builtIn) && <p className="ml-add-warn">
             Mossy has suggested how to read some of these files from their headings. Check the interpretations below;
             you can change them before saving.</p>}
