@@ -3,10 +3,11 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {applySources,parseGraphDocument,readDelimited,readJson,recogniseTable,
-  placedCoordinates,fundingFlows,recordedYear,type PlannedTable,type GraphDocument} from "../src/index.ts";
+  placedCoordinates,readAtlasLocation,fundingFlows,recordedYear,type PlannedTable,type GraphDocument} from "../src/index.ts";
 
 type RichExample={id:string;title:string;files:{name:string;path:string;rows:number}[];
- expectedRecords:number;expectedLinks:number;idealFirstView:string;stats:string};
+ expectedRecords:number;expectedLinks:number;idealFirstView:string;stats:string;
+ geography:{label:string;cities:number;countries:string[]}};
 const catalogue=JSON.parse(readFileSync(resolve("data/throw-lab/rich-catalogue.json"),"utf8")) as
   {version:number;examples:RichExample[]};
 
@@ -37,6 +38,9 @@ test("Throw Lab has eight genuinely rich, separate raw-data examples",()=>{
   assert.equal(new Set(catalogue.examples.map(x=>x.id)).size,8);
   assert.ok(catalogue.examples.every(x=>x.files.length>0&&x.idealFirstView&&x.stats));
   assert.ok(catalogue.examples.every(x=>x.files.reduce((n,f)=>n+f.rows,0)>=190));
+  assert.ok(catalogue.examples.every(x=>x.geography?.cities>=10));
+  assert.ok(catalogue.examples.some(x=>x.geography.label==="United States-wide"));
+  assert.ok(catalogue.examples.filter(x=>x.geography.countries.length>2).length>=4);
 });
 
 for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
@@ -60,9 +64,39 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
     assert.ok(graph.edges.filter(e=>located.has(e.source)&&located.has(e.target)).length>=150,
       "Geographic networks need source-recorded connections, not just pins");
   }
+  // Test actual imported geography, not just text on a gallery card.
+  if(item.id!=="funding-in-motion"){
+    const positioned=graph.nodes.map(node=>({node,place:readAtlasLocation(node)}))
+      .filter((entry):entry is {node:GraphDocument["nodes"][number];place:{latitude:number;longitude:number}}=>!!entry.place);
+    assert.ok(positioned.length>=Math.min(150,item.expectedRecords-40),
+      item.id+": its source coordinates must survive import");
+    const countries=new Set(positioned.map(entry=>entry.node.properties?.Country)
+      .filter((value):value is string=>typeof value==="string"));
+    for(const expected of item.geography.countries)
+      assert.ok(countries.has(expected),item.id+": no plotted source records in "+expected);
+    const longitudes=positioned.map(entry=>entry.place.longitude);
+    const span=Math.max(...longitudes)-Math.min(...longitudes);
+    const required=item.id==="wildlife-sightings"||item.id==="mixed-programmes"?150:
+      item.id==="arts-across-places"?25:item.id==="food-supply-routes"?40:4;
+    assert.ok(span>required,item.id+": map still spans only "+span.toFixed(1)+"° of longitude");
+    if(item.geography.countries.length>1&&graph.edges.length>0){
+      const byId=new Map(graph.nodes.map(node=>[node.id,node]));
+      const crossBorder=graph.edges.filter(edge=>{
+        const from=byId.get(edge.source)?.properties?.Country;
+        const to=byId.get(edge.target)?.properties?.Country;
+        return typeof from==="string"&&typeof to==="string"&&from!==to;
+      });
+      assert.ok(crossBorder.length>15,item.id+": connections should cross country borders");
+    }
+  }
   if(item.id==="funding-in-motion"){
     assert.equal(fundingFlows(graph).length,720);
     assert.ok(graph.edges.every(e=>e.direction==="directed"));
+    // A financial dataset need not invent map coordinates to show US coverage.
+    const csv=readDelimited("awards.csv",readFileSync(resolve("apps/web/public/throw-lab/funding-in-motion/awards.csv"),"utf8"));
+    const col=csv.headings.indexOf("Region"),currency=csv.headings.indexOf("Currency");
+    assert.ok(new Set(csv.rows.map(r=>r[col])).size>=10,"awards must span many US cities");
+    assert.ok(csv.rows.every(r=>r[currency]==="USD"),"US grant values need their correct currency");
   }
   if(item.id==="volunteer-calendar"){
     assert.equal(graph.edges.filter(edge=>recordedYear(edge)!==null).length,320,
