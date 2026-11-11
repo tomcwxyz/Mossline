@@ -17,6 +17,8 @@ type Props = {
   selectedId: string | null;
   route: AtlasRoute | null;
   onPick: (id: string | null) => void;
+  /** Double-click a drawn record to open its inline editing controls. */
+  onEditNode?: (id: string) => void;
   onUnavailable: () => void;
   /** Themes: the group of each record, and whether the grouping is a suggestion. */
   groupOf?: Map<string, string>;
@@ -53,7 +55,7 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, markStyle, frame, frameKey, sketch = false }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onEditNode, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, markStyle, frame, frameKey, sketch = false }: Props) {
   const sketched = sketch && mode === "themes";
   const filterId = "ml-wc-" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
@@ -73,6 +75,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   const sigmaRef = useRef<SigmaType | null>(null);
   const graphRef = useRef<GraphType | null>(null);
   const pick = useRef(onPick); pick.current = onPick;
+  const editNode = useRef(onEditNode); editNode.current = onEditNode;
   const unavailable = useRef(onUnavailable); unavailable.current = onUnavailable;
   const focus = useRef<{ selected: string | null; neighbours: Set<string>; pencil: Set<string>;
     route: AtlasRoute | null; routeNodes: Set<string>; routeEdges: Set<string>; labelled: Set<string> }>({
@@ -314,6 +317,9 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         sigmaRef.current = renderer;
         renderer.getCamera().setState(home());
         renderer.on("clickNode", ({ node }) => pick.current(node));
+        renderer.on("doubleClickNode", ({ node }) => {
+          if (editNode.current) editNode.current(node);
+        });
         renderer.on("clickStage", () => pick.current(null));
         renderer.on("enterNode", () => { if (container.current) container.current.style.cursor = "pointer"; });
         renderer.on("leaveNode", () => { if (container.current) container.current.style.cursor = ""; });
