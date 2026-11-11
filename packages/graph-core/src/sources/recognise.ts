@@ -108,7 +108,7 @@ export function suggestShape(table: SourceTable): Shape | null {
       // Co-occurrence in a row is recorded, but its social meaning is NOT.
       // "Organisation, Project, Funder" does not by itself prove delivery,
       // partnership or an awarded grant. Keep the link explicitly neutral.
-      links: named.map(n => ({ from: "row", to: n.t, type: "listed together in source" })) });
+      links: named.map(n => ({ from: "row", to: n.t, type: "listed together in source", fields:"row" })) });
   }
   return parseShape({ ...base, name: "List of records", each: "Each row is one record named in “" + label + "”.", records: [record], links: [] });
 }
