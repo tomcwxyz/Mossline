@@ -46,8 +46,8 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   await expect(page.locator(".ml-dataset summary strong")).toHaveText("Upper dale (test)");
   await expect(page.locator(".ml-toast")).toContainText("Created ‘Upper dale (test)’");
   await page.locator(".ml-search input").fill("Allendale Larder");
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list button").first().click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody .ml-data-locate").first().click();
   const panel=page.locator(".ml-inspector");
   await expect(panel.locator("h2")).toHaveText("Allendale Larder");
   await expect(panel.locator(".ml-identifiers")).toContainText("Charity 1990001 (England and Wales)");
