@@ -62,6 +62,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   const [consent, setConsent] = useState(false);
   const [exactNote, setExactNote] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [pasted, setPasted] = useState("");
   // Only surface manual table configuration when the proposed interpretation is uncertain.
   const [showTechnical,setShowTechnical]=useState(false);
   const pending = useRef<Map<number, (m: AddMessage) => void>>(new Map());
@@ -157,6 +158,21 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       setBusy("");
       setError(cause instanceof Error ? cause.message : "Could not retrieve The List's public changes.");
     }
+  }
+  function readPasted() {
+    const source=pasted.trim();
+    if(!source)return;
+    if(source.length>8_000_000){
+      setError("That paste is too large. Save it as a file and drop it here instead.");return;
+    }
+    const isJson=/^[\\[{]/.test(source);
+    const first=source.split(/\\r?\\n/)[0];
+    if(!isJson && (!/[\\r\\n]/.test(source)||!/[\\t,;]/.test(first))){
+      setError("Paste a table with a heading row and at least one data row, or paste JSON. Free-form documents aren't supported here yet.");
+      return;
+    }
+    const name=isJson?"pasted-data.json":source.includes("\\t")?"pasted-data.tsv":"pasted-data.csv";
+    readFiles([new File([source],name,{type:isJson?"application/json":"text/plain"})],"Pasted data");
   }
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); readFiles(Array.from(event.dataTransfer.files)); };
 
@@ -267,6 +283,19 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <strong>Drop files here, or choose files</strong>
           <small>CSV, tab-separated text, Excel (.xlsx) or JSON · several at once is fine</small>
         </label>
+        <details className="ml-add-knows">
+          <summary>Or paste rows or JSON</summary>
+          <label className="ml-add-field" htmlFor="ml-add-pasted-data">
+            <span>Paste a table copied from a spreadsheet, CSV or JSON</span>
+          </label>
+          <textarea id="ml-add-pasted-data" rows={5} value={pasted}
+            placeholder={"Name,Theme\\nFood club,Food\\nRepair shed,Climate"}
+            onChange={e=>setPasted(e.target.value)} />
+          <p className="ml-small">Include the header row. Mossy reads this in your browser.
+            For free-form reports, notes and transcripts, source-grounded extraction is still being developed.</p>
+          <button type="button" className="ml-quiet" onClick={readPasted} disabled={!!busy||!pasted.trim()}>
+            Explore pasted data →</button>
+        </details>
         <details className="ml-add-knows">
           <summary>Formats Mossy understands</summary>
           <h2 className="ml-section-title">Recognised straight away</h2>
