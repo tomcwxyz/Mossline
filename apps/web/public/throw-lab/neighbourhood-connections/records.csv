@@ -1,0 +1,192 @@
+Name,Type,Tags,Region,Latitude,Longitude,Description
+Newcastle Bracken Co-operative 001,organisation,Food|Nature,Newcastle,54.96600,-1.60769,Fictional organisation working with local food projects.
+Sunderland Harbour Trust 002,organisation,Health|Transport,Sunderland,54.91200,-1.36879,Fictional organisation working with local health projects.
+Middlesbrough Mosaic Group 003,organisation,Housing|Culture,Middlesbrough,54.55702,-1.22228,Fictional organisation working with local housing projects.
+Darlington Beacon Co-operative 004,organisation,Nature|Young people,Darlington,54.52854,-1.57912,Fictional organisation working with local nature projects.
+Durham Willow Trust 005,organisation,Transport|Energy,Durham,54.78462,-1.56368,Fictional organisation working with local transport projects.
+Hartlepool Cornerstone Group 006,organisation,Culture|Community care,Hartlepool,54.71124,-1.19462,Fictional organisation working with local culture projects.
+Gateshead Bridgewater Co-operative 007,organisation,Young people|Learning,Gateshead,54.96816,-1.60774,Fictional organisation working with local young people projects.
+Newcastle Hearth Trust 008,organisation,Energy|Food,Newcastle,54.99801,-1.59727,Fictional organisation working with local energy projects.
+Sunderland Meadow Group 009,organisation,Community care|Health,Sunderland,54.89017,-1.38126,Fictional organisation working with local community care projects.
+Middlesbrough Highfield Co-operative 010,organisation,Learning|Housing,Middlesbrough,54.57650,-1.21609,Fictional organisation working with local learning projects.
+Darlington Lantern Trust 011,organisation,Food|Nature,Darlington,54.52913,-1.57877,Fictional organisation working with local food projects.
+Durham Riverside Group 012,organisation,Health|Transport,Durham,54.76217,-1.56453,Fictional organisation working with local health projects.
+Hartlepool Northbank Co-operative 013,organisation,Housing|Culture,Hartlepool,54.69600,-1.22973,Fictional organisation working with local housing projects.
+Gateshead Seedling Trust 014,organisation,Nature|Young people,Gateshead,54.94218,-1.58203,Fictional organisation working with local nature projects.
+Newcastle Cedar Group 015,organisation,Transport|Energy,Newcastle,54.96815,-1.60213,Fictional organisation working with local transport projects.
+Sunderland Hilltop Co-operative 016,organisation,Culture|Community care,Sunderland,54.90667,-1.39400,Fictional organisation working with local culture projects.
+Middlesbrough Tideway Trust 017,organisation,Young people|Learning,Middlesbrough,54.57575,-1.24042,Fictional organisation working with local young people projects.
+Darlington Foundry Group 018,organisation,Energy|Food,Darlington,54.50373,-1.57883,Fictional organisation working with local energy projects.
+Durham Bracken Co-operative 019,organisation,Community care|Health,Durham,54.75829,-1.59205,Fictional organisation working with local community care projects.
+Hartlepool Harbour Trust 020,organisation,Learning|Housing,Hartlepool,54.67729,-1.23100,Fictional organisation working with local learning projects.
+Gateshead Mosaic Group 021,organisation,Food|Nature,Gateshead,54.97324,-1.58555,Fictional organisation working with local food projects.
+Newcastle Beacon Co-operative 022,organisation,Health|Transport,Newcastle,54.99349,-1.61681,Fictional organisation working with local health projects.
+Sunderland Willow Trust 023,organisation,Housing|Culture,Sunderland,54.90537,-1.37981,Fictional organisation working with local housing projects.
+Middlesbrough Cornerstone Group 024,organisation,Nature|Young people,Middlesbrough,54.58742,-1.22638,Fictional organisation working with local nature projects.
+Darlington Bridgewater Co-operative 025,organisation,Transport|Energy,Darlington,54.53488,-1.55880,Fictional organisation working with local transport projects.
+Durham Hearth Trust 026,organisation,Culture|Community care,Durham,54.79481,-1.59187,Fictional organisation working with local culture projects.
+Hartlepool Meadow Group 027,organisation,Young people|Learning,Hartlepool,54.67541,-1.20161,Fictional organisation working with local young people projects.
+Gateshead Highfield Co-operative 028,organisation,Energy|Food,Gateshead,54.96755,-1.61034,Fictional organisation working with local energy projects.
+Newcastle Lantern Trust 029,organisation,Community care|Health,Newcastle,54.99445,-1.62976,Fictional organisation working with local community care projects.
+Sunderland Riverside Group 030,organisation,Learning|Housing,Sunderland,54.92338,-1.36153,Fictional organisation working with local learning projects.
+Middlesbrough Northbank Co-operative 031,organisation,Food|Nature,Middlesbrough,54.57485,-1.23620,Fictional organisation working with local food projects.
+Darlington Seedling Trust 032,organisation,Health|Transport,Darlington,54.50486,-1.56567,Fictional organisation working with local health projects.
+Durham Cedar Group 033,organisation,Housing|Culture,Durham,54.78381,-1.58142,Fictional organisation working with local housing projects.
+Hartlepool Hilltop Co-operative 034,organisation,Nature|Young people,Hartlepool,54.70050,-1.21648,Fictional organisation working with local nature projects.
+Gateshead Tideway Trust 035,organisation,Transport|Energy,Gateshead,54.97533,-1.60081,Fictional organisation working with local transport projects.
+Newcastle Foundry Group 036,organisation,Culture|Community care,Newcastle,54.97251,-1.63723,Fictional organisation working with local culture projects.
+Sunderland Bracken Co-operative 037,organisation,Young people|Learning,Sunderland,54.89808,-1.36929,Fictional organisation working with local young people projects.
+Middlesbrough Harbour Trust 038,organisation,Energy|Food,Middlesbrough,54.56665,-1.24465,Fictional organisation working with local energy projects.
+Darlington Mosaic Group 039,organisation,Community care|Health,Darlington,54.52590,-1.57367,Fictional organisation working with local community care projects.
+Durham Beacon Co-operative 040,organisation,Learning|Housing,Durham,54.79753,-1.57202,Fictional organisation working with local learning projects.
+Hartlepool Willow Trust 041,organisation,Food|Nature,Hartlepool,54.70048,-1.23377,Fictional organisation working with local food projects.
+Gateshead Cornerstone Group 042,organisation,Health|Transport,Gateshead,54.96715,-1.58092,Fictional organisation working with local health projects.
+Newcastle Bridgewater Co-operative 043,organisation,Housing|Culture,Newcastle,54.95768,-1.61061,Fictional organisation working with local housing projects.
+Sunderland Hearth Trust 044,organisation,Nature|Young people,Sunderland,54.90558,-1.39844,Fictional organisation working with local nature projects.
+Middlesbrough Meadow Group 045,organisation,Transport|Energy,Middlesbrough,54.57487,-1.22232,Fictional organisation working with local transport projects.
+Darlington Highfield Co-operative 046,organisation,Culture|Community care,Darlington,54.50775,-1.54598,Fictional organisation working with local culture projects.
+Durham Lantern Trust 047,organisation,Young people|Learning,Durham,54.79437,-1.57945,Fictional organisation working with local young people projects.
+Hartlepool Riverside Group 048,organisation,Energy|Food,Hartlepool,54.70792,-1.19612,Fictional organisation working with local energy projects.
+Gateshead Northbank Co-operative 049,organisation,Community care|Health,Gateshead,54.94287,-1.61995,Fictional organisation working with local community care projects.
+Newcastle Seedling Trust 050,organisation,Learning|Housing,Newcastle,54.97509,-1.60173,Fictional organisation working with local learning projects.
+Sunderland Cedar Group 051,organisation,Food|Nature,Sunderland,54.91233,-1.40128,Fictional organisation working with local food projects.
+Middlesbrough Hilltop Co-operative 052,organisation,Health|Transport,Middlesbrough,54.55354,-1.24331,Fictional organisation working with local health projects.
+Darlington Tideway Trust 053,organisation,Housing|Culture,Darlington,54.52847,-1.57124,Fictional organisation working with local housing projects.
+Durham Foundry Group 054,organisation,Nature|Young people,Durham,54.79064,-1.59209,Fictional organisation working with local nature projects.
+Hartlepool Bracken Co-operative 055,organisation,Transport|Energy,Hartlepool,54.67020,-1.21476,Fictional organisation working with local transport projects.
+Gateshead Harbour Trust 056,organisation,Culture|Community care,Gateshead,54.97342,-1.60980,Fictional organisation working with local culture projects.
+Newcastle Mosaic Group 057,organisation,Young people|Learning,Newcastle,54.96995,-1.62145,Fictional organisation working with local young people projects.
+Sunderland Beacon Co-operative 058,organisation,Energy|Food,Sunderland,54.92157,-1.36797,Fictional organisation working with local energy projects.
+Middlesbrough Willow Trust 059,organisation,Community care|Health,Middlesbrough,54.57134,-1.22040,Fictional organisation working with local community care projects.
+Darlington Cornerstone Group 060,organisation,Learning|Housing,Darlington,54.51967,-1.53915,Fictional organisation working with local learning projects.
+Durham Bridgewater Co-operative 061,organisation,Food|Nature,Durham,54.78780,-1.57554,Fictional organisation working with local food projects.
+Hartlepool Hearth Trust 062,organisation,Health|Transport,Hartlepool,54.70880,-1.22799,Fictional organisation working with local health projects.
+Gateshead Meadow Group 063,organisation,Housing|Culture,Gateshead,54.97579,-1.62297,Fictional organisation working with local housing projects.
+Newcastle Highfield Co-operative 064,organisation,Nature|Young people,Newcastle,54.96467,-1.60230,Fictional organisation working with local nature projects.
+Sunderland Lantern Trust 065,organisation,Transport|Energy,Sunderland,54.88709,-1.39384,Fictional organisation working with local transport projects.
+Middlesbrough Riverside Group 066,organisation,Culture|Community care,Middlesbrough,54.56523,-1.25158,Fictional organisation working with local culture projects.
+Darlington Northbank Co-operative 067,organisation,Young people|Learning,Darlington,54.50967,-1.57571,Fictional organisation working with local young people projects.
+Durham Seedling Trust 068,organisation,Energy|Food,Durham,54.75351,-1.59668,Fictional organisation working with local energy projects.
+Hartlepool Cedar Group 069,organisation,Community care|Health,Hartlepool,54.67450,-1.20600,Fictional organisation working with local community care projects.
+Gateshead Hilltop Co-operative 070,organisation,Learning|Housing,Gateshead,54.97110,-1.60773,Fictional organisation working with local learning projects.
+Newcastle Tideway Trust 071,organisation,Food|Nature,Newcastle,54.95699,-1.63834,Fictional organisation working with local food projects.
+Sunderland Foundry Group 072,organisation,Health|Transport,Sunderland,54.91353,-1.36950,Fictional organisation working with local health projects.
+Middlesbrough Bracken Co-operative 073,organisation,Housing|Culture,Middlesbrough,54.57304,-1.22974,Fictional organisation working with local housing projects.
+Darlington Harbour Trust 074,organisation,Nature|Young people,Darlington,54.51424,-1.57293,Fictional organisation working with local nature projects.
+Durham Mosaic Group 075,organisation,Transport|Energy,Durham,54.78740,-1.59814,Fictional organisation working with local transport projects.
+Hartlepool Beacon Co-operative 076,organisation,Culture|Community care,Hartlepool,54.70092,-1.23170,Fictional organisation working with local culture projects.
+Gateshead Willow Trust 077,organisation,Young people|Learning,Gateshead,54.94639,-1.60781,Fictional organisation working with local young people projects.
+Newcastle Cornerstone Group 078,organisation,Energy|Food,Newcastle,54.97525,-1.63565,Fictional organisation working with local energy projects.
+Sunderland Bridgewater Co-operative 079,organisation,Community care|Health,Sunderland,54.89342,-1.37271,Fictional organisation working with local community care projects.
+Middlesbrough Hearth Trust 080,organisation,Learning|Housing,Middlesbrough,54.56756,-1.21936,Fictional organisation working with local learning projects.
+Darlington Meadow Group 081,organisation,Food|Nature,Darlington,54.54061,-1.56172,Fictional organisation working with local food projects.
+Durham Highfield Co-operative 082,organisation,Health|Transport,Durham,54.75611,-1.57115,Fictional organisation working with local health projects.
+Hartlepool Lantern Trust 083,organisation,Housing|Culture,Hartlepool,54.67230,-1.21087,Fictional organisation working with local housing projects.
+Gateshead Riverside Group 084,organisation,Nature|Young people,Gateshead,54.97497,-1.60069,Fictional organisation working with local nature projects.
+Newcastle Northbank Co-operative 085,organisation,Transport|Energy,Newcastle,54.95834,-1.60930,Fictional organisation working with local transport projects.
+Sunderland Seedling Trust 086,organisation,Culture|Community care,Sunderland,54.90073,-1.39562,Fictional organisation working with local culture projects.
+Middlesbrough Cedar Group 087,organisation,Young people|Learning,Middlesbrough,54.59556,-1.21350,Fictional organisation working with local young people projects.
+Darlington Hilltop Co-operative 088,organisation,Energy|Food,Darlington,54.52315,-1.55233,Fictional organisation working with local energy projects.
+Durham Tideway Trust 089,organisation,Community care|Health,Durham,54.75889,-1.59529,Fictional organisation working with local community care projects.
+Hartlepool Foundry Group 090,organisation,Learning|Housing,Hartlepool,54.67270,-1.19087,Fictional organisation working with local learning projects.
+Gateshead Bracken Co-operative 091,organisation,Food|Nature,Gateshead,54.96320,-1.58252,Fictional organisation working with local food projects.
+Newcastle Harbour Trust 092,organisation,Health|Transport,Newcastle,54.98936,-1.59705,Fictional organisation working with local health projects.
+Sunderland Mosaic Group 093,organisation,Housing|Culture,Sunderland,54.91274,-1.39865,Fictional organisation working with local housing projects.
+Middlesbrough Beacon Co-operative 094,organisation,Nature|Young people,Middlesbrough,54.58823,-1.21650,Fictional organisation working with local nature projects.
+Darlington Willow Trust 095,organisation,Transport|Energy,Darlington,54.53530,-1.55662,Fictional organisation working with local transport projects.
+Durham Cornerstone Group 096,organisation,Culture|Community care,Durham,54.75531,-1.56185,Fictional organisation working with local culture projects.
+Hartlepool Bridgewater Co-operative 097,organisation,Young people|Learning,Hartlepool,54.69084,-1.20799,Fictional organisation working with local young people projects.
+Gateshead Hearth Trust 098,organisation,Energy|Food,Gateshead,54.98115,-1.60275,Fictional organisation working with local energy projects.
+Newcastle Meadow Group 099,organisation,Community care|Health,Newcastle,54.97096,-1.63587,Fictional organisation working with local community care projects.
+Sunderland Highfield Co-operative 100,organisation,Learning|Housing,Sunderland,54.91634,-1.37037,Fictional organisation working with local learning projects.
+Middlesbrough Lantern Trust 101,organisation,Food|Nature,Middlesbrough,54.58145,-1.25191,Fictional organisation working with local food projects.
+Darlington Riverside Group 102,organisation,Health|Transport,Darlington,54.51286,-1.56251,Fictional organisation working with local health projects.
+Durham Northbank Co-operative 103,organisation,Housing|Culture,Durham,54.75830,-1.57438,Fictional organisation working with local housing projects.
+Hartlepool Seedling Trust 104,organisation,Nature|Young people,Hartlepool,54.67772,-1.20090,Fictional organisation working with local nature projects.
+Gateshead Cedar Group 105,organisation,Transport|Energy,Gateshead,54.94168,-1.58255,Fictional organisation working with local transport projects.
+Newcastle Hilltop Co-operative 106,organisation,Culture|Community care,Newcastle,54.96224,-1.59981,Fictional organisation working with local culture projects.
+Sunderland Tideway Trust 107,organisation,Young people|Learning,Sunderland,54.90382,-1.36458,Fictional organisation working with local young people projects.
+Middlesbrough Foundry Group 108,organisation,Energy|Food,Middlesbrough,54.56619,-1.25684,Fictional organisation working with local energy projects.
+Darlington Bracken Co-operative 109,organisation,Community care|Health,Darlington,54.52645,-1.58084,Fictional organisation working with local community care projects.
+Durham Harbour Trust 110,organisation,Learning|Housing,Durham,54.76387,-1.59874,Fictional organisation working with local learning projects.
+Hartlepool Mosaic Group 111,organisation,Food|Nature,Hartlepool,54.69648,-1.20470,Fictional organisation working with local food projects.
+Gateshead Beacon Co-operative 112,organisation,Health|Transport,Gateshead,54.94860,-1.61274,Fictional organisation working with local health projects.
+Newcastle Willow Trust 113,organisation,Housing|Culture,Newcastle,54.95980,-1.62564,Fictional organisation working with local housing projects.
+Sunderland Cornerstone Group 114,organisation,Nature|Young people,Sunderland,54.91337,-1.38661,Fictional organisation working with local nature projects.
+Middlesbrough Bridgewater Co-operative 115,organisation,Transport|Energy,Middlesbrough,54.58945,-1.23617,Fictional organisation working with local transport projects.
+Newcastle Food Programme 001,project,Housing,Newcastle,54.99339,-1.63849,Programme delivered in a fictional local network.
+Sunderland Health Programme 002,project,Nature,Sunderland,54.91805,-1.37271,Programme delivered in a fictional local network.
+Middlesbrough Housing Programme 003,project,Transport,Middlesbrough,54.58393,-1.22575,Programme delivered in a fictional local network.
+Darlington Nature Programme 004,project,Culture,Darlington,54.51475,-1.56216,Programme delivered in a fictional local network.
+Durham Transport Programme 005,project,Young people,Durham,54.76684,-1.57624,Programme delivered in a fictional local network.
+Hartlepool Culture Programme 006,project,Energy,Hartlepool,54.71023,-1.20276,Programme delivered in a fictional local network.
+Gateshead Young people Programme 007,project,Community care,Gateshead,54.96581,-1.60573,Programme delivered in a fictional local network.
+Newcastle Energy Programme 008,project,Learning,Newcastle,54.96855,-1.62369,Programme delivered in a fictional local network.
+Sunderland Community care Programme 009,project,Food,Sunderland,54.89226,-1.38144,Programme delivered in a fictional local network.
+Middlesbrough Learning Programme 010,project,Health,Middlesbrough,54.57709,-1.21343,Programme delivered in a fictional local network.
+Darlington Food Programme 011,project,Housing,Darlington,54.54230,-1.57823,Programme delivered in a fictional local network.
+Durham Health Programme 012,project,Nature,Durham,54.79308,-1.57100,Programme delivered in a fictional local network.
+Hartlepool Housing Programme 013,project,Transport,Hartlepool,54.66953,-1.19241,Programme delivered in a fictional local network.
+Gateshead Nature Programme 014,project,Culture,Gateshead,54.95904,-1.58624,Programme delivered in a fictional local network.
+Newcastle Transport Programme 015,project,Young people,Newcastle,54.97688,-1.63697,Programme delivered in a fictional local network.
+Sunderland Culture Programme 016,project,Energy,Sunderland,54.91807,-1.40154,Programme delivered in a fictional local network.
+Middlesbrough Young people Programme 017,project,Community care,Middlesbrough,54.55174,-1.24451,Programme delivered in a fictional local network.
+Darlington Energy Programme 018,project,Learning,Darlington,54.52466,-1.56166,Programme delivered in a fictional local network.
+Durham Community care Programme 019,project,Food,Durham,54.76647,-1.59541,Programme delivered in a fictional local network.
+Hartlepool Learning Programme 020,project,Health,Hartlepool,54.70956,-1.20903,Programme delivered in a fictional local network.
+Gateshead Food Programme 021,project,Housing,Gateshead,54.95075,-1.58678,Programme delivered in a fictional local network.
+Newcastle Health Programme 022,project,Nature,Newcastle,54.97389,-1.60893,Programme delivered in a fictional local network.
+Sunderland Housing Programme 023,project,Transport,Sunderland,54.89359,-1.38059,Programme delivered in a fictional local network.
+Middlesbrough Nature Programme 024,project,Culture,Middlesbrough,54.55343,-1.24154,Programme delivered in a fictional local network.
+Darlington Transport Programme 025,project,Young people,Darlington,54.53756,-1.54291,Programme delivered in a fictional local network.
+Durham Culture Programme 026,project,Energy,Durham,54.79220,-1.58878,Programme delivered in a fictional local network.
+Hartlepool Young people Programme 027,project,Community care,Hartlepool,54.71065,-1.19250,Programme delivered in a fictional local network.
+Gateshead Energy Programme 028,project,Learning,Gateshead,54.98370,-1.60758,Programme delivered in a fictional local network.
+Newcastle Community care Programme 029,project,Food,Newcastle,54.95769,-1.62866,Programme delivered in a fictional local network.
+Sunderland Learning Programme 030,project,Health,Sunderland,54.89924,-1.36796,Programme delivered in a fictional local network.
+Middlesbrough Food Programme 031,project,Housing,Middlesbrough,54.55941,-1.23098,Programme delivered in a fictional local network.
+Darlington Health Programme 032,project,Nature,Darlington,54.51818,-1.56910,Programme delivered in a fictional local network.
+Durham Housing Programme 033,project,Transport,Durham,54.78987,-1.57462,Programme delivered in a fictional local network.
+Hartlepool Nature Programme 034,project,Culture,Hartlepool,54.68705,-1.22681,Programme delivered in a fictional local network.
+Gateshead Transport Programme 035,project,Young people,Gateshead,54.95760,-1.58817,Programme delivered in a fictional local network.
+Newcastle Culture Programme 036,project,Energy,Newcastle,54.96652,-1.62823,Programme delivered in a fictional local network.
+Sunderland Young people Programme 037,project,Community care,Sunderland,54.92686,-1.36336,Programme delivered in a fictional local network.
+Middlesbrough Energy Programme 038,project,Learning,Middlesbrough,54.59110,-1.22686,Programme delivered in a fictional local network.
+Darlington Community care Programme 039,project,Food,Darlington,54.51545,-1.57027,Programme delivered in a fictional local network.
+Durham Learning Programme 040,project,Health,Durham,54.78920,-1.56216,Programme delivered in a fictional local network.
+Hartlepool Food Programme 041,project,Housing,Hartlepool,54.68325,-1.22705,Programme delivered in a fictional local network.
+Gateshead Health Programme 042,project,Nature,Gateshead,54.98081,-1.62153,Programme delivered in a fictional local network.
+Newcastle Housing Programme 043,project,Transport,Newcastle,54.98705,-1.61072,Programme delivered in a fictional local network.
+Sunderland Nature Programme 044,project,Culture,Sunderland,54.89100,-1.40455,Programme delivered in a fictional local network.
+Middlesbrough Transport Programme 045,project,Young people,Middlesbrough,54.59360,-1.21266,Programme delivered in a fictional local network.
+Darlington Culture Programme 046,project,Energy,Darlington,54.52261,-1.54853,Programme delivered in a fictional local network.
+Durham Young people Programme 047,project,Community care,Durham,54.75528,-1.55878,Programme delivered in a fictional local network.
+Hartlepool Energy Programme 048,project,Learning,Hartlepool,54.66914,-1.23030,Programme delivered in a fictional local network.
+Gateshead Community care Programme 049,project,Food,Gateshead,54.96761,-1.58770,Programme delivered in a fictional local network.
+Newcastle Learning Programme 050,project,Health,Newcastle,54.98030,-1.59627,Programme delivered in a fictional local network.
+Sunderland Food Programme 051,project,Housing,Sunderland,54.90858,-1.39739,Programme delivered in a fictional local network.
+Middlesbrough Health Programme 052,project,Nature,Middlesbrough,54.59405,-1.25004,Programme delivered in a fictional local network.
+Darlington Housing Programme 053,project,Transport,Darlington,54.52521,-1.55023,Programme delivered in a fictional local network.
+Durham Nature Programme 054,project,Culture,Durham,54.78638,-1.59814,Programme delivered in a fictional local network.
+Hartlepool Transport Programme 055,project,Young people,Hartlepool,54.69496,-1.19165,Programme delivered in a fictional local network.
+Gateshead Culture Programme 056,project,Energy,Gateshead,54.97486,-1.59792,Programme delivered in a fictional local network.
+Newcastle Young people Programme 057,project,Community care,Newcastle,54.99663,-1.61034,Programme delivered in a fictional local network.
+Sunderland Energy Programme 058,project,Learning,Sunderland,54.91293,-1.37359,Programme delivered in a fictional local network.
+Middlesbrough Community care Programme 059,project,Food,Middlesbrough,54.56616,-1.23474,Programme delivered in a fictional local network.
+Darlington Learning Programme 060,project,Health,Darlington,54.51216,-1.57105,Programme delivered in a fictional local network.
+Durham Food Programme 061,project,Housing,Durham,54.78575,-1.58204,Programme delivered in a fictional local network.
+Hartlepool Health Programme 062,project,Nature,Hartlepool,54.68198,-1.21729,Programme delivered in a fictional local network.
+Newcastle Community Space 001,place,Community spaces,Newcastle,54.99523,-1.61127,Invented meeting point on a real city's geographic backdrop.
+Sunderland Community Space 002,place,Community spaces,Sunderland,54.90194,-1.38393,Invented meeting point on a real city's geographic backdrop.
+Middlesbrough Community Space 003,place,Community spaces,Middlesbrough,54.57794,-1.21553,Invented meeting point on a real city's geographic backdrop.
+Darlington Community Space 004,place,Community spaces,Darlington,54.50984,-1.53726,Invented meeting point on a real city's geographic backdrop.
+Durham Community Space 005,place,Community spaces,Durham,54.76194,-1.55710,Invented meeting point on a real city's geographic backdrop.
+Hartlepool Community Space 006,place,Community spaces,Hartlepool,54.68769,-1.22475,Invented meeting point on a real city's geographic backdrop.
+Gateshead Community Space 007,place,Community spaces,Gateshead,54.95303,-1.61205,Invented meeting point on a real city's geographic backdrop.
+Newcastle Community Space 008,place,Community spaces,Newcastle,54.96564,-1.60894,Invented meeting point on a real city's geographic backdrop.
+Sunderland Community Space 009,place,Community spaces,Sunderland,54.90702,-1.36554,Invented meeting point on a real city's geographic backdrop.
+Middlesbrough Community Space 010,place,Community spaces,Middlesbrough,54.56941,-1.24972,Invented meeting point on a real city's geographic backdrop.
+Darlington Community Space 011,place,Community spaces,Darlington,54.51225,-1.55899,Invented meeting point on a real city's geographic backdrop.
+Durham Community Space 012,place,Community spaces,Durham,54.76672,-1.56817,Invented meeting point on a real city's geographic backdrop.
+Hartlepool Community Space 013,place,Community spaces,Hartlepool,54.67161,-1.19204,Invented meeting point on a real city's geographic backdrop.
+Gateshead Community Space 014,place,Community spaces,Gateshead,54.96839,-1.58725,Invented meeting point on a real city's geographic backdrop.
