@@ -1468,3 +1468,24 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-map-connections .ml-segmented button {min-width:0;flex:1;padding:6px 8px;}
 .ml-map-connections .ml-segmented button:disabled {opacity:.4;cursor:default;}
 @media(max-width:700px){.ml-map-connections{max-width:min(260px,calc(100vw - 26px));}}
+
+
+/* Throw Lab: a catalogue of actual substantial files, not decorative graph previews. */
+.ml-throw-rich-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+.ml-throw-rich-card {border-top:3px solid var(--ml-moss-ink);min-height:0;}
+.ml-throw-rich-card .ml-start-example-copy {padding:clamp(20px,2.3vw,34px);gap:14px;}
+.ml-throw-rich-card h3 {font-size:clamp(26px,2.4vw,36px);max-width:20ch;}
+.ml-throw-rich-card .ml-example-facts {font-weight:650;font-size:13px!important;letter-spacing:0;}
+.ml-throw-patterns {display:grid;gap:7px;padding:12px 0;border-block:1px solid var(--ml-border);}
+.ml-throw-patterns > strong {font-size:13px;color:var(--ml-ink);}
+.ml-throw-patterns ul {margin:0;padding-inline-start:20px;line-height:1.6;color:var(--ml-muted);font-size:13px;}
+.ml-throw-rich-card .ml-start-example-actions {padding-top:2px;}
+.ml-throw-rich-card .ml-start-example-actions .ml-example-open {font-size:15px;}
+.ml-throw-small {border-top:1px solid var(--ml-border);padding-top:14px;}
+.ml-throw-small > summary {cursor:pointer;font-weight:650;font-size:14px;margin-bottom:18px;}
+.ml-throw-small:not([open]) > summary {margin-bottom:0;}
+.ml-throw-small .ml-start-example-copy h3 {font-size:clamp(20px,2vw,27px);}
+@media(max-width:780px){
+  .ml-throw-rich-grid {grid-template-columns:1fr;gap:14px;}
+  .ml-throw-rich-card .ml-start-example-copy {padding:20px;}
+}
