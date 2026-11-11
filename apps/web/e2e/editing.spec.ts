@@ -95,6 +95,7 @@ test("one editable data view changes the graph, and a graph connection appears i
   await connection.getByRole("button",{name:"Add link"}).click();
   const links=page.getByRole("region",{name:"Connections table"});
   await expect(links).toContainText("strengthens");
+  await expect(links.locator("tbody tr").first()).toContainText("strengthens");
   await expect(page.locator(".ml-inspector .ml-link-list")).toContainText("strengthens");
   const row=links.locator("tr").filter({hasText:"strengthens"});
   await row.getByRole("button",{name:/Edit relationship from/}).click();
