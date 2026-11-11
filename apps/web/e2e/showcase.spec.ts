@@ -77,7 +77,8 @@ test("Throw Lab makes raw fictional inputs and unsupported cases visible",async(
   await expect(page.getByText(/36 tracked gaps/)).toBeVisible();
   await expect(page.locator(".ml-throw-rich-card")).toHaveCount(8);
   await expect(page.locator(".ml-throw-small .ml-start-example")).toHaveCount(24);
-  const bare=page.locator(".ml-start-example").filter({hasText:"Only From, To and Relationship"});
+  await page.locator(".ml-throw-small > summary").click();
+  const bare=page.locator(".ml-throw-small .ml-start-example").filter({hasText:"Only From, To and Relationship"});
   await expect(bare).toHaveCount(1);
   await bare.locator("summary").click();
   await expect(bare.getByRole("link",{name:"connections.csv"})).toHaveAttribute("download","connections.csv");
