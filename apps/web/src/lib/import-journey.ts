@@ -40,7 +40,12 @@ export function canReviewDirectly(
   hasExistingRecords:boolean
 ):boolean {
   if(problems.length || (!tables.length && !maps.length))return false;
-  const hasRecords=hasExistingRecords || maps.length>0 ||
+  // A standalone relationship list supplies its own source-mentioned endpoints,
+  // even if there is no separate elements sheet or records table.
+  const linksOnly=tables.length>0 && tables.every(t=>plans[t.name]?.include &&
+    plans[t.name].use==="records" && (t.matches[0]?.shape.records.length??-1)===0 &&
+    (t.matches[0]?.shape.links.length??0)>0);
+  const hasRecords=hasExistingRecords || maps.some(m=>m.nodes>0) || linksOnly ||
     tables.some(t=>plans[t.name]?.include&&plans[t.name].use==="records"&&(t.matches[0]?.shape.records.length??0)>0);
   if(!hasRecords)return false;
   return tables.every(t=>{
