@@ -68,7 +68,12 @@ export function suggestShape(table: SourceTable): Shape | null {
         ...(sign ? { polarity: brace(sign) } : {}), ...(dir ? { direction: brace(dir) } : {}) }] });
   }
 
-  const label = pick(h, ["label", "name", "organisation", "organisationname", "organization", "organizationname", "title", "entity", "project", "projectname", "charityname", "companyname"]) || h[0];
+  // Repeated event/activity rows are records in their own right. Choosing
+  // Organisation as the main label otherwise collapses several events into
+  // one organisation and silently loses their dates and observations.
+  const label = pick(h, ["label", "name", "event", "eventname", "session", "sessionname",
+    "activity", "activityname", "organisation", "organisationname", "organization",
+    "organizationname", "title", "entity", "project", "projectname", "charityname", "companyname"]) || h[0];
   const typeCol = pick(h, ["type", "elementtype", "entitytype", "category", "kind"]);
   const idCol = pick(h, ["id", "identifier", "orgid", "organisationidentifier", "reference", "ref"]);
   const charityCol = pick(h, ["charitynumber", "registeredcharitynumber", "charityno", "charityregistrationnumber", "regcharitynumber"]);
