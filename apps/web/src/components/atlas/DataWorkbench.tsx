@@ -2,7 +2,7 @@
 
 import {useMemo,useRef,useState,type KeyboardEvent} from "react";
 import {
-  edgeValues,isRecorded,makeEdit,nodeValues,type Edit,type GraphDocument,type GraphEdge,
+  edgeValues,isRecorded,makeEdit,nodeValues,readAtlasLocation,type Edit,type GraphDocument,type GraphEdge,
   type GraphNode,type NodeFields,type EdgeFields,type NodeType
 } from "@mossline/graph-core";
 import {TYPE_LABEL} from "./palette";
@@ -76,6 +76,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
   const [search,setSearch]=useState("");
   const [limit,setLimit]=useState(pageSize);
   const [removed,setRemoved]=useState<string|null>(null);
+  const [coordinateError,setCoordinateError]=useState<string|null>(null);
   const known=useMemo(()=>new Map(graph.nodes.map(n=>[n.id,n])),[graph.nodes]);
   const counts=useMemo(()=>{
     const degree=new Map(graph.nodes.map(n=>[n.id,0]));
@@ -110,12 +111,24 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
   const lastEdgeId=lastEdit?.op.kind==="update-edge"?lastEdit.op.id:
     lastEdit?.op.kind==="add-edge"?lastEdit.op.edge.id:null;
   const shown=tab==="records"?records:links;
-  function nodeEdit(node:GraphNode,key:keyof NodeFields,next:string|NodeType|string[]){
+  function nodeEdit(node:GraphNode,key:keyof NodeFields,next:string|NodeType|string[]|NodeFields["location"]){
     const old=nodeValues(node,[key]);
     const current=old[key];
     if(JSON.stringify(current)===JSON.stringify(next))return;
     if(key==="label" && !String(next).trim())return;
     onEdit(makeEdit({kind:"update-node",id:node.id,set:{[key]:next} as NodeFields,was:old},editor));
+  }
+  function positionEdit(node:GraphNode,text:string){
+    if(!text.trim()){setCoordinateError(null);nodeEdit(node,"location",null);return;}
+    const parts=text.split(",").map(value=>value.trim());
+    const numbers=parts.map(value=>value!==""&&/^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$/.test(value)?Number(value):NaN);
+    if(numbers.length!==2||!Number.isFinite(numbers[0])||!Number.isFinite(numbers[1])||
+      Math.abs(numbers[0])>90||Math.abs(numbers[1])>180){
+      setCoordinateError("Map position needs a valid latitude and longitude, separated by a comma. Nothing changed.");
+      return;
+    }
+    setCoordinateError(null);
+    nodeEdit(node,"location",{latitude:numbers[0],longitude:numbers[1]});
   }
   function edgeEdit(edge:GraphEdge,key:keyof EdgeFields,next:string){
     const old=edgeValues(edge,[key]);
@@ -141,7 +154,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
     <div className="ml-data-scroll" role="region" aria-label={tab==="records"?"Records table":"Connections table"} tabIndex={0}>
       {tab==="records"?<table className="ml-data-table"><thead><tr>
         <th scope="col">Record</th><th scope="col">Type</th><th scope="col">Region</th>
-        <th scope="col">Themes</th><th scope="col">Links</th><th scope="col">Source</th>
+        <th scope="col" title="Latitude, longitude (WGS84)">Map position</th><th scope="col">Themes</th><th scope="col">Links</th><th scope="col">Source</th>
       </tr></thead><tbody>{shownRecords.map(n=><tr key={n.id} className={[selectedId===n.id?"is-selected":"",lastNodeId===n.id?"is-updated":""].filter(Boolean).join(" ")}>
         <td className="ml-data-name"><div className="ml-data-named">
           <button type="button" className="ml-data-locate" aria-label={"Show "+n.label+" in the graph"}
@@ -152,6 +165,11 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
           editable={editable} onCommit={type=>nodeEdit(n,"type",type)}/></td>
         <td><Cell value={n.region??""} label={"region of "+n.label} editable={editable}
           onCommit={text=>nodeEdit(n,"region",text)}/></td>
+        <td><Cell value={(()=>{
+          const position=readAtlasLocation(n);
+          return position?position.latitude.toFixed(5)+", "+position.longitude.toFixed(5):"";
+        })()} label={"map position of "+n.label+" (latitude, longitude)"} editable={editable}
+          onCommit={text=>positionEdit(n,text)}/></td>
         <td><Cell value={n.tags.join(", ")} label={"themes of "+n.label} editable={editable}
           onCommit={text=>nodeEdit(n,"tags",[...new Set(text.split(/[,;|]/).map(t=>t.trim()).filter(Boolean))].slice(0,40))}/></td>
         <td className="ml-data-number">{counts.get(n.id)??0}</td>
@@ -180,6 +198,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
         </span>:<button type="button" className="ml-data-remove" onClick={()=>setRemoved(e.id)}
           aria-label={"Remove connection "+e.type}>×</button>}</td>}
       </tr>)}</tbody></table>}
+      {coordinateError&&<p role="alert" className="ml-add-warn ml-data-error">{coordinateError}</p>}
       {!shown.length&&<p className="ml-data-none">No matching {tab==="records"?"records":"connections"}. Clear the search or change the filters above.</p>}
     </div>
     <footer className="ml-data-foot">
