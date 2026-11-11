@@ -5,7 +5,7 @@ test("a map can be built and changed in place, with receipts, undo and a Kumu ex
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await page.getByRole("button",{name:/Check what this adds/}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
   await page.getByRole("button",{name:"Create the map"}).click();
   await page.locator(".ml-toast button").click();
   await page.getByRole("button",{name:"Edit",exact:true}).click();
@@ -38,9 +38,9 @@ test("a map can be built and changed in place, with receipts, undo and a Kumu ex
 
   // Change what a record says; the file's value is kept and can be restored.
   await page.locator(".ml-search input").fill("Grant funding");
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list button").first().click();
-  await page.getByRole("button",{name:"Close list"}).click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody .ml-data-locate").first().click();
+  await page.getByRole("button",{name:"Close data table"}).click();
   await page.locator(".ml-search-clear").click();
   await panel.getByRole("button",{name:"Edit details"}).click();
   await panel.getByLabel("Name").fill("Grant and donated funding");
@@ -61,4 +61,55 @@ test("a map can be built and changed in place, with receipts, undo and a Kumu ex
   await page.getByRole("button",{name:/Invented systems map/}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("13 records");
   await expect(page.getByRole("button",{name:/Edit · 4/})).toBeVisible();
+});
+
+
+test("one editable data view changes the graph, and a graph connection appears in the data",async({page})=>{
+  test.setTimeout(100_000);
+  await page.goto("/");
+  await page.getByRole("button",{name:/Add your data/}).click();
+  await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.locator(".ml-data-toggle").click();
+  const records=page.getByRole("region",{name:"Records table"});
+  const funding=records.locator("tr").filter({hasText:"Grant funding"});
+  await funding.getByRole("button",{name:"Edit name of Grant funding"}).click();
+  await records.getByRole("textbox",{name:"name of Grant funding"}).fill("Funder support");
+  await records.getByRole("textbox",{name:"name of Grant funding"}).press("Enter");
+  await expect(records).toContainText("Funder support");
+  await records.getByRole("button",{name:"Show Funder support in the graph"}).click();
+  await expect(page.locator(".ml-inspector h2")).toHaveText("Funder support");
+  // The change is not a separate table copy: undo restores the graph and the table.
+  await page.getByRole("button",{name:"Undo last change"}).click();
+  await expect(records).toContainText("Grant funding");
+  await expect(page.locator(".ml-inspector h2")).toHaveText("Grant funding");
+  // No global Edit mode is needed to create a connection.
+  await page.getByRole("button",{name:"Connect",exact:true}).click();
+  await expect(page.locator(".ml-pick-banner")).toContainText("Drag between two records");
+  await expect(page.locator(".ml-connect-preview line")).toHaveCount(1);
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".ml-pick-banner")).toHaveCount(0);
+  await expect(page.getByRole("button",{name:"Connect",exact:true})).toHaveAttribute("aria-pressed","false");
+  await page.getByRole("button",{name:"Connect",exact:true}).click();
+  // Data stays visible while connecting, so either endpoint can be chosen in the
+  // drawing or from a keyboard-accessible row.
+  const candidates=page.locator(".ml-data-table tbody tr");
+  await candidates.filter({hasText:"Cooking skills"}).first().locator(".ml-data-locate").click();
+  const connection=page.getByRole("complementary",{name:"Draw a connection"});
+  await expect(connection).toContainText("Connect two records");
+  await connection.getByLabel("Kind of link").fill("strengthens");
+  await connection.getByRole("button",{name:"Add link"}).click();
+  const links=page.getByRole("region",{name:"Connections table"});
+  await expect(links).toContainText("strengthens");
+  await expect(links.locator("tbody tr").first()).toContainText("strengthens");
+  await expect(page.locator(".ml-inspector .ml-link-list")).toContainText("strengthens");
+  const row=links.locator("tr").filter({hasText:"strengthens"});
+  await row.getByRole("button",{name:/Edit relationship from/}).click();
+  await links.getByRole("textbox",{name:/relationship from/}).fill("supports");
+  await links.getByRole("textbox",{name:/relationship from/}).press("Enter");
+  await expect(links).toContainText("supports");
+  await expect(page.locator(".ml-inspector .ml-link-list")).toContainText("supports");
+  await page.getByRole("button",{name:"Undo last change"}).click();
+  await expect(links).toContainText("strengthens");
 });

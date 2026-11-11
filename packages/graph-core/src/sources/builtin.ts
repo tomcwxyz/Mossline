@@ -118,7 +118,9 @@ const kumuConnections: ShapeInput = {
   kind: "mossline-shape", version: 1, id: "kumu-connections", name: "Kumu connections",
   each: "Each row is a connection from one element to another.",
   about: "Kumu's Connections sheet or connections array. From and To name elements by ID or label.",
-  match: { all: ["From|from", "To|to"], any: ["Type|Connection Type|type|connection type|attributes.connection type", "Direction|direction"] },
+  // Direction alone is not sufficient to claim a file is a Kumu export:
+  // a generic From/To/Relationship/Direction table must retain Relationship.
+  match: { all: ["From|from", "To|to"], any: ["Type|Connection Type|type|connection type|attributes.connection type"] },
   records: [],
   links: [{ from: { ref: "{From|from}" }, to: { ref: "{To|to}" }, type: "{Type|Connection Type|type|connection type|attributes.connection type}",
     direction: "{Direction|direction}", description: "{Description|description|attributes.description}", fields: "row",

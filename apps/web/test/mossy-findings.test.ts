@@ -14,6 +14,13 @@ for(const id of examples)test("fictional "+id+" has valid source-grounded explor
   assert.equal(report.relationships,graph.edges.filter(e=>!e.inferred).length);
   assert.ok(graph.nodes.every(n=>n.origin?.fileName?.includes("fictional")));
   assert.ok(graph.edges.every(e=>e.origin?.fileName?.includes("fictional")));
+  if(id==="after-dark"){
+    // A geographical discovery must contain connected places, not merely pins.
+    assert.ok(report.mappedConnections>=100);
+    const placeFinding=report.findings.find(f=>f.id==="places");
+    assert.ok(placeFinding);
+    assert.match(placeFinding.detail,/recorded relationships connect mapped places/);
+  }
 });
 test("the 5 examples recommend meaningfully different lenses",()=>{
  const lenses=examples.map(id=>mossyOverview(parseGraphDocument(
@@ -70,3 +77,16 @@ test("each showcase visual is a distinct, data-backed chart",()=>{
   assert.match(readFileSync(resolve("apps/web/public/examples/the-ripple-effect.svg"),"utf8"),/THEMES/);
   assert.match(readFileSync(resolve("apps/web/public/examples/follow-the-money.svg"),"utf8"),/Ribbon widths/);
 });
+
+test("a theme-rich list with no recorded relationships starts with themes, not an empty network",()=>{
+  const graph=parseGraphDocument({version:1,title:"Themes alone",
+    nodes:Array.from({length:80},(_,i)=>({
+      id:"n"+i,label:"Initiative "+i,type:"project",tags:[i%2?"Culture":"Nature",i%5?"Health":"Food"]
+    })),
+    edges:[]});
+  const report=mossyOverview(graph);
+  assert.equal(report.recommended,"themes");
+  assert.equal(report.relationships,0);
+  assert.ok(report.findings.some(item=>item.id==="themes"));
+});
+

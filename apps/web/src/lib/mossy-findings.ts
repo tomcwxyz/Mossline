@@ -1,11 +1,12 @@
-import {fundingFlows,isRecorded,recordedCoordinates,recordedYear,type AtlasLens,type GraphDocument} from "@mossline/graph-core";
+import {fundingFlows,isRecorded,placedCoordinates,recordedYear,type AtlasLens,type GraphDocument} from "@mossline/graph-core";
+import {spatialConnections} from "./spatial-connections";
 
 export type MossyFinding={
   id:string;heading:string;detail:string;lens:AtlasLens;recordId?:string;label:string;
 };
 export type MossyOverview={
   records:number;relationships:number;findings:MossyFinding[];
-  recommended:AtlasLens;missingPlaces:number;noConnections:number;
+  recommended:AtlasLens;missingPlaces:number;noConnections:number;mappedConnections:number;approximatePlaces:number;
 };
 
 /**
@@ -22,7 +23,10 @@ export function mossyOverview(graph:GraphDocument):MossyOverview {
   }
   const leads=graph.nodes.map(n=>({node:n,degree:degree.get(n.id)??0})).filter(x=>x.degree>0)
     .sort((a,b)=>b.degree-a.degree||a.node.label.localeCompare(b.node.label));
-  const located=graph.nodes.filter(n=>recordedCoordinates(n)!==null);
+  const placed=graph.nodes.map(node=>({node,position:placedCoordinates(node)})).filter(x=>x.position!==null);
+  const located=placed.map(x=>x.node);
+  const approximatePlaces=placed.filter(x=>x.position?.approximate).length;
+  const spatial=spatialConnections(graph);
   const flows=fundingFlows(graph);
   const years=recorded.map(recordedYear).filter((v):v is number=>v!==null);
   const distinctYears=[...new Set(years)].sort((a,b)=>a-b);
@@ -51,8 +55,10 @@ export function mossyOverview(graph:GraphDocument):MossyOverview {
   }
   if(located.length>=3){
     findings.push({id:"places",heading:"A picture of where things happen",
-      detail:located.length+" of "+graph.nodes.length+" records have source-given coordinates."+
-        " The other locations are not guessed from names.",
+      detail:located.length+" of "+graph.nodes.length+" records can be positioned on a map."+
+        (spatial.plotted>0?" "+spatial.plotted.toLocaleString("en-GB")+" recorded "+(spatial.plotted===1?"relationship connects":"relationships connect")+" mapped places.":"")+
+        (approximatePlaces>0?" "+approximatePlaces+" places are approximate from postcodes.":"")+
+        " Missing locations are never guessed from names.",
       lens:"map",label:"Explore places"});
   }
   if(distinctYears.length>=2){
@@ -69,11 +75,17 @@ export function mossyOverview(graph:GraphDocument):MossyOverview {
       lens:"themes",label:"Explore themes"});
   }
   const disconnected=graph.nodes.filter(n=>(degree.get(n.id)??0)===0).length;
-  const recommended:AtlasLens=flows.length>=8?"funding":located.length>=10&&located.length>=Math.ceil(graph.nodes.length*.25)?"map":
-    distinctYears.length>=3&&years.length>=Math.max(5,Math.ceil(recorded.length*.6))?"timeline":"network";
+  const hasUsefulThemes=topThemes.length>=2 &&
+    graph.nodes.filter(node=>node.tags.length>0).length>=Math.ceil(graph.nodes.length*.5);
+  const fewRelationships=recorded.length<Math.max(10,Math.ceil(graph.nodes.length*.2));
+  const recommended:AtlasLens=flows.length>=8?"funding":
+    located.length>=10&&located.length>=Math.ceil(graph.nodes.length*.25)?"map":
+    distinctYears.length>=3&&years.length>=Math.max(5,Math.ceil(recorded.length*.6))?"timeline":
+    fewRelationships&&hasUsefulThemes?"themes":"network";
   if(!findings.length)findings.push({id:"records",heading:"Start with the records",
     detail:graph.nodes.length+" records were recognised. No source-recorded relationships are available yet. You can browse records or add a connection.",
     lens:"network",label:"Browse and explore"});
   return {records:graph.nodes.length,relationships:recorded.length,
-    findings, recommended,missingPlaces:graph.nodes.length-located.length,noConnections:disconnected};
+    findings, recommended,missingPlaces:graph.nodes.length-located.length,noConnections:disconnected,
+    mappedConnections:spatial.plotted,approximatePlaces};
 }

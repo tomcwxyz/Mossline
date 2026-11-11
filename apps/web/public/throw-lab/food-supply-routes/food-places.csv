@@ -1,0 +1,203 @@
+Name,Type,Tags,Region,Latitude,Longitude,Description,Country
+Vancouver Bracken Growers 001,organisation,Growing|Food,"Vancouver, Canada",49.26701,-123.13053,Fictional local food producer.,Canada
+Toronto Harbour Growers 002,organisation,Growing|Food,"Toronto, Canada",43.66176,-79.38383,Fictional local food producer.,Canada
+Montreal Mosaic Growers 003,organisation,Growing|Food,"Montreal, Canada",45.49538,-73.56197,Fictional local food producer.,Canada
+Calgary Beacon Growers 004,organisation,Growing|Food,"Calgary, Canada",51.02925,-114.07528,Fictional local food producer.,Canada
+Mexico City Willow Growers 005,organisation,Growing|Food,"Mexico City, Mexico",19.42194,-99.14746,Fictional local food producer.,Mexico
+Monterrey Cornerstone Growers 006,organisation,Growing|Food,"Monterrey, Mexico",25.69516,-100.31233,Fictional local food producer.,Mexico
+Guadalajara Bridgewater Growers 007,organisation,Growing|Food,"Guadalajara, Mexico",20.65522,-103.34218,Fictional local food producer.,Mexico
+Oaxaca Hearth Growers 008,organisation,Growing|Food,"Oaxaca, Mexico",17.08814,-96.71034,Fictional local food producer.,Mexico
+"Seattle, WA Meadow Growers 009",organisation,Growing|Food,"Seattle, WA, United States",47.61780,-122.32613,Fictional local food producer.,United States
+"Chicago, IL Highfield Growers 010",organisation,Growing|Food,"Chicago, IL, United States",41.86651,-87.62430,Fictional local food producer.,United States
+"Los Angeles, CA Lantern Growers 011",organisation,Growing|Food,"Los Angeles, CA, United States",34.04021,-118.23653,Fictional local food producer.,United States
+"Austin, TX Riverside Growers 012",organisation,Growing|Food,"Austin, TX, United States",30.26915,-97.74409,Fictional local food producer.,United States
+Vancouver Northbank Growers 013,organisation,Growing|Food,"Vancouver, Canada",49.29473,-123.11652,Fictional local food producer.,Canada
+Toronto Seedling Growers 014,organisation,Growing|Food,"Toronto, Canada",43.65543,-79.37598,Fictional local food producer.,Canada
+Montreal Cedar Growers 015,organisation,Growing|Food,"Montreal, Canada",45.50843,-73.55943,Fictional local food producer.,Canada
+Calgary Hilltop Growers 016,organisation,Growing|Food,"Calgary, Canada",51.02381,-114.05787,Fictional local food producer.,Canada
+Mexico City Tideway Growers 017,organisation,Growing|Food,"Mexico City, Mexico",19.44508,-99.13497,Fictional local food producer.,Mexico
+Monterrey Foundry Growers 018,organisation,Growing|Food,"Monterrey, Mexico",25.68315,-100.32627,Fictional local food producer.,Mexico
+Guadalajara Bracken Growers 019,organisation,Growing|Food,"Guadalajara, Mexico",20.67643,-103.33851,Fictional local food producer.,Mexico
+Oaxaca Harbour Growers 020,organisation,Growing|Food,"Oaxaca, Mexico",17.05216,-96.74001,Fictional local food producer.,Mexico
+"Seattle, WA Mosaic Growers 021",organisation,Growing|Food,"Seattle, WA, United States",47.62530,-122.31179,Fictional local food producer.,United States
+"Chicago, IL Beacon Growers 022",organisation,Growing|Food,"Chicago, IL, United States",41.89103,-87.64868,Fictional local food producer.,United States
+"Los Angeles, CA Willow Growers 023",organisation,Growing|Food,"Los Angeles, CA, United States",34.04704,-118.23637,Fictional local food producer.,United States
+"Austin, TX Cornerstone Growers 024",organisation,Growing|Food,"Austin, TX, United States",30.26797,-97.74436,Fictional local food producer.,United States
+Vancouver Bridgewater Growers 025,organisation,Growing|Food,"Vancouver, Canada",49.29888,-123.12987,Fictional local food producer.,Canada
+Toronto Hearth Growers 026,organisation,Growing|Food,"Toronto, Canada",43.64155,-79.40227,Fictional local food producer.,Canada
+Montreal Meadow Growers 027,organisation,Growing|Food,"Montreal, Canada",45.49407,-73.58668,Fictional local food producer.,Canada
+Calgary Highfield Growers 028,organisation,Growing|Food,"Calgary, Canada",51.02582,-114.07532,Fictional local food producer.,Canada
+Mexico City Lantern Growers 029,organisation,Growing|Food,"Mexico City, Mexico",19.41775,-99.12186,Fictional local food producer.,Mexico
+Monterrey Riverside Growers 030,organisation,Growing|Food,"Monterrey, Mexico",25.69499,-100.30309,Fictional local food producer.,Mexico
+Guadalajara Northbank Growers 031,organisation,Growing|Food,"Guadalajara, Mexico",20.65777,-103.33233,Fictional local food producer.,Mexico
+Oaxaca Seedling Growers 032,organisation,Growing|Food,"Oaxaca, Mexico",17.06541,-96.74260,Fictional local food producer.,Mexico
+"Seattle, WA Cedar Growers 033",organisation,Growing|Food,"Seattle, WA, United States",47.60018,-122.33553,Fictional local food producer.,United States
+"Chicago, IL Hilltop Growers 034",organisation,Growing|Food,"Chicago, IL, United States",41.85641,-87.64156,Fictional local food producer.,United States
+"Los Angeles, CA Tideway Growers 035",organisation,Growing|Food,"Los Angeles, CA, United States",34.05863,-118.26505,Fictional local food producer.,United States
+"Austin, TX Foundry Growers 036",organisation,Growing|Food,"Austin, TX, United States",30.26032,-97.76000,Fictional local food producer.,United States
+Vancouver Bracken Growers 037,organisation,Growing|Food,"Vancouver, Canada",49.27963,-123.12524,Fictional local food producer.,Canada
+Toronto Harbour Growers 038,organisation,Growing|Food,"Toronto, Canada",43.67003,-79.37358,Fictional local food producer.,Canada
+Montreal Mosaic Growers 039,organisation,Growing|Food,"Montreal, Canada",45.52299,-73.56927,Fictional local food producer.,Canada
+Calgary Beacon Growers 040,organisation,Growing|Food,"Calgary, Canada",51.03346,-114.08581,Fictional local food producer.,Canada
+Mexico City Willow Growers 041,organisation,Growing|Food,"Mexico City, Mexico",19.45209,-99.14688,Fictional local food producer.,Mexico
+Monterrey Cornerstone Growers 042,organisation,Growing|Food,"Monterrey, Mexico",25.68443,-100.32244,Fictional local food producer.,Mexico
+Guadalajara Bridgewater Growers 043,organisation,Growing|Food,"Guadalajara, Mexico",20.65443,-103.34811,Fictional local food producer.,Mexico
+Oaxaca Hearth Growers 044,organisation,Growing|Food,"Oaxaca, Mexico",17.08488,-96.73784,Fictional local food producer.,Mexico
+"Seattle, WA Meadow Growers 045",organisation,Growing|Food,"Seattle, WA, United States",47.61493,-122.33114,Fictional local food producer.,United States
+"Chicago, IL Highfield Growers 046",organisation,Growing|Food,"Chicago, IL, United States",41.87289,-87.62639,Fictional local food producer.,United States
+"Los Angeles, CA Lantern Growers 047",organisation,Growing|Food,"Los Angeles, CA, United States",34.06853,-118.23580,Fictional local food producer.,United States
+"Austin, TX Riverside Growers 048",organisation,Growing|Food,"Austin, TX, United States",30.28389,-97.72754,Fictional local food producer.,United States
+Vancouver Northbank Growers 049,organisation,Growing|Food,"Vancouver, Canada",49.26167,-123.12768,Fictional local food producer.,Canada
+Toronto Seedling Growers 050,organisation,Growing|Food,"Toronto, Canada",43.66126,-79.39512,Fictional local food producer.,Canada
+Montreal Cedar Growers 051,organisation,Growing|Food,"Montreal, Canada",45.48940,-73.57437,Fictional local food producer.,Canada
+Calgary Hilltop Growers 052,organisation,Growing|Food,"Calgary, Canada",51.04801,-114.07073,Fictional local food producer.,Canada
+Mexico City Tideway Growers 053,organisation,Growing|Food,"Mexico City, Mexico",19.43526,-99.14297,Fictional local food producer.,Mexico
+Monterrey Foundry Growers 054,organisation,Growing|Food,"Monterrey, Mexico",25.69656,-100.30698,Fictional local food producer.,Mexico
+Guadalajara Bracken Growers 055,organisation,Growing|Food,"Guadalajara, Mexico",20.65701,-103.35741,Fictional local food producer.,Mexico
+Oaxaca Harbour Growers 056,organisation,Growing|Food,"Oaxaca, Mexico",17.07918,-96.74787,Fictional local food producer.,Mexico
+"Seattle, WA Mosaic Growers 057",organisation,Growing|Food,"Seattle, WA, United States",47.60789,-122.34130,Fictional local food producer.,United States
+"Chicago, IL Beacon Growers 058",organisation,Growing|Food,"Chicago, IL, United States",41.87079,-87.62183,Fictional local food producer.,United States
+"Los Angeles, CA Willow Growers 059",organisation,Growing|Food,"Los Angeles, CA, United States",34.05289,-118.25037,Fictional local food producer.,United States
+"Austin, TX Cornerstone Growers 060",organisation,Growing|Food,"Austin, TX, United States",30.26434,-97.75357,Fictional local food producer.,United States
+Vancouver Bridgewater Growers 061,organisation,Growing|Food,"Vancouver, Canada",49.29664,-123.11184,Fictional local food producer.,Canada
+Toronto Hearth Growers 062,organisation,Growing|Food,"Toronto, Canada",43.67219,-79.36787,Fictional local food producer.,Canada
+Montreal Meadow Growers 063,organisation,Growing|Food,"Montreal, Canada",45.52259,-73.54500,Fictional local food producer.,Canada
+Calgary Highfield Growers 064,organisation,Growing|Food,"Calgary, Canada",51.06282,-114.08758,Fictional local food producer.,Canada
+Mexico City Lantern Growers 065,organisation,Growing|Food,"Mexico City, Mexico",19.42278,-99.13423,Fictional local food producer.,Mexico
+Monterrey Riverside Growers 066,organisation,Growing|Food,"Monterrey, Mexico",25.69235,-100.32415,Fictional local food producer.,Mexico
+Guadalajara Northbank Growers 067,organisation,Growing|Food,"Guadalajara, Mexico",20.67399,-103.33097,Fictional local food producer.,Mexico
+Oaxaca Seedling Growers 068,organisation,Growing|Food,"Oaxaca, Mexico",17.07096,-96.74041,Fictional local food producer.,Mexico
+"Seattle, WA Cedar Growers 069",organisation,Growing|Food,"Seattle, WA, United States",47.62744,-122.31243,Fictional local food producer.,United States
+"Chicago, IL Hilltop Growers 070",organisation,Growing|Food,"Chicago, IL, United States",41.88337,-87.60874,Fictional local food producer.,United States
+"Los Angeles, CA Tideway Growers 071",organisation,Growing|Food,"Los Angeles, CA, United States",34.03886,-118.24893,Fictional local food producer.,United States
+"Austin, TX Foundry Growers 072",organisation,Growing|Food,"Austin, TX, United States",30.24615,-97.72313,Fictional local food producer.,United States
+Vancouver Bracken Growers 073,organisation,Growing|Food,"Vancouver, Canada",49.28827,-123.11456,Fictional local food producer.,Canada
+Toronto Harbour Growers 074,organisation,Growing|Food,"Toronto, Canada",43.64766,-79.38588,Fictional local food producer.,Canada
+Montreal Mosaic Growers 075,organisation,Growing|Food,"Montreal, Canada",45.50134,-73.58282,Fictional local food producer.,Canada
+Calgary Beacon Growers 076,organisation,Growing|Food,"Calgary, Canada",51.03266,-114.08368,Fictional local food producer.,Canada
+Mexico City Willow Growers 077,organisation,Growing|Food,"Mexico City, Mexico",19.44959,-99.12636,Fictional local food producer.,Mexico
+Monterrey Cornerstone Growers 078,organisation,Growing|Food,"Monterrey, Mexico",25.66838,-100.33380,Fictional local food producer.,Mexico
+Guadalajara Bridgewater Growers 079,organisation,Growing|Food,"Guadalajara, Mexico",20.68212,-103.34428,Fictional local food producer.,Mexico
+Oaxaca Hearth Growers 080,organisation,Growing|Food,"Oaxaca, Mexico",17.06968,-96.73780,Fictional local food producer.,Mexico
+"Seattle, WA Meadow Growers 081",organisation,Growing|Food,"Seattle, WA, United States",47.58410,-122.34782,Fictional local food producer.,United States
+"Chicago, IL Highfield Growers 082",organisation,Growing|Food,"Chicago, IL, United States",41.86011,-87.61817,Fictional local food producer.,United States
+"Los Angeles, CA Lantern Growers 083",organisation,Growing|Food,"Los Angeles, CA, United States",34.04097,-118.25348,Fictional local food producer.,United States
+"Austin, TX Riverside Growers 084",organisation,Growing|Food,"Austin, TX, United States",30.28884,-97.74914,Fictional local food producer.,United States
+Vancouver Northbank Growers 085,organisation,Growing|Food,"Vancouver, Canada",49.27038,-123.13083,Fictional local food producer.,Canada
+Toronto Seedling Growers 086,organisation,Growing|Food,"Toronto, Canada",43.64708,-79.39963,Fictional local food producer.,Canada
+Montreal Cedar Growers 087,organisation,Growing|Food,"Montreal, Canada",45.51616,-73.56432,Fictional local food producer.,Canada
+Calgary Hilltop Growers 088,organisation,Growing|Food,"Calgary, Canada",51.04837,-114.05589,Fictional local food producer.,Canada
+Mexico City Tideway Growers 089,organisation,Growing|Food,"Mexico City, Mexico",19.43405,-99.14046,Fictional local food producer.,Mexico
+Monterrey Foundry Growers 090,organisation,Growing|Food,"Monterrey, Mexico",25.66699,-100.32683,Fictional local food producer.,Mexico
+Guadalajara Bracken Growers 091,organisation,Growing|Food,"Guadalajara, Mexico",20.66955,-103.33158,Fictional local food producer.,Mexico
+Oaxaca Harbour Growers 092,organisation,Growing|Food,"Oaxaca, Mexico",17.07474,-96.73201,Fictional local food producer.,Mexico
+"Seattle, WA Mosaic Growers 093",organisation,Growing|Food,"Seattle, WA, United States",47.59037,-122.33937,Fictional local food producer.,United States
+"Chicago, IL Beacon Growers 094",organisation,Growing|Food,"Chicago, IL, United States",41.86523,-87.62530,Fictional local food producer.,United States
+"Los Angeles, CA Willow Growers 095",organisation,Growing|Food,"Los Angeles, CA, United States",34.04513,-118.25964,Fictional local food producer.,United States
+Vancouver Community Kitchen 001,organisation,Food|Community care,"Vancouver, Canada",49.26895,-123.13030,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 002,organisation,Food|Community care,"Toronto, Canada",43.65322,-79.37084,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 003,organisation,Food|Community care,"Montreal, Canada",45.49490,-73.58929,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 004,organisation,Food|Community care,"Calgary, Canada",51.02226,-114.07999,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 005,organisation,Food|Community care,"Mexico City, Mexico",19.42969,-99.12253,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 006,organisation,Food|Community care,"Monterrey, Mexico",25.69865,-100.30320,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 007,organisation,Food|Community care,"Guadalajara, Mexico",20.64981,-103.34821,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 008,organisation,Food|Community care,"Oaxaca, Mexico",17.09532,-96.72030,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 009",organisation,Food|Community care,"Seattle, WA, United States",47.59176,-122.32614,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 010",organisation,Food|Community care,"Chicago, IL, United States",41.90036,-87.62530,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 011",organisation,Food|Community care,"Los Angeles, CA, United States",34.07063,-118.22314,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 012",organisation,Food|Community care,"Austin, TX, United States",30.25558,-97.72628,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 013,organisation,Food|Community care,"Vancouver, Canada",49.30493,-123.12695,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 014,organisation,Food|Community care,"Toronto, Canada",43.66508,-79.39281,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 015,organisation,Food|Community care,"Montreal, Canada",45.48393,-73.57854,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 016,organisation,Food|Community care,"Calgary, Canada",51.04547,-114.09403,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 017,organisation,Food|Community care,"Mexico City, Mexico",19.44394,-99.13979,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 018,organisation,Food|Community care,"Monterrey, Mexico",25.68360,-100.30098,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 019,organisation,Food|Community care,"Guadalajara, Mexico",20.66605,-103.33846,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 020,organisation,Food|Community care,"Oaxaca, Mexico",17.05909,-96.73890,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 021",organisation,Food|Community care,"Seattle, WA, United States",47.59940,-122.33422,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 022",organisation,Food|Community care,"Chicago, IL, United States",41.89764,-87.62794,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 023",organisation,Food|Community care,"Los Angeles, CA, United States",34.03871,-118.25779,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 024",organisation,Food|Community care,"Austin, TX, United States",30.26959,-97.75662,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 025,organisation,Food|Community care,"Vancouver, Canada",49.28222,-123.13891,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 026,organisation,Food|Community care,"Toronto, Canada",43.63671,-79.37437,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 027,organisation,Food|Community care,"Montreal, Canada",45.49892,-73.56526,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 028,organisation,Food|Community care,"Calgary, Canada",51.05582,-114.06339,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 029,organisation,Food|Community care,"Mexico City, Mexico",19.43397,-99.14197,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 030,organisation,Food|Community care,"Monterrey, Mexico",25.69815,-100.31143,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 031,organisation,Food|Community care,"Guadalajara, Mexico",20.64216,-103.34108,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 032,organisation,Food|Community care,"Oaxaca, Mexico",17.05880,-96.72821,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 033",organisation,Food|Community care,"Seattle, WA, United States",47.60130,-122.33209,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 034",organisation,Food|Community care,"Chicago, IL, United States",41.89497,-87.61182,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 035",organisation,Food|Community care,"Los Angeles, CA, United States",34.04141,-118.22850,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 036",organisation,Food|Community care,"Austin, TX, United States",30.27002,-97.74176,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 037,organisation,Food|Community care,"Vancouver, Canada",49.28372,-123.13813,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 038,organisation,Food|Community care,"Toronto, Canada",43.67358,-79.39731,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 039,organisation,Food|Community care,"Montreal, Canada",45.50051,-73.55214,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 040,organisation,Food|Community care,"Calgary, Canada",51.04407,-114.06437,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 041,organisation,Food|Community care,"Mexico City, Mexico",19.45248,-99.15481,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 042,organisation,Food|Community care,"Monterrey, Mexico",25.68485,-100.29442,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 043,organisation,Food|Community care,"Guadalajara, Mexico",20.64582,-103.36088,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 044,organisation,Food|Community care,"Oaxaca, Mexico",17.07601,-96.73613,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 045",organisation,Food|Community care,"Seattle, WA, United States",47.59840,-122.31916,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 046",organisation,Food|Community care,"Chicago, IL, United States",41.85783,-87.60835,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 047",organisation,Food|Community care,"Los Angeles, CA, United States",34.03361,-118.25480,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 048",organisation,Food|Community care,"Austin, TX, United States",30.25062,-97.73859,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 049,organisation,Food|Community care,"Vancouver, Canada",49.26805,-123.11044,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 050,organisation,Food|Community care,"Toronto, Canada",43.64345,-79.37831,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 051,organisation,Food|Community care,"Montreal, Canada",45.50194,-73.57379,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 052,organisation,Food|Community care,"Calgary, Canada",51.04595,-114.09053,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 053,organisation,Food|Community care,"Mexico City, Mexico",19.41112,-99.12110,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 054,organisation,Food|Community care,"Monterrey, Mexico",25.70650,-100.29599,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 055,organisation,Food|Community care,"Guadalajara, Mexico",20.68066,-103.33078,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 056,organisation,Food|Community care,"Oaxaca, Mexico",17.09166,-96.73587,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 057",organisation,Food|Community care,"Seattle, WA, United States",47.61665,-122.34859,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 058",organisation,Food|Community care,"Chicago, IL, United States",41.89526,-87.61231,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 059",organisation,Food|Community care,"Los Angeles, CA, United States",34.06237,-118.24395,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 060",organisation,Food|Community care,"Austin, TX, United States",30.27419,-97.72324,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 061,organisation,Food|Community care,"Vancouver, Canada",49.29766,-123.10552,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 062,organisation,Food|Community care,"Toronto, Canada",43.65123,-79.37558,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 063,organisation,Food|Community care,"Montreal, Canada",45.49758,-73.54567,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 064,organisation,Food|Community care,"Calgary, Canada",51.03625,-114.07951,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 065,organisation,Food|Community care,"Mexico City, Mexico",19.45198,-99.11106,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 066,organisation,Food|Community care,"Monterrey, Mexico",25.68694,-100.30779,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 067,organisation,Food|Community care,"Guadalajara, Mexico",20.66829,-103.34607,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 068,organisation,Food|Community care,"Oaxaca, Mexico",17.05609,-96.74553,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 069",organisation,Food|Community care,"Seattle, WA, United States",47.59187,-122.31290,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 070",organisation,Food|Community care,"Chicago, IL, United States",41.89659,-87.62412,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 071",organisation,Food|Community care,"Los Angeles, CA, United States",34.03230,-118.24051,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 072",organisation,Food|Community care,"Austin, TX, United States",30.24860,-97.75849,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 073,organisation,Food|Community care,"Vancouver, Canada",49.29716,-123.13787,Fictional buyer or community kitchen.,Canada
+Toronto Community Kitchen 074,organisation,Food|Community care,"Toronto, Canada",43.66167,-79.36397,Fictional buyer or community kitchen.,Canada
+Montreal Community Kitchen 075,organisation,Food|Community care,"Montreal, Canada",45.50683,-73.54890,Fictional buyer or community kitchen.,Canada
+Calgary Community Kitchen 076,organisation,Food|Community care,"Calgary, Canada",51.05077,-114.08330,Fictional buyer or community kitchen.,Canada
+Mexico City Community Kitchen 077,organisation,Food|Community care,"Mexico City, Mexico",19.44441,-99.11355,Fictional buyer or community kitchen.,Mexico
+Monterrey Community Kitchen 078,organisation,Food|Community care,"Monterrey, Mexico",25.69474,-100.31501,Fictional buyer or community kitchen.,Mexico
+Guadalajara Community Kitchen 079,organisation,Food|Community care,"Guadalajara, Mexico",20.68056,-103.34451,Fictional buyer or community kitchen.,Mexico
+Oaxaca Community Kitchen 080,organisation,Food|Community care,"Oaxaca, Mexico",17.08686,-96.73114,Fictional buyer or community kitchen.,Mexico
+"Seattle, WA Community Kitchen 081",organisation,Food|Community care,"Seattle, WA, United States",47.59509,-122.34561,Fictional buyer or community kitchen.,United States
+"Chicago, IL Community Kitchen 082",organisation,Food|Community care,"Chicago, IL, United States",41.89100,-87.61058,Fictional buyer or community kitchen.,United States
+"Los Angeles, CA Community Kitchen 083",organisation,Food|Community care,"Los Angeles, CA, United States",34.03633,-118.22182,Fictional buyer or community kitchen.,United States
+"Austin, TX Community Kitchen 084",organisation,Food|Community care,"Austin, TX, United States",30.24549,-97.76460,Fictional buyer or community kitchen.,United States
+Vancouver Community Kitchen 085,organisation,Food|Community care,"Vancouver, Canada",49.28706,-123.11868,Fictional buyer or community kitchen.,Canada
+Vancouver Food Hub 001,place,Distribution,"Vancouver, Canada",49.29435,-123.11594,Invented distribution location.,Canada
+Toronto Food Hub 002,place,Distribution,"Toronto, Canada",43.65977,-79.37698,Invented distribution location.,Canada
+Montreal Food Hub 003,place,Distribution,"Montreal, Canada",45.49796,-73.58230,Invented distribution location.,Canada
+Calgary Food Hub 004,place,Distribution,"Calgary, Canada",51.06432,-114.06703,Invented distribution location.,Canada
+Mexico City Food Hub 005,place,Distribution,"Mexico City, Mexico",19.43558,-99.12481,Invented distribution location.,Mexico
+Monterrey Food Hub 006,place,Distribution,"Monterrey, Mexico",25.68408,-100.32400,Invented distribution location.,Mexico
+Guadalajara Food Hub 007,place,Distribution,"Guadalajara, Mexico",20.67093,-103.36622,Invented distribution location.,Mexico
+Oaxaca Food Hub 008,place,Distribution,"Oaxaca, Mexico",17.05509,-96.74818,Invented distribution location.,Mexico
+"Seattle, WA Food Hub 009",place,Distribution,"Seattle, WA, United States",47.59802,-122.31131,Invented distribution location.,United States
+"Chicago, IL Food Hub 010",place,Distribution,"Chicago, IL, United States",41.86265,-87.62549,Invented distribution location.,United States
+"Los Angeles, CA Food Hub 011",place,Distribution,"Los Angeles, CA, United States",34.06691,-118.24930,Invented distribution location.,United States
+"Austin, TX Food Hub 012",place,Distribution,"Austin, TX, United States",30.26728,-97.75604,Invented distribution location.,United States
+Vancouver Food Hub 013,place,Distribution,"Vancouver, Canada",49.29400,-123.13360,Invented distribution location.,Canada
+Toronto Food Hub 014,place,Distribution,"Toronto, Canada",43.64061,-79.39390,Invented distribution location.,Canada
+Montreal Food Hub 015,place,Distribution,"Montreal, Canada",45.50352,-73.55583,Invented distribution location.,Canada
+Calgary Food Hub 016,place,Distribution,"Calgary, Canada",51.02814,-114.09281,Invented distribution location.,Canada
+Mexico City Food Hub 017,place,Distribution,"Mexico City, Mexico",19.42251,-99.11767,Invented distribution location.,Mexico
+Monterrey Food Hub 018,place,Distribution,"Monterrey, Mexico",25.67052,-100.30858,Invented distribution location.,Mexico
+Guadalajara Food Hub 019,place,Distribution,"Guadalajara, Mexico",20.65713,-103.36964,Invented distribution location.,Mexico
+Oaxaca Food Hub 020,place,Distribution,"Oaxaca, Mexico",17.07628,-96.74051,Invented distribution location.,Mexico
+"Seattle, WA Food Hub 021",place,Distribution,"Seattle, WA, United States",47.61028,-122.31714,Invented distribution location.,United States
+"Chicago, IL Food Hub 022",place,Distribution,"Chicago, IL, United States",41.89246,-87.61738,Invented distribution location.,United States

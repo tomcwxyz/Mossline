@@ -8,6 +8,7 @@ import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PIGMENTS, SKETCH_FONT, blobPath } from "./sketch";
 import { PALETTES, SHAPE, markSize, mix, type AtlasTheme } from "./palette";
 import { areasFromCommunities, placeUnlinked, terrain, themeLayout, type AtlasArea, type Positions } from "./layout";
+import {movedToConnect,dragConnection} from "../../lib/connection-gesture";
 
 export interface AtlasRoute { nodeIds: string[]; edgeIds: string[] }
 type Props = {
@@ -17,6 +18,11 @@ type Props = {
   selectedId: string | null;
   route: AtlasRoute | null;
   onPick: (id: string | null) => void;
+  /** Double-click a drawn record to open its inline editing controls. */
+  onEditNode?: (id: string) => void;
+  /** In Connect mode, drag one node to another to propose a recorded relationship. */
+  connectMode?: boolean;
+  onDragConnect?: (fromId: string, toId: string) => void;
   onUnavailable: () => void;
   /** Themes: the group of each record, and whether the grouping is a suggestion. */
   groupOf?: Map<string, string>;
@@ -53,7 +59,8 @@ const LAYOUTS = new Map<string, LayoutResult>();
 
 /** The Network and Themes lenses. Sigma draws the records; an SVG wash and
  *  HTML area names sit underneath and above it, following the camera. */
-export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, markStyle, frame, frameKey, sketch = false }: Props) {
+export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, onPick, onEditNode,
+  connectMode = false, onDragConnect, onUnavailable, groupOf, groupKey = "", groupName = "Source tags", suggested = false, alias, linkColour, linkKey = "", marks, pins, markStyle, frame, frameKey, sketch = false }: Props) {
   const sketched = sketch && mode === "themes";
   const filterId = "ml-wc-" + useId().replace(/[^a-zA-Z0-9]/g, "");
   const selectedId = chosenId && alias?.has(chosenId) ? alias.get(chosenId)! : chosenId;
@@ -73,6 +80,17 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
   const sigmaRef = useRef<SigmaType | null>(null);
   const graphRef = useRef<GraphType | null>(null);
   const pick = useRef(onPick); pick.current = onPick;
+  const editNode = useRef(onEditNode); editNode.current = onEditNode;
+  const connecting = useRef(connectMode); connecting.current = connectMode;
+  const onConnect = useRef(onDragConnect); onConnect.current = onDragConnect;
+  const dragPreview = useRef<SVGLineElement>(null);
+  const dragStart = useRef<{id:string;x:number;y:number;moved:boolean}|null>(null);
+  const suppressClick = useRef(false);
+  const hideDrag = () => {
+    dragStart.current = null;
+    if(dragPreview.current)dragPreview.current.style.opacity = "0";
+  };
+
   const unavailable = useRef(onUnavailable); unavailable.current = onUnavailable;
   const focus = useRef<{ selected: string | null; neighbours: Set<string>; pencil: Set<string>;
     route: AtlasRoute | null; routeNodes: Set<string>; routeEdges: Set<string>; labelled: Set<string> }>({
@@ -313,10 +331,57 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         });
         sigmaRef.current = renderer;
         renderer.getCamera().setState(home());
-        renderer.on("clickNode", ({ node }) => pick.current(node));
+        // Direct manipulation is active only after the person chooses Connect.
+        // Normal navigation, drag-panning and double-click editing are unchanged.
+        renderer.on("downNode", ({node,event}) => {
+          if(!connecting.current || !onConnect.current)return;
+          if(event.original instanceof MouseEvent && event.original.button!==0)return;
+          const point = renderer?.getNodeDisplayData(node);
+          const centre = point&&renderer?renderer.framedGraphToViewport(point):{x:event.x,y:event.y};
+          dragStart.current={id:node,x:event.x,y:event.y,moved:false};
+          if(dragPreview.current){
+            dragPreview.current.setAttribute("x1",String(centre.x));
+            dragPreview.current.setAttribute("y1",String(centre.y));
+            dragPreview.current.setAttribute("x2",String(event.x));
+            dragPreview.current.setAttribute("y2",String(event.y));
+          }
+          event.preventSigmaDefault();
+        });
+        renderer.on("moveBody",({event})=>{
+          const drag=dragStart.current;
+          if(!drag||!connecting.current)return;
+          if(movedToConnect(drag,{x:event.x,y:event.y}))drag.moved=true;
+          if(drag.moved&&dragPreview.current){
+            dragPreview.current.setAttribute("x2",String(event.x));
+            dragPreview.current.setAttribute("y2",String(event.y));
+            dragPreview.current.style.opacity="1";
+          }
+        });
+        renderer.on("upNode",({node,event})=>{
+          const drag=dragStart.current;
+          if(!drag)return;
+          const result=dragConnection(drag.id,node,drag.moved,connecting.current);
+          hideDrag();
+          if(result){
+            event.preventSigmaDefault();
+            suppressClick.current=true;
+            window.setTimeout(()=>{suppressClick.current=false;},100);
+            onConnect.current?.(result.from,result.to);
+          }
+        });
+        renderer.on("upStage",hideDrag);
+        renderer.on("clickNode", ({ node }) => {
+          if(suppressClick.current)return;
+          pick.current(node);
+        });
+        renderer.on("doubleClickNode", ({ node }) => {
+          if (editNode.current) editNode.current(node);
+        });
         renderer.on("clickStage", () => pick.current(null));
         renderer.on("enterNode", () => { if (container.current) container.current.style.cursor = "pointer"; });
-        renderer.on("leaveNode", () => { if (container.current) container.current.style.cursor = ""; });
+        renderer.on("leaveNode", () => {
+          if (container.current) container.current.style.cursor=connecting.current?"crosshair":"";
+        });
         renderer.on("afterRender", syncOverlay);
         let replan: number | undefined;
         renderer.getCamera().on("updated", () => {
@@ -497,6 +562,21 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
     else if (action === "out") void c.zoomOut({ duration: 220 });
     else void c.animate(home(), { duration: 350 });
   };
+  // The split data table resizes the diagram without resizing the browser.
+  // Keep hit targets, overlays and the Sigma viewport in step with the layout.
+  useEffect(()=>{
+    if(!container.current)return;
+    const observer=new ResizeObserver(()=>{
+      sigmaRef.current?.resize();
+      sigmaRef.current?.refresh();
+    });
+    observer.observe(container.current);
+    return ()=>observer.disconnect();
+  },[]);
+  useEffect(()=>{
+    if(!connectMode)hideDrag();
+    if(container.current)container.current.style.cursor=connectMode?"crosshair":"";
+  },[connectMode]);
   const suggestions = graph.edges.length - recorded;
   return <section ref={stage} className={"ml-network ml-network--" + mode + (sketched ? " is-sketched" : "")}
     aria-label={mode === "themes" ? "Records grouped by " + (suggested ? "suggested topics" : groupName.toLowerCase()) : "Complete Sigma network"}>
@@ -532,7 +612,10 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       </g>
     </svg>
     <div ref={container} className="ml-sigma-viewport" role="img"
-      aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Use Browse records for a list.`}/>
+      aria-label={`${graph.nodes.length.toLocaleString("en-GB")} records and ${recorded.toLocaleString("en-GB")} recorded links. Open Data for the accessible record list.`}/>
+    <svg className="ml-connect-preview" aria-hidden="true" focusable="false">
+      <line ref={dragPreview} x1="0" y1="0" x2="0" y2="0"/>
+    </svg>
     <div ref={signLayer} className="ml-sign-layer" aria-hidden="true"/>
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     <div ref={areaLayer} className="ml-area-labels" aria-hidden="true">
@@ -551,7 +634,7 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
       {status === "laying-out" ? "Arranging by recorded links… · " : ""}
       {graph.nodes.length.toLocaleString("en-GB")} records · {recorded.toLocaleString("en-GB")} recorded links
       {mode === "network" && <> · {suggestions.toLocaleString("en-GB")} suggestions</>}
-      {status === "error" && " · This device cannot draw the network; Browse records lists everything."}
+      {status === "error" && " · This device cannot draw the network; Data lists every record."}
     </p>
   </section>;
 }

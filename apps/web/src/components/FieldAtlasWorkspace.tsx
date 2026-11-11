@@ -15,7 +15,8 @@ import { motion, pictureOf, settled } from "./atlas/snapshot";
 import { MARK_NEEDS, StoryPrint, StoryCard, StoryEditor, StoryReader, makeMark, markPrompt, type MarkPick } from "./atlas/Stories";
 import { loadFundingDataset } from "../lib/funding-dataset-store";
 import { useMapEdits } from "../hooks/useMapEdits";
-import { ChangeList, QuickEntry, RecordCreator, type EditingApi } from "./atlas/Editing";
+import { ChangeList, QuickEntry, RecordCreator, LinkCreator, type EditingApi } from "./atlas/Editing";
+import {DataWorkbench,type DataTab} from "./atlas/DataWorkbench";
 import { FollowConnection } from "./FollowConnection";
 import { NetworkLens, type AtlasRoute } from "./atlas/NetworkLens";
 import { useAtlasTheme } from "./atlas/theme";
@@ -162,8 +163,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const [funderId, setFunderId] = useState("");
   const [range, setRange] = useState<YearRange>({ from: null, to: null });
   const [type, setType] = useState<NodeType | null>(null);
-  const [browse, setBrowse] = useState(false);
-  const [browseLimit, setBrowseLimit] = useState(100);
+  const [dataOpen,setDataOpen]=useState(false);
+  const [dataTab,setDataTab]=useState<DataTab>("records");
   const [routeFromId, setRouteFromId] = useState<string | null>(null);
   const [trail, setTrail] = useState<ConnectionTrail | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -213,7 +214,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "/") { e.preventDefault(); searchRef.current?.focus(); }
-      if (e.key === "Escape") { if (pickingRef.current) { setPickingFrom(null); return; } setSelectedId(null); setBrowse(false); }
+      if (e.key === "Escape") { if (pickingRef.current) { setPickingFrom(null); return; } setSelectedId(null);  }
       const index = Number(e.key) - 1;
       if (index >= 0 && index < LENSES.length) setLens(LENSES[index].id);
     };
@@ -279,8 +280,6 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   }, [graph]);
   const leads = useMemo(() => [...graph.nodes].sort((a, b) => (degree.get(b.id) ?? 0) - (degree.get(a.id) ?? 0))
     .slice(0, 5).map(node => ({ node, degree: degree.get(node.id) ?? 0 })), [graph, degree]);
-  const recordList = useMemo(() => [...result.graph.nodes].sort((a, b) => a.label.localeCompare(b.label)), [result.graph]);
-  useEffect(() => setBrowseLimit(100), [filters]);
   const unplaced = useMemo(() => result.graph.nodes.filter(n => !placedCoordinates(n)), [result.graph]);
   /** Group sizes among the records drawn in the Themes lens. */
   const groupCounts = useMemo(() => {
@@ -363,7 +362,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setLens(v.lens); setSelectedId(v.record ?? null); setSearch(v.q ?? ""); setTheme(v.theme ?? "");
     setGroupChoice(v.group && ["tags", "topics", "programme", "funder", "place"].includes(v.group) ? v.group as GroupingKind : null);
     setRegion(v.region ?? ""); setFunderId(v.funder ?? ""); setType(v.type && v.type in TYPE_PLURAL ? v.type as NodeType : null);
-    setRange({ from: v.from ?? null, to: v.to ?? null }); setLoopId(v.loop ?? null); setTrail(null); setRouteFromId(null); setBrowse(false);
+    setRange({ from: v.from ?? null, to: v.to ?? null }); setLoopId(v.loop ?? null); setTrail(null); setRouteFromId(null); 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewKey]);
   // A mark is finished once it has the records it needs (a ring when the author says so).
@@ -473,6 +472,44 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const [editMode, setEditMode] = useState(false);
   const [editTab, setEditTab] = useState<"add" | "quick" | "changes">("add");
   const [editCardOpen, setEditCardOpen] = useState(true);
+  /** Select two drawn records, then create an editable, undoable source-backed link. */
+  const [editRequest,setEditRequest]=useState<{id:string;sequence:number}|null>(null);
+  const [connectFrom,setConnectFrom]=useState<string|null>(null);
+  const [connectTo,setConnectTo]=useState<string|null>(null);
+  const [connectPicking,setConnectPicking]=useState(false);
+  const connectPickingRef=useRef(connectPicking);connectPickingRef.current=connectPicking;
+  const connectFromRef=useRef(connectFrom);connectFromRef.current=connectFrom;
+  const beginConnect=()=>{
+    if(viewOnly)return;
+    setConnectFrom(selectedId);
+    setConnectTo(null);setConnectPicking(true);
+    setEditMode(false);
+    setStoryMode(null);setPickingFrom(null);setPicked(null);
+  };
+  const closeConnect=()=>{setConnectFrom(null);setConnectTo(null);setConnectPicking(false);};
+  // Escape always abandons an unfinished gesture or an unconfirmed
+  // relationship, without writing anything to the edit history.
+  useEffect(()=>{
+    if(!connectPicking&&!connectTo)return;
+    const cancel=(event:KeyboardEvent)=>{
+      if(event.key!=="Escape"||document.querySelector("dialog.ml-lightbox[open]"))return;
+      event.preventDefault();
+      event.stopPropagation();
+      setConnectFrom(null);setConnectTo(null);setConnectPicking(false);
+    };
+    document.addEventListener("keydown",cancel,true);
+    return ()=>document.removeEventListener("keydown",cancel,true);
+  },[connectPicking,connectTo]);
+  const finishDrawnConnection=(from:string,to:string)=>{
+    if(viewOnly||storyMode||!connectPicking||from===to)return;
+    setConnectFrom(from);setConnectTo(to);setConnectPicking(false);
+    setSelectedId(from);
+  };
+  const editDrawnRecord=(id:string)=>{
+    if(viewOnly||storyMode)return;
+    setSelectedId(id);
+    setEditRequest(previous=>({id,sequence:(previous?.sequence??0)+1}));
+  };
   /** Choosing a link's other end on the map: the record it starts from, and the one picked. */
   const [pickingFrom, setPickingFrom] = useState<string | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -487,14 +524,30 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       if (id && id !== from) { setPicked(id); setPickingFrom(null); setSelectedId(from); }
       return;
     }
+    if(connectPickingRef.current){
+      if(!id)return;
+      const start=connectFromRef.current;
+      if(!start){setConnectFrom(id);setSelectedId(id);}
+      else if(id!==start){setConnectTo(id);setConnectPicking(false);setSelectedId(start);}
+      else setNotice("Choose a different record to connect to.");
+      return;
+    }
     setSelectedId(id);
   }, []);
   const liveChanges = edits.layer.entries.filter(e => !e.undone).length;
-  const editing: EditingApi | null = useMemo(() => editMode ? {
+  // Selecting a record is already enough to edit it or add a relationship.
+  // The Edit button is reserved for creating records, bulk entry and history.
+  const editing: EditingApi | null = useMemo(() => viewOnly ? null : {
     graph: workingGraph, editor: edits.editor || "you", add: list => { edits.add(list); },
     pickTarget: from => { setPickingFrom(from); setPicked(null); }, picked, clearPicked: () => setPicked(null),
     linkKinds: connectionTypes(workingGraph).map(t => t.type).filter(t => t !== "funded").slice(0, 40)
-  } : null, [editMode, workingGraph, edits, picked]);
+  }, [viewOnly, workingGraph, edits, picked]);
+  const tableGraph=useMemo(()=>{
+    const visible=new Set(result.graph.nodes.map(n=>n.id));
+    return {...workingGraph,nodes:workingGraph.nodes.filter(n=>visible.has(n.id)),
+      edges:workingGraph.edges.filter(e=>visible.has(e.source)&&visible.has(e.target))};
+  },[workingGraph,result.graph.nodes]);
+  const latestEdit=[...edits.layer.entries].reverse().find(e=>!e.undone);
   const download = (name: string, data: BlobPart, type: string) => {
     const url = URL.createObjectURL(new Blob([data], { type }));
     const a = document.createElement("a"); a.href = url; a.download = name;
@@ -519,7 +572,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setNotice(kind === "changes" ? "Changes saved as a separate backup file." : "Map exported with your changes. Each item notes where it came from.");
   }
   const onUnavailable = useCallback(() =>
-    setNotice("This device cannot draw the network. Browse records lists everything; Advanced tools has the previous explorer."), []);
+    setNotice("This device cannot draw the network. Open Data to browse all records; Advanced tools has the previous explorer."), []);
 
 
   const activeFilters = [search, type, theme, region, funderId, range.from ?? range.to ?? ""].filter(v => v !== "" && v !== null).length;
@@ -590,7 +643,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           <i aria-hidden="true"/><span className="ml-shared-text">{edits.status.state === "offline" ? "Shared · offline" : edits.status.state === "syncing" ? "Shared · updating" : "Shared"}
           {shared.role === "viewer" ? " · view only" : ""}</span></button>
           : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
-        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+        {!viewOnly && <button type="button" className="ml-quiet ml-connect-trigger" aria-pressed={connectPicking||!!connectTo}
+          onClick={beginConnect} title="Choose two records on the drawing or in Data, then describe their relationship">Connect</button>}
+        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode} title="Add records, enter multiple links, review changes and export"
           onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); setStoryMode(null); }}>
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
@@ -604,13 +659,16 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
+            {publishing && <>
+              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>
+                Publish a shareable copy…</button>
+              <p className="ml-menu-note">Choose exactly what to publish. Anyone with the resulting link can explore that copy. You&apos;ll need an account.</p>
+              <hr/>
+            </>}
             <button type="button" onClick={() => { closeShare(); void navigator.clipboard?.writeText(window.location.href).then(() =>
-              setNotice("View link copied. The underlying local dataset does not travel with the link."))
-              .catch(() => setNotice("Copy the address from your browser.")); }}>Copy view link</button>
-            <p className="ml-menu-note">Opens this view for someone with the same data in their browser.</p>
-            {publishing && <><hr/>
-              <button type="button" onClick={() => { closeShare(); setShareOpen(false); setPublishOpen(true); }}>Publish online…</button>
-              <p className="ml-menu-note">A reviewed copy of what&apos;s drawn, at a link anyone can open. Needs an account.</p></>}
+              setNotice("View address copied. It does not share your data; the recipient must already have the same dataset in their browser."))
+              .catch(() => setNotice("Copy the address from your browser.")); }}>Copy local view address</button>
+            <p className="ml-menu-note">Only works for someone who already has the same data on their device. This does not publish or transfer your dataset.</p>
           </div>
         </details>}
       </div>
@@ -644,8 +702,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               <span className="ml-visually-hidden">Clear dates</span></button>}
             {activeFilters > 0 && <button type="button" className="ml-chip ml-chip--clear" onClick={clearAll}>Clear filters</button>}
           </div>
-          <button type="button" className="ml-chip ml-chip--browse" aria-expanded={browse} onClick={() => setBrowse(b => !b)}>
-            {browse ? "Hide list" : "Browse records"} · {result.graph.nodes.length.toLocaleString("en-GB")}</button>
+          <button type="button" className={"ml-chip ml-chip--browse ml-data-toggle"+(dataOpen?" is-on":"")}
+            aria-expanded={dataOpen} onClick={()=>{setDataOpen(v=>!v);if(!dataOpen)setDataTab("records");}}>
+            {dataOpen?"Hide data":"Data"} · {result.graph.nodes.length.toLocaleString("en-GB")}</button>
+          {!readOnly&&!reading&&selectedId&&<button type="button" className="ml-chip ml-chip--clear"
+            onClick={()=>{setSelectedId(null);}}>
+            ← Back to findings</button>}
           {funderName && <p className="ml-filter-note"><span>Showing records reached by {funderName}</span></p>}
         </div>
 
@@ -665,10 +727,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             {(lens === "network" || lens === "themes") && <NetworkLens graph={drawn} mode={lens} theme={activeTheme}
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
-              selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord} onUnavailable={onUnavailable}
+              selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord}
+              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined}
+              connectMode={connectPicking&&!viewOnly&&!storyMode}
+              onDragConnect={finishDrawnConnection} onUnavailable={onUnavailable}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              unplaced={unplaced} onBrowse={() => setBrowse(true)}
+              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined}
+              unplaced={unplaced} onBrowse={() => {setDataTab("records");setDataOpen(true);}}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
@@ -748,17 +814,6 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               onClose={() => { setRouteFromId(null); setTrail(null); }}/>
           </div>}
 
-          {browse && <section className="ml-browse" aria-label="Keyboard-accessible record list">
-            <div className="ml-browse-head"><h2>Browse records · {recordList.length.toLocaleString("en-GB")}</h2>
-              <button type="button" className="ml-quiet" onClick={() => setBrowse(false)} aria-label="Close list">×</button></div>
-            <p className="ml-small">Every matching record, including any not drawn on a dense view.</p>
-            <div className="ml-browse-list">{recordList.slice(0, browseLimit).map(n => <button type="button" key={n.id}
-              aria-pressed={selectedId === n.id} onClick={() => pickRecord(n.id)}>
-              <TypeMark type={n.type}/><strong>{n.label}</strong><small>{n.type}</small></button>)}</div>
-            {recordList.length > browseLimit && <button className="ml-browse-next" type="button" onClick={() => setBrowseLimit(n => n + 100)}>
-              Show 100 more · {recordList.length - browseLimit} not listed yet</button>}
-          </section>}
-
           {editMode && <aside className={"ml-overlay-card ml-edit-card" + (editCardOpen ? "" : " is-closed")} aria-label="Editing this map">
             <button type="button" className="ml-unplaced-head" aria-expanded={editCardOpen} onClick={() => setEditCardOpen(v => !v)}>
               <strong>Editing this map</strong><span aria-hidden="true">{editCardOpen ? "–" : "+"}</span></button>
@@ -790,15 +845,31 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             onClose={() => { flushStory(); setStoryMode(null); }} onSave={flushStory}/>}
           {markPick && <div className="ml-banner ml-pick-banner" role="status">
             {markPrompt(markPick)}{markPick.kind === "ring" && markPick.targets.length > 0 ? " " + markPick.targets.length + " chosen." : ""}
-            {" "}You can also choose from Browse records.
+            {" "}You can also choose from Data.
             {markPick.kind === "ring" && <button type="button" disabled={!markPick.targets.length} onClick={finishRing}>Finish</button>}
             <button type="button" onClick={() => setMarkPick(null)}>Cancel</button></div>}
           {reading && story && (storyMode === "present" || narrow) && <StoryCard story={story} stepIndex={stepIndex} onStep={goToStep}
             onExit={exitStory} exitLabel={exitLabel} presenting={storyMode === "present"} labelOf={labelOf}
             cover={coverShown} onBegin={() => setCover(false)}/>}
           {pickingFrom && <div className="ml-banner ml-pick-banner" role="status">
-            Click the record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to.
+            Choose a record to link <strong>{workingGraph.nodes.find(n => n.id === pickingFrom)?.label}</strong> to, on the drawing or in Data.
             <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
+
+          {connectPicking && <div className="ml-banner ml-pick-banner" role="status">
+            {connectFrom?<>Select the second record to connect to <strong>{workingGraph.nodes.find(n=>n.id===connectFrom)?.label}</strong>.</>:
+              <>Drag between two records to connect them, or select the first and second in the drawing or Data. Nothing is added until you confirm.</>}
+            <button type="button" onClick={closeConnect}>Cancel</button>
+          </div>}
+          {connectFrom&&connectTo&&editing&&<aside className="ml-overlay-card ml-connect-card" aria-label="Draw a connection">
+            <div className="ml-unplaced-head"><strong>Connect two records</strong>
+              <button type="button" aria-label="Cancel connection" onClick={closeConnect}>×</button></div>
+            <LinkCreator from={workingGraph.nodes.find(n=>n.id===connectFrom)!}
+              api={{...editing,picked:connectTo,
+                pickTarget:from=>{setConnectFrom(from);setConnectTo(null);setConnectPicking(true);},
+                clearPicked:()=>setConnectTo(null),
+                add:list=>{edits.add(list);setDataTab("connections");setDataOpen(true);setNotice("Connection added to the map and data table. You can undo it.");}}}
+              onDone={closeConnect}/>
+          </aside>}
 
           {shareOpen && !readOnly && <ShareMapCard graph={sourceGraph} mapId={mapId} shared={shared} account={accountState}
             status={edits.status} onLinked={link => onSharedChange?.(link)} onClose={() => setShareOpen(false)}/>}
@@ -812,6 +883,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {embedOpen && published && <EmbedCard slug={published.slug} title={imported.title} story={!!publishedStory} onClose={() => setEmbedOpen(false)}/>}
           {notice && <div className="ml-toast" role="status">{notice}<button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
         </div>
+        {dataOpen&&<DataWorkbench graph={tableGraph} tab={dataTab} onTab={setDataTab}
+          selectedId={selectedId} onPick={pickRecord}
+          onClose={()=>setDataOpen(false)} onConnect={beginConnect}
+          editable={!viewOnly} editor={edits.editor||"you"}
+          onEdit={entry=>{edits.add([entry]);}}
+          lastEdit={latestEdit} onUndo={id=>edits.undo(id,true)}/>}
         {lens !== "timeline" && <TimeStrip graph={undated.graph} range={range} onRange={setRange}
           inView={result.recordedCount} theme={activeTheme}/>}
       </div>
@@ -825,12 +902,12 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         {selected && <button type="button" className="ml-inspector-close" onClick={() => setSelectedId(null)}
           aria-label="Clear selection">×</button>}
         {!selected && !readOnly && !reading ? <MossyFindings graph={graph} onPick={setSelectedId}
-          onLens={setLens} onBrowse={()=>setBrowse(true)}/> :
+          onLens={setLens} onBrowse={()=>{setDataTab("records");setDataOpen(true);}}/> :
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads} editing={editing}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
           onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
-          grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
+          grouping={grouping} groupLabel={groupOption?.label ?? "Theme"} editRequest={editRequest}/>}
       </aside>}
     </section>
     {printing?.ready && story && <StoryPrint story={story} pictures={printing.pictures} labelOf={labelOf} mapTitle={imported.title}

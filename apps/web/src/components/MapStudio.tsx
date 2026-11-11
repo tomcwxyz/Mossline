@@ -15,6 +15,7 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import { MOSSY_EXAMPLES, isMossyExample, type MossyExampleId } from "../data/mossy-examples";
+import {richLabExample} from "../lib/throw-lab-examples";
 import {mossyOverview} from "../lib/mossy-findings";
 import type {AtlasLens} from "@mossline/graph-core";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
@@ -157,10 +158,22 @@ export function MapStudio() {
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
   /** The one way in for files: where it was opened from decides the default target and the return. */
-  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"|"the-list"}|null>(null);
+  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"|"the-list";starterId?:string}|null>(null);
   const [atlasMessage,setAtlasMessage]=useState("");
   const clearAtlasMessage=useCallback(()=>setAtlasMessage(""),[]);
 
+
+  // A Throw Lab deep link opens actual fictional source files in the ordinary
+  // reversible Add data journey. Nothing is created or saved automatically.
+  const openedThrowLab=useRef(false);
+  useEffect(()=>{
+    if(openedThrowLab.current)return;
+    openedThrowLab.current=true;
+    const id=new URLSearchParams(window.location.search).get("throw");
+    if(!id || !richLabExample(id))return;
+    window.history.replaceState(null,"",window.location.pathname);
+    setAddData({from:"home",intent:"general",starterId:id});
+  },[]);
 
   // "/?open=<map>" reopens a saved map, e.g. on the way back from signing in.
   const reopened=useRef(false);
@@ -639,6 +652,7 @@ export function MapStudio() {
     const fundingMap=!!activeFundingMap?.fundingDatasetId;
     return <AddData base={graph} baseTitle={graph.title} canAddToBase={!fundingMap}
       startWith={addData.from==="home"||graphKey===DEMO_KEY?"new":"add"} intent={addData.intent}
+      starter={addData.starterId?richLabExample(addData.starterId):undefined}
       onClose={()=>setAddData(null)} onCommit={commitAddedData}
       onLargeFunding={()=>{setAddData(null);setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}/>;
   }

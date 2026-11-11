@@ -77,7 +77,10 @@ export function StartScreen({maps,onOpen,onImport,onFunding,onTheList,onExample,
         <div><p className="ml-start-eyebrow">Five ways to see the connections</p>
           <h2 id="start-examples">See what Mossy can make</h2>
           <p>Each example demonstrates a different view, with data you can explore or import yourself. All people and projects are fictional; the geography example uses real city locations.</p></div>
-        <a className="ml-quiet" href="/showcase">Visit Showcase →</a>
+        <div className="ml-start-example-actions">
+          <a className="ml-quiet" href="/showcase">Visit Showcase →</a>
+          <a className="ml-quiet" href="/throw-lab">Try the Throw Lab →</a>
+        </div>
       </div>
       <div className="ml-start-example-grid">
         {MOSSY_EXAMPLES.map((example,index)=><article key={example.id} className={"ml-start-example is-"+example.colour+(index===0?" is-featured":"")}>

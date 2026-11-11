@@ -27,13 +27,13 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await page.getByRole("button",{name:/Check what this adds/}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
   await page.getByRole("button",{name:"Create the map"}).click();
   await page.locator(".ml-toast button").click();
 
   // Signed out, the card explains and offers sign-in; nothing else needs an account.
   await page.locator(".ml-share summary").click();
-  await page.getByRole("button",{name:"Publish online…"}).click();
+  await page.getByRole("button",{name:"Publish a shareable copy…"}).click();
   const card=page.getByRole("complementary",{name:"Publish online"});
   await expect(card).toContainText("You'll need to sign in");
   await card.getByRole("link",{name:"Sign in to publish"}).click();
@@ -51,7 +51,7 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   // Back in the same map, signed in.
   await expect(page.locator(".ml-header .ml-share")).toBeVisible();
   await page.locator(".ml-share summary").click();
-  await page.getByRole("button",{name:"Publish online…"}).click();
+  await page.getByRole("button",{name:"Publish a shareable copy…"}).click();
   await expect(card).toContainText("Signed in as");
   await card.getByLabel("Title").fill("Kitchen loops, first look");
   await expect(card.getByRole("button",{name:"Publish",exact:true})).toBeDisabled();

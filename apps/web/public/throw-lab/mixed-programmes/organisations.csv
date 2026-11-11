@@ -1,0 +1,95 @@
+Name,Type,Tags,Region,Latitude,Longitude,Description,Country
+London Bracken Social Group 001,organisation,Food,"London, United Kingdom",51.51631,-0.12188,Fictional community organisation.,United Kingdom
+Manchester Harbour Social Group 002,organisation,Health,"Manchester, United Kingdom",53.46481,-2.25780,Fictional community organisation.,United Kingdom
+Amsterdam Mosaic Social Group 003,organisation,Housing,"Amsterdam, Netherlands",52.38998,4.90018,Fictional community organisation.,Netherlands
+Nairobi Beacon Social Group 004,organisation,Nature,"Nairobi, Kenya",-1.27837,36.83735,Fictional community organisation.,Kenya
+Kampala Willow Social Group 005,organisation,Transport,"Kampala, Uganda",0.34001,32.57519,Fictional community organisation.,Uganda
+Accra Cornerstone Social Group 006,organisation,Culture,"Accra, Ghana",5.61791,-0.18298,Fictional community organisation.,Ghana
+Lagos Bridgewater Social Group 007,organisation,Young people,"Lagos, Nigeria",6.50390,3.38188,Fictional community organisation.,Nigeria
+Mumbai Hearth Social Group 008,organisation,Energy,"Mumbai, India",19.09847,72.87747,Fictional community organisation.,India
+Kathmandu Meadow Social Group 009,organisation,Community care,"Kathmandu, Nepal",27.69968,85.33566,Fictional community organisation.,Nepal
+Johannesburg Highfield Social Group 010,organisation,Learning,"Johannesburg, South Africa",-26.20166,28.05277,Fictional community organisation.,South Africa
+Buenos Aires Lantern Social Group 011,organisation,Food,"Buenos Aires, Argentina",-34.61851,-58.38215,Fictional community organisation.,Argentina
+Vancouver Riverside Social Group 012,organisation,Health,"Vancouver, Canada",49.28366,-123.11344,Fictional community organisation.,Canada
+Berlin Northbank Social Group 013,organisation,Housing,"Berlin, Germany",52.53667,13.42238,Fictional community organisation.,Germany
+Oslo Seedling Social Group 014,organisation,Nature,"Oslo, Norway",59.91786,10.75126,Fictional community organisation.,Norway
+London Cedar Social Group 015,organisation,Transport,"London, United Kingdom",51.49090,-0.14566,Fictional community organisation.,United Kingdom
+Manchester Hilltop Social Group 016,organisation,Culture,"Manchester, United Kingdom",53.48051,-2.22059,Fictional community organisation.,United Kingdom
+Amsterdam Tideway Social Group 017,organisation,Young people,"Amsterdam, Netherlands",52.35712,4.92622,Fictional community organisation.,Netherlands
+Nairobi Foundry Social Group 018,organisation,Energy,"Nairobi, Kenya",-1.28961,36.80236,Fictional community organisation.,Kenya
+Kampala Bracken Social Group 019,organisation,Community care,"Kampala, Uganda",0.32670,32.60106,Fictional community organisation.,Uganda
+Accra Harbour Social Group 020,organisation,Learning,"Accra, Ghana",5.58458,-0.18944,Fictional community organisation.,Ghana
+Lagos Mosaic Social Group 021,organisation,Food,"Lagos, Nigeria",6.50614,3.38914,Fictional community organisation.,Nigeria
+Mumbai Beacon Social Group 022,organisation,Health,"Mumbai, India",19.08266,72.89215,Fictional community organisation.,India
+Kathmandu Willow Social Group 023,organisation,Housing,"Kathmandu, Nepal",27.71377,85.31356,Fictional community organisation.,Nepal
+Johannesburg Cornerstone Social Group 024,organisation,Nature,"Johannesburg, South Africa",-26.19803,28.05085,Fictional community organisation.,South Africa
+Buenos Aires Bridgewater Social Group 025,organisation,Transport,"Buenos Aires, Argentina",-34.59656,-58.35949,Fictional community organisation.,Argentina
+Vancouver Hearth Social Group 026,organisation,Culture,"Vancouver, Canada",49.27441,-123.10324,Fictional community organisation.,Canada
+Berlin Meadow Social Group 027,organisation,Young people,"Berlin, Germany",52.51751,13.40161,Fictional community organisation.,Germany
+Oslo Highfield Social Group 028,organisation,Energy,"Oslo, Norway",59.91343,10.73371,Fictional community organisation.,Norway
+London Lantern Social Group 029,organisation,Community care,"London, United Kingdom",51.49485,-0.11854,Fictional community organisation.,United Kingdom
+Manchester Riverside Social Group 030,organisation,Learning,"Manchester, United Kingdom",53.48238,-2.23858,Fictional community organisation.,United Kingdom
+Amsterdam Northbank Social Group 031,organisation,Food,"Amsterdam, Netherlands",52.34809,4.89997,Fictional community organisation.,Netherlands
+Nairobi Seedling Social Group 032,organisation,Health,"Nairobi, Kenya",-1.30556,36.83153,Fictional community organisation.,Kenya
+Kampala Cedar Social Group 033,organisation,Housing,"Kampala, Uganda",0.34746,32.57248,Fictional community organisation.,Uganda
+Accra Hilltop Social Group 034,organisation,Nature,"Accra, Ghana",5.60989,-0.19958,Fictional community organisation.,Ghana
+Lagos Tideway Social Group 035,organisation,Transport,"Lagos, Nigeria",6.51817,3.38809,Fictional community organisation.,Nigeria
+Mumbai Foundry Social Group 036,organisation,Culture,"Mumbai, India",19.07321,72.87437,Fictional community organisation.,India
+Kathmandu Bracken Social Group 037,organisation,Young people,"Kathmandu, Nepal",27.70464,85.34506,Fictional community organisation.,Nepal
+Johannesburg Harbour Social Group 038,organisation,Energy,"Johannesburg, South Africa",-26.19493,28.03166,Fictional community organisation.,South Africa
+Buenos Aires Mosaic Social Group 039,organisation,Community care,"Buenos Aires, Argentina",-34.58782,-58.37178,Fictional community organisation.,Argentina
+Vancouver Beacon Social Group 040,organisation,Learning,"Vancouver, Canada",49.27822,-123.10080,Fictional community organisation.,Canada
+Berlin Willow Social Group 041,organisation,Food,"Berlin, Germany",52.53237,13.38420,Fictional community organisation.,Germany
+Oslo Cornerstone Social Group 042,organisation,Health,"Oslo, Norway",59.91472,10.74084,Fictional community organisation.,Norway
+London Bridgewater Social Group 043,organisation,Housing,"London, United Kingdom",51.52640,-0.14354,Fictional community organisation.,United Kingdom
+Manchester Hearth Social Group 044,organisation,Nature,"Manchester, United Kingdom",53.49453,-2.24052,Fictional community organisation.,United Kingdom
+Amsterdam Meadow Social Group 045,organisation,Transport,"Amsterdam, Netherlands",52.38453,4.91352,Fictional community organisation.,Netherlands
+Nairobi Highfield Social Group 046,organisation,Culture,"Nairobi, Kenya",-1.31072,36.82586,Fictional community organisation.,Kenya
+Kampala Lantern Social Group 047,organisation,Young people,"Kampala, Uganda",0.33768,32.56206,Fictional community organisation.,Uganda
+Accra Riverside Social Group 048,organisation,Energy,"Accra, Ghana",5.60078,-0.19945,Fictional community organisation.,Ghana
+Lagos Northbank Social Group 049,organisation,Community care,"Lagos, Nigeria",6.51679,3.39908,Fictional community organisation.,Nigeria
+Mumbai Seedling Social Group 050,organisation,Learning,"Mumbai, India",19.08565,72.87849,Fictional community organisation.,India
+Kathmandu Cedar Social Group 051,organisation,Food,"Kathmandu, Nepal",27.71713,85.33579,Fictional community organisation.,Nepal
+Johannesburg Hilltop Social Group 052,organisation,Health,"Johannesburg, South Africa",-26.21533,28.02961,Fictional community organisation.,South Africa
+Buenos Aires Tideway Social Group 053,organisation,Housing,"Buenos Aires, Argentina",-34.58812,-58.40321,Fictional community organisation.,Argentina
+Vancouver Foundry Social Group 054,organisation,Nature,"Vancouver, Canada",49.28964,-123.09847,Fictional community organisation.,Canada
+Berlin Bracken Social Group 055,organisation,Transport,"Berlin, Germany",52.52492,13.41421,Fictional community organisation.,Germany
+Oslo Harbour Social Group 056,organisation,Culture,"Oslo, Norway",59.89421,10.74049,Fictional community organisation.,Norway
+London Mosaic Social Group 057,organisation,Young people,"London, United Kingdom",51.52586,-0.10742,Fictional community organisation.,United Kingdom
+Manchester Beacon Social Group 058,organisation,Energy,"Manchester, United Kingdom",53.47201,-2.25359,Fictional community organisation.,United Kingdom
+Amsterdam Willow Social Group 059,organisation,Community care,"Amsterdam, Netherlands",52.37928,4.92140,Fictional community organisation.,Netherlands
+Nairobi Cornerstone Social Group 060,organisation,Learning,"Nairobi, Kenya",-1.27995,36.82842,Fictional community organisation.,Kenya
+Kampala Bridgewater Social Group 061,organisation,Food,"Kampala, Uganda",0.35788,32.59101,Fictional community organisation.,Uganda
+Accra Hearth Social Group 062,organisation,Health,"Accra, Ghana",5.62541,-0.17347,Fictional community organisation.,Ghana
+Lagos Meadow Social Group 063,organisation,Housing,"Lagos, Nigeria",6.54391,3.36961,Fictional community organisation.,Nigeria
+Mumbai Highfield Social Group 064,organisation,Nature,"Mumbai, India",19.06061,72.88719,Fictional community organisation.,India
+Kathmandu Lantern Social Group 065,organisation,Transport,"Kathmandu, Nepal",27.70496,85.30783,Fictional community organisation.,Nepal
+Johannesburg Riverside Social Group 066,organisation,Culture,"Johannesburg, South Africa",-26.21533,28.05524,Fictional community organisation.,South Africa
+Buenos Aires Northbank Social Group 067,organisation,Young people,"Buenos Aires, Argentina",-34.59310,-58.40171,Fictional community organisation.,Argentina
+Vancouver Seedling Social Group 068,organisation,Energy,"Vancouver, Canada",49.27188,-123.10317,Fictional community organisation.,Canada
+Berlin Cedar Social Group 069,organisation,Community care,"Berlin, Germany",52.50294,13.38342,Fictional community organisation.,Germany
+Oslo Hilltop Social Group 070,organisation,Learning,"Oslo, Norway",59.92789,10.73350,Fictional community organisation.,Norway
+London Tideway Social Group 071,organisation,Food,"London, United Kingdom",51.49551,-0.12892,Fictional community organisation.,United Kingdom
+Manchester Foundry Social Group 072,organisation,Health,"Manchester, United Kingdom",53.47082,-2.23339,Fictional community organisation.,United Kingdom
+Amsterdam Bracken Social Group 073,organisation,Housing,"Amsterdam, Netherlands",52.34652,4.90383,Fictional community organisation.,Netherlands
+Nairobi Harbour Social Group 074,organisation,Nature,"Nairobi, Kenya",-1.27140,36.81271,Fictional community organisation.,Kenya
+Kampala Mosaic Social Group 075,organisation,Transport,"Kampala, Uganda",0.36465,32.59604,Fictional community organisation.,Uganda
+Accra Beacon Social Group 076,organisation,Culture,"Accra, Ghana",5.58464,-0.20612,Fictional community organisation.,Ghana
+Lagos Willow Social Group 077,organisation,Young people,"Lagos, Nigeria",6.53276,3.38556,Fictional community organisation.,Nigeria
+Mumbai Cornerstone Social Group 078,organisation,Energy,"Mumbai, India",19.08078,72.89478,Fictional community organisation.,India
+Kathmandu Bridgewater Social Group 079,organisation,Community care,"Kathmandu, Nepal",27.71512,85.34000,Fictional community organisation.,Nepal
+Johannesburg Hearth Social Group 080,organisation,Learning,"Johannesburg, South Africa",-26.21658,28.06752,Fictional community organisation.,South Africa
+Buenos Aires Meadow Social Group 081,organisation,Food,"Buenos Aires, Argentina",-34.61886,-58.37112,Fictional community organisation.,Argentina
+Vancouver Highfield Social Group 082,organisation,Health,"Vancouver, Canada",49.29845,-123.13220,Fictional community organisation.,Canada
+Berlin Lantern Social Group 083,organisation,Housing,"Berlin, Germany",52.50325,13.40367,Fictional community organisation.,Germany
+Oslo Riverside Social Group 084,organisation,Nature,"Oslo, Norway",59.91854,10.74108,Fictional community organisation.,Norway
+London Northbank Social Group 085,organisation,Transport,"London, United Kingdom",51.49439,-0.13602,Fictional community organisation.,United Kingdom
+Manchester Seedling Social Group 086,organisation,Culture,"Manchester, United Kingdom",53.46397,-2.24300,Fictional community organisation.,United Kingdom
+Amsterdam Cedar Social Group 087,organisation,Young people,"Amsterdam, Netherlands",52.36946,4.91445,Fictional community organisation.,Netherlands
+Nairobi Hilltop Social Group 088,organisation,Energy,"Nairobi, Kenya",-1.28777,36.80605,Fictional community organisation.,Kenya
+Kampala Tideway Social Group 089,organisation,Community care,"Kampala, Uganda",0.35308,32.56547,Fictional community organisation.,Uganda
+Accra Foundry Social Group 090,organisation,Learning,"Accra, Ghana",5.62210,-0.18343,Fictional community organisation.,Ghana
+Lagos Bracken Social Group 091,organisation,Food,"Lagos, Nigeria",6.54545,3.35789,Fictional community organisation.,Nigeria
+Mumbai Harbour Social Group 092,organisation,Health,"Mumbai, India",19.08986,72.88241,Fictional community organisation.,India
+Kathmandu Mosaic Social Group 093,organisation,Housing,"Kathmandu, Nepal",27.72496,85.33589,Fictional community organisation.,Nepal
+Johannesburg Beacon Social Group 094,organisation,Nature,"Johannesburg, South Africa",-26.18250,28.06108,Fictional community organisation.,South Africa

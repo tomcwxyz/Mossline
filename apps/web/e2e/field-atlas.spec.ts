@@ -12,19 +12,20 @@ const lens=(page:Page,name:string)=>page.getByRole("navigation",{name:"Atlas len
   .getByRole("button",{name:new RegExp("^"+name)});
 async function choose(page:Page,name:string){
   await page.locator(".ml-search input").fill(name);
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list").getByRole("button",{name:new RegExp(name)}).first().click();
-  await page.getByRole("button",{name:"Close list"}).click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody tr").filter({hasText:name}).first().locator(".ml-data-locate").click();
+  await page.getByRole("button",{name:"Close data table"}).click();
   await page.getByRole("button",{name:"Clear search"}).click();
 }
 
 test("Field Atlas keeps selection and filters across five lenses and in the URL",async({page})=>{
   await openExample(page);
   await expect(lens(page,"Network")).toHaveAttribute("aria-current","page");
-  await page.getByRole("button",{name:/Browse records/}).click();
-  const first=page.locator(".ml-browse-list button").first();
-  const name=await first.locator("strong").innerText();
-  await first.click();
+  await page.locator(".ml-data-toggle").click();
+  const first=page.locator(".ml-data-table tbody tr").first();
+  const name=(await first.locator(".ml-data-locate").getAttribute("aria-label"))!
+    .replace(/^Show /,"").replace(/ in the graph$/,"");
+  await first.locator(".ml-data-locate").click();
   await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   const url=new URL(page.url());
   expect(url.searchParams.get("record")).toBeTruthy();
@@ -33,9 +34,44 @@ test("Field Atlas keeps selection and filters across five lenses and in the URL"
     await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   }
   await page.keyboard.press("Escape");
-  await expect(page.locator(".ml-empty-panel")).toBeVisible();
+  await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
   await page.keyboard.press("/");
   await expect(page.locator(".ml-search input")).toBeFocused();
+});
+
+test("discoveries remain accessible after following an interesting record",async({page})=>{
+  await openExample(page);
+  const panel=page.getByLabel("What Mossy found");
+  await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+  await expect(panel.locator(".ml-findings-recommend h3")).toBeVisible();
+  // The recommended Funding view may not pick a record. Select a finding
+  // that explicitly has one, then verify that the way back is visible.
+  await panel.getByRole("button",{name:"Explore this record"}).click();
+  await expect(page.locator(".ml-inspector h2")).not.toHaveText("What Mossy found");
+  await page.getByRole("button",{name:"Back to findings"}).click();
+  await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+});
+test("geography-first datasets lead with recorded mapped connections",async({page})=>{
+  await page.goto("/?example=after-dark");
+  const panel=page.getByLabel("What Mossy found");
+  await expect(panel.locator(".ml-findings-recommend")).toContainText("recorded relationships connect mapped places");
+  await expect(panel.locator(".ml-findings-list")).not.toContainText("A picture of where things happen");
+  await panel.locator(".ml-findings-recommend button").click();
+  await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}))
+    .toHaveAttribute("aria-current","page");
+});
+
+test("sharing clearly distinguishes published copies from local view addresses",async({page})=>{
+  await openExample(page);
+  await page.locator(".ml-share summary").click();
+  const share=page.getByRole("group",{name:"Share"});
+  await expect(share.getByRole("button",{name:"Copy local view address"})).toBeVisible();
+  await expect(share).toContainText("does not publish or transfer your dataset");
+  const publish=share.getByRole("button",{name:"Publish a shareable copy…"});
+  if(await publish.count()){
+    await expect(publish).toBeVisible();
+    await expect(share).toContainText("Anyone with the resulting link can explore that copy");
+  }
 });
 
 test("Network lens draws every record with named areas and the ink/pencil key",async({page})=>{
@@ -62,7 +98,7 @@ test("Map never geocodes records from names and keeps the unplaced margin",async
   await lens(page,"Map").click();
   await expect(page.locator(".ml-unplaced")).toContainText(/\d+ records have no location/);
   await expect(page.locator(".ml-unplaced")).toContainText("rather than guessed from a name or region");
-  await expect(page.locator(".ml-drawing-caption")).toContainText(/\d+ plotted · \d+ without a place/);
+  await expect(page.locator(".ml-drawing-caption")).toContainText(/\d+ plotted · \d+ positioned connections.*\d+ without a place/);
   await expect(page.locator(".maplibregl-canvas")).toBeVisible();
   await expect(page.locator(".maplibregl-ctrl-attrib")).toContainText("Natural Earth");
   // Place names come from place records in the source, drawn as a map would.
@@ -105,7 +141,7 @@ test("the Field Atlas uses mobile-first filters and retains advanced tools",asyn
   await page.setViewportSize({width:390,height:844});
   await openExample(page);
   await expect(page.locator(".ml-search input")).toBeVisible();
-  await expect(page.getByRole("button",{name:/Browse records/})).toBeVisible();
+  await expect(page.locator(".ml-data-toggle")).toBeVisible();
   const filter=page.getByRole("button",{name:"Refine results"});
   await expect(filter).toBeVisible();
   await expect(page.getByRole("combobox",{name:"Type"})).toBeHidden();
@@ -160,4 +196,34 @@ test("the atlas has no detectable WCAG A/AA issues on its main views",async({pag
       .withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();
     expect(result.violations.map(v=>view+": "+v.id+" "+v.nodes.length)).toEqual([]);
   }
+});
+
+
+test("a mapped point follows explicit coordinate edits and undo keeps its source",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Add your data/}).click();
+  await page.locator(".ml-add-drop input[type=file]").setInputFiles({
+    name:"points.csv",mimeType:"text/csv",
+    buffer:Buffer.from("Name,Latitude,Longitude\nPlot A,54.97830,-1.61780\nPlot B,54.52530,-1.55900\n")
+  });
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.locator(".ml-data-toggle").click();
+  const records=page.getByRole("region",{name:"Records table"});
+  await expect(records).toContainText("Plot A");
+  await records.getByRole("button",{name:/Edit map position of Plot A/}).click();
+  const input=records.getByRole("textbox",{name:/map position of Plot A/});
+  await input.fill("54.57420, -1.23500");
+  await input.press("Enter");
+  await expect(records).toContainText("54.57420, -1.23500");
+  await expect(records).toContainText("points.csv");
+  await page.getByRole("button",{name:"Undo last change"}).click();
+  await expect(records).toContainText("54.97830, -1.61780");
+  // Invalid latitude must not create a change.
+  await records.getByRole("button",{name:/Edit map position of Plot A/}).click();
+  const invalid=records.getByRole("textbox",{name:/map position of Plot A/});
+  await invalid.fill("95, -1.2");
+  await invalid.press("Enter");
+  await expect(records.getByRole("alert")).toContainText("valid latitude and longitude");
+  await expect(records).toContainText("54.97830, -1.61780");
 });

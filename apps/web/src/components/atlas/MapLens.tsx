@@ -17,6 +17,7 @@ type Props = {
   theme: AtlasTheme;
   selectedId: string | null;
   onPick: (id: string | null) => void;
+  onEditNode?: (id: string) => void;
   /** Records in view with no source coordinates: listed, never guessed. */
   unplaced: GraphNode[];
   onBrowse: () => void;
@@ -96,7 +97,7 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -118,6 +119,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const gratLabels = useRef<HTMLDivElement>(null);
   const insetRect = useRef<SVGRectElement>(null);
   const pick = useRef(onPick); pick.current = onPick;
+  const editNode = useRef(onEditNode); editNode.current = onEditNode;
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
   const [land, setLand] = useState<Land | null>(null);
@@ -162,8 +164,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       if (small) setUnplacedOpen(false);
     };
     measure();
+    // Opening the live data table changes the canvas size without a window
+    // resize. MapLibre must measure its new viewport to keep marks clickable.
+    const observer=new ResizeObserver(()=>{
+      mapRef.current?.resize();
+      measure();
+    });
+    if(container.current)observer.observe(container.current);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {observer.disconnect();window.removeEventListener("resize", measure);};
   }, []);
 
   const data = useMemo(() => {
@@ -239,7 +248,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         let step = 5;
         map = new ml.Map({
           container: container.current, attributionControl: false, dragRotate: false, pitchWithRotate: false,
-          renderWorldCopies: false, maxZoom: 13, minZoom: 1.5,
+          // National, continental and worldwide examples must be able to zoom
+          // out to their full source extent; fixed regional minimums clip them.
+          renderWorldCopies: false, maxZoom: 13, minZoom: -2,
           style: {
             version: 8,
             sources: {
@@ -296,6 +307,16 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         map.on("error", event => {
           const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? "");
           if (/webgl|context/i.test(message)) { setStatus("error"); setError(message); }
+        });
+        // Direct edit on the map, without going through a separate editing mode.
+        // Prevent default double-click zoom only when a source-backed point is hit.
+        map.on("dblclick", event => {
+          if(!map)return;
+          const hit=map.queryRenderedFeatures(event.point,{layers:["records","places"]})[0];
+          if(hit && editNode.current){
+            event.preventDefault();
+            editNode.current(String(hit.properties?.id));
+          }
         });
         map.on("click", event => {
           const hit = map?.queryRenderedFeatures(event.point, { layers: ["records", "places"] })[0];
@@ -377,8 +398,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     for (const p of located) { w = Math.min(w, p.lon); e = Math.max(e, p.lon); s = Math.min(s, p.lat); n = Math.max(n, p.lat); }
     const small = (container.current?.clientWidth ?? 1000) < 700;
     if (w === e && s === n) { map.jumpTo({ center: [w, s], zoom: 8 }); return; }
-    map.fitBounds([[w, s], [e, n]], { padding: small ? { top: 70, bottom: 60, left: 24, right: 70 }
-      : { top: 80, bottom: 70, left: 330, right: 90 }, maxZoom: 9, duration: animate ? 450 : 0 });
+    // A UK local map benefits from room for the inspector and place labels.
+    // That much left padding hides distant countries on international maps.
+    const wideExtent=e-w>45 || n-s>32;
+    map.fitBounds([[w, s], [e, n]], { padding: wideExtent
+      ? (small ? { top: 36, bottom: 36, left: 12, right: 12 }
+        : { top: 56, bottom: 50, left: 48, right: 36 })
+      : (small ? { top: 70, bottom: 60, left: 24, right: 70 }
+        : { top: 80, bottom: 70, left: 330, right: 90 }),
+      maxZoom: 9, duration: animate ? 450 : 0 });
   }
 
   // ---- Names: places from the records, seas and uplands from the gazetteer --
@@ -432,7 +460,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     map.getCanvas().setAttribute("aria-label",
       `Map: ${(located.length - approximate).toLocaleString("en-GB")} records plotted from their source coordinates` +
       (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") +
-      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Use Browse records for a list.`);
+      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Open Data for the accessible record list.`);
     // The selected record gets a name card, as a map would label a feature.
     focusMarkers.current.forEach(m => m.remove()); focusMarkers.current = [];
     const sel = selectedNode ? located.find(p => p.node.id === selectedNode.id) : null;
@@ -652,7 +680,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
-      <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>
+      <p>{located.length.toLocaleString("en-GB")} records have a place; Data lists them all.</p>
       {error && <small>{error}</small>}
     </div>}
     {inset && !narrow && <svg className="ml-map-inset" viewBox={`0 0 ${inset.width} ${inset.height}`} aria-hidden="true">
@@ -700,7 +728,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         {unplacedOpen && <>
           <p>Kept here in the margin rather than guessed from a name or region. A postcode or coordinates in your data would place them.</p>
           <ul>{unplaced.slice(0, 3).map(n => <li key={n.id}><button type="button" onClick={() => pick.current(n.id)}>{n.label}</button></li>)}
-            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Browse</button></li>}</ul>
+            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Data</button></li>}</ul>
         </>}
       </section>}
     </div>
