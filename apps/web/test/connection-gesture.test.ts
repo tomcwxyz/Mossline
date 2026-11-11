@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {CONNECT_DRAG_THRESHOLD,movedToConnect,dragConnection} from "../src/lib/connection-gesture.ts";
+import {CONNECT_DRAG_THRESHOLD,movedToConnect,dragConnection} from "../src/lib/connection-gesture";
 
 test("a normal click or slight pointer wobble is not interpreted as a new relationship",()=>{
   assert.equal(movedToConnect({x:10,y:20},{x:10,y:20}),false);
