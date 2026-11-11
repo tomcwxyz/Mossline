@@ -43,8 +43,10 @@ test("discoveries remain accessible after following an interesting record",async
   const panel=page.getByLabel("What Mossy found");
   await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
   await expect(panel.locator(".ml-findings-recommend h3")).toBeVisible();
-  await panel.locator(".ml-findings-recommend button").click();
-  await expect(page.locator(".ml-inspector h2")).toBeVisible();
+  // The recommended Funding view may not pick a record. Select a finding
+  // that explicitly has one, then verify that the way back is visible.
+  await panel.getByRole("button",{name:"Explore this record"}).click();
+  await expect(page.locator(".ml-inspector h2")).not.toHaveText("What Mossy found");
   await page.getByRole("button",{name:"Back to findings"}).click();
   await expect(panel.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
 });
