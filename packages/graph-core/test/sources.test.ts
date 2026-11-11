@@ -110,7 +110,7 @@ test("suggests shapes for grants, links and rows naming several records", () => 
 });
 
 test("a relationship-only table creates sparse, source-mentioned endpoints without inferred identities",()=>{
-  const t=readDelimited("links.csv","From,To,Relationship,Direction\\nAlice,Bob,helps,directed\\nBob,Charlie,works with,mutual\\nAlice,Bob,helps,directed\\n");
+  const t=readDelimited("links.csv","From,To,Relationship,Direction\nAlice,Bob,helps,directed\nBob,Charlie,works with,mutual\nAlice,Bob,helps,directed\n");
   const reading=recogniseTable(t)[0].shape;
   assert.equal(reading.records.length,0);
   const res=applySources([{table:t,shape:reading,use:"records"}],null,"Untyped relationships");
@@ -126,8 +126,8 @@ test("a relationship-only table creates sparse, source-mentioned endpoints witho
   assert.equal(res.graph.edges.find(e=>e.type==="works with")?.direction,"mutual");
 });
 test("paired record and link files use real records, never placeholder duplicates",()=>{
-  const people=readDelimited("people.csv","Name,Type\\nAlice,person\\nBob,person\\n");
-  const links=readDelimited("links.csv","From,To,Relationship\\nAlice,Bob,helps\\n");
+  const people=readDelimited("people.csv","Name,Type\nAlice,person\nBob,person\n");
+  const links=readDelimited("links.csv","From,To,Relationship\nAlice,Bob,helps\n");
   const res=applySources([
     {table:people,shape:recogniseTable(people)[0].shape,use:"records"},
     {table:links,shape:recogniseTable(links)[0].shape,use:"records"}
@@ -138,7 +138,7 @@ test("paired record and link files use real records, never placeholder duplicate
   assert.ok(res.graph.nodes.every(n=>!n.id.startsWith("src:mentioned:")));
 });
 test("fill-in link tables never manufacture source-mentioned endpoints",()=>{
-  const links=readDelimited("links.csv","From,To,Relationship\\nAlice,Bob,works with\\n");
+  const links=readDelimited("links.csv","From,To,Relationship\nAlice,Bob,works with\n");
   const res=applySources([{table:links,shape:recogniseTable(links)[0].shape,use:"fill"}],null);
   assert.equal(res.graph.nodes.length,0);
   assert.equal(res.graph.edges.length,0);
