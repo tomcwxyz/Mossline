@@ -77,3 +77,16 @@ test("each showcase visual is a distinct, data-backed chart",()=>{
   assert.match(readFileSync(resolve("apps/web/public/examples/the-ripple-effect.svg"),"utf8"),/THEMES/);
   assert.match(readFileSync(resolve("apps/web/public/examples/follow-the-money.svg"),"utf8"),/Ribbon widths/);
 });
+
+test("a theme-rich list with no recorded relationships starts with themes, not an empty network",()=>{
+  const graph=parseGraphDocument({version:1,title:"Themes alone",
+    nodes:Array.from({length:80},(_,i)=>({
+      id:"n"+i,label:"Initiative "+i,type:"project",tags:[i%2?"Culture":"Nature",i%5?"Health":"Food"]
+    })),
+    edges:[]});
+  const report=mossyOverview(graph);
+  assert.equal(report.recommended,"themes");
+  assert.equal(report.relationships,0);
+  assert.ok(report.findings.some(item=>item.id==="themes"));
+});
+
