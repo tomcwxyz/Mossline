@@ -508,7 +508,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       if(!id)return;
       const start=connectFromRef.current;
       if(!start){setConnectFrom(id);setSelectedId(id);}
-      else if(id!==start){setConnectTo(id);setConnectPicking(false);setSelectedId(start);}
+      else if(id!==start){setConnectTo(id);setConnectPicking(false);setSelectedId(start);setBrowse(false);}
       else setNotice("Choose a different record to connect to.");
       return;
     }
