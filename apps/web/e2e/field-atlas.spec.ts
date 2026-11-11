@@ -23,7 +23,8 @@ test("Field Atlas keeps selection and filters across five lenses and in the URL"
   await expect(lens(page,"Network")).toHaveAttribute("aria-current","page");
   await page.locator(".ml-data-toggle").click();
   const first=page.locator(".ml-data-table tbody tr").first();
-  const name=await first.locator(".ml-data-cell-edit").innerText();
+  const name=(await first.locator(".ml-data-locate").getAttribute("aria-label"))!
+    .replace(/^Show /,"").replace(/ in the graph$/,"");
   await first.locator(".ml-data-locate").click();
   await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   const url=new URL(page.url());
@@ -33,7 +34,7 @@ test("Field Atlas keeps selection and filters across five lenses and in the URL"
     await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   }
   await page.keyboard.press("Escape");
-  await expect(page.locator(".ml-empty-panel")).toBeVisible();
+  await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
   await page.keyboard.press("/");
   await expect(page.locator(".ml-search input")).toBeFocused();
 });
@@ -195,4 +196,34 @@ test("the atlas has no detectable WCAG A/AA issues on its main views",async({pag
       .withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();
     expect(result.violations.map(v=>view+": "+v.id+" "+v.nodes.length)).toEqual([]);
   }
+});
+
+
+test("a mapped point follows explicit coordinate edits and undo keeps its source",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Add your data/}).click();
+  await page.locator(".ml-add-drop input[type=file]").setInputFiles({
+    name:"points.csv",mimeType:"text/csv",
+    buffer:Buffer.from("Name,Latitude,Longitude\nPlot A,54.97830,-1.61780\nPlot B,54.52530,-1.55900\n")
+  });
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.locator(".ml-data-toggle").click();
+  const records=page.getByRole("region",{name:"Records table"});
+  await expect(records).toContainText("Plot A");
+  await records.getByRole("button",{name:/Edit map position of Plot A/}).click();
+  const input=records.getByRole("textbox",{name:/map position of Plot A/});
+  await input.fill("54.57420, -1.23500");
+  await input.press("Enter");
+  await expect(records).toContainText("54.57420, -1.23500");
+  await expect(records).toContainText("points.csv");
+  await page.getByRole("button",{name:"Undo last change"}).click();
+  await expect(records).toContainText("54.97830, -1.61780");
+  // Invalid latitude must not create a change.
+  await records.getByRole("button",{name:/Edit map position of Plot A/}).click();
+  const invalid=records.getByRole("textbox",{name:/map position of Plot A/});
+  await invalid.fill("95, -1.2");
+  await invalid.press("Enter");
+  await expect(records.getByRole("alert")).toContainText("valid latitude and longitude");
+  await expect(records).toContainText("54.97830, -1.61780");
 });
