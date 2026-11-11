@@ -38,6 +38,49 @@ These may coexist within a dataset. Retain original files and row/page provenanc
 - **One doorway.** No specialist import wizard before the result. Advanced controls appear only to address ambiguity or after the user wants to change something. No extra permanent lens tabs just because a chart exists.
 - **Trustworthy sharing.** Separate local view addresses from genuinely published copies, require privacy review, and never publish source material or personal details unexpectedly.
 
+## What you see is what you change
+
+**Decision added: 11 November 2026.** The picture and the underlying data must be
+two complementary views of a *single*, undoable model. There must not be a
+separate diagram to "save back" or a second table copy that falls out of sync.
+
+- **Start with a useful result**, then offer clear, adjacent access to its
+  records and recorded relationships. People should be able to keep the visual
+  result on screen while inspecting the actual data.
+- **Edit in place.** A cell can change a record's name, kind, place or tags, or
+  a relationship's meaning and direction. Committing the cell (Enter or click
+  away) immediately updates every relevant view, count and inspector.
+- **Draw a connection in the diagram.** Select two existing things, describe
+  what connects them, choose direction/meaning, and confirm. It becomes an
+  actual editable row in the recorded-connections table, with a receipt.
+  Directly editing or removing that row changes the diagram, too.
+- **No unnecessary editing gate.** Selecting a record offers edits and
+  connections without first learning how to enter a special editor. Keep
+  advanced tools for bulk creation, changed-source reconciliation and export.
+- **A single record of change.** Every manual edit goes into the same
+  history as every visual edit. Preserve what each original source said;
+  allow undo/redo; label manual assertions as manually entered, not as
+  source-verified or inferred AI evidence.
+- **Selection stays synchronised.** Selecting a record or relationship in one
+  view should locate it in the other. Filters should be the same where
+  applicable and should never silently modify the underlying source.
+- **Keep it accessible.** Tables must remain keyboard-usable and work without
+  a canvas or precise pointer. Graph drawing is an extra, not the only way
+  to make a connection.
+- **Scale thoughtfully.** Show and edit manageable portions of large tables
+  without materialising hundreds of thousands of editable controls. Keep the
+  graph and map responsive when the data drawer opens or closes.
+- **Permission follows the data.** Read-only and viewer roles can explore but
+  cannot make changes. Shared edits synchronise through the same reviewed
+  edit layer; local maps remain local unless explicitly shared.
+
+The first slice uses a docked Records/Connections table, inline cell commits,
+a two-endpoint Connect action and the existing auditable edit layer. Next:
+drag-to-connect directly on the visualisation, in-place node label editing,
+a unified data browser (removing duplicate Browse/Details routes), and richer
+editable source properties. Avoid claiming free-form arbitrary columns are
+editable until the canonical schema can preserve and validate them.
+
 ## Product contract
 **Input**: files, paste or link → source bundle with optional partial failures.
 **Understand**: detect tables, nested objects, headers, joins, entities, relationships, event/time/value fields, geometry, measures, possible evidence; record confidence and alternative readings.
