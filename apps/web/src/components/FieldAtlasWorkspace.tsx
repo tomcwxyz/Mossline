@@ -627,7 +627,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
         {!viewOnly && <button type="button" className="ml-quiet ml-connect-trigger" aria-pressed={connectPicking||!!connectTo}
           onClick={beginConnect} title="Choose two records on the drawing or in Data, then describe their relationship">Connect</button>}
-        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
+        {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode} title="Add records, enter multiple links, review changes and export"
           onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); setStoryMode(null); }}>
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
         <button type="button" className="ml-quiet" onClick={() => chooseTheme(activeTheme === "night" ? "day" : "night")}
