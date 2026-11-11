@@ -1,95 +1,95 @@
-Name,Type,Tags,Region,Latitude,Longitude,Description
-Newcastle Bracken Social Group 001,organisation,Food,Newcastle,54.96168,-1.61380,Fictional community organisation.
-Sunderland Harbour Social Group 002,organisation,Health,Sunderland,54.91005,-1.37225,Fictional community organisation.
-Middlesbrough Mosaic Social Group 003,organisation,Housing,Middlesbrough,54.56404,-1.24439,Fictional community organisation.
-Darlington Beacon Social Group 004,organisation,Nature,Darlington,54.54595,-1.53681,Fictional community organisation.
-Durham Willow Social Group 005,organisation,Transport,Durham,54.77265,-1.57702,Fictional community organisation.
-Hartlepool Cornerstone Social Group 006,organisation,Culture,Hartlepool,54.69807,-1.23022,Fictional community organisation.
-Gateshead Bridgewater Social Group 007,organisation,Young people,Gateshead,54.97111,-1.60321,Fictional community organisation.
-Newcastle Hearth Social Group 008,organisation,Energy,Newcastle,54.97809,-1.63191,Fictional community organisation.
-Sunderland Meadow Social Group 009,organisation,Community care,Sunderland,54.89248,-1.36141,Fictional community organisation.
-Middlesbrough Highfield Social Group 010,organisation,Learning,Middlesbrough,54.57354,-1.23478,Fictional community organisation.
-Darlington Lantern Social Group 011,organisation,Food,Darlington,54.54312,-1.54587,Fictional community organisation.
-Durham Riverside Social Group 012,organisation,Health,Durham,54.78248,-1.59564,Fictional community organisation.
-Hartlepool Northbank Social Group 013,organisation,Housing,Hartlepool,54.69958,-1.23223,Fictional community organisation.
-Gateshead Seedling Social Group 014,organisation,Nature,Gateshead,54.96492,-1.57964,Fictional community organisation.
-Newcastle Cedar Social Group 015,organisation,Transport,Newcastle,54.98022,-1.61291,Fictional community organisation.
-Sunderland Hilltop Social Group 016,organisation,Culture,Sunderland,54.89983,-1.37049,Fictional community organisation.
-Middlesbrough Tideway Social Group 017,organisation,Young people,Middlesbrough,54.58364,-1.24797,Fictional community organisation.
-Darlington Foundry Social Group 018,organisation,Energy,Darlington,54.50663,-1.54750,Fictional community organisation.
-Durham Bracken Social Group 019,organisation,Community care,Durham,54.77428,-1.58832,Fictional community organisation.
-Hartlepool Harbour Social Group 020,organisation,Learning,Hartlepool,54.69791,-1.21615,Fictional community organisation.
-Gateshead Mosaic Social Group 021,organisation,Food,Gateshead,54.97974,-1.60634,Fictional community organisation.
-Newcastle Beacon Social Group 022,organisation,Health,Newcastle,54.98639,-1.60603,Fictional community organisation.
-Sunderland Willow Social Group 023,organisation,Housing,Sunderland,54.92079,-1.37140,Fictional community organisation.
-Middlesbrough Cornerstone Social Group 024,organisation,Nature,Middlesbrough,54.57556,-1.23248,Fictional community organisation.
-Darlington Bridgewater Social Group 025,organisation,Transport,Darlington,54.51470,-1.54201,Fictional community organisation.
-Durham Hearth Social Group 026,organisation,Culture,Durham,54.77100,-1.56427,Fictional community organisation.
-Hartlepool Meadow Social Group 027,organisation,Young people,Hartlepool,54.70545,-1.19169,Fictional community organisation.
-Gateshead Highfield Social Group 028,organisation,Energy,Gateshead,54.95383,-1.58814,Fictional community organisation.
-Newcastle Lantern Social Group 029,organisation,Community care,Newcastle,54.99596,-1.60335,Fictional community organisation.
-Sunderland Riverside Social Group 030,organisation,Learning,Sunderland,54.91414,-1.38333,Fictional community organisation.
-Middlesbrough Northbank Social Group 031,organisation,Food,Middlesbrough,54.56336,-1.23387,Fictional community organisation.
-Darlington Seedling Social Group 032,organisation,Health,Darlington,54.53698,-1.54833,Fictional community organisation.
-Durham Cedar Social Group 033,organisation,Housing,Durham,54.76635,-1.56198,Fictional community organisation.
-Hartlepool Hilltop Social Group 034,organisation,Nature,Hartlepool,54.68625,-1.21766,Fictional community organisation.
-Gateshead Tideway Social Group 035,organisation,Transport,Gateshead,54.94297,-1.58586,Fictional community organisation.
-Newcastle Foundry Social Group 036,organisation,Culture,Newcastle,54.98851,-1.63414,Fictional community organisation.
-Sunderland Bracken Social Group 037,organisation,Young people,Sunderland,54.89837,-1.40420,Fictional community organisation.
-Middlesbrough Harbour Social Group 038,organisation,Energy,Middlesbrough,54.55967,-1.24878,Fictional community organisation.
-Darlington Mosaic Social Group 039,organisation,Community care,Darlington,54.50726,-1.54853,Fictional community organisation.
-Durham Beacon Social Group 040,organisation,Learning,Durham,54.76047,-1.57220,Fictional community organisation.
-Hartlepool Willow Social Group 041,organisation,Food,Hartlepool,54.69802,-1.21543,Fictional community organisation.
-Gateshead Cornerstone Social Group 042,organisation,Health,Gateshead,54.95085,-1.59463,Fictional community organisation.
-Newcastle Bridgewater Social Group 043,organisation,Housing,Newcastle,54.99752,-1.60444,Fictional community organisation.
-Sunderland Hearth Social Group 044,organisation,Nature,Sunderland,54.88488,-1.39364,Fictional community organisation.
-Middlesbrough Meadow Social Group 045,organisation,Transport,Middlesbrough,54.59646,-1.23967,Fictional community organisation.
-Darlington Highfield Social Group 046,organisation,Culture,Darlington,54.54748,-1.55825,Fictional community organisation.
-Durham Lantern Social Group 047,organisation,Young people,Durham,54.77790,-1.55951,Fictional community organisation.
-Hartlepool Riverside Social Group 048,organisation,Energy,Hartlepool,54.68218,-1.22364,Fictional community organisation.
-Gateshead Northbank Social Group 049,organisation,Community care,Gateshead,54.95619,-1.58710,Fictional community organisation.
-Newcastle Seedling Social Group 050,organisation,Learning,Newcastle,54.96054,-1.60273,Fictional community organisation.
-Sunderland Cedar Social Group 051,organisation,Food,Sunderland,54.90454,-1.36142,Fictional community organisation.
-Middlesbrough Hilltop Social Group 052,organisation,Health,Middlesbrough,54.56500,-1.22349,Fictional community organisation.
-Darlington Tideway Social Group 053,organisation,Housing,Darlington,54.52967,-1.57333,Fictional community organisation.
-Durham Foundry Social Group 054,organisation,Nature,Durham,54.75480,-1.56677,Fictional community organisation.
-Hartlepool Bracken Social Group 055,organisation,Transport,Hartlepool,54.68431,-1.21609,Fictional community organisation.
-Gateshead Harbour Social Group 056,organisation,Culture,Gateshead,54.95892,-1.60819,Fictional community organisation.
-Newcastle Mosaic Social Group 057,organisation,Young people,Newcastle,54.99537,-1.62771,Fictional community organisation.
-Sunderland Beacon Social Group 058,organisation,Energy,Sunderland,54.90125,-1.39935,Fictional community organisation.
-Middlesbrough Willow Social Group 059,organisation,Community care,Middlesbrough,54.57623,-1.24920,Fictional community organisation.
-Darlington Cornerstone Social Group 060,organisation,Learning,Darlington,54.53822,-1.55338,Fictional community organisation.
-Durham Bridgewater Social Group 061,organisation,Food,Durham,54.75970,-1.59947,Fictional community organisation.
-Hartlepool Hearth Social Group 062,organisation,Health,Hartlepool,54.68669,-1.21512,Fictional community organisation.
-Gateshead Meadow Social Group 063,organisation,Housing,Gateshead,54.96253,-1.58075,Fictional community organisation.
-Newcastle Highfield Social Group 064,organisation,Nature,Newcastle,54.96654,-1.63865,Fictional community organisation.
-Sunderland Lantern Social Group 065,organisation,Transport,Sunderland,54.92349,-1.38066,Fictional community organisation.
-Middlesbrough Riverside Social Group 066,organisation,Culture,Middlesbrough,54.58357,-1.23216,Fictional community organisation.
-Darlington Northbank Social Group 067,organisation,Young people,Darlington,54.52715,-1.58144,Fictional community organisation.
-Durham Seedling Social Group 068,organisation,Energy,Durham,54.79093,-1.58628,Fictional community organisation.
-Hartlepool Cedar Social Group 069,organisation,Community care,Hartlepool,54.69305,-1.23223,Fictional community organisation.
-Gateshead Hilltop Social Group 070,organisation,Learning,Gateshead,54.96688,-1.60547,Fictional community organisation.
-Newcastle Tideway Social Group 071,organisation,Food,Newcastle,54.98156,-1.60794,Fictional community organisation.
-Sunderland Foundry Social Group 072,organisation,Health,Sunderland,54.89289,-1.37429,Fictional community organisation.
-Middlesbrough Bracken Social Group 073,organisation,Housing,Middlesbrough,54.58393,-1.25000,Fictional community organisation.
-Darlington Harbour Social Group 074,organisation,Nature,Darlington,54.50594,-1.55456,Fictional community organisation.
-Durham Mosaic Social Group 075,organisation,Transport,Durham,54.78658,-1.58608,Fictional community organisation.
-Hartlepool Beacon Social Group 076,organisation,Culture,Hartlepool,54.71161,-1.22003,Fictional community organisation.
-Gateshead Willow Social Group 077,organisation,Young people,Gateshead,54.95438,-1.60378,Fictional community organisation.
-Newcastle Cornerstone Social Group 078,organisation,Energy,Newcastle,54.97122,-1.62263,Fictional community organisation.
-Sunderland Bridgewater Social Group 079,organisation,Community care,Sunderland,54.90371,-1.37083,Fictional community organisation.
-Middlesbrough Hearth Social Group 080,organisation,Learning,Middlesbrough,54.57230,-1.22130,Fictional community organisation.
-Darlington Meadow Social Group 081,organisation,Food,Darlington,54.50611,-1.55331,Fictional community organisation.
-Durham Highfield Social Group 082,organisation,Health,Durham,54.78940,-1.59107,Fictional community organisation.
-Hartlepool Lantern Social Group 083,organisation,Housing,Hartlepool,54.71099,-1.21440,Fictional community organisation.
-Gateshead Riverside Social Group 084,organisation,Nature,Gateshead,54.94175,-1.61303,Fictional community organisation.
-Newcastle Northbank Social Group 085,organisation,Transport,Newcastle,54.99750,-1.61801,Fictional community organisation.
-Sunderland Seedling Social Group 086,organisation,Culture,Sunderland,54.92059,-1.36328,Fictional community organisation.
-Middlesbrough Cedar Social Group 087,organisation,Young people,Middlesbrough,54.58667,-1.23924,Fictional community organisation.
-Darlington Hilltop Social Group 088,organisation,Energy,Darlington,54.50371,-1.55324,Fictional community organisation.
-Durham Tideway Social Group 089,organisation,Community care,Durham,54.77279,-1.55972,Fictional community organisation.
-Hartlepool Foundry Social Group 090,organisation,Learning,Hartlepool,54.69760,-1.21405,Fictional community organisation.
-Gateshead Bracken Social Group 091,organisation,Food,Gateshead,54.94744,-1.59422,Fictional community organisation.
-Newcastle Harbour Social Group 092,organisation,Health,Newcastle,54.96424,-1.62544,Fictional community organisation.
-Sunderland Mosaic Social Group 093,organisation,Housing,Sunderland,54.90569,-1.40226,Fictional community organisation.
-Middlesbrough Beacon Social Group 094,organisation,Nature,Middlesbrough,54.58041,-1.24642,Fictional community organisation.
+Name,Type,Tags,Region,Latitude,Longitude,Description,Country
+London Bracken Social Group 001,organisation,Food,"London, United Kingdom",51.51631,-0.12188,Fictional community organisation.,United Kingdom
+Manchester Harbour Social Group 002,organisation,Health,"Manchester, United Kingdom",53.46481,-2.25780,Fictional community organisation.,United Kingdom
+Amsterdam Mosaic Social Group 003,organisation,Housing,"Amsterdam, Netherlands",52.38998,4.90018,Fictional community organisation.,Netherlands
+Nairobi Beacon Social Group 004,organisation,Nature,"Nairobi, Kenya",-1.27837,36.83735,Fictional community organisation.,Kenya
+Kampala Willow Social Group 005,organisation,Transport,"Kampala, Uganda",0.34001,32.57519,Fictional community organisation.,Uganda
+Accra Cornerstone Social Group 006,organisation,Culture,"Accra, Ghana",5.61791,-0.18298,Fictional community organisation.,Ghana
+Lagos Bridgewater Social Group 007,organisation,Young people,"Lagos, Nigeria",6.50390,3.38188,Fictional community organisation.,Nigeria
+Mumbai Hearth Social Group 008,organisation,Energy,"Mumbai, India",19.09847,72.87747,Fictional community organisation.,India
+Kathmandu Meadow Social Group 009,organisation,Community care,"Kathmandu, Nepal",27.69968,85.33566,Fictional community organisation.,Nepal
+Johannesburg Highfield Social Group 010,organisation,Learning,"Johannesburg, South Africa",-26.20166,28.05277,Fictional community organisation.,South Africa
+Buenos Aires Lantern Social Group 011,organisation,Food,"Buenos Aires, Argentina",-34.61851,-58.38215,Fictional community organisation.,Argentina
+Vancouver Riverside Social Group 012,organisation,Health,"Vancouver, Canada",49.28366,-123.11344,Fictional community organisation.,Canada
+Berlin Northbank Social Group 013,organisation,Housing,"Berlin, Germany",52.53667,13.42238,Fictional community organisation.,Germany
+Oslo Seedling Social Group 014,organisation,Nature,"Oslo, Norway",59.91786,10.75126,Fictional community organisation.,Norway
+London Cedar Social Group 015,organisation,Transport,"London, United Kingdom",51.49090,-0.14566,Fictional community organisation.,United Kingdom
+Manchester Hilltop Social Group 016,organisation,Culture,"Manchester, United Kingdom",53.48051,-2.22059,Fictional community organisation.,United Kingdom
+Amsterdam Tideway Social Group 017,organisation,Young people,"Amsterdam, Netherlands",52.35712,4.92622,Fictional community organisation.,Netherlands
+Nairobi Foundry Social Group 018,organisation,Energy,"Nairobi, Kenya",-1.28961,36.80236,Fictional community organisation.,Kenya
+Kampala Bracken Social Group 019,organisation,Community care,"Kampala, Uganda",0.32670,32.60106,Fictional community organisation.,Uganda
+Accra Harbour Social Group 020,organisation,Learning,"Accra, Ghana",5.58458,-0.18944,Fictional community organisation.,Ghana
+Lagos Mosaic Social Group 021,organisation,Food,"Lagos, Nigeria",6.50614,3.38914,Fictional community organisation.,Nigeria
+Mumbai Beacon Social Group 022,organisation,Health,"Mumbai, India",19.08266,72.89215,Fictional community organisation.,India
+Kathmandu Willow Social Group 023,organisation,Housing,"Kathmandu, Nepal",27.71377,85.31356,Fictional community organisation.,Nepal
+Johannesburg Cornerstone Social Group 024,organisation,Nature,"Johannesburg, South Africa",-26.19803,28.05085,Fictional community organisation.,South Africa
+Buenos Aires Bridgewater Social Group 025,organisation,Transport,"Buenos Aires, Argentina",-34.59656,-58.35949,Fictional community organisation.,Argentina
+Vancouver Hearth Social Group 026,organisation,Culture,"Vancouver, Canada",49.27441,-123.10324,Fictional community organisation.,Canada
+Berlin Meadow Social Group 027,organisation,Young people,"Berlin, Germany",52.51751,13.40161,Fictional community organisation.,Germany
+Oslo Highfield Social Group 028,organisation,Energy,"Oslo, Norway",59.91343,10.73371,Fictional community organisation.,Norway
+London Lantern Social Group 029,organisation,Community care,"London, United Kingdom",51.49485,-0.11854,Fictional community organisation.,United Kingdom
+Manchester Riverside Social Group 030,organisation,Learning,"Manchester, United Kingdom",53.48238,-2.23858,Fictional community organisation.,United Kingdom
+Amsterdam Northbank Social Group 031,organisation,Food,"Amsterdam, Netherlands",52.34809,4.89997,Fictional community organisation.,Netherlands
+Nairobi Seedling Social Group 032,organisation,Health,"Nairobi, Kenya",-1.30556,36.83153,Fictional community organisation.,Kenya
+Kampala Cedar Social Group 033,organisation,Housing,"Kampala, Uganda",0.34746,32.57248,Fictional community organisation.,Uganda
+Accra Hilltop Social Group 034,organisation,Nature,"Accra, Ghana",5.60989,-0.19958,Fictional community organisation.,Ghana
+Lagos Tideway Social Group 035,organisation,Transport,"Lagos, Nigeria",6.51817,3.38809,Fictional community organisation.,Nigeria
+Mumbai Foundry Social Group 036,organisation,Culture,"Mumbai, India",19.07321,72.87437,Fictional community organisation.,India
+Kathmandu Bracken Social Group 037,organisation,Young people,"Kathmandu, Nepal",27.70464,85.34506,Fictional community organisation.,Nepal
+Johannesburg Harbour Social Group 038,organisation,Energy,"Johannesburg, South Africa",-26.19493,28.03166,Fictional community organisation.,South Africa
+Buenos Aires Mosaic Social Group 039,organisation,Community care,"Buenos Aires, Argentina",-34.58782,-58.37178,Fictional community organisation.,Argentina
+Vancouver Beacon Social Group 040,organisation,Learning,"Vancouver, Canada",49.27822,-123.10080,Fictional community organisation.,Canada
+Berlin Willow Social Group 041,organisation,Food,"Berlin, Germany",52.53237,13.38420,Fictional community organisation.,Germany
+Oslo Cornerstone Social Group 042,organisation,Health,"Oslo, Norway",59.91472,10.74084,Fictional community organisation.,Norway
+London Bridgewater Social Group 043,organisation,Housing,"London, United Kingdom",51.52640,-0.14354,Fictional community organisation.,United Kingdom
+Manchester Hearth Social Group 044,organisation,Nature,"Manchester, United Kingdom",53.49453,-2.24052,Fictional community organisation.,United Kingdom
+Amsterdam Meadow Social Group 045,organisation,Transport,"Amsterdam, Netherlands",52.38453,4.91352,Fictional community organisation.,Netherlands
+Nairobi Highfield Social Group 046,organisation,Culture,"Nairobi, Kenya",-1.31072,36.82586,Fictional community organisation.,Kenya
+Kampala Lantern Social Group 047,organisation,Young people,"Kampala, Uganda",0.33768,32.56206,Fictional community organisation.,Uganda
+Accra Riverside Social Group 048,organisation,Energy,"Accra, Ghana",5.60078,-0.19945,Fictional community organisation.,Ghana
+Lagos Northbank Social Group 049,organisation,Community care,"Lagos, Nigeria",6.51679,3.39908,Fictional community organisation.,Nigeria
+Mumbai Seedling Social Group 050,organisation,Learning,"Mumbai, India",19.08565,72.87849,Fictional community organisation.,India
+Kathmandu Cedar Social Group 051,organisation,Food,"Kathmandu, Nepal",27.71713,85.33579,Fictional community organisation.,Nepal
+Johannesburg Hilltop Social Group 052,organisation,Health,"Johannesburg, South Africa",-26.21533,28.02961,Fictional community organisation.,South Africa
+Buenos Aires Tideway Social Group 053,organisation,Housing,"Buenos Aires, Argentina",-34.58812,-58.40321,Fictional community organisation.,Argentina
+Vancouver Foundry Social Group 054,organisation,Nature,"Vancouver, Canada",49.28964,-123.09847,Fictional community organisation.,Canada
+Berlin Bracken Social Group 055,organisation,Transport,"Berlin, Germany",52.52492,13.41421,Fictional community organisation.,Germany
+Oslo Harbour Social Group 056,organisation,Culture,"Oslo, Norway",59.89421,10.74049,Fictional community organisation.,Norway
+London Mosaic Social Group 057,organisation,Young people,"London, United Kingdom",51.52586,-0.10742,Fictional community organisation.,United Kingdom
+Manchester Beacon Social Group 058,organisation,Energy,"Manchester, United Kingdom",53.47201,-2.25359,Fictional community organisation.,United Kingdom
+Amsterdam Willow Social Group 059,organisation,Community care,"Amsterdam, Netherlands",52.37928,4.92140,Fictional community organisation.,Netherlands
+Nairobi Cornerstone Social Group 060,organisation,Learning,"Nairobi, Kenya",-1.27995,36.82842,Fictional community organisation.,Kenya
+Kampala Bridgewater Social Group 061,organisation,Food,"Kampala, Uganda",0.35788,32.59101,Fictional community organisation.,Uganda
+Accra Hearth Social Group 062,organisation,Health,"Accra, Ghana",5.62541,-0.17347,Fictional community organisation.,Ghana
+Lagos Meadow Social Group 063,organisation,Housing,"Lagos, Nigeria",6.54391,3.36961,Fictional community organisation.,Nigeria
+Mumbai Highfield Social Group 064,organisation,Nature,"Mumbai, India",19.06061,72.88719,Fictional community organisation.,India
+Kathmandu Lantern Social Group 065,organisation,Transport,"Kathmandu, Nepal",27.70496,85.30783,Fictional community organisation.,Nepal
+Johannesburg Riverside Social Group 066,organisation,Culture,"Johannesburg, South Africa",-26.21533,28.05524,Fictional community organisation.,South Africa
+Buenos Aires Northbank Social Group 067,organisation,Young people,"Buenos Aires, Argentina",-34.59310,-58.40171,Fictional community organisation.,Argentina
+Vancouver Seedling Social Group 068,organisation,Energy,"Vancouver, Canada",49.27188,-123.10317,Fictional community organisation.,Canada
+Berlin Cedar Social Group 069,organisation,Community care,"Berlin, Germany",52.50294,13.38342,Fictional community organisation.,Germany
+Oslo Hilltop Social Group 070,organisation,Learning,"Oslo, Norway",59.92789,10.73350,Fictional community organisation.,Norway
+London Tideway Social Group 071,organisation,Food,"London, United Kingdom",51.49551,-0.12892,Fictional community organisation.,United Kingdom
+Manchester Foundry Social Group 072,organisation,Health,"Manchester, United Kingdom",53.47082,-2.23339,Fictional community organisation.,United Kingdom
+Amsterdam Bracken Social Group 073,organisation,Housing,"Amsterdam, Netherlands",52.34652,4.90383,Fictional community organisation.,Netherlands
+Nairobi Harbour Social Group 074,organisation,Nature,"Nairobi, Kenya",-1.27140,36.81271,Fictional community organisation.,Kenya
+Kampala Mosaic Social Group 075,organisation,Transport,"Kampala, Uganda",0.36465,32.59604,Fictional community organisation.,Uganda
+Accra Beacon Social Group 076,organisation,Culture,"Accra, Ghana",5.58464,-0.20612,Fictional community organisation.,Ghana
+Lagos Willow Social Group 077,organisation,Young people,"Lagos, Nigeria",6.53276,3.38556,Fictional community organisation.,Nigeria
+Mumbai Cornerstone Social Group 078,organisation,Energy,"Mumbai, India",19.08078,72.89478,Fictional community organisation.,India
+Kathmandu Bridgewater Social Group 079,organisation,Community care,"Kathmandu, Nepal",27.71512,85.34000,Fictional community organisation.,Nepal
+Johannesburg Hearth Social Group 080,organisation,Learning,"Johannesburg, South Africa",-26.21658,28.06752,Fictional community organisation.,South Africa
+Buenos Aires Meadow Social Group 081,organisation,Food,"Buenos Aires, Argentina",-34.61886,-58.37112,Fictional community organisation.,Argentina
+Vancouver Highfield Social Group 082,organisation,Health,"Vancouver, Canada",49.29845,-123.13220,Fictional community organisation.,Canada
+Berlin Lantern Social Group 083,organisation,Housing,"Berlin, Germany",52.50325,13.40367,Fictional community organisation.,Germany
+Oslo Riverside Social Group 084,organisation,Nature,"Oslo, Norway",59.91854,10.74108,Fictional community organisation.,Norway
+London Northbank Social Group 085,organisation,Transport,"London, United Kingdom",51.49439,-0.13602,Fictional community organisation.,United Kingdom
+Manchester Seedling Social Group 086,organisation,Culture,"Manchester, United Kingdom",53.46397,-2.24300,Fictional community organisation.,United Kingdom
+Amsterdam Cedar Social Group 087,organisation,Young people,"Amsterdam, Netherlands",52.36946,4.91445,Fictional community organisation.,Netherlands
+Nairobi Hilltop Social Group 088,organisation,Energy,"Nairobi, Kenya",-1.28777,36.80605,Fictional community organisation.,Kenya
+Kampala Tideway Social Group 089,organisation,Community care,"Kampala, Uganda",0.35308,32.56547,Fictional community organisation.,Uganda
+Accra Foundry Social Group 090,organisation,Learning,"Accra, Ghana",5.62210,-0.18343,Fictional community organisation.,Ghana
+Lagos Bracken Social Group 091,organisation,Food,"Lagos, Nigeria",6.54545,3.35789,Fictional community organisation.,Nigeria
+Mumbai Harbour Social Group 092,organisation,Health,"Mumbai, India",19.08986,72.88241,Fictional community organisation.,India
+Kathmandu Mosaic Social Group 093,organisation,Housing,"Kathmandu, Nepal",27.72496,85.33589,Fictional community organisation.,Nepal
+Johannesburg Beacon Social Group 094,organisation,Nature,"Johannesburg, South Africa",-26.18250,28.06108,Fictional community organisation.,South Africa
