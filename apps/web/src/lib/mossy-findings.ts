@@ -75,9 +75,13 @@ export function mossyOverview(graph:GraphDocument):MossyOverview {
       lens:"themes",label:"Explore themes"});
   }
   const disconnected=graph.nodes.filter(n=>(degree.get(n.id)??0)===0).length;
+  const hasUsefulThemes=topThemes.length>=2 &&
+    graph.nodes.filter(node=>node.tags.length>0).length>=Math.ceil(graph.nodes.length*.5);
+  const fewRelationships=recorded.length<Math.max(10,Math.ceil(graph.nodes.length*.2));
   const recommended:AtlasLens=flows.length>=8?"funding":
     located.length>=10&&located.length>=Math.ceil(graph.nodes.length*.25)?"map":
-    distinctYears.length>=3&&years.length>=Math.max(5,Math.ceil(recorded.length*.6))?"timeline":"network";
+    distinctYears.length>=3&&years.length>=Math.max(5,Math.ceil(recorded.length*.6))?"timeline":
+    fewRelationships&&hasUsefulThemes?"themes":"network";
   if(!findings.length)findings.push({id:"records",heading:"Start with the records",
     detail:graph.nodes.length+" records were recognised. No source-recorded relationships are available yet. You can browse records or add a connection.",
     lens:"network",label:"Browse and explore"});
