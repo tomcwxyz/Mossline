@@ -140,7 +140,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
     </header>
     <div className="ml-data-scroll" role="region" aria-label={tab==="records"?"Records table":"Connections table"} tabIndex={0}>
       {tab==="records"?<table className="ml-data-table"><thead><tr>
-        <th scope="col">Record</th><th scope="col">Type</th><th scope="col">Place</th>
+        <th scope="col">Record</th><th scope="col">Type</th><th scope="col">Region</th>
         <th scope="col">Themes</th><th scope="col">Links</th><th scope="col">Source</th>
       </tr></thead><tbody>{shownRecords.map(n=><tr key={n.id} className={[selectedId===n.id?"is-selected":"",lastNodeId===n.id?"is-updated":""].filter(Boolean).join(" ")}>
         <td className="ml-data-name"><div className="ml-data-named">
@@ -150,7 +150,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
             onCommit={text=>nodeEdit(n,"label",text)}/></div></td>
         <td><SelectCell value={n.type} label={"Type of "+n.label} choices={typeOptions}
           editable={editable} onCommit={type=>nodeEdit(n,"type",type)}/></td>
-        <td><Cell value={n.region??""} label={"place of "+n.label} editable={editable}
+        <td><Cell value={n.region??""} label={"region of "+n.label} editable={editable}
           onCommit={text=>nodeEdit(n,"region",text)}/></td>
         <td><Cell value={n.tags.join(", ")} label={"themes of "+n.label} editable={editable}
           onCommit={text=>nodeEdit(n,"tags",[...new Set(text.split(/[,;|]/).map(t=>t.trim()).filter(Boolean))].slice(0,40))}/></td>
