@@ -487,6 +487,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setStoryMode(null);setPickingFrom(null);setPicked(null);
   };
   const closeConnect=()=>{setConnectFrom(null);setConnectTo(null);setConnectPicking(false);};
+  const finishDrawnConnection=(from:string,to:string)=>{
+    if(viewOnly||storyMode||!connectPicking||from===to)return;
+    setConnectFrom(from);setConnectTo(to);setConnectPicking(false);
+    setSelectedId(from);
+  };
   const editDrawnRecord=(id:string)=>{
     if(viewOnly||storyMode)return;
     setSelectedId(id);
@@ -710,7 +715,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
               selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord}
-              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined} onUnavailable={onUnavailable}
+              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined}
+              connectMode={connectPicking&&!viewOnly&&!storyMode}
+              onDragConnect={finishDrawnConnection} onUnavailable={onUnavailable}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
               onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined}
@@ -837,7 +844,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
 
           {connectPicking && <div className="ml-banner ml-pick-banner" role="status">
             {connectFrom?<>Select the second record to connect to <strong>{workingGraph.nodes.find(n=>n.id===connectFrom)?.label}</strong>.</>:
-              <>Select the first record, then the second, on the drawing or in Data.</>}
+              <>Drag between two records to connect them, or select the first and second in the drawing or Data.</>}
             <button type="button" onClick={closeConnect}>Cancel</button>
           </div>}
           {connectFrom&&connectTo&&editing&&<aside className="ml-overlay-card ml-connect-card" aria-label="Draw a connection">
