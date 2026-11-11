@@ -12,18 +12,18 @@ const lens=(page:Page,name:string)=>page.getByRole("navigation",{name:"Atlas len
   .getByRole("button",{name:new RegExp("^"+name)});
 async function choose(page:Page,name:string){
   await page.locator(".ml-search input").fill(name);
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list").getByRole("button",{name:new RegExp(name)}).first().click();
-  await page.getByRole("button",{name:"Close list"}).click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody tr").filter({hasText:name}).first().locator(".ml-data-locate").click();
+  await page.getByRole("button",{name:"Close data table"}).click();
   await page.getByRole("button",{name:"Clear search"}).click();
 }
 
 test("Field Atlas keeps selection and filters across five lenses and in the URL",async({page})=>{
   await openExample(page);
   await expect(lens(page,"Network")).toHaveAttribute("aria-current","page");
-  await page.getByRole("button",{name:/Browse records/}).click();
-  const first=page.locator(".ml-browse-list button").first();
-  const name=await first.locator("strong").innerText();
+  await page.locator(".ml-data-toggle").click();
+  const first=page.locator(".ml-data-table tbody tr").first();
+  const name=await first.locator(".ml-data-cell-edit").innerText();
   await first.click();
   await expect(page.locator(".ml-inspector h2")).toHaveText(name);
   const url=new URL(page.url());
@@ -140,7 +140,7 @@ test("the Field Atlas uses mobile-first filters and retains advanced tools",asyn
   await page.setViewportSize({width:390,height:844});
   await openExample(page);
   await expect(page.locator(".ml-search input")).toBeVisible();
-  await expect(page.getByRole("button",{name:/Browse records/})).toBeVisible();
+  await expect(page.locator(".ml-data-toggle")).toBeVisible();
   const filter=page.getByRole("button",{name:"Refine results"});
   await expect(filter).toBeVisible();
   await expect(page.getByRole("combobox",{name:"Type"})).toBeHidden();
