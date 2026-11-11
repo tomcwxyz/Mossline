@@ -100,7 +100,7 @@ for(const item of catalogue.examples)test("Rich Throw Lab: "+item.id,()=>{
     assert.ok(csv.rows.every(r=>r[currency]==="USD"),"US grant values need their correct currency");
     const recipientColumn=csv.headings.indexOf("Recipient");
     assert.ok(csv.rows.every(row=>{
-      const match=row[recipientColumn]?.match(/^(.+?) [^ ]+ Project Organisation \\d+$/);
+      const match=row[recipientColumn]?.match(/^(.+?) [^ ]+ Project Organisation \d+$/);
       return !!match&&row[col]===match[1]+", United States";
     }),"Every grant locality must agree with the city named in its recipient");
     assert.ok(graph.nodes.filter(n=>readAtlasLocation(n)).length>=700,
