@@ -24,9 +24,9 @@ test("a systems map shows direction, signs, feedback loops and routes that follo
   await page.getByRole("button",{name:"Show every kind"}).click();
 
   await page.locator(".ml-search input").fill("Grant funding");
-  await page.getByRole("button",{name:/Browse records/}).click();
-  await page.locator(".ml-browse-list button").first().click();
-  await page.getByRole("button",{name:"Close list"}).click();
+  await page.locator(".ml-data-toggle").click();
+  await page.locator(".ml-data-table tbody .ml-data-locate").first().click();
+  await page.getByRole("button",{name:"Close data table"}).click();
   await page.getByRole("button",{name:/Follow a recorded connection/}).click();
   await page.getByLabel(/Follow arrows only/).check();
   await page.locator(".ml-follow-route-form input[placeholder]").fill("insecurity");
