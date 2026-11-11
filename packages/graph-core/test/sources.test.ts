@@ -106,7 +106,10 @@ test("suggests shapes for grants, links and rows naming several records", () => 
   assert.equal(several.records.length, 3);
   const r = applySources([{ table: readDelimited("p.csv", "Project,Organisation,Funder\nFood hubs,Town Larder,Moorfield Foundation"), shape: several, use: "records" }], null);
   assert.deepEqual(r.graph.nodes.map(n => n.type).sort(), ["funder", "organisation", "project"]);
-  assert.deepEqual(r.graph.edges.map(e => e.type).sort(), ["delivers", "funded by"]);
+  assert.deepEqual(r.graph.edges.map(e => e.type).sort(),
+    ["listed together in source", "listed together in source"]);
+  assert.ok(r.graph.edges.every(e=>e.origin?.fileName==="p.csv" && !e.inferred),
+    "co-occurrence is sourced, but no partnership or award has been inferred");
 });
 
 test("a relationship-only table creates sparse, source-mentioned endpoints without inferred identities",()=>{
