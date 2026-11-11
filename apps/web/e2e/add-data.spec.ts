@@ -151,3 +151,30 @@ test("a standalone relationship CSV reveals real links between minimal, editable
   await page.getByRole("button",{name:"Edit"}).click();
   await expect(page.getByRole("button",{name:"Done"})).toBeVisible();
 });
+
+test("copy-pasted tabular data joins the same throw → review → edit journey",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Add your data/}).click();
+  await page.locator(".ml-add-knows").filter({hasText:"Or paste rows or JSON"}).locator("summary").click();
+  await page.getByLabel("Paste a table copied from a spreadsheet, CSV or JSON").fill(
+    "From\tTo\tRelationship\nAlice\tBob\thelps\nBob\tCharlie\tworks with"
+  );
+  await page.getByRole("button",{name:"Explore pasted data"}).click();
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.locator(".ml-add-totals")).toContainText("3new records");
+  await expect(page.locator(".ml-add-totals")).toContainText("2new recorded links");
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.locator(".ml-dataset summary small")).toContainText("3 records · 2 recorded links");
+});
+
+test("free-form pasted prose is not misrepresented as a verified network",async({page})=>{
+  await page.goto("/");
+  await page.getByRole("button",{name:/Add your data/}).click();
+  await page.locator(".ml-add-knows").filter({hasText:"Or paste rows or JSON"}).locator("summary").click();
+  await page.getByLabel("Paste a table copied from a spreadsheet, CSV or JSON").fill(
+    "Alice helped Bob at the community centre."
+  );
+  await page.getByRole("button",{name:"Explore pasted data"}).click();
+  await expect(page.getByRole("alert")).toContainText("Paste a table with a heading row");
+  await expect(page.getByRole("heading",{name:"Bring in your data"})).toBeVisible();
+});
