@@ -336,8 +336,8 @@ export function NetworkLens({ graph, mode, theme, selectedId: chosenId, route, o
         renderer.on("downNode", ({node,event}) => {
           if(!connecting.current || !onConnect.current)return;
           if(event.original instanceof MouseEvent && event.original.button!==0)return;
-          const point = renderer.getNodeDisplayData(node);
-          const centre = point?renderer.framedGraphToViewport(point):{x:event.x,y:event.y};
+          const point = renderer?.getNodeDisplayData(node);
+          const centre = point&&renderer?renderer.framedGraphToViewport(point):{x:event.x,y:event.y};
           dragStart.current={id:node,x:event.x,y:event.y,moved:false};
           if(dragPreview.current){
             dragPreview.current.setAttribute("x1",String(centre.x));
