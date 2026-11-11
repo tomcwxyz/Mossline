@@ -75,8 +75,8 @@ test("one editable data view changes the graph, and a graph connection appears i
   const records=page.getByRole("region",{name:"Records table"});
   const funding=records.locator("tr").filter({hasText:"Grant funding"});
   await funding.getByRole("button",{name:"Edit name of Grant funding"}).click();
-  await funding.getByRole("textbox",{name:"name of Grant funding"}).fill("Funder support");
-  await funding.getByRole("textbox",{name:"name of Grant funding"}).press("Enter");
+  await records.getByRole("textbox",{name:"name of Grant funding"}).fill("Funder support");
+  await records.getByRole("textbox",{name:"name of Grant funding"}).press("Enter");
   await expect(records).toContainText("Funder support");
   await funding.getByRole("button",{name:"Show Funder support in the graph"}).click();
   await expect(page.locator(".ml-inspector h2")).toHaveText("Funder support");
@@ -98,8 +98,8 @@ test("one editable data view changes the graph, and a graph connection appears i
   await expect(page.locator(".ml-inspector .ml-link-list")).toContainText("strengthens");
   const row=links.locator("tr").filter({hasText:"strengthens"});
   await row.getByRole("button",{name:/Edit relationship from/}).click();
-  await row.getByRole("textbox",{name:/relationship from/}).fill("supports");
-  await row.getByRole("textbox",{name:/relationship from/}).press("Enter");
+  await links.getByRole("textbox",{name:/relationship from/}).fill("supports");
+  await links.getByRole("textbox",{name:/relationship from/}).press("Enter");
   await expect(links).toContainText("supports");
   await expect(page.locator(".ml-inspector .ml-link-list")).toContainText("supports");
   await page.getByRole("button",{name:"Undo last change"}).click();
