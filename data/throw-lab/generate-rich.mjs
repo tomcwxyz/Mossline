@@ -172,7 +172,7 @@ function generateRichLab(){
     const json=JSON.stringify({initiatives:initiatives.map((Name,i)=>({Name,Type:"project",Tags:topics[(i+4)%10],Region:regionOf(i),Country:zones[i%zones.length][3],Latitude:Number(loc(i)[1]),Longitude:Number(loc(i)[2]),
       Description:"Fictional initiative spanning local organisations.",Year:2022+i%5}))},null,2)+"\n";
     const links=[];
-    for(let i=0;i<280;i++)links.push([orgs[(i*3+5)%94],initiatives[i%zones.length6],i%4===0?"shares resources with":"helps deliver","directed"]);
+    for(let i=0;i<280;i++)links.push([orgs[(i*3+5)%94],initiatives[i%76],i%4===0?"shares resources with":"helps deliver","directed"]);
     for(let i=0;i<75;i++)links.push([orgs[i],orgs[(i*7+23)%94],"works with","mutual"]);
     add("mixed-programmes","A Patchwork of Projects","Mixed sources",
       "Fictional international programmes across countries, using CSV organisations, JSON initiatives and recorded cross-border links.",
