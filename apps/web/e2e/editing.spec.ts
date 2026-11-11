@@ -88,6 +88,10 @@ test("one editable data view changes the graph, and a graph connection appears i
   await page.getByRole("button",{name:"Connect",exact:true}).click();
   await expect(page.locator(".ml-pick-banner")).toContainText("Drag between two records");
   await expect(page.locator(".ml-connect-preview line")).toHaveCount(1);
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".ml-pick-banner")).toHaveCount(0);
+  await expect(page.getByRole("button",{name:"Connect",exact:true})).toHaveAttribute("aria-pressed","false");
+  await page.getByRole("button",{name:"Connect",exact:true}).click();
   // Data stays visible while connecting, so either endpoint can be chosen in the
   // drawing or from a keyboard-accessible row.
   const candidates=page.locator(".ml-data-table tbody tr");
