@@ -16,6 +16,16 @@ food supply routes, volunteer sessions, wildlife observations, thematic
 project records and a mixed CSV/JSON network. Their patterns are intentional
 and recorded in the source data: no decorative, disconnected mock diagrams.
 
+The eight worlds now use **different geographical scopes** by design: UK-wide
+community work, UK-wide events and themes, US-wide grant awards (USD and
+recipient-centred map positions), European cultural connections, North American
+food supply routes across Canada/the US/Mexico, global species observations,
+and an international mixed-source programme network. Every relevant source
+provides coordinates and a country; the generator uses illustrative
+offsets near real city centres, never addresses of real organisations.
+Cross-border lines are explicitly present in the relationship source files,
+not inferred from proximity. Mossy's map frames the actual data extent.
+
 The source assets live in `apps/web/public/throw-lab/` and are built
 deterministically from `generate-rich.mjs`:
 
