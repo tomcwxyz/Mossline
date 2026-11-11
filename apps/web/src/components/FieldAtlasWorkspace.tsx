@@ -473,6 +473,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const [editTab, setEditTab] = useState<"add" | "quick" | "changes">("add");
   const [editCardOpen, setEditCardOpen] = useState(true);
   /** Select two drawn records, then create an editable, undoable source-backed link. */
+  const [editRequest,setEditRequest]=useState<{id:string;sequence:number}|null>(null);
   const [connectFrom,setConnectFrom]=useState<string|null>(null);
   const [connectTo,setConnectTo]=useState<string|null>(null);
   const [connectPicking,setConnectPicking]=useState(false);
@@ -486,6 +487,11 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     setStoryMode(null);setPickingFrom(null);setPicked(null);
   };
   const closeConnect=()=>{setConnectFrom(null);setConnectTo(null);setConnectPicking(false);};
+  const editDrawnRecord=(id:string)=>{
+    if(viewOnly||storyMode)return;
+    setSelectedId(id);
+    setEditRequest(previous=>({id,sequence:(previous?.sequence??0)+1}));
+  };
   /** Choosing a link's other end on the map: the record it starts from, and the one picked. */
   const [pickingFrom, setPickingFrom] = useState<string | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -620,7 +626,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {shared.role === "viewer" ? " · view only" : ""}</span></button>
           : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
         {!viewOnly && <button type="button" className="ml-quiet ml-connect-trigger" aria-pressed={connectPicking||!!connectTo}
-          onClick={beginConnect}>Connect</button>}
+          onClick={beginConnect} title="Choose two records on the drawing or in Data, then describe their relationship">Connect</button>}
         {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode}
           onClick={() => { setEditMode(v => { if (!v) setKeyOpen(false); return !v; }); setPickingFrom(null); setPicked(null); setStoryMode(null); }}>
           {editMode ? "Done" : "Edit"}{liveChanges > 0 && !editMode ? <span className="ml-edit-count"> · {liveChanges}</span> : null}</button>}
@@ -703,13 +709,15 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             {(lens === "network" || lens === "themes") && <NetworkLens graph={drawn} mode={lens} theme={activeTheme}
               groupOf={grouping?.of} groupKey={groupKind} groupName={groupOption?.label} suggested={grouping?.suggested} alias={alias}
               linkColour={linkMode === "plain" ? undefined : linkColour} linkKey={linkMode + ":" + activeTheme}
-              selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord} onUnavailable={onUnavailable}
+              selectedId={selectedId} route={spotlight ?? (lens === "network" ? route : null)} onPick={pickRecord}
+              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined} onUnavailable={onUnavailable}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} sketch={drawingStyle === "sketched"}/>}
             {lens === "map" && <MapLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
+              onEditNode={!viewOnly&&!storyMode&&!connectPicking?editDrawnRecord:undefined}
               unplaced={unplaced} onBrowse={() => {setDataTab("records");setDataOpen(true);}}
               marks={storyMarks} pins={storyPins} markStyle={story ? markStyleOf(story) : undefined} frame={storyFrame} frameKey={storyMode ?? ""} spotlight={spotlight?.nodeIds}/>}
             {lens === "funding" && <FundingLens graph={result.graph} flows={flowsView} theme={activeTheme} selectedId={selectedId} onPick={pickRecord}
-              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"}/>}
+              grouping={grouping} groupLabel={groupOption?.label ?? "Theme"} editRequest={editRequest}/>}
             {lens === "timeline" && <TimelineLens graph={undated.graph} flows={flowsUndated} range={range} onRange={setRange} theme={activeTheme}
               grouping={grouping} groupLabel={groupOption?.label ?? "Themes"}
               selectedId={selectedId} onPick={pickRecord}/>}
