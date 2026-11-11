@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "generated": "2026-11-11",
+  "disclaimer": "All organisations, grants, events, species and relationships are wholly fictional. Real city coordinates are used only as a backdrop. All counts describe intended source interpretations; final visual support is tested separately.",
+  "examples": [
+    {
+      "id": "neighbourhood-connections",
+      "title": "The Neighbourhood Web",
+      "group": "Relationships",
+      "description": "Seven fictional towns, hundreds of community organisations, shared projects and explicit partnerships.",
+      "idealFirstView": "network / map",
+      "whatToTry": "Find organisations that bridge otherwise separate areas. Then look at the same recorded links geographically.",
+      "caveat": "Closeness on the diagram isn't proof of collaboration; the source only records the links in the table.",
+      "files": [
+        {
+          "name": "records.csv",
+          "path": "/throw-lab/neighbourhood-connections/records.csv",
+          "rows": 191,
+          "bytes": 27479
+        },
+        {
+          "name": "relationships.csv",
+          "path": "/throw-lab/neighbourhood-connections/relationships.csv",
+          "rows": 350,
+          "bytes": 31826
+        }
+      ],
+      "expectedRecords": 191,
+      "expectedLinks": 350,
+      "stats": "191 named records · 350 recorded links · 7 areas",
+      "observations": [
+        "Clusters around activities",
+        "A few bridges between distant areas",
+        "Some organisations are lightly connected"
+      ]
+    },
+    {
+      "id": "arts-across-places",
+      "title": "After Hours: Culture Across Places",
+      "group": "Geography",
+      "description": "Venues, promoters and recorded touring or collaboration links across seven real UK cities; every organisation and relationship is fictional.",
+      "idealFirstView": "map / network",
+      "whatToTry": "Switch between points and connected arcs; trace who bridges different towns.",
+      "caveat": "The venues and promoters are inventions, even though the geographic backdrop uses real city locations.",
+      "files": [
+        {
+          "name": "venues.csv",
+          "path": "/throw-lab/arts-across-places/venues.csv",
+          "rows": 169,
+          "bytes": 20207
+        },
+        {
+          "name": "cultural-links.csv",
+          "path": "/throw-lab/arts-across-places/cultural-links.csv",
+          "rows": 358,
+          "bytes": 31354
+        }
+      ],
+      "expectedRecords": 169,
+      "expectedLinks": 358,
+      "stats": "169 venues and promoters · 358 links · 7 cities",
+      "observations": [
+        "Dense local clusters",
+        "Cross-city touring links",
+        "Some promoters reach several areas"
+      ]
+    },
+    {
+      "id": "funding-in-motion",
+      "title": "Six Years of Community Funding",
+      "group": "Funding",
+      "description": "An invented grants portfolio with repeat awards, unequal funder reach, programme shifts and distinct funding sizes.",
+      "idealFirstView": "funding / timeline",
+      "whatToTry": "Compare funders, award amounts, recipients and how the priorities move between years.",
+      "caveat": "Shared recipients or a common funder do not demonstrate organisations working together.",
+      "files": [
+        {
+          "name": "awards.csv",
+          "path": "/throw-lab/funding-in-motion/awards.csv",
+          "rows": 720,
+          "bytes": 100780
+        }
+      ],
+      "expectedRecords": 863,
+      "expectedLinks": 1440,
+      "stats": "720 grants · 18 funders · 125 recipients · 6 years",
+      "observations": [
+        "A few large funders dominate",
+        "Repeat recipients over time",
+        "Small awards sit alongside major investments"
+      ]
+    },
+    {
+      "id": "food-supply-routes",
+      "title": "How Food Moves",
+      "group": "Supply chains",
+      "description": "Fictional farms, community kitchens and food hubs with hundreds of explicit supply and distribution routes.",
+      "idealFirstView": "network / map",
+      "whatToTry": "Find fragile hubs, trace recorded routes and compare local clusters to cross-area deliveries.",
+      "caveat": "A source-recorded supply relationship isn't evidence of a quantity, value or successful delivery without those fields.",
+      "files": [
+        {
+          "name": "food-places.csv",
+          "path": "/throw-lab/food-supply-routes/food-places.csv",
+          "rows": 202,
+          "bytes": 24630
+        },
+        {
+          "name": "supply-links.csv",
+          "path": "/throw-lab/food-supply-routes/supply-links.csv",
+          "rows": 530,
+          "bytes": 44927
+        }
+      ],
+      "expectedRecords": 202,
+      "expectedLinks": 530,
+      "stats": "202 food sites · 530 recorded routes · 7 places",
+      "observations": [
+        "A handful of distribution hubs",
+        "Multi-hop supply chains",
+        "Connections between distinct areas"
+      ]
+    },
+    {
+      "id": "volunteer-calendar",
+      "title": "A Year of Community Activity",
+      "group": "Events",
+      "description": "Repeated sessions across four years, with organising bodies, places, topics and participant numbers.",
+      "idealFirstView": "network / future timeline",
+      "whatToTry": "Explore which organisations appear most often, then compare seasons, topics and attendance once event charting lands.",
+      "caveat": "Appearing in a row with an event does not, alone, prove collaboration or wider impact.",
+      "files": [
+        {
+          "name": "sessions.csv",
+          "path": "/throw-lab/volunteer-calendar/sessions.csv",
+          "rows": 320,
+          "bytes": 31230
+        }
+      ],
+      "expectedRecords": 362,
+      "expectedLinks": 320,
+      "stats": "320 dated sessions · 42 organisers · 4 years",
+      "observations": [
+        "Activities fluctuate by season",
+        "Different types of event",
+        "Uneven levels of participation"
+      ]
+    },
+    {
+      "id": "wildlife-sightings",
+      "title": "Living Places: Field Observations",
+      "group": "Ecology",
+      "description": "Hundreds of invented species observations at real geographic coordinates, with strong local and seasonal variation.",
+      "idealFirstView": "map / themes",
+      "whatToTry": "Explore observation clusters, species concentrations and where the records are sparse.",
+      "caveat": "Observations are not proof of species absence elsewhere and don't create relationships between observations.",
+      "files": [
+        {
+          "name": "observations.csv",
+          "path": "/throw-lab/wildlife-sightings/observations.csv",
+          "rows": 510,
+          "bytes": 40886
+        }
+      ],
+      "expectedRecords": 510,
+      "expectedLinks": 0,
+      "stats": "510 positioned observations · 8 fictional species · 4 years",
+      "observations": [
+        "Concentrations in several places",
+        "Uneven species coverage",
+        "Source dates available for further charting"
+      ]
+    },
+    {
+      "id": "themes-in-common",
+      "title": "Common Ground: A Project Portfolio",
+      "group": "Themes",
+      "description": "A portfolio of projects across places with overlapping source-given themes and year fields, but no asserted partnerships.",
+      "idealFirstView": "themes / directory",
+      "whatToTry": "See themes that recur, try different groupings and inspect projects within each group.",
+      "caveat": "Sharing a tag is not evidence of partnership. No links have been fabricated in this dataset.",
+      "files": [
+        {
+          "name": "projects.csv",
+          "path": "/throw-lab/themes-in-common/projects.csv",
+          "rows": 285,
+          "bytes": 41431
+        }
+      ],
+      "expectedRecords": 285,
+      "expectedLinks": 0,
+      "stats": "285 projects · 10 themes · 7 areas",
+      "observations": [
+        "Some themes recur together",
+        "Regional variation",
+        "No recorded relationships"
+      ]
+    },
+    {
+      "id": "mixed-programmes",
+      "title": "A Patchwork of Projects",
+      "group": "Mixed sources",
+      "description": "Different file types forming one picture: a CSV organisation register, nested JSON initiatives and a separate connection list.",
+      "idealFirstView": "network / themes",
+      "whatToTry": "Compare sources, follow who works across initiatives and inspect the original rows behind the links.",
+      "caveat": "Cross-file records must not merge merely because they share a similar name or location.",
+      "files": [
+        {
+          "name": "organisations.csv",
+          "path": "/throw-lab/mixed-programmes/organisations.csv",
+          "rows": 94,
+          "bytes": 11373
+        },
+        {
+          "name": "initiatives.json",
+          "path": "/throw-lab/mixed-programmes/initiatives.json",
+          "rows": 76,
+          "bytes": 18187
+        },
+        {
+          "name": "recorded-connections.csv",
+          "path": "/throw-lab/mixed-programmes/recorded-connections.csv",
+          "rows": 355,
+          "bytes": 33470
+        }
+      ],
+      "expectedRecords": 170,
+      "expectedLinks": 355,
+      "stats": "94 organisations · 76 initiatives · 355 explicit links",
+      "observations": [
+        "Three different source files",
+        "Cross-file relationships",
+        "Repeated themes and distinct source receipts"
+      ]
+    }
+  ]
+}
