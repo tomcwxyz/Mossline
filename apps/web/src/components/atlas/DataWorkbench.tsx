@@ -121,7 +121,7 @@ export function DataWorkbench({graph,tab,onTab,selectedId,onPick,onClose,onConne
   function positionEdit(node:GraphNode,text:string){
     if(!text.trim()){setCoordinateError(null);nodeEdit(node,"location",null);return;}
     const parts=text.split(",").map(value=>value.trim());
-    const numbers=parts.map(value=>value!==""&&/^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$/.test(value)?Number(value):NaN);
+    const numbers=parts.map(value=>value!==""&&/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(value)?Number(value):NaN);
     if(numbers.length!==2||!Number.isFinite(numbers[0])||!Number.isFinite(numbers[1])||
       Math.abs(numbers[0])>90||Math.abs(numbers[1])>180){
       setCoordinateError("Map position needs a valid latitude and longitude, separated by a comma. Nothing changed.");
