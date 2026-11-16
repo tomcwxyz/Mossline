@@ -1,6 +1,6 @@
 "use client";
 
-import type {AtlasLens,GraphDocument} from "@mossline/graph-core";
+import {isRecorded,placedCoordinates,type AtlasLens,type GraphDocument} from "@mossline/graph-core";
 import {useMemo} from "react";
 import {mossyOverview} from "../lib/mossy-findings";
 
@@ -15,6 +15,17 @@ export function MossyFindings({graph,onPick,onLens,onBrowse}:{
   // The same source observation must never appear twice.
   const lead=report.findings.find(item=>item.lens===report.recommended)??report.findings[0]!;
   const remaining=report.findings.filter(item=>item.id!==lead.id).slice(0,3);
+  const sources=useMemo(()=>{
+    const files=new Map<string,{records:number;links:number}>();
+    const entry=(file:string)=>{if(!files.has(file))files.set(file,{records:0,links:0});return files.get(file)!;};
+    for(const node of graph.nodes)entry(node.origin?.fileName??"Added in Mossy").records++;
+    for(const edge of graph.edges)if(isRecorded(edge))entry(edge.origin?.fileName??"Added in Mossy").links++;
+    return [...files].sort((a,b)=>b[1].records+b[1].links-a[1].records-a[1].links);
+  },[graph]);
+  const locationCounts=useMemo(()=>({
+    located:graph.nodes.filter(node=>placedCoordinates(node)).length,
+    missing:graph.nodes.filter(node=>!placedCoordinates(node)).length
+  }),[graph]);
   const explore=(item:typeof lead)=>{
     onLens(item.lens);
     if(item.recordId)onPick(item.recordId);
@@ -26,6 +37,23 @@ export function MossyFindings({graph,onPick,onLens,onBrowse}:{
     <p>Mossy recognised <strong>{report.records.toLocaleString("en-GB")} records</strong> and
       <strong> {report.relationships.toLocaleString("en-GB")} source-recorded relationships</strong>.
       These observations come from the records, not an AI guess.</p>
+    <details className="ml-findings-provenance">
+      <summary>What Mossy knows about this data</summary>
+      <div className="ml-findings-provenance-body">
+        <p><strong>What was read:</strong> {report.records.toLocaleString("en-GB")} records and
+          {" "}{report.relationships.toLocaleString("en-GB")} explicitly recorded relationships.
+          Mossy uses the source files as evidence; it has not independently checked that their claims are true.</p>
+        <p><strong>On the map:</strong> {locationCounts.located.toLocaleString("en-GB")} records can be placed from
+          source coordinates or recognised postcode locations.
+          {locationCounts.missing>0&&<> {locationCounts.missing.toLocaleString("en-GB")} have no recognised location; Mossy does not guess one.</>}</p>
+        <strong>Files and contributions</strong>
+        <ul>{sources.map(([file,totals])=><li key={file}>
+          <span>{file}</span><small>{totals.records.toLocaleString("en-GB")} records · {totals.links.toLocaleString("en-GB")} links</small>
+        </li>)}</ul>
+        <p>Open Data to see each record and its recorded connections. You can correct anything
+          there without changing the original imported files.</p>
+      </div>
+    </details>
     <div className="ml-findings-recommend">
       <span className="ml-eyebrow">Start here</span>
       <h3>{lead.heading}</h3>
