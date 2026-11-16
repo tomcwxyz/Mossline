@@ -64,11 +64,11 @@ function generateRichLab(){
     for(let i=0;i<28;i++)links.push([venues[i*4%145],venues[(i*4+54)%145],"touring route","directed",2024]);
     add("arts-across-places","After Hours: Culture Across Places","Geography",
       "Fictional cultural venues and recorded touring links between cities in twelve European countries.",
-      "map / network","Switch between points and connected arcs; trace who bridges different towns.",
+      "map / network","Use the line-colour legend to isolate touring routes, joint events, hosted activities and shared programmes. Switch point colours between record type and recorded theme, then edit a relationship in Data.",
       "Venues and promoters are inventions. Their positions are illustrative offsets from real city centres.",
       [["venues.csv",csv(head,rows),rows.length],["cultural-links.csv",csv(["From","To","Relationship","Direction","Since"],links),links.length]],
       rows.length,links.length,`${rows.length} venues and promoters · ${links.length} links · ${zones.length} cities · 12 countries`,
-      ["Dense local clusters","Cross-city touring links","Some promoters reach several areas"]);
+      ["Four source-recorded connection types, each shown in its own line colour","Music, theatre, film and visual arts venues have different point colours","Cross-border touring links and promoters spanning multiple areas"]);
   }
   // 3. An uneven award portfolio with recurring funders, winners, themed grants and dates.
   {scope("usa");
