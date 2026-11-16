@@ -140,6 +140,20 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
   const [view, setView] = useState({ inView: 0, grantsInView: 0 });
   const [narrow, setNarrow] = useState(false);
   const [unplacedOpen, setUnplacedOpen] = useState(true);
+  // Phone maps start as a map, not a permanently-open control sheet.
+  const [mobileOptionsOpen,setMobileOptionsOpen]=useState(false);
+  const [mapFullScreen,setMapFullScreen]=useState(false);
+  useEffect(()=>{
+    if(!mobileOptionsOpen&&!mapFullScreen)return;
+    const onKey=(event:KeyboardEvent)=>{
+      if(event.key!=="Escape")return;
+      if(mobileOptionsOpen){setMobileOptionsOpen(false);event.stopPropagation();}
+      else if(mapFullScreen){setMapFullScreen(false);event.stopPropagation();}
+    };
+    document.addEventListener("keydown",onKey,true);
+    return ()=>document.removeEventListener("keydown",onKey,true);
+  },[mobileOptionsOpen,mapFullScreen]);
+
   const palette = PALETTES[theme];
   const byId = useMemo(() => new Map(graph.nodes.map(n => [n.id, n])), [graph]);
   const located = useMemo(() => graph.nodes.flatMap(n => {
@@ -693,7 +707,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
   };
   const outside = located.length - view.inView;
   const grantsOutside = myGrants.length - view.grantsInView;
-  return <section className="ml-map" aria-label="Map of records with source coordinates">
+  return <section className={"ml-map"+(mapFullScreen?" ml-map--full-screen":"")} aria-label="Map of records with source coordinates">
     <div ref={container} className="ml-map-canvas"/>
     <div ref={gratLabels} className="ml-graticule-labels" aria-hidden="true"/>
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
@@ -712,9 +726,22 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
       <button type="button" aria-label="Zoom out" onClick={() => zoom("out")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
       <button type="button" aria-label="Fit everything" onClick={() => zoom("fit")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5V1.5H5M9 1.5h3.5V5M12.5 9v3.5H9M5 12.5H1.5V9"/></svg></button>
     </div>
-    <div className="ml-map-cards">
+    <div className="ml-map-mobile-actions" aria-label="Map options">
+      <button type="button" className="ml-map-mobile-menu" aria-controls="ml-mobile-map-panels"
+        aria-expanded={mobileOptionsOpen} onClick={()=>setMobileOptionsOpen(v=>!v)}>
+        {mobileOptionsOpen?"Hide key":"Key & layers"}
+      </button>
+      <button type="button" className="ml-map-mobile-expand" aria-pressed={mapFullScreen}
+        onClick={()=>{setMapFullScreen(v=>!v);setMobileOptionsOpen(false);}}>
+        {mapFullScreen?"Exit full map":"Full map"}
+      </button>
+    </div>
+    <div id="ml-mobile-map-panels" className={"ml-map-cards"+(mobileOptionsOpen?" is-mobile-open":"")}>
       <section className="ml-overlay-card ml-map-connections" aria-label="Connections on the map">
-        <h3>Recorded connections</h3>
+        <div className="ml-map-card-head"><h3>Recorded connections</h3>
+          <button type="button" className="ml-map-mobile-close" onClick={()=>setMobileOptionsOpen(false)}
+            aria-label="Close map key">×</button>
+        </div>
         <div className="ml-segmented" role="group" aria-label="Show connections">
           <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");}}>All</button>
           <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>setConnectionsMode("selected")} disabled={!selectedId}>Selected</button>
