@@ -19,8 +19,8 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
     file("publicextract.charity_classification.txt"),file("companies-house.csv","text/csv"),
     file("kumu-map.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")]);
   // Recognised files go straight to a reversible review.
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await page.getByRole("button",{name:"Change how Mossy understood my files"}).click();
   await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
   await page.getByRole("button",{name:/Adjust how Mossy reads your files/}).click();
   const card=(name:string)=>page.locator(".ml-add-table").filter({has:page.getByText(name,{exact:true})});
@@ -31,7 +31,8 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   expect((await axe(page)).violations).toEqual([]);
   await page.getByLabel("Map name").fill("Upper dale (test)");
   await page.getByRole("button",{name:/Check what this adds/}).click();
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await page.locator(".ml-add-interpretation > summary").click();
   await expect(page.locator(".ml-add-joins")).toContainText("360giving-grants.csv ↔ companies-house.csv");
   await expect(page.locator(".ml-add-ledger")).toContainText("Grants to individuals are left out · 1");
   // Same name without a shared identifier is listed, unticked.
@@ -39,7 +40,7 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   await expect(pair.getByRole("checkbox")).not.toBeChecked();
   await expect(page.locator(".ml-add-places")).toContainText("approximately");
   expect((await axe(page)).violations).toEqual([]);
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.getByRole("button",{name:"See my map"}).click();
 
   const atlas=page.locator(".ml-atlas:not(.ml-home):not(.ml-add)");
   await expect(atlas).toBeVisible();
@@ -61,25 +62,26 @@ test("adding to the open map fills in records it already has",async({page})=>{
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.locator(".ml-add-drop input[type=file]").setInputFiles([file("360giving-grants.csv","text/csv")]);
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
   await page.getByLabel("Map name").fill("Grants only (test)");
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.getByRole("button",{name:"See my map"}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("9 records");
 
   await page.locator(".ml-dataset summary").click();
   await page.getByRole("button",{name:"Add data…"}).click();
   await expect(page.locator(".ml-add-title")).toHaveText("Add data to Grants only (test)");
   await page.locator(".ml-add-drop input[type=file]").setInputFiles([file("companies-house.csv","text/csv")]);
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await page.getByRole("button",{name:"Change how Mossy understood my files"}).click();
   await expect(page.getByRole("radio",{name:/Add to Grants only \(test\)/})).toBeChecked();
   await page.getByRole("button",{name:/Adjust how Mossy reads your files/}).click();
   await expect(page.getByRole("radio",{name:/Fill in/})).toBeChecked();
   await page.getByRole("button",{name:/Check what this adds/}).click();
-  await expect(page.locator(".ml-add-totals")).toContainText("2filled in");
-  await expect(page.locator(".ml-add-totals")).toContainText("0new records");
+  await expect(page.locator(".ml-add-totals")).toContainText("2existing records updated");
+  await expect(page.locator(".ml-add-totals")).not.toContainText("records found");
+  await page.locator(".ml-add-interpretation > summary").click();
   await expect(page.locator(".ml-add-ledger")).toContainText("Not about a record you already have · 1");
-  await page.getByRole("button",{name:"Add to Grants only (test)"}).click();
+  await page.getByRole("button",{name:"Add and explore"}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("9 records");
   await expect(page.locator(".ml-toast")).toContainText("2 filled in");
 });
@@ -93,8 +95,8 @@ test("a large grants file stays readable: grants as links, groupings, ranked fun
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(csv);
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible({timeout:90_000});
-  await page.getByRole("button",{name:"Create the map"}).click({timeout:60_000});
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible({timeout:90_000});
+  await page.getByRole("button",{name:"See my map"}).click({timeout:60_000});
   // Mossy now recognises a grant portfolio and recommends the Funding lens.
   await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Funding"}))
     .toHaveAttribute("aria-current","page");
@@ -125,11 +127,11 @@ test("a suggested spreadsheet gets a review and can be reinterpreted",async({pag
     name:"community-ideas.csv",mimeType:"text/csv",
     buffer:Buffer.from("Name,Organisation,Theme,Postcode\nFood club,Neighbourhood Trust,Food,NE1 1AA\nCycle repairs,Neighbourhood Trust,Transport,NE2 2AA\n")
   });
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
   await expect(page.getByText(/suggested how to read some of these files/i)).toBeVisible();
-  await expect(page.locator(".ml-add-totals")).toContainText("new records");
+  await expect(page.locator(".ml-add-totals")).toContainText("records found");
   await page.getByLabel("Map name").fill("Community ideas");
-  await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
+  await page.getByRole("button",{name:"Change how Mossy understood my files"}).click();
   await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
   // Suggestions are editable, rather than silently treated as facts.
   await expect(page.getByRole("combobox",{name:"Read as"})).toBeVisible();
@@ -142,11 +144,11 @@ test("a standalone relationship CSV reveals real links between minimal, editable
     name:"links.csv",mimeType:"text/csv",
     buffer:Buffer.from("From,To,Relationship\nAlice,Bob,helps\nBob,Charlie,works with\n")
   });
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await expect(page.locator(".ml-add-totals")).toContainText("3new records");
-  await expect(page.locator(".ml-add-totals")).toContainText("2new recorded links");
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await expect(page.locator(".ml-add-totals")).toContainText("3records found");
+  await expect(page.locator(".ml-add-totals")).toContainText("2recorded connections");
   await expect(page.getByText(/Their identities and types have not been verified/)).toBeVisible();
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.getByRole("button",{name:"See my map"}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("3 records · 2 recorded links");
   await page.getByRole("button",{name:"Edit"}).click();
   await expect(page.getByRole("button",{name:"Done"})).toBeVisible();
@@ -160,10 +162,10 @@ test("copy-pasted tabular data joins the same throw → review → edit journey"
     "From\tTo\tRelationship\nAlice\tBob\thelps\nBob\tCharlie\tworks with"
   );
   await page.getByRole("button",{name:"Explore pasted data"}).click();
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await expect(page.locator(".ml-add-totals")).toContainText("3new records");
-  await expect(page.locator(".ml-add-totals")).toContainText("2new recorded links");
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await expect(page.locator(".ml-add-totals")).toContainText("3records found");
+  await expect(page.locator(".ml-add-totals")).toContainText("2recorded connections");
+  await page.getByRole("button",{name:"See my map"}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("3 records · 2 recorded links");
 });
 
