@@ -149,6 +149,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
   const approximate = useMemo(() => located.filter(p => p.approximate).length, [located]);
   const pointKey=useMemo(()=>pointCategoryKey(located.map(({node})=>node),theme),[located,theme]);
   const pointsByTag=pointKey.available&&pointInkMode==="tag";
+  const hoverTagRef=useRef(pointsByTag);hoverTagRef.current=pointsByTag;
   const degree = useMemo(() => {
     const d = new Map<string, number>();
     for (const e of graph.edges) if (isRecorded(e)) {
@@ -355,7 +356,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
           if(id===selectedRef.current||(!node&&!link)){hoverMarker.current?.remove();hoverMarker.current=null;return;}
           const el=hoverMarker.current?.getElement()??document.createElement("div");
           el.className="ml-map-hover";
-          if(node)el.textContent=node.label;
+          if(node)el.textContent=hoverTagRef.current&&node.tags[0]
+            ? node.label+" · "+node.tags[0] : node.label;
           else if(link){
             const from=byIdRef.current.get(String(link.properties?.source));
             const to=byIdRef.current.get(String(link.properties?.target));
