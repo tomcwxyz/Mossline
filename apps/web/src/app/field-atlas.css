@@ -1460,6 +1460,25 @@ button.ml-shared-badge:hover { border-color: var(--ml-ink); }
 .ml-map-connections .ml-segmented {display:flex;gap:2px;}
 .ml-map-connections .ml-segmented button {min-width:0;flex:1;padding:6px 8px;}
 .ml-map-connections .ml-segmented button:disabled {opacity:.4;cursor:default;}
+.ml-map-grammar,.ml-map-point-grammar{border-top:1px solid var(--ml-border);padding-top:8px;}
+.ml-map-grammar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ml-map-grammar-head strong{font-size:11px;font-weight:600;color:var(--ml-ink);}
+.ml-map-grammar-head button{border:0;background:transparent;color:var(--ml-ink);font:600 11px var(--ml-sans);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.ml-map-grammar-items{display:grid;gap:2px;margin-top:5px;}
+.ml-map-grammar-item{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;min-width:0;
+ border:1px solid transparent;border-radius:4px;background:transparent;padding:5px 6px;color:var(--ml-ink);font:12px/1.3 var(--ml-sans);text-align:left;}
+button.ml-map-grammar-item{cursor:pointer;}
+button.ml-map-grammar-item:hover,button.ml-map-grammar-item[aria-pressed="true"]{background:var(--ml-sunken);border-color:var(--ml-border);}
+.ml-map-grammar-item[aria-pressed="true"]{font-weight:650;}
+.ml-map-grammar-item small,.ml-map-point-key small{font:10px var(--ml-mono);color:var(--ml-subtle);white-space:nowrap;}
+.ml-map-grammar-line{display:block;width:21px;height:0;border-top:3px solid;border-radius:4px;}
+.ml-map-grammar>p,.ml-map-point-grammar>p{font-size:11px!important;margin-top:5px!important;}
+.ml-map-point-grammar summary{font-size:11px;font-weight:600;cursor:pointer;color:var(--ml-ink);}
+.ml-map-point-grammar .ml-segmented{margin-top:8px;}
+.ml-map-point-key{list-style:none;margin:7px 0 0;padding:0;display:grid;gap:4px;}
+.ml-map-point-key li{display:grid;grid-template-columns:14px minmax(0,1fr) auto;align-items:center;gap:7px;font-size:11.5px;color:var(--ml-ink);}
+.ml-map-point-key i{width:10px;height:10px;border-radius:50%;border:1px solid var(--ml-paper);}
+@media(max-width:700px){.ml-map-grammar-items{max-height:140px;overflow-y:auto;}.ml-map-connections{max-height:min(57dvh,430px);overflow-y:auto;}}
 @media(max-width:700px){.ml-map-connections{max-width:min(260px,calc(100vw - 26px));}}
 
 
