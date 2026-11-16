@@ -1588,3 +1588,29 @@ button.ml-map-grammar-item:hover,button.ml-map-grammar-item[aria-pressed="true"]
   .ml-map--full-screen .ml-map-cards.is-mobile-open{top:calc(62px + env(safe-area-inset-top));max-height:70dvh;}
   .ml-map--full-screen .ml-zoom{right:12px;top:75px;}
 }
+
+
+/* One understandable import decision; technical receipts are available, not a
+   mandatory wall of cards between the person and the result. */
+.ml-add-totals--simple{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.ml-add-totals--simple > div:last-child{border-style:solid;border-color:var(--ml-border);background:var(--ml-surface);}
+.ml-add-actions--preview{justify-content:start;align-items:center;gap:12px 22px;margin:2px 0 8px;}
+.ml-add-actions--preview .ml-primary{min-height:48px;padding-inline:28px;font-size:15px;font-weight:600;}
+.ml-add-interpretation{border-top:1px solid var(--ml-rule);padding:12px 0;display:grid;gap:12px;}
+.ml-add-interpretation>summary{font-size:13px;font-weight:600;color:var(--ml-ink);cursor:pointer;list-style:revert;}
+.ml-add-interpretation[open]>summary{margin-bottom:12px;}
+.ml-add-interpretation>.ml-small{margin:0 0 12px;}
+.ml-add-interpretation .ml-add-review-grid{margin-bottom:10px;}
+.ml-findings-provenance{border:1px solid var(--ml-border);border-radius:var(--ml-radius-md);padding:11px 14px;background:var(--ml-raised);}
+.ml-findings-provenance>summary{cursor:pointer;font-size:13px;font-weight:650;color:var(--ml-ink);}
+.ml-findings-provenance-body{padding-top:10px;display:grid;gap:10px;font-size:12px;line-height:1.5;color:var(--ml-text-2);}
+.ml-findings-provenance-body>strong{color:var(--ml-ink);}
+.ml-findings-provenance-body ul{list-style:none;display:grid;gap:4px;padding:0;margin:0;}
+.ml-findings-provenance-body li{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;border-bottom:1px solid var(--ml-rule);padding-bottom:5px;overflow-wrap:anywhere;}
+.ml-findings-provenance-body li small{color:var(--ml-muted);white-space:nowrap;}
+@media(max-width:700px){
+ .ml-add-review-grid{grid-template-columns:1fr;}
+ .ml-add-actions--preview .ml-primary{width:100%;justify-content:center;}
+ .ml-add-totals--simple{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .ml-findings-provenance-body li small{white-space:normal;}
+}
