@@ -536,6 +536,10 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
 
         </details>
+        {report.tables.some(t=>t.unresolvedLinks>0)&&<p className="ml-add-warn" role="alert">
+          Some recorded relationships could not be matched to a record. They will not appear as lines.
+          Check “How Mossy understood your files” before you open the map.
+        </p>}
         {report.sameName.length > 0 && <section className="ml-add-panel ml-add-same">
           <h2 className="ml-section-title"><span className="ml-key-pencil"/>Same name, no shared identifier</h2>
           <p className="ml-small">These may be the same organisation recorded twice, or two different ones. Tick only the pairs you know are the same;
@@ -552,6 +556,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           {report.sameName.length > 60 && <p className="ml-small">{report.sameName.length - 60} more pairs are kept separate; review them in the map later.</p>}
         </section>}
 
+        <details className="ml-add-interpretation ml-add-interpretation--places">
+          <summary>Places, source notes and individual records</summary>
         {places && <section className="ml-add-panel ml-add-places">
           <h2 className="ml-section-title">Places</h2>
           <ul className="ml-add-placecounts">
@@ -566,7 +572,9 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           {consent && <div className="ml-add-consent" role="group" aria-label="Exact postcode lookup">
             <p><strong>This sends {count(toLookUp, "postcode")} to postcodes.io</strong>, a free public lookup service. Only the postcodes
               are sent, not names or anything else. Do this only if you are comfortable with them leaving this device.</p>
-            <div className="ml-add-actions"><button type="button" className="ml-quiet" onClick={() => setConsent(false)}>Cancel</button>
+            </details>
+
+        <div className="ml-add-actions"><button type="button" className="ml-quiet" onClick={() => setConsent(false)}>Cancel</button>
               <button type="button" className="ml-solid" onClick={lookUpExact} disabled={!!busy}>Send postcodes and place exactly</button></div>
           </div>}
           {exactNote && <p className="ml-small" role="status">{exactNote}</p>}
