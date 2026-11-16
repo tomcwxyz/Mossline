@@ -121,8 +121,9 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           "Mossy couldn't find any tables or records in these files. Try a CSV, Excel workbook or Mossy JSON map.");
         return;
       }
-      // The proposal is still reversible. The worker provides a full evidence and
-      // omissions report; only the subsequent Create/Add action stores anything.
+      // The proposal is still reversible. For normal uploads only the user's
+      // explicit 'See my map' action saves anything. Curated Throw Lab examples
+      // are explicitly opened by selecting Explore in Mossy, so can open faster.
       setPhase("plan");
       if (canReviewDirectly(m.tables,m.maps,m.problems,next,
         requestedTarget === "add" && (base?.nodes.length ?? 0)>0)) {
@@ -131,11 +132,26 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           plans:m.tables.map(t=>({table:t.name,shape:shapeOf(t,next[t.name]),use:next[t.name].use}))},
         "Checking records and connections…",result=>{
           if(result.kind!=="result")return;
-          setReport(result.report);setMerge(new Set());setConsent(false);setExactNote("");setPhase("review");
+          setReport(result.report);setMerge(new Set());setConsent(false);setExactNote("");
+          // A curated example is the one safe exception to a second approval
+          // screen. Read the actual files first, and only skip when every source
+          // row was understood and no names/relationships need resolving.
+          const cleanExample=!!starter&&requestedTarget==="new"&&m.problems.length===0
+            &&result.report.sameName.length===0
+            &&result.report.tables.every(t=>t.used===t.rows&&t.unresolvedLinks===0&&t.skipped.length===0);
+          if(cleanExample){
+            send({kind:"finish",id:++request.current,merges:[]},
+              "Opening the example map…",async final=>{
+                if(final.kind!=="graph")return;
+                const saved=await onCommit(final.graph,"new",proposedTitle,
+                  "Opened from the original Throw Lab source files. Source records and relationships are available under What Mossy knows.");
+                if(saved!==true){setPhase("review");setError(saved+" Your files are still open here.");}
+              });
+          }else setPhase("review");
         });
       }
     });
-  }, [send, target, base, title]);
+  }, [send, target, base, title, starter, onCommit]);
   // Loading a Throw Lab example is not a shortcut to a canned graph. The
   // actual source files pass through the same worker, review and edit controls.
   const openedStarter=useRef(false);
@@ -247,7 +263,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
     });
   }
 
-  const steps: [Phase, string][] = [["choose", "Files"], ["plan", "What each adds"], ["review", "Check and add"]];
+  const steps: [Phase, string][] = [["choose", "Files"], ["plan", "Adjust reading"], ["review", "See result"]];
   const stepIndex = steps.findIndex(s => s[0] === phase);
   const places = report?.places;
   const approxCount = places ? (places.placed["postcode sector"] ?? 0) + (places.placed["postcode district"] ?? 0) : 0;
@@ -456,8 +472,10 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
       {phase === "review" && report && <section className="ml-add-stack" aria-labelledby="review-h">
         <div className="ml-add-intro">
-          <h1 id="review-h" ref={heading} tabIndex={-1}>Check before adding</h1>
-          <p className="ml-add-lede">Nothing has been saved yet. {target === "add" ? <>This will change <strong>{baseTitle}</strong>.</> : <>This will create a new map.</>}</p>
+          <h1 id="review-h" ref={heading} tabIndex={-1}>Ready to explore</h1>
+          <p className="ml-add-lede">Mossy has found the records and relationships in your files. {target === "add"
+            ? <>Nothing has changed in <strong>{baseTitle}</strong> yet.</>
+            : <>Nothing has been saved yet. Open the map to explore what you brought in.</>}</p>
           {target === "new" && <label className="ml-add-field ml-add-name"><span>Give your map a name</span>
             <input aria-label="Map name" value={title} maxLength={100} onChange={e => setTitle(e.target.value)}/></label>}
           {mentionedOnly&&report.totals.newRecords>0&&<p className="ml-add-warn" role="note">
@@ -469,15 +487,28 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             Mossy has suggested how to read some of these files from their headings. Check the interpretations below;
             you can change them before saving.</p>}
         </div>
-        <div className="ml-add-totals">
-          <div><strong>{report.totals.newRecords.toLocaleString("en-GB")}</strong><span>new records</span></div>
-          <div><strong>{report.totals.filledIn.toLocaleString("en-GB")}</strong><span>filled in</span></div>
-          <div><strong>{report.totals.newLinks.toLocaleString("en-GB")}</strong><span>new recorded links</span></div>
-          <div><strong>{report.sameName.length.toLocaleString("en-GB")}</strong><span>names to check</span></div>
+        <div className="ml-add-totals ml-add-totals--simple">
+          {report.totals.newRecords>0&&<div><strong>{report.totals.newRecords.toLocaleString("en-GB")}</strong><span>records found</span></div>}
+          {report.totals.newLinks>0&&<div><strong>{report.totals.newLinks.toLocaleString("en-GB")}</strong><span>recorded connections</span></div>}
+          {report.totals.filledIn>0&&<div><strong>{report.totals.filledIn.toLocaleString("en-GB")}</strong><span>existing records updated</span></div>}
+          {report.sameName.length>0&&<div><strong>{report.sameName.length.toLocaleString("en-GB")}</strong><span>possible duplicates</span></div>}
         </div>
         {addedByType.length > 0 && <ul className="ml-add-types">{addedByType.map(([type, n]) =>
           <li key={type}><TypeMark type={type}/>{n.toLocaleString("en-GB")} {(n === 1 ? TYPE_LABEL[type] : TYPE_PLURAL[type]).toLowerCase()}</li>)}</ul>}
 
+        <div className="ml-add-actions ml-add-actions--preview">
+          <button type="button" className="ml-primary" onClick={finish}
+            disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
+            {target==="add"?"Add and explore": "See my map"} →
+          </button>
+          <button type="button" className="ml-link-button" onClick={()=>setPhase("plan")} disabled={!!busy}>
+            Change how Mossy understood my files
+          </button>
+        </div>
+        <details className="ml-add-interpretation">
+          <summary>How Mossy understood your files</summary>
+          <p className="ml-small">The details below show which files contributed records,
+            what Mossy matched, and which places could be mapped. Original source records remain available afterwards.</p>
         <div className="ml-add-review-grid">
           <section className="ml-add-panel">
             <h2 className="ml-section-title">File by file</h2>
@@ -504,6 +535,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           </section>
         </div>
 
+        </details>
         {report.sameName.length > 0 && <section className="ml-add-panel ml-add-same">
           <h2 className="ml-section-title"><span className="ml-key-pencil"/>Same name, no shared identifier</h2>
           <p className="ml-small">These may be the same organisation recorded twice, or two different ones. Tick only the pairs you know are the same;
@@ -546,8 +578,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
         <div className="ml-add-actions">
           <button type="button" className="ml-quiet" onClick={() => setPhase("plan")} disabled={!!busy}>← Change how files are read or where they go</button>
-          <button type="button" className="ml-primary" onClick={finish} disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
-            {target === "add" ? "Add to " + baseTitle : "Create the map"}{merge.size ? " · merge " + merge.size : ""}</button>
+          <span className="ml-small">Want to check something first? Open “How Mossy understood your files” above.</span>
         </div>
       </section>}
     </div>
