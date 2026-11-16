@@ -206,8 +206,8 @@ test("a mapped point follows explicit coordinate edits and undo keeps its source
     name:"points.csv",mimeType:"text/csv",
     buffer:Buffer.from("Name,Latitude,Longitude\nPlot A,54.97830,-1.61780\nPlot B,54.52530,-1.55900\n")
   });
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await page.getByRole("button",{name:"See my map"}).click();
   await page.locator(".ml-data-toggle").click();
   const records=page.getByRole("region",{name:"Records table"});
   await expect(records).toContainText("Plot A");
