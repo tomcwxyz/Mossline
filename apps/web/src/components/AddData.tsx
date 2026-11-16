@@ -578,9 +578,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           {consent && <div className="ml-add-consent" role="group" aria-label="Exact postcode lookup">
             <p><strong>This sends {count(toLookUp, "postcode")} to postcodes.io</strong>, a free public lookup service. Only the postcodes
               are sent, not names or anything else. Do this only if you are comfortable with them leaving this device.</p>
-            </details>
-
-        <div className="ml-add-actions"><button type="button" className="ml-quiet" onClick={() => setConsent(false)}>Cancel</button>
+            <div className="ml-add-actions"><button type="button" className="ml-quiet" onClick={() => setConsent(false)}>Cancel</button>
               <button type="button" className="ml-solid" onClick={lookUpExact} disabled={!!busy}>Send postcodes and place exactly</button></div>
           </div>}
           {exactNote && <p className="ml-small" role="status">{exactNote}</p>}
@@ -589,6 +587,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
         {report.added.length > 0 && <details className="ml-add-panel ml-add-newlist"><summary>New records · first {Math.min(report.added.length, 60)}</summary>
           <ul>{report.added.slice(0, 60).map(n => <li key={n.id}><TypeMark type={n.type as NodeType}/>{n.label}</li>)}</ul></details>}
+        </details>
 
         <div className="ml-add-actions">
           <button type="button" className="ml-quiet" onClick={() => setPhase("plan")} disabled={!!busy}>← Change how files are read or where they go</button>
