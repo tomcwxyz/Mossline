@@ -498,6 +498,18 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         {addedByType.length > 0 && <ul className="ml-add-types">{addedByType.map(([type, n]) =>
           <li key={type}><TypeMark type={type}/>{n.toLocaleString("en-GB")} {(n === 1 ? TYPE_LABEL[type] : TYPE_PLURAL[type]).toLowerCase()}</li>)}</ul>}
 
+        {omittedRows>0&&<p className="ml-add-warn" role="note">
+          {omittedRows.toLocaleString("en-GB")} source {omittedRows===1?"row was":"rows were"} not included.
+          Check “How Mossy understood your files” to see why before saving.
+        </p>}
+        {report.tables.some(t=>t.unresolvedLinks>0)&&<p className="ml-add-warn" role="alert">
+          Some recorded relationships could not be matched to a record. They will not appear as lines.
+          Check “How Mossy understood your files” before you open the map.
+        </p>}
+        {report.sameName.length>0&&<p className="ml-add-warn" role="note">
+          {report.sameName.length.toLocaleString("en-GB")} pairs share a name but have no matching identifier.
+          They will remain separate unless you choose to combine them below.
+        </p>}
         <div className="ml-add-actions ml-add-actions--preview">
           <button type="button" className="ml-primary" onClick={finish}
             disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
@@ -507,6 +519,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
             Change how Mossy understood my files
           </button>
         </div>
+        <p className="ml-small">Opening the map saves a copy in this browser. You can inspect and edit its source-backed records afterwards.</p>
         <details className="ml-add-interpretation">
           <summary>How Mossy understood your files</summary>
           <p className="ml-small">The details below show which files contributed records,
@@ -538,14 +551,6 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
 
         </details>
-        {omittedRows>0&&<p className="ml-add-warn" role="note">
-          {omittedRows.toLocaleString("en-GB")} source {omittedRows===1?"row was":"rows were"} not included.
-          Check “How Mossy understood your files” to see why before saving.
-        </p>}
-        {report.tables.some(t=>t.unresolvedLinks>0)&&<p className="ml-add-warn" role="alert">
-          Some recorded relationships could not be matched to a record. They will not appear as lines.
-          Check “How Mossy understood your files” before you open the map.
-        </p>}
         {report.sameName.length > 0 && <section className="ml-add-panel ml-add-same">
           <h2 className="ml-section-title"><span className="ml-key-pencil"/>Same name, no shared identifier</h2>
           <p className="ml-small">These may be the same organisation recorded twice, or two different ones. Tick only the pairs you know are the same;
