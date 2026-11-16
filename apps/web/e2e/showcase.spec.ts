@@ -27,10 +27,10 @@ test("The two raw CSVs for After Dark produce a usable, editable map",async({pag
   }));
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(files);
   // Both CSVs are understood in one go; the user still approves the review.
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
   await expect(page.locator(".ml-add-ledger li")).toHaveCount(2);
   await expect(page.locator(".ml-add-totals")).toContainText("334");
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.getByRole("button",{name:"See my map"}).click();
   await expect(page.locator(".ml-dataset summary strong")).toContainText("after dark");
   await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
 });
@@ -90,17 +90,21 @@ test("Throw Lab makes raw fictional inputs and unsupported cases visible",async(
   await expect(page.getByRole("heading",{name:"What Mossy can't do properly yet"})).toBeVisible();
 });
 
-test("rich Throw Lab data opens the actual sources in an editable review",async({page})=>{
+test("curated Throw Lab sources open directly as a map, with evidence available afterwards",async({page})=>{
   test.setTimeout(90_000);
   await page.goto("/throw-lab");
   const example=page.locator(".ml-throw-rich-card").filter({hasText:"The Neighbourhood Web"});
   await expect(example).toContainText("350 recorded links");
   await example.getByRole("link",{name:/Explore in Mossy/}).click();
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible({timeout:40_000});
-  await expect(page.locator(".ml-add-totals")).toContainText("191new records");
-  await expect(page.locator(".ml-add-totals")).toContainText("350new recorded links");
-  await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
-  await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible({timeout:60_000});
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toHaveCount(0);
+  const details=page.getByText("What Mossy knows about this data",{exact:true});
+  await details.click();
+  const summary=page.locator(".ml-findings-provenance");
+  await expect(summary).toContainText("191 records");
+  await expect(summary).toContainText("350 explicitly recorded relationships");
+  await expect(summary).toContainText("records.csv");
+  await expect(summary).toContainText("relationships.csv");
 });
 
 
@@ -113,8 +117,8 @@ test("European arts map shows different line and point meanings, including edits
     buffer:readFileSync(resolve("apps/web/public/throw-lab/arts-across-places",name))
   }));
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(files);
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible({timeout:40_000});
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible({timeout:40_000});
+  await page.getByRole("button",{name:"See my map"}).click();
   await page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}).click();
 
   const key=page.getByRole("region",{name:"Connections on the map"});
