@@ -269,6 +269,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   const approxCount = places ? (places.placed["postcode sector"] ?? 0) + (places.placed["postcode district"] ?? 0) : 0;
   const exactCount = places?.placed.postcode ?? 0;
   const toLookUp = places?.postcodesToLookUp.length ?? 0;
+  const omittedRows = report?.tables.reduce((total,table)=>total+
+    table.skipped.reduce((sum,skip)=>sum+skip.count,0),0)??0;
   const addedByType = useMemo(() => {
     const m = new Map<NodeType, number>();
     for (const t of report?.tables ?? []) for (const [k, v] of Object.entries(t.added)) m.set(k as NodeType, (m.get(k as NodeType) ?? 0) + (v ?? 0));
@@ -536,6 +538,10 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         </div>
 
         </details>
+        {omittedRows>0&&<p className="ml-add-warn" role="note">
+          {omittedRows.toLocaleString("en-GB")} source {omittedRows===1?"row was":"rows were"} not included.
+          Check “How Mossy understood your files” to see why before saving.
+        </p>}
         {report.tables.some(t=>t.unresolvedLinks>0)&&<p className="ml-add-warn" role="alert">
           Some recorded relationships could not be matched to a record. They will not appear as lines.
           Check “How Mossy understood your files” before you open the map.
