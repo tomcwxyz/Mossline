@@ -227,3 +227,31 @@ test("a mapped point follows explicit coordinate edits and undo keeps its source
   await expect(records.getByRole("alert")).toContainText("valid latitude and longitude");
   await expect(records).toContainText("54.97830, -1.61780");
 });
+
+
+test("on a phone the geographic key disappears, reopens and allows a full-height map",async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/?example=after-dark");
+  await expect(page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}))
+    .toHaveAttribute("aria-current","page");
+  const map=page.getByRole("region",{name:"Map of records with source coordinates"});
+  const toggle=map.getByRole("button",{name:"Key & layers"});
+  const panels=map.locator(".ml-map-cards");
+  await expect(toggle).toBeVisible();
+  await expect(panels).toBeHidden();
+  await toggle.click();
+  await expect(panels).toBeVisible();
+  await expect(map.getByRole("region",{name:"Connections on the map"}))
+    .toContainText("Line colours · relationship");
+  await map.getByRole("button",{name:"Close map key"}).click();
+  await expect(panels).toBeHidden();
+  await map.getByRole("button",{name:"Full map"}).click();
+  await expect(map).toHaveClass(/ml-map--full-screen/);
+  const height=await map.evaluate(element=>Math.round(element.getBoundingClientRect().height));
+  expect(height).toBeGreaterThan(800);
+  await map.getByRole("button",{name:"Key & layers"}).click();
+  await page.keyboard.press("Escape");
+  await expect(panels).toBeHidden();
+  await page.keyboard.press("Escape");
+  await expect(map).not.toHaveClass(/ml-map--full-screen/);
+});
