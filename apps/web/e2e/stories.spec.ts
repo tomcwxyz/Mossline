@@ -14,8 +14,8 @@ async function openExample(page:Page){
   await page.goto("/");
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await page.getByRole("button",{name:"Create the map"}).click();
+  await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await page.getByRole("button",{name:"See my map"}).click();
   await page.locator(".ml-toast button").click();
 }
 /** Chooses a record from the keyboard-accessible list, as people without a mouse do. */
