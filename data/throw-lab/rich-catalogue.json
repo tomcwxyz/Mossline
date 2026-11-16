@@ -47,7 +47,7 @@
       "group": "Geography",
       "description": "Fictional cultural venues and recorded touring links between cities in twelve European countries.",
       "idealFirstView": "map / network",
-      "whatToTry": "Switch between points and connected arcs; trace who bridges different towns.",
+      "whatToTry": "Use the line-colour legend to isolate touring routes, joint events, hosted activities and shared programmes. Switch point colours between record type and recorded theme, then edit a relationship in Data.",
       "caveat": "Venues and promoters are inventions. Their positions are illustrative offsets from real city centres.",
       "files": [
         {
@@ -67,9 +67,9 @@
       "expectedLinks": 358,
       "stats": "169 venues and promoters · 358 links · 12 cities · 12 countries",
       "observations": [
-        "Dense local clusters",
-        "Cross-city touring links",
-        "Some promoters reach several areas"
+        "Four source-recorded connection types, each shown in its own line colour",
+        "Music, theatre, film and visual arts venues have different point colours",
+        "Cross-border touring links and promoters spanning multiple areas"
       ],
       "geography": {
         "label": "Europe-wide",
