@@ -721,9 +721,44 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         <p>{spatial.plotted.toLocaleString("en-GB")} recorded mapped {spatial.plotted===1?"link":"links"}
           {spatial.unplaced>0&&<> · {spatial.unplaced.toLocaleString("en-GB")} cannot be drawn without locations</>}
           {spatial.colocated>0&&<> · {spatial.colocated.toLocaleString("en-GB")} at the same coordinates</>}
-          {connectionsMode==="all"&&spatial.links.length>SPATIAL_LINK_LIMIT&&<> · Showing {SPATIAL_LINK_LIMIT} distinct links at once</>}
+          {connectionsMode==="all"&&visibleLinks.length>SPATIAL_LINK_LIMIT&&<> · Showing {SPATIAL_LINK_LIMIT} distinct links at once</>}
           {mode==="hexagons"&&connectionsMode==="all"&&<> · Switch to Points for lines</>}
         </p>
+        {connectionKey.entries.length>1&&<div className="ml-map-grammar" aria-label="Recorded relationship types">
+          <div className="ml-map-grammar-head"><strong>Line colours · relationship</strong>
+            {selectedLinkType&&<button type="button" onClick={()=>setSelectedLinkType(null)}>Show all</button>}
+          </div>
+          <div className="ml-map-grammar-items">
+            {connectionKey.entries.map(entry=>entry.label==="Other relationships"
+              ? <span className="ml-map-grammar-item" key={entry.label}>
+                  <i className="ml-map-grammar-line" aria-hidden="true" style={{borderColor:entry.colour}}/>
+                  <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+                </span>
+              : <button type="button" className="ml-map-grammar-item" key={entry.label}
+                  aria-pressed={selectedLinkType===entry.label}
+                  aria-label={"Show "+entry.label+" relationships"}
+                  onClick={()=>{setSelectedLinkType(old=>old===entry.label?null:entry.label);
+                    setConnectionsMode("all");setMode("points");}}>
+                  <i className="ml-map-grammar-line" aria-hidden="true" style={{borderColor:entry.colour}}/>
+                  <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+                </button>)}
+          </div>
+          <p>Colours come from the recorded link type. Select one to filter the map.</p>
+        </div>}
+        {pointKey.available&&<details className="ml-map-point-grammar">
+          <summary>Point colours · {pointsByTag?"first recorded theme":"record type"}</summary>
+          <div className="ml-segmented" role="group" aria-label="Colour map points by">
+            <button type="button" aria-pressed={pointInkMode==="type"} onClick={()=>setPointInkMode("type")}>Record type</button>
+            <button type="button" aria-pressed={pointInkMode==="tag"} onClick={()=>setPointInkMode("tag")}>First theme</button>
+          </div>
+          {pointsByTag&&<ul className="ml-map-point-key">
+            {pointKey.entries.map(entry=><li key={entry.label}>
+              <i aria-hidden="true" style={{backgroundColor:entry.colour}}/>
+              <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+            </li>)}
+          </ul>}
+          <p>Only source-provided themes are used. Record type and shape remain available.</p>
+        </details>}
       </section>
       {!narrow && <section className="ml-overlay-card ml-map-show" aria-label="Show places as">
         <h3>Show places as</h3>
