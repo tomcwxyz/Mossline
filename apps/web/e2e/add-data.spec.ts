@@ -38,6 +38,7 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   // Same name without a shared identifier is listed, unticked.
   const pair=page.locator(".ml-add-same li").filter({hasText:"Hexmoor Youth Project"});
   await expect(pair.getByRole("checkbox")).not.toBeChecked();
+  await page.locator(".ml-add-interpretation--places > summary").click();
   await expect(page.locator(".ml-add-places")).toContainText("approximately");
   expect((await axe(page)).violations).toEqual([]);
   await page.getByRole("button",{name:"See my map"}).click();
