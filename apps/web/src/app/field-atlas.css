@@ -1562,3 +1562,29 @@ button.ml-map-grammar-item:hover,button.ml-map-grammar-item[aria-pressed="true"]
 @media(hover:none){
   .ml-data-pencil{opacity:.7;}
 }
+
+
+/* The map is the product. On a phone the controls are opt-in, not a card
+   obscuring the map by default. Full map stays local to the Map lens. */
+.ml-map-mobile-actions,.ml-map-mobile-close{display:none;}
+.ml-map-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+@media(max-width:860px){
+  .ml-map-mobile-actions{display:flex;position:absolute;left:10px;top:10px;z-index:22;gap:7px;align-items:center;}
+  .ml-map-mobile-actions button{border:1px solid var(--ml-border-strong);border-radius:999px;
+    box-shadow:var(--ml-shadow);padding:9px 13px;min-height:40px;background:var(--ml-surface);
+    color:var(--ml-ink);font:600 12px var(--ml-sans);}
+  .ml-map-cards:not(.is-mobile-open){display:none;}
+  .ml-map-cards.is-mobile-open{position:absolute;left:10px;right:10px;top:58px;bottom:auto;width:min(330px,calc(100% - 20px));
+    max-height:calc(100% - 95px);overflow:auto;overscroll-behaviour:contain;align-items:stretch;z-index:23;
+    border-radius:var(--ml-radius-md);box-shadow:var(--ml-shadow-sheet);}
+  .ml-map-cards.is-mobile-open .ml-map-connections{max-height:none;width:100%;max-width:none;overflow:visible;}
+  .ml-map-cards.is-mobile-open .ml-map-show{display:none;}
+  .ml-map-cards.is-mobile-open .ml-unplaced:not(.is-closed){width:100%;}
+  .ml-map-mobile-close{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ml-border);
+    background:transparent;border-radius:5px;width:30px;height:30px;font-size:21px;line-height:1;flex:none;}
+  .ml-map--full-screen{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+    min-height:0!important;z-index:1000!important;border-radius:0!important;}
+  .ml-map--full-screen .ml-map-mobile-actions{top:max(12px,env(safe-area-inset-top));}
+  .ml-map--full-screen .ml-map-cards.is-mobile-open{top:calc(62px + env(safe-area-inset-top));max-height:70dvh;}
+  .ml-map--full-screen .ml-zoom{right:12px;top:75px;}
+}
