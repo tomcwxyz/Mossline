@@ -102,3 +102,52 @@ test("rich Throw Lab data opens the actual sources in an editable review",async(
   await page.getByRole("button",{name:/Change how files are read or where they go/}).click();
   await expect(page.getByRole("heading",{name:"Here's how Mossy read your data"})).toBeVisible();
 });
+
+
+test("European arts map shows different line and point meanings, including edits",async({page})=>{
+  test.setTimeout(120_000);
+  await page.goto("/");
+  await page.getByRole("button",{name:"Add your data"}).click();
+  const files=["venues.csv","cultural-links.csv"].map(name=>({
+    name,mimeType:"text/csv",
+    buffer:readFileSync(resolve("apps/web/public/throw-lab/arts-across-places",name))
+  }));
+  await page.locator(".ml-add-drop input[type=file]").setInputFiles(files);
+  await expect(page.getByRole("heading",{name:"Check before adding"})).toBeVisible({timeout:40_000});
+  await page.getByRole("button",{name:"Create the map"}).click();
+  await page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}).click();
+
+  const key=page.getByRole("region",{name:"Connections on the map"});
+  for(const kind of ["joint event","shared programme","hosts activity at","touring route"]){
+    await expect(key.getByRole("button",{name:"Show "+kind+" relationships"})).toBeVisible();
+  }
+  const colours=await key.locator(".ml-map-grammar-items button .ml-map-grammar-line")
+    .evaluateAll(nodes=>nodes.map(node=>(node as HTMLElement).style.borderColor));
+  expect(new Set(colours).size).toBe(4);
+
+  await key.getByRole("button",{name:"Show touring route relationships"}).click();
+  await expect(key.getByRole("button",{name:"Show touring route relationships"})).toHaveAttribute("aria-pressed","true");
+  await key.getByRole("button",{name:"Show all"}).click();
+  await expect(key.getByRole("button",{name:"Show touring route relationships"})).toHaveAttribute("aria-pressed","false");
+
+  await key.locator(".ml-map-point-grammar summary").click();
+  await expect(key.getByRole("group",{name:"Colour map points by"}).getByRole("button",{name:"First theme"}))
+    .toHaveAttribute("aria-pressed","true");
+  for(const category of ["Music","Theatre","Film","Visual arts","Culture"]){
+    await expect(key.locator(".ml-map-point-key")).toContainText(category);
+  }
+  await key.getByRole("group",{name:"Colour map points by"}).getByRole("button",{name:"Record type"}).click();
+  await expect(key.locator(".ml-map-point-key")).toHaveCount(0);
+
+  // Edits to recorded relationships, not separate map presentation settings,
+  // generate an updated map legend automatically.
+  await page.locator(".ml-data-toggle").click();
+  await page.getByRole("group",{name:"Data tables"}).getByRole("button",{name:"Connections"}).click();
+  const table=page.getByRole("region",{name:"Connections table"});
+  const row=table.locator("tbody tr").filter({hasText:"touring route"}).first();
+  await row.getByRole("button",{name:/Edit relationship from/}).click();
+  const input=table.getByRole("textbox",{name:/relationship from/});
+  await input.fill("cross-city cultural tour");
+  await input.press("Enter");
+  await expect(key.getByRole("button",{name:"Show cross-city cultural tour relationships"})).toBeVisible();
+});
