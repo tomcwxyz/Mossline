@@ -10,6 +10,7 @@ import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
 import { spatialConnections, SPATIAL_LINK_LIMIT } from "../../lib/spatial-connections";
+import {connectionInkKey,pointCategoryKey} from "../../lib/map-visual-grammar";
 
 type Props = {
   graph: GraphDocument;
@@ -125,8 +126,17 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
   const [land, setLand] = useState<Land | null>(null);
   const [mode, setMode] = useState<"points" | "hexagons">("points");
   const [connectionsMode,setConnectionsMode] = useState<"all"|"selected"|"off">("all");
+  const [selectedLinkType,setSelectedLinkType]=useState<string|null>(null);
+  const [pointInkMode,setPointInkMode]=useState<"type"|"tag">("tag");
   const spatial=useMemo(()=>spatialConnections(graph),[graph]);
-  const displayed=useMemo(()=>spatial.links.slice(0,SPATIAL_LINK_LIMIT),[spatial]);
+  const connectionKey=useMemo(()=>connectionInkKey(spatial.links,theme),[spatial.links,theme]);
+  const visibleLinks=useMemo(()=>spatial.links.filter(link=>!selectedLinkType||link.type===selectedLinkType),
+    [spatial.links,selectedLinkType]);
+  const displayed=useMemo(()=>visibleLinks.slice(0,SPATIAL_LINK_LIMIT),[visibleLinks]);
+  useEffect(()=>{
+    if(selectedLinkType&&!connectionKey.entries.some(entry=>entry.label===selectedLinkType))
+      setSelectedLinkType(null);
+  },[selectedLinkType,connectionKey]);
   const [view, setView] = useState({ inView: 0, grantsInView: 0 });
   const [narrow, setNarrow] = useState(false);
   const [unplacedOpen, setUnplacedOpen] = useState(true);
@@ -137,6 +147,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     return c ? [{ node: n, lon: c.lon, lat: c.lat, approximate: c.approximate }] : [];
   }), [graph]);
   const approximate = useMemo(() => located.filter(p => p.approximate).length, [located]);
+  const pointKey=useMemo(()=>pointCategoryKey(located.map(({node})=>node),theme),[located,theme]);
+  const pointsByTag=pointKey.available&&pointInkMode==="tag";
   const degree = useMemo(() => {
     const d = new Map<string, number>();
     for (const e of graph.edges) if (isRecorded(e)) {
@@ -184,7 +196,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
       : selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
     const records = collection(located.map(({ node, lon, lat, approximate: approx }) => {
       const focus = !!focusSet?.has(node.id);
-      const base = palette.types[node.type] ?? palette.types.other;
+      // Source-given themes can colour small coherent categories (e.g. music
+      // versus theatre venues). Otherwise retain the normal node-type grammar.
+      const base = (pointsByTag?pointKey.colour(node.tags):null)??palette.types[node.type]??palette.types.other;
       const d = Math.sqrt(degree.get(node.id) ?? 0);
       // Resting marks are small and pale, like pencil on survey paper; the
       // selection and what it touches come forward in full colour.
@@ -201,16 +215,18 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     if(connectionsMode==="all"&&mode==="points"){
       for(const link of displayed) mappedLinks.push({
         type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
-        properties:{source:link.source,target:link.target,type:link.type,count:link.count}
+        properties:{source:link.source,target:link.target,type:link.type,count:link.count,
+          colour:connectionKey.colour(link.type)}
       });
     }
     // Always include all direct plotted neighbours when somebody selects a record,
     // even if the overview is capped or currently in hexagon mode.
     if(selectedId&&selectedNode?.type!=="funder"&&connectionsMode!=="off"){
-      for(const link of spatial.links) {
+      for(const link of visibleLinks) {
         if(link.source!==selectedId&&link.target!==selectedId)continue;
         ego.push({type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
-          properties:{source:link.source,target:link.target,type:link.type,count:link.count}});
+          properties:{source:link.source,target:link.target,type:link.type,count:link.count,
+            colour:connectionKey.colour(link.type)}});
       }
     }
     let hiddenArcs = 0;
@@ -227,7 +243,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
       }
     }
     return { records, arcs: collection(arcs), ego: collection(ego), links:collection(mappedLinks), hiddenArcs };
-  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial, displayed, connectionsMode, mode]);
+  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial,
+    visibleLinks, displayed, connectionsMode, mode, connectionKey, pointsByTag, pointKey]);
 
   // ---- Build the map once per theme; data changes update sources in place --
   useEffect(() => {
@@ -274,10 +291,10 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
                 paint: { "fill-color": ["interpolate", ["linear"], ["get", "t"], 0, mix(palette.wash, palette.paper, 0.78), 1, palette.moss],
                   "fill-opacity": 0.82, "fill-outline-color": palette.paper } },
               { id: "map-links", type: "line", source: "links", layout:{"line-cap":"round","line-join":"round"},
-                paint:{"line-color":palette.moss,"line-opacity":0.48,
+                paint:{"line-color":["get","colour"],"line-opacity":0.67,
                   "line-width":["interpolate",["linear"],["zoom"],2,0.9,6,1.55,10,2.1]} },
               { id: "ego", type: "line", source: "ego",layout:{"line-cap":"round"},
-                paint: { "line-color": palette.moss, "line-width": 3.1, "line-opacity": 0.9 } },
+                paint: { "line-color": ["get","colour"], "line-width": 3.1, "line-opacity": 0.96 } },
               { id: "arcs-casing", type: "line", source: "arcs", layout: { "line-cap": "round" },
                 paint: { "line-color": palette.paper, "line-opacity": 0.9, "line-width": ["+", ["get", "w"], 2.4] } },
               { id: "arcs", type: "line", source: "arcs", layout: { "line-cap": "round" },
@@ -288,7 +305,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
                 paint: { "icon-color": ["get", "color"], "icon-halo-color": palette.paper, "icon-halo-width": 0.8 } },
               // Place records are drawn the way a map draws a town: a dot and a name.
               { id: "places", type: "circle", source: "records", filter: ["==", ["get", "kind"], "place"],
-                paint: { "circle-radius": ["case", ["get", "focus"], 4.2, 3], "circle-color": palette.ink,
+                paint: { "circle-radius": ["case", ["get", "focus"], 4.6, 3.5], "circle-color": ["get","color"],
                   "circle-stroke-color": palette.paper, "circle-stroke-width": 1 } },
               { id: "selected", type: "circle", source: "records", filter: ["==", ["get", "id"], "__none__"],
                 paint: { "circle-radius": 16, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": palette.moss, "circle-stroke-width": 2 } }
@@ -447,7 +464,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
     if (!map || status !== "ready") return;
     (map.getSource("records") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.records);
     (map.getSource("links") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.links);
-    map.setPaintProperty("map-links","line-opacity",selectedId?0.2:0.48);
+    map.setPaintProperty("map-links","line-opacity",selectedId?0.22:0.67);
     (map.getSource("arcs") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.arcs);
     (map.getSource("ego") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.ego);
     map.setFilter("selected", ["==", ["get", "id"], selectedId ?? "__none__"]);
