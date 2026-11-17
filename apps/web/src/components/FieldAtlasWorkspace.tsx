@@ -856,7 +856,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
             <button type="button" onClick={() => setPickingFrom(null)}>Cancel</button></div>}
 
           {connectPicking && <div className="ml-banner ml-pick-banner" role="status">
-            {connectFrom?<>Select the second record to connect to <strong>{workingGraph.nodes.find(n=>n.id===connectFrom)?.label}</strong>.</>:
+            {connectFrom?<>Select the second record to connect to <strong>{workingGraph.nodes.find(n=>n.id===connectFrom)?.label}</strong>, or drag between any two records.</>:
               <>Drag between two records to connect them, or select the first and second in the drawing or Data. Nothing is added until you confirm.</>}
             <button type="button" onClick={closeConnect}>Cancel</button>
           </div>}
