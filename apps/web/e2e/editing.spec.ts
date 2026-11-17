@@ -86,7 +86,7 @@ test("one editable data view changes the graph, and a graph connection appears i
   await expect(page.locator(".ml-inspector h2")).toHaveText("Grant funding");
   // No global Edit mode is needed to create a connection.
   await page.getByRole("button",{name:"Connect",exact:true}).click();
-  await expect(page.locator(".ml-pick-banner")).toContainText("Drag between two records");
+  await expect(page.locator(".ml-pick-banner")).toContainText("drag between any two records");
   await expect(page.locator(".ml-connect-preview line")).toHaveCount(1);
   await page.keyboard.press("Escape");
   await expect(page.locator(".ml-pick-banner")).toHaveCount(0);
