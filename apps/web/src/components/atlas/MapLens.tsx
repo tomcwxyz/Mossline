@@ -736,6 +736,10 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         {mapFullScreen?"Exit full map":"Full map"}
       </button>
     </div>
+    {selectedLinkType&&!mobileOptionsOpen&&<div className="ml-map-mobile-filter" role="status">
+      <span>Showing: {selectedLinkType}</span>
+      <button type="button" onClick={()=>setSelectedLinkType(null)} aria-label="Show all relationship types">×</button>
+    </div>}
     <div id="ml-mobile-map-panels" className={"ml-map-cards"+(mobileOptionsOpen?" is-mobile-open":"")}>
       <section className="ml-overlay-card ml-map-connections" aria-label="Connections on the map">
         <div className="ml-map-card-head"><h3>Recorded connections</h3>
@@ -743,9 +747,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
             aria-label="Close map key">×</button>
         </div>
         <div className="ml-segmented" role="group" aria-label="Show connections">
-          <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");}}>All</button>
-          <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>setConnectionsMode("selected")} disabled={!selectedId}>Selected</button>
-          <button type="button" aria-pressed={connectionsMode==="off"} onClick={()=>setConnectionsMode("off")}>Off</button>
+          <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");setMobileOptionsOpen(false);}}>All</button>
+          <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>{setConnectionsMode("selected");setMobileOptionsOpen(false);}} disabled={!selectedId}>Selected</button>
+          <button type="button" aria-pressed={connectionsMode==="off"} onClick={()=>{setConnectionsMode("off");setMobileOptionsOpen(false);}}>Off</button>
         </div>
         <p>{spatial.plotted.toLocaleString("en-GB")} recorded mapped {spatial.plotted===1?"link":"links"}
           {spatial.unplaced>0&&<> · {spatial.unplaced.toLocaleString("en-GB")} cannot be drawn without locations</>}
@@ -755,7 +759,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         </p>
         {connectionKey.entries.length>1&&<div className="ml-map-grammar" aria-label="Recorded relationship types">
           <div className="ml-map-grammar-head"><strong>Line colours · relationship</strong>
-            {selectedLinkType&&<button type="button" onClick={()=>setSelectedLinkType(null)}>Show all</button>}
+            {selectedLinkType&&<button type="button" onClick={()=>{setSelectedLinkType(null);setMobileOptionsOpen(false);}}>Show all</button>}
           </div>
           <div className="ml-map-grammar-items">
             {connectionKey.entries.map(entry=>entry.label==="Other relationships"
@@ -767,7 +771,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
                   aria-pressed={selectedLinkType===entry.label}
                   aria-label={"Show "+entry.label+" relationships"}
                   onClick={()=>{setSelectedLinkType(old=>old===entry.label?null:entry.label);
-                    setConnectionsMode("all");setMode("points");}}>
+                    setConnectionsMode("all");setMode("points");setMobileOptionsOpen(false);}}>
                   <i className="ml-map-grammar-line" aria-hidden="true" style={{borderColor:entry.colour}}/>
                   <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
                 </button>)}
@@ -777,8 +781,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, u
         {pointKey.available&&<details className="ml-map-point-grammar">
           <summary>Point colours · {pointsByTag?"first recorded theme":"record type"}</summary>
           <div className="ml-segmented" role="group" aria-label="Colour map points by">
-            <button type="button" aria-pressed={pointInkMode==="type"} onClick={()=>setPointInkMode("type")}>Record type</button>
-            <button type="button" aria-pressed={pointInkMode==="tag"} onClick={()=>setPointInkMode("tag")}>First theme</button>
+            <button type="button" aria-pressed={pointInkMode==="type"} onClick={()=>{setPointInkMode("type");setMobileOptionsOpen(false);}}>Record type</button>
+            <button type="button" aria-pressed={pointInkMode==="tag"} onClick={()=>{setPointInkMode("tag");setMobileOptionsOpen(false);}}>First theme</button>
           </div>
           {pointsByTag&&<ul className="ml-map-point-key">
             {pointKey.entries.map(entry=><li key={entry.label}>
