@@ -243,6 +243,16 @@ test("on a phone the geographic key disappears, reopens and allows a full-height
   await expect(panels).toBeVisible();
   await expect(map.getByRole("region",{name:"Connections on the map"}))
     .toContainText("Line colours · relationship");
+  // The choice returns users to the full view, while a compact chip makes
+  // it obvious that the map is filtered rather than missing links.
+  const firstType=map.locator(".ml-map-grammar-items button").first();
+  const category=await firstType.locator("span").innerText();
+  await firstType.click();
+  await expect(panels).toBeHidden();
+  await expect(map.locator(".ml-map-mobile-filter")).toContainText("Showing: "+category);
+  await map.getByRole("button",{name:"Show all relationship types"}).click();
+  await expect(map.locator(".ml-map-mobile-filter")).toHaveCount(0);
+  await toggle.click();
   await map.getByRole("button",{name:"Close map key"}).click();
   await expect(panels).toBeHidden();
   await map.getByRole("button",{name:"Full map"}).click();
