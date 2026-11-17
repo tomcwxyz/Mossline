@@ -1566,10 +1566,15 @@ button.ml-map-grammar-item:hover,button.ml-map-grammar-item[aria-pressed="true"]
 
 /* The map is the product. On a phone the controls are opt-in, not a card
    obscuring the map by default. Full map stays local to the Map lens. */
-.ml-map-mobile-actions,.ml-map-mobile-close{display:none;}
+.ml-map-mobile-actions,.ml-map-mobile-close,.ml-map-mobile-filter{display:none;}
 .ml-map-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
 @media(max-width:860px){
   .ml-map-mobile-actions{display:flex;position:absolute;left:10px;top:10px;z-index:22;gap:7px;align-items:center;}
+  .ml-map-mobile-filter{position:absolute;top:57px;left:10px;z-index:22;display:flex;align-items:center;
+    gap:8px;max-width:min(300px,calc(100% - 90px));padding:7px 10px;border:1px solid var(--ml-border-strong);
+    border-radius:6px;background:var(--ml-surface);box-shadow:var(--ml-shadow);font:12px var(--ml-sans);color:var(--ml-ink);}
+  .ml-map-mobile-filter span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .ml-map-mobile-filter button{border:0;background:transparent;color:var(--ml-ink);font-size:17px;cursor:pointer;line-height:1;}
   .ml-map-mobile-actions button{border:1px solid var(--ml-border-strong);border-radius:999px;
     box-shadow:var(--ml-shadow);padding:9px 13px;min-height:40px;background:var(--ml-surface);
     color:var(--ml-ink);font:600 12px var(--ml-sans);}
