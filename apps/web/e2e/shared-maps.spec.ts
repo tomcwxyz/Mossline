@@ -44,8 +44,8 @@ test("an owner shares a map; an invited editor's changes reach them, and undo re
   await sam.goto("/");
   await sam.getByRole("button",{name:/Add your data/}).click();
   await sam.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await expect(sam.getByRole("heading",{name:"Check before adding"})).toBeVisible();
-  await sam.getByRole("button",{name:"Create the map"}).click();
+  await expect(sam.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await sam.getByRole("button",{name:"See my map"}).click();
   await sam.locator(".ml-toast button").click();
   await sam.locator(".ml-dataset summary").click();
   await sam.getByRole("button",{name:"Save to your account…"}).click();
