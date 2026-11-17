@@ -148,6 +148,9 @@ test("European arts map shows different line and point meanings, including edits
   await page.locator(".ml-data-toggle").click();
   await page.getByRole("group",{name:"Data tables"}).getByRole("button",{name:"Connections"}).click();
   const table=page.getByRole("region",{name:"Connections table"});
+  // Rich sources have hundreds of links. Filter the shared table rather
+  // than assuming a specific relationship appears in its first 80 rows.
+  await page.getByRole("searchbox",{name:"Find in data"}).fill("touring route");
   const row=table.locator("tbody tr").filter({hasText:"touring route"}).first();
   await row.getByRole("button",{name:/Edit relationship from/}).click();
   const input=table.getByRole("textbox",{name:/relationship from/});
