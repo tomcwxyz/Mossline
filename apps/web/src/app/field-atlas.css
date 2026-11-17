@@ -294,7 +294,7 @@
 .ml-map-inset-sea { fill: var(--ml-sea); }
 .ml-map-inset-land { fill: var(--ml-paper); stroke: color-mix(in srgb, var(--ml-ink) 35%, var(--ml-paper)); stroke-width: .5; }
 .ml-map-inset-view { fill: color-mix(in srgb, var(--ml-moss) 14%, transparent); stroke: var(--ml-moss); stroke-width: 1.4; }
-.ml-map-cards { position: absolute; left: 14px; bottom: 14px; z-index: 11; width: 290px; display: flex; flex-direction: column; gap: 10px; }
+.ml-map-cards { position: absolute; left: 14px; bottom: 14px; z-index: 11; width: 290px; display: flex; flex-direction: column; gap: 10px; max-height: calc(100% - 28px); overflow-y: auto; overflow-x: hidden; overscroll-behaviour: contain; scrollbar-width: thin; }
 .ml-map-cards .ml-overlay-card { position: static; }
 .ml-map-show h3 { margin: 0 0 8px; font: 600 11px var(--ml-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ml-muted); }
 .ml-map-show .ml-segmented { display: flex; }
