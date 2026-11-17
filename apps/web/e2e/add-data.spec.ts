@@ -32,7 +32,7 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   await page.getByLabel("Map name").fill("Upper dale (test)");
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
-  await page.locator(".ml-add-interpretation > summary").click();
+  await page.getByText("How Mossy understood your files",{exact:true}).click();
   await expect(page.locator(".ml-add-joins")).toContainText("360giving-grants.csv ↔ companies-house.csv");
   await expect(page.locator(".ml-add-ledger")).toContainText("Grants to individuals are left out · 1");
   // Same name without a shared identifier is listed, unticked.
@@ -80,7 +80,7 @@ test("adding to the open map fills in records it already has",async({page})=>{
   await page.getByRole("button",{name:/Check what this adds/}).click();
   await expect(page.locator(".ml-add-totals")).toContainText("2existing records updated");
   await expect(page.locator(".ml-add-totals")).not.toContainText("records found");
-  await page.locator(".ml-add-interpretation > summary").click();
+  await page.getByText("How Mossy understood your files",{exact:true}).click();
   await expect(page.locator(".ml-add-ledger")).toContainText("Not about a record you already have · 1");
   await page.getByRole("button",{name:"Add and explore"}).click();
   await expect(page.locator(".ml-dataset summary small")).toContainText("9 records");
