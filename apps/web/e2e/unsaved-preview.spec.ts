@@ -58,11 +58,14 @@ test("keeping a preview preserves original source and reversible changes on reop
   await expect(page.getByRole("region",{name:"Unsaved map preview"})).toHaveCount(0);
   await expect(page.locator(".ml-toast")).toContainText("Kept");
   await expect(page.locator(".ml-data-table")).toContainText("Harbour Skills Workshop");
-  await page.getByRole("button",{name:"Undo last change"}).click();
-  await expect(page.locator(".ml-data-table")).toContainText("Harbour Workshop");
   await page.reload();
   await page.getByRole("button",{name:/local projects/i}).click();
   await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+  await page.locator(".ml-data-toggle").click();
+  await expect(page.getByRole("region",{name:"Records table"})).toContainText("Harbour Skills Workshop");
+  // The original CSV remains available: undo works even after a full reload.
+  await page.getByRole("button",{name:"Undo last change"}).click();
+  await expect(page.getByRole("region",{name:"Records table"})).toContainText("Harbour Workshop");
   await page.getByText("What Mossy knows about this data",{exact:true}).click();
   await expect(page.getByText("local-projects.csv")).toBeVisible();
 });
