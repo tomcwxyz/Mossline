@@ -7,7 +7,7 @@ import {
   applyEdits, toKumuWorkbook,
   graphWithAnnotations, isRecorded, parseAnnotationLayer, placedCoordinates, projectAtlas,
   type AtlasAnnotationLayer, type AtlasFilters, type AtlasLens, type ConnectionTrail,
-  type GraphDocument, type GraphEdge, type NodeType, markStyleOf, stepRecords, type Story, type StoryMark, type StoryView
+  type GraphDocument, type GraphEdge, type EditLayer, type NodeType, markStyleOf, stepRecords, type Story, type StoryMark, type StoryView
 } from "@mossline/graph-core";
 import { useStories } from "../hooks/useStories";
 import type { StoryPin } from "./atlas/MarkLayer";
@@ -41,7 +41,7 @@ const LENSES: { id: AtlasLens; label: string; help: string }[] = [
 ];
 const SUGGESTION_LIMIT = { nodes: 5000, edges: 10000 };
 
-export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published, initialLens = "network" }: {
+export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack, onImport, onAdvanced, example, message = "", onMessageShown, readOnly = false, shared, onSharedChange, onSharedRefresh, story: publishedStory, published, initialLens = "network", preview }: {
   graph: GraphDocument; datasetId?: string; onBack: () => void; onImport: () => void; onAdvanced: () => void; example?: boolean; initialLens?: AtlasLens;
   /** The saved map's ID: changes made here are kept under it. */
   mapId?: string;
@@ -57,6 +57,8 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   story?: Story;
   /** A published copy: its address, and whether it's embedded in another site. */
   published?: { slug: string; embedded: boolean };
+  /** This is a session-only, editable map. Keeping persists source and undoable edits together. */
+  preview?: {onKeep:(source:GraphDocument,edits:EditLayer)=>Promise<true|string>;onDiscard:()=>void};
 }) {
   // ---- Complete source (funding datasets live in IndexedDB) -------------------
   const [fullSource, setFullSource] = useState<GraphDocument | null>(null);
@@ -79,7 +81,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const sourceGraph = fullSource ?? imported;
   const graphKey = useMemo(() => graphFingerprint(sourceGraph), [sourceGraph]);
   // ---- Changes made here sit beside the imported records ---------------------
-  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly, shared);
+  const edits = useMapEdits(readOnly ? undefined : mapId, !readOnly, shared, !!preview);
   const viewOnly = readOnly || shared?.role === "viewer";
   const editedMap = useMemo(() => applyEdits(sourceGraph, edits.layer), [sourceGraph, edits.layer]);
   const workingGraph = editedMap.graph;
@@ -91,16 +93,16 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const annotationFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
-      if (readOnly) { setAnnotations(emptyAnnotationLayer(graphKey)); setAnnotationsReady(true); return; }
+      if (readOnly || preview) { setAnnotations(emptyAnnotationLayer(graphKey)); setAnnotationsReady(true); return; }
       const stored = window.localStorage.getItem(storageKey);
       setAnnotations(stored ? parseAnnotationLayer(JSON.parse(stored), graphKey) : emptyAnnotationLayer(graphKey));
     } catch { setAnnotations(emptyAnnotationLayer(graphKey)); }
     setAnnotationsReady(true);
-  }, [storageKey, graphKey, readOnly]);
+  }, [storageKey, graphKey, readOnly, preview]);
   useEffect(() => {
-    if (readOnly || !annotationsReady || annotations.graphKey !== graphKey) return;
+    if (readOnly || preview || !annotationsReady || annotations.graphKey !== graphKey) return;
     try { window.localStorage.setItem(storageKey, JSON.stringify(annotations)); } catch { /* storage full or blocked */ }
-  }, [annotations, annotationsReady, graphKey, storageKey]);
+  }, [annotations, annotationsReady, graphKey, storageKey, preview]);
   const largeSource = workingGraph.nodes.length > SUGGESTION_LIMIT.nodes || workingGraph.edges.length > SUGGESTION_LIMIT.edges;
   const proposedGraph = useMemo(() => {
     // Shared-funder/project associations are pencil: derived, reversible, never counted.
@@ -344,7 +346,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     const q = window.matchMedia("(max-width: 720px)"); const on = () => setNarrow(q.matches);
     on(); q.addEventListener("change", on); return () => q.removeEventListener("change", on);
   }, []);
-  const storyStore = useStories({ storeKey: storyKey, sharedId: shared?.id, readOnly, published: publishedStory,
+  const storyStore = useStories({ storeKey: storyKey, sharedId: preview?undefined:shared?.id, readOnly:readOnly||!!preview, published: publishedStory,
     active: storyMode !== null, onNotice: setNotice });
   const { stories, change: changeStory, flush: flushStory } = storyStore;
   const story = stories.find(s => s.id === storyId) ?? null;
@@ -581,6 +583,18 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const funderName = funderId ? graph.nodes.find(n => n.id === funderId)?.label : "";
   const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
   const closeShare = () => { if (shareRef.current) shareRef.current.open = false; };
+  const [previewSaving,setPreviewSaving]=useState(false);
+  const [previewError,setPreviewError]=useState("");
+  const keepPreview=async()=>{
+    if(!preview||previewSaving)return;
+    setPreviewSaving(true);setPreviewError("");
+    try{
+      const saved=await preview.onKeep(sourceGraph,edits.layer);
+      if(saved!==true)setPreviewError(saved);
+    }catch(error){
+      setPreviewError(error instanceof Error?error.message:"The map could not be kept. It remains in this preview.");
+    }finally{setPreviewSaving(false);}
+  };
 
   return <main className={"ml-atlas" + (storyMode === "present" ? " ml-atlas--presenting" : "") + (reading ? " ml-atlas--reading" : "") + (storyMode === "edit" ? " ml-atlas--writing" : "") + (embedded ? " ml-atlas--embedded" : "")}
     data-theme={activeTheme} data-lens={lens}>
@@ -601,6 +615,9 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
       {readOnly ? <div className="ml-dataset ml-dataset--static">
         <strong>{imported.title}</strong>
         <small>{graph.nodes.length.toLocaleString("en-GB")} records · {recordedTotal.toLocaleString("en-GB")} recorded links · published copy</small>
+      </div> : preview ? <div className="ml-dataset ml-dataset--static">
+        <strong>{imported.title}</strong>
+        <small>Unsaved preview · {graph.nodes.length.toLocaleString("en-GB")} records</small>
       </div> : <>
       <details className="ml-dataset" ref={menuRef}>
         <summary>
@@ -642,7 +659,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           title={edits.status.state === "offline" ? edits.status.message : "Who has this map"}>
           <i aria-hidden="true"/><span className="ml-shared-text">{edits.status.state === "offline" ? "Shared · offline" : edits.status.state === "syncing" ? "Shared · updating" : "Shared"}
           {shared.role === "viewer" ? " · view only" : ""}</span></button>
-          : <span className="ml-local"><i aria-hidden="true"/>{readOnly ? "Read-only" : "On this device"}</span>}
+          : <span className="ml-local"><i aria-hidden="true"/>{preview?"Not saved":readOnly?"Read-only":"On this device"}</span>}
         {!viewOnly && <button type="button" className="ml-quiet ml-connect-trigger" aria-pressed={connectPicking||!!connectTo}
           onClick={beginConnect} title="Choose two records on the drawing or in Data, then describe their relationship">Connect</button>}
         {!viewOnly && <button type="button" className={editMode ? "ml-solid ml-edit-toggle" : "ml-quiet ml-edit-toggle"} aria-pressed={editMode} title="Add records, enter multiple links, review changes and export"
@@ -656,7 +673,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           {published && <button type="button" className="ml-quiet" aria-expanded={embedOpen} onClick={() => setEmbedOpen(v => !v)}>Embed</button>}
           <button type="button" className="ml-solid" onClick={() => navigator.clipboard?.writeText(fullPage())
           .then(() => setNotice("Link copied.")).catch(() => setNotice("Copy the address from your browser."))}>Copy link</button></> :
-        <details className="ml-share" ref={shareRef}>
+        preview ? null : <details className="ml-share" ref={shareRef}>
           <summary className="ml-solid">Share</summary>
           <div className="ml-menu ml-menu--right" role="group" aria-label="Share">
             {publishing && <>
@@ -673,6 +690,19 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
         </details>}
       </div>
     </header>
+    {preview&&<section className="ml-preview-banner" aria-label="Unsaved map preview" role="region">
+      <div className="ml-preview-banner-copy">
+        <strong>Preview · not saved</strong>
+        <span>Explore and edit the map. Nothing is added to your saved maps until you keep it.
+          Your original source records and your changes will stay separate.</span>
+      </div>
+      <div className="ml-preview-banner-actions">
+        <button type="button" className="ml-solid" onClick={()=>void keepPreview()} disabled={previewSaving}>
+          {previewSaving?"Keeping map…":"Keep this map"}</button>
+        <button type="button" className="ml-quiet" disabled={previewSaving} onClick={preview.onDiscard}>Discard preview</button>
+      </div>
+      {previewError&&<p className="ml-preview-error" role="alert">{previewError}</p>}
+    </section>}
 
     <section className="ml-body">
       <div className="ml-stage">
@@ -905,7 +935,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
           onLens={setLens} onBrowse={()=>{setDataTab("records");setDataOpen(true);}}/> :
         <RecordPanel source={graph} view={result.graph} node={selected} flows={flowsAll} leads={leads} editing={editing}
           totalRecords={graph.nodes.length} totalRecorded={recordedTotal}
-          onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly ? undefined : confirm}
+          onPick={setSelectedId} onFollow={id => { setLoopId(null); setRouteFromId(id); }} onConfirm={readOnly||preview ? undefined : confirm}
           loops={loopsFound.loops} loopLabel={loopLabel} onLoop={id => showLoop(id)}
           grouping={grouping} groupLabel={groupOption?.label ?? "Theme"} editRequest={editRequest}/>}
       </aside>}
