@@ -40,12 +40,14 @@ const shapeOf = (t: TableInfo, p: Plan): Shape => {
     ...(p.type ? { type: p.type, typeFallback: p.type } : {}) }, ...rest] };
 };
 
-export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", starter, onClose, onCommit, onLargeFunding }: {
+export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", starter, onClose, onCommit, onPreview, onLargeFunding }: {
   base: GraphDocument | null; baseTitle: string; canAddToBase: boolean; startWith?: AddTarget; intent?: "general" | "funding" | "the-list";
   /** Optional fictional source files, opened through exactly the same parser as a real upload. */
   starter?: RichLabExample;
   /** Saves the result; resolves to true, or to a message saying why it could not. */
   onClose: () => void; onCommit: (graph: GraphDocument, target: AddTarget, title: string, summary: string) => Promise<true | string>;
+  /** Starts a session-only editable preview. This MUST NOT save anything. */
+  onPreview?: (graph: GraphDocument, title: string, summary: string) => void;
   onLargeFunding?: () => void;
 }) {
   const [theme, chooseTheme] = useAtlasTheme();
@@ -257,6 +259,13 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       const parts = t ? [t.newRecords ? count(t.newRecords, "new record") : "", t.filledIn ? t.filledIn.toLocaleString("en-GB") + " filled in" : "",
         t.newLinks ? count(t.newLinks, "new recorded link") : "", merges.length ? count(merges.length, "pair") + " merged" : ""].filter(Boolean) : [];
       const summary = (parts.length ? parts.join(", ") + ". " : "") + "Every record keeps a receipt for its source rows.";
+      if (target==="new" && !starter && onPreview) {
+        setBusy("");
+        // The map is explored and edited first; no graph or change history is
+        // persisted until the person explicitly chooses Keep this map.
+        onPreview(m.graph,title.trim()||"New map",summary.charAt(0).toUpperCase()+summary.slice(1));
+        return;
+      }
       const saved = await onCommit(m.graph, target, title.trim() || "New map", summary.charAt(0).toUpperCase() + summary.slice(1));
       setBusy("");
       if (saved !== true) setError(saved + " Your files are still open here.");
@@ -513,13 +522,15 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
         <div className="ml-add-actions ml-add-actions--preview">
           <button type="button" className="ml-primary" onClick={finish}
             disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
-            {target==="add"?"Add and explore": "See my map"} →
+            {target==="add"?"Add and explore": "Preview my map"} →
           </button>
           <button type="button" className="ml-link-button" onClick={()=>setPhase("plan")} disabled={!!busy}>
             Change how Mossy understood my files
           </button>
         </div>
-        <p className="ml-small">Opening the map saves a copy in this browser. You can inspect and edit its source-backed records afterwards.</p>
+        <p className="ml-small">{target==="new" && !starter
+          ? "Nothing is saved yet. Explore and correct the map first, then choose Keep this map when you're happy."
+          : "This adds the records to your existing saved map. You can inspect and edit their sources afterwards."}</p>
         <details className="ml-add-interpretation">
           <summary>How Mossy understood your files</summary>
           <p className="ml-small">The details below show which files contributed records,
