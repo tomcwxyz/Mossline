@@ -68,6 +68,7 @@ test("keeping a preview preserves original source and reversible changes on reop
   // The original CSV remains available: undo works even after a full reload.
   await page.getByRole("button",{name:"Undo last change"}).click();
   await expect(page.getByRole("region",{name:"Records table"})).toContainText("Harbour Workshop");
-  await page.getByText("What Mossy knows about this data",{exact:true}).click();
-  await expect(page.getByText("local-projects.csv")).toBeVisible();
+  const original=page.getByRole("region",{name:"Records table"}).locator("tbody tr")
+    .filter({hasText:"Harbour Workshop"}).first();
+  await expect(original.locator(".ml-data-source")).toHaveText("local-projects.csv");
 });
