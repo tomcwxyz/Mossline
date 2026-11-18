@@ -30,7 +30,9 @@ test("The two raw CSVs for After Dark produce a usable, editable map",async({pag
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
   await expect(page.locator(".ml-add-ledger li")).toHaveCount(2);
   await expect(page.locator(".ml-add-totals")).toContainText("334");
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   await expect(page.locator(".ml-dataset summary strong")).toContainText("after dark");
   await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
 });
@@ -118,7 +120,9 @@ test("European arts map shows different line and point meanings, including edits
   }));
   await page.locator(".ml-add-drop input[type=file]").setInputFiles(files);
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible({timeout:40_000});
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   await page.getByRole("navigation",{name:"Atlas lenses"}).getByRole("button",{name:"Map"}).click();
 
   const key=page.getByRole("region",{name:"Connections on the map"});
