@@ -28,7 +28,9 @@ test("publishing needs an account: sign in by email, publish, update, unpublish,
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   await page.locator(".ml-toast button").click();
 
   // Signed out, the card explains and offers sign-in; nothing else needs an account.
