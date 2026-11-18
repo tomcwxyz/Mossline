@@ -1,8 +1,15 @@
 # Mossy
 
-**A field atlas for connected work.** Explore the connections between
-organisations, projects, funders, people, places and ideas, with a source
-record behind each recorded relationship.
+**Throw in your data. See what it reveals. Change it.**
+
+Mossy is a general-purpose, local-first tool for discovering structure,
+relationships, patterns and meaning in data. Sometimes the right view is a
+network, but it may equally be a map, timeline, chart, matrix or catalogue.
+No one should have to understand a schema before seeing a useful result.
+
+The governing product decision is [Throw → See → Edit](docs/THROW_SEE_EDIT.md).
+Our [Mossy Throw Lab](data/throw-lab/README.md) records 60 varied, fictional
+inputs and separates working engine checks from capabilities still missing.
 
 Mossy is an [Apache-2.0 licensed](LICENSE), local-first, general-purpose
 technical alpha. It is **not** a product for one farming organisation: the
@@ -94,6 +101,8 @@ configured, are optional and require a deliberate decision to use them.
 
 ## Project references
 
+[Product direction](docs/THROW_SEE_EDIT.md) ·
+[Throw Lab](data/throw-lab/README.md) ·
 [Architecture](docs/ARCHITECTURE.md) ·
 [Getting data in](docs/DATA_IN.md) ·
 [Field Atlas design implementation](docs/design/FIELD_ATLAS_IMPLEMENTATION.md) ·

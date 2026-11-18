@@ -7,6 +7,8 @@ import { useAtlasTheme } from "./atlas/theme";
 import { ThemeButton, Wordmark } from "./atlas/Wordmark";
 import { TypeMark } from "./atlas/RecordPanel";
 import { TYPE_LABEL, TYPE_PLURAL } from "./atlas/palette";
+import { canReviewDirectly } from "../lib/import-journey";
+import type {RichLabExample} from "../lib/throw-lab-examples";
 
 /**
  * One way in for every kind of file: 360Giving grants, register downloads,
@@ -38,10 +40,14 @@ const shapeOf = (t: TableInfo, p: Plan): Shape => {
     ...(p.type ? { type: p.type, typeFallback: p.type } : {}) }, ...rest] };
 };
 
-export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", onClose, onCommit, onLargeFunding }: {
+export function AddData({ base, baseTitle, canAddToBase, startWith = "new", intent = "general", starter, onClose, onCommit, onPreview, onLargeFunding }: {
   base: GraphDocument | null; baseTitle: string; canAddToBase: boolean; startWith?: AddTarget; intent?: "general" | "funding" | "the-list";
+  /** Optional fictional source files, opened through exactly the same parser as a real upload. */
+  starter?: RichLabExample;
   /** Saves the result; resolves to true, or to a message saying why it could not. */
   onClose: () => void; onCommit: (graph: GraphDocument, target: AddTarget, title: string, summary: string) => Promise<true | string>;
+  /** Starts a session-only editable preview. This MUST NOT save anything. */
+  onPreview?: (graph: GraphDocument, title: string, summary: string) => void;
   onLargeFunding?: () => void;
 }) {
   const [theme, chooseTheme] = useAtlasTheme();
@@ -61,6 +67,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   const [consent, setConsent] = useState(false);
   const [exactNote, setExactNote] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [pasted, setPasted] = useState("");
   // Only surface manual table configuration when the proposed interpretation is uncertain.
   const [showTechnical,setShowTechnical]=useState(false);
   const pending = useRef<Map<number, (m: AddMessage) => void>>(new Map());
@@ -93,27 +100,83 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
   }, []);
 
   /* ---- 1. Files ---------------------------------------------------------- */
-  const readFiles = useCallback((files: File[], name?: string) => {
+  const readFiles = useCallback((files: File[], name?: string, requestedTarget: AddTarget = target) => {
     if (!files.length) return;
     send({ kind: "read", id: ++request.current, files }, "Opening your files…", m => {
       if (m.kind !== "tables") return;
       const register = (t: TableInfo) => REGISTER.test(t.matches[0]?.shape.id ?? "");
       const others = m.tables.some(t => !register(t)) || m.maps.length > 0;
-      const haveRecords = (target === "add" && (base?.nodes.length ?? 0) > 0) || others;
+      const haveRecords = (requestedTarget === "add" && (base?.nodes.length ?? 0) > 0) || others;
       const next: Record<string, Plan> = {};
       for (const t of m.tables) {
         const id = t.matches[0]?.shape.id ?? "";
         const fill = t.large || ALWAYS_FILL.has(id) || (register(t) && haveRecords);
         next[t.name] = { include: true, match: 0, use: fill ? "fill" : "records", labelColumn: "", type: "" };
       }
+      const proposedTitle = name ?? (title || (m.tables[0]?.file.replace(/\.(csv|tsv|txt|json|xlsx)$/i, "").replace(/[_.-]+/g, " ") ?? m.maps[0]?.title ?? "New map"));
       setTables(m.tables); setMaps(m.maps.map(x => ({ ...x, include: true }))); setProblems(m.problems);
-      setPlans(next); setReport(null); setMerge(new Set());
+      setPlans(next); setReport(null); setMerge(new Set()); setTitle(proposedTitle);
       setShowTechnical(m.tables.some(t=>!t.matches[0]?.builtIn||(t.matches[0]?.missing.length??0)>0) ||
         (m.tables.length>0 && !Object.values(next).some(p=>p.use==="records") && !haveRecords));
-      setTitle(t => name ?? (t || (m.tables[0]?.file.replace(/\.(csv|tsv|txt|json|xlsx)$/i, "").replace(/[_.-]+/g, " ") ?? m.maps[0]?.title ?? "New map")));
-      if (m.tables.length || m.maps.length) setPhase("plan");
+      if (!m.tables.length && !m.maps.length) {
+        setError(m.problems.length?m.problems.map(p=>p.file+": "+p.message).join(" "):
+          "Mossy couldn't find any tables or records in these files. Try a CSV, Excel workbook or Mossy JSON map.");
+        return;
+      }
+      // The proposal is still reversible. For normal uploads only the user's
+      // explicit 'See my map' action saves anything. Curated Throw Lab examples
+      // are explicitly opened by selecting Explore in Mossy, so can open faster.
+      setPhase("plan");
+      if (canReviewDirectly(m.tables,m.maps,m.problems,next,
+        requestedTarget === "add" && (base?.nodes.length ?? 0)>0)) {
+        send({kind:"apply",id:++request.current,base:requestedTarget==="add"?base:null,title:proposedTitle,
+          maps:m.maps.map(x=>x.file),
+          plans:m.tables.map(t=>({table:t.name,shape:shapeOf(t,next[t.name]),use:next[t.name].use}))},
+        "Checking records and connections…",result=>{
+          if(result.kind!=="result")return;
+          setReport(result.report);setMerge(new Set());setConsent(false);setExactNote("");
+          // A curated example is the one safe exception to a second approval
+          // screen. Read the actual files first, and only skip when every source
+          // row was understood and no names/relationships need resolving.
+          const cleanExample=!!starter&&requestedTarget==="new"&&m.problems.length===0
+            &&result.report.sameName.length===0
+            &&result.report.tables.every(t=>t.used===t.rows&&t.unresolvedLinks===0&&t.skipped.length===0);
+          if(cleanExample){
+            send({kind:"finish",id:++request.current,merges:[]},
+              "Opening the example map…",async final=>{
+                if(final.kind!=="graph")return;
+                const saved=await onCommit(final.graph,"new",proposedTitle,
+                  "Opened from the original Throw Lab source files. Source records and relationships are available under What Mossy knows.");
+                if(saved!==true){setPhase("review");setError(saved+" Your files are still open here.");}
+              });
+          }else setPhase("review");
+        });
+      }
     });
-  }, [send, target, base]);
+  }, [send, target, base, title, starter, onCommit]);
+  // Loading a Throw Lab example is not a shortcut to a canned graph. The
+  // actual source files pass through the same worker, review and edit controls.
+  const openedStarter=useRef(false);
+  useEffect(()=>{
+    if(!starter||openedStarter.current)return;
+    let cancelled=false;
+    void Promise.all(starter.files.map(async file=>{
+      const res=await fetch(file.path);
+      if(!res.ok)throw Error("Could not load "+file.name+" ("+res.status+").");
+      return new File([await res.blob()],file.name,{
+        type:file.name.endsWith(".json")?"application/json":"text/csv"
+      });
+    })).then(files=>{
+      if(cancelled||openedStarter.current)return;
+      openedStarter.current=true;
+      setTarget("new");
+      readFiles(files,starter.title,"new");
+    }).catch(error=>{
+      if(!cancelled)setError(error instanceof Error?error.message:"Could not open the example's source files.");
+    });
+    return ()=>{cancelled=true;};
+  },[starter,readFiles]);
+
   async function trySamples(names = SAMPLE_FILES, title = "Invented sample data") {
     setBusy("Fetching the sample files…");
     try {
@@ -134,18 +197,39 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       if (!response.ok || !data.graph) throw Error(data.detail || data.error || "The List is unavailable.");
       const file = new File([JSON.stringify(data.graph)], "the-list-published-changes.json", { type: "application/json" });
       setTarget("new");
-      readFiles([file], "Shifting Ground · The List");
+      readFiles([file], "Shifting Ground · The List", "new");
     } catch (cause) {
       setBusy("");
       setError(cause instanceof Error ? cause.message : "Could not retrieve The List's public changes.");
     }
+  }
+  function readPasted() {
+    const source=pasted.trim();
+    if(!source)return;
+    if(source.length>8_000_000){
+      setError("That paste is too large. Save it as a file and drop it here instead.");return;
+    }
+    const isJson=/^[\[{]/.test(source);
+    const first=source.split(/\r?\n/)[0];
+    if(!isJson && (!/[\r\n]/.test(source)||!/[\t,;]/.test(first))){
+      setError("Paste a table with a heading row and at least one data row, or paste JSON. Free-form documents aren't supported here yet.");
+      return;
+    }
+    const name=isJson?"pasted-data.json":source.includes("\t")?"pasted-data.tsv":"pasted-data.csv";
+    readFiles([new File([source],name,{type:isJson?"application/json":"text/plain"})],"Pasted data");
   }
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); readFiles(Array.from(event.dataTransfer.files)); };
 
   /* ---- 2. Plan ------------------------------------------------------------ */
   const update = (name: string, change: Partial<Plan>) => setPlans(p => ({ ...p, [name]: { ...p[name], ...change } }));
   const chosen = tables.filter(t => plans[t.name]?.include);
-  const anyRecords = chosen.some(t => plans[t.name].use === "records") || maps.some(m => m.include) || (target === "add" && !!base?.nodes.length);
+  // In a standalone links table, endpoints explicitly named by the source
+  // become sparse records, not identities inferred from thin air.
+  const mentionedOnly = chosen.length>0 && chosen.every(t=>plans[t.name].use==="records" &&
+    shapeOf(t,plans[t.name]).records.length===0 && shapeOf(t,plans[t.name]).links.length>0);
+  const anyRecords = mentionedOnly || chosen.some(t => plans[t.name].use === "records" &&
+    shapeOf(t, plans[t.name]).records.length > 0) ||
+    maps.some(m => m.include && m.nodes > 0) || (target === "add" && !!base?.nodes.length);
   function preview() {
     const baseGraph = target === "add" ? base : null;
     send({ kind: "apply", id: ++request.current, base: baseGraph, title: title.trim() || "New map", maps: maps.filter(m => m.include).map(m => m.file),
@@ -175,18 +259,27 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
       const parts = t ? [t.newRecords ? count(t.newRecords, "new record") : "", t.filledIn ? t.filledIn.toLocaleString("en-GB") + " filled in" : "",
         t.newLinks ? count(t.newLinks, "new recorded link") : "", merges.length ? count(merges.length, "pair") + " merged" : ""].filter(Boolean) : [];
       const summary = (parts.length ? parts.join(", ") + ". " : "") + "Every record keeps a receipt for its source rows.";
+      if (target==="new" && !starter && onPreview) {
+        setBusy("");
+        // The map is explored and edited first; no graph or change history is
+        // persisted until the person explicitly chooses Keep this map.
+        onPreview(m.graph,title.trim()||"New map",summary.charAt(0).toUpperCase()+summary.slice(1));
+        return;
+      }
       const saved = await onCommit(m.graph, target, title.trim() || "New map", summary.charAt(0).toUpperCase() + summary.slice(1));
       setBusy("");
       if (saved !== true) setError(saved + " Your files are still open here.");
     });
   }
 
-  const steps: [Phase, string][] = [["choose", "Files"], ["plan", "What each adds"], ["review", "Check and add"]];
+  const steps: [Phase, string][] = [["choose", "Files"], ["plan", "Adjust reading"], ["review", "See result"]];
   const stepIndex = steps.findIndex(s => s[0] === phase);
   const places = report?.places;
   const approxCount = places ? (places.placed["postcode sector"] ?? 0) + (places.placed["postcode district"] ?? 0) : 0;
   const exactCount = places?.placed.postcode ?? 0;
   const toLookUp = places?.postcodesToLookUp.length ?? 0;
+  const omittedRows = report?.tables.reduce((total,table)=>total+
+    table.skipped.reduce((sum,skip)=>sum+skip.count,0),0)??0;
   const addedByType = useMemo(() => {
     const m = new Map<NodeType, number>();
     for (const t of report?.tables ?? []) for (const [k, v] of Object.entries(t.added)) m.set(k as NodeType, (m.get(k as NodeType) ?? 0) + (v ?? 0));
@@ -243,6 +336,19 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <strong>Drop files here, or choose files</strong>
           <small>CSV, tab-separated text, Excel (.xlsx) or JSON · several at once is fine</small>
         </label>
+        <details className="ml-add-knows">
+          <summary>Or paste rows or JSON</summary>
+          <label className="ml-add-field" htmlFor="ml-add-pasted-data">
+            <span>Paste a table copied from a spreadsheet, CSV or JSON</span>
+          </label>
+          <textarea id="ml-add-pasted-data" rows={5} value={pasted}
+            placeholder={"Name,Theme\nFood club,Food\nRepair shed,Climate"}
+            onChange={e=>setPasted(e.target.value)} />
+          <p className="ml-small">Include the header row. Mossy reads this in your browser.
+            For free-form reports, notes and transcripts, source-grounded extraction is still being developed.</p>
+          <button type="button" className="ml-quiet" onClick={readPasted} disabled={!!busy||!pasted.trim()}>
+            Explore pasted data →</button>
+        </details>
         <details className="ml-add-knows">
           <summary>Formats Mossy understands</summary>
           <h2 className="ml-section-title">Recognised straight away</h2>
@@ -369,24 +475,66 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           <button type="button" className="ml-primary" onClick={preview} disabled={!!busy || (!chosen.length && !maps.some(m => m.include)) || !anyRecords}>
             Check what this adds →</button>
         </div>
-        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">Mossy hasn't found a set of records to start from. Open the detailed settings and choose <strong>Add as records</strong> for a suitable table. 
-          Set at least one table to <strong>Add as records</strong>.</p>}
+        {!anyRecords && chosen.length > 0 && <p className="ml-small ml-add-right" role="alert">
+          Mossy hasn't found a usable set of records or relationships in the selected files.
+          Try another reading or include a table with names of things or links between them.
+        </p>}
       </section>}
 
       {phase === "review" && report && <section className="ml-add-stack" aria-labelledby="review-h">
         <div className="ml-add-intro">
-          <h1 id="review-h" ref={heading} tabIndex={-1}>Check before adding</h1>
-          <p className="ml-add-lede">Nothing has been saved yet. {target === "add" ? <>This will change <strong>{baseTitle}</strong>.</> : <>This will create <strong>{title || "a new map"}</strong>.</>}</p>
+          <h1 id="review-h" ref={heading} tabIndex={-1}>Ready to explore</h1>
+          <p className="ml-add-lede">Mossy has found the records and relationships in your files. {target === "add"
+            ? <>Nothing has changed in <strong>{baseTitle}</strong> yet.</>
+            : <>Nothing has been saved yet. Open the map to explore what you brought in.</>}</p>
+          {target === "new" && <label className="ml-add-field ml-add-name"><span>Give your map a name</span>
+            <input aria-label="Map name" value={title} maxLength={100} onChange={e => setTitle(e.target.value)}/></label>}
+          {mentionedOnly&&report.totals.newRecords>0&&<p className="ml-add-warn" role="note">
+            These names were mentioned as endpoints of relationships in your file. Mossy has drawn them as
+            minimal records so you can see the connections. Their identities and types have not been verified;
+            you can add details and correct them after importing.
+          </p>}
+          {tables.some(t=>!t.matches[plans[t.name]?.match ?? 0]?.builtIn) && <p className="ml-add-warn">
+            Mossy has suggested how to read some of these files from their headings. Check the interpretations below;
+            you can change them before saving.</p>}
         </div>
-        <div className="ml-add-totals">
-          <div><strong>{report.totals.newRecords.toLocaleString("en-GB")}</strong><span>new records</span></div>
-          <div><strong>{report.totals.filledIn.toLocaleString("en-GB")}</strong><span>filled in</span></div>
-          <div><strong>{report.totals.newLinks.toLocaleString("en-GB")}</strong><span>new recorded links</span></div>
-          <div><strong>{report.sameName.length.toLocaleString("en-GB")}</strong><span>names to check</span></div>
+        <div className="ml-add-totals ml-add-totals--simple">
+          {report.totals.newRecords>0&&<div><strong>{report.totals.newRecords.toLocaleString("en-GB")}</strong><span>records found</span></div>}
+          {report.totals.newLinks>0&&<div><strong>{report.totals.newLinks.toLocaleString("en-GB")}</strong><span>recorded connections</span></div>}
+          {report.totals.filledIn>0&&<div><strong>{report.totals.filledIn.toLocaleString("en-GB")}</strong><span>existing records updated</span></div>}
+          {report.sameName.length>0&&<div><strong>{report.sameName.length.toLocaleString("en-GB")}</strong><span>possible duplicates</span></div>}
         </div>
         {addedByType.length > 0 && <ul className="ml-add-types">{addedByType.map(([type, n]) =>
           <li key={type}><TypeMark type={type}/>{n.toLocaleString("en-GB")} {(n === 1 ? TYPE_LABEL[type] : TYPE_PLURAL[type]).toLowerCase()}</li>)}</ul>}
 
+        {omittedRows>0&&<p className="ml-add-warn" role="note">
+          {omittedRows.toLocaleString("en-GB")} source {omittedRows===1?"row was":"rows were"} not included.
+          Check “How Mossy understood your files” to see why before saving.
+        </p>}
+        {report.tables.some(t=>t.unresolvedLinks>0)&&<p className="ml-add-warn" role="alert">
+          Some recorded relationships could not be matched to a record. They will not appear as lines.
+          Check “How Mossy understood your files” before you open the map.
+        </p>}
+        {report.sameName.length>0&&<p className="ml-add-warn" role="note">
+          {report.sameName.length.toLocaleString("en-GB")} pairs share a name but have no matching identifier.
+          They will remain separate unless you choose to combine them below.
+        </p>}
+        <div className="ml-add-actions ml-add-actions--preview">
+          <button type="button" className="ml-primary" onClick={finish}
+            disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
+            {target==="add"?"Add and explore": "Preview my map"} →
+          </button>
+          <button type="button" className="ml-link-button" onClick={()=>setPhase("plan")} disabled={!!busy}>
+            Change how Mossy understood my files
+          </button>
+        </div>
+        <p className="ml-small">{target==="new" && !starter
+          ? "Nothing is saved yet. Explore and correct the map first, then choose Keep this map when you're happy."
+          : "This adds the records to your existing saved map. You can inspect and edit their sources afterwards."}</p>
+        <details className="ml-add-interpretation">
+          <summary>How Mossy understood your files</summary>
+          <p className="ml-small">The details below show which files contributed records,
+            what Mossy matched, and which places could be mapped. Original source records remain available afterwards.</p>
         <div className="ml-add-review-grid">
           <section className="ml-add-panel">
             <h2 className="ml-section-title">File by file</h2>
@@ -413,6 +561,7 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           </section>
         </div>
 
+        </details>
         {report.sameName.length > 0 && <section className="ml-add-panel ml-add-same">
           <h2 className="ml-section-title"><span className="ml-key-pencil"/>Same name, no shared identifier</h2>
           <p className="ml-small">These may be the same organisation recorded twice, or two different ones. Tick only the pairs you know are the same;
@@ -429,6 +578,8 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
           {report.sameName.length > 60 && <p className="ml-small">{report.sameName.length - 60} more pairs are kept separate; review them in the map later.</p>}
         </section>}
 
+        <details className="ml-add-interpretation ml-add-interpretation--places">
+          <summary>Places, source notes and individual records</summary>
         {places && <section className="ml-add-panel ml-add-places">
           <h2 className="ml-section-title">Places</h2>
           <ul className="ml-add-placecounts">
@@ -452,11 +603,11 @@ export function AddData({ base, baseTitle, canAddToBase, startWith = "new", inte
 
         {report.added.length > 0 && <details className="ml-add-panel ml-add-newlist"><summary>New records · first {Math.min(report.added.length, 60)}</summary>
           <ul>{report.added.slice(0, 60).map(n => <li key={n.id}><TypeMark type={n.type as NodeType}/>{n.label}</li>)}</ul></details>}
+        </details>
 
         <div className="ml-add-actions">
-          <button type="button" className="ml-quiet" onClick={() => setPhase("plan")} disabled={!!busy}>← Change how files are read</button>
-          <button type="button" className="ml-primary" onClick={finish} disabled={!!busy || (report.totals.newRecords + report.totals.filledIn + report.totals.newLinks === 0 && !report.mapsAdded)}>
-            {target === "add" ? "Add to " + baseTitle : "Create the map"}{merge.size ? " · merge " + merge.size : ""}</button>
+          <button type="button" className="ml-quiet" onClick={() => setPhase("plan")} disabled={!!busy}>← Change how files are read or where they go</button>
+          <span className="ml-small">Want to check something first? Open “How Mossy understood your files” above.</span>
         </div>
       </section>}
     </div>

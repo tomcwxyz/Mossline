@@ -29,6 +29,8 @@ type Props = {
   loops?: FeedbackLoop[]; loopLabel?: Map<string, string>; onLoop?: (id: string) => void;
   /** Present while the map is being edited. */
   editing?: EditingApi | null;
+  /** A fresh request from double-clicking a drawn record, not a second edit state. */
+  editRequest?: { id: string; sequence: number } | null;
 };
 
 const receiptText = (r: SourceOrigin) => r.system === "edit"
@@ -66,11 +68,14 @@ function Receipt({ edge }: { edge: GraphEdge }) {
   return <span className="ml-receipt" title={text}>{text}</span>;
 }
 
-export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop, editing }: Props) {
+export function RecordPanel({ source, view, node, flows, leads, totalRecords, totalRecorded, onPick, onFollow, onConfirm, grouping, groupLabel = "Theme", loops = [], loopLabel, onLoop, editing, editRequest }: Props) {
   const [showAll, setShowAll] = useState(false);
   /** What is open for editing: the details, a new link, or one link (by ID). */
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => { setOpen(null); }, [node?.id, editing === null || editing === undefined]);
+  useEffect(() => {
+    if(editing && node && editRequest?.id===node.id)setOpen("details");
+  },[editRequest?.sequence,editRequest?.id]);
   useEffect(() => { if (editing?.picked && node) setOpen("link"); }, [editing?.picked, node]);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("");
@@ -109,7 +114,7 @@ export function RecordPanel({ source, view, node, flows, leads, totalRecords, to
         <button type="button" onClick={() => onPick(n.id)}><TypeMark type={n.type}/><span>{n.label}</span>
           <small>{degree} recorded</small></button></li>)}</ul>
     </>}
-    <p className="ml-hint">Or press <kbd>/</kbd> to search, or open <strong>Browse records</strong> for a full list.</p>
+    <p className="ml-hint">Or press <kbd>/</kbd> to search, or open <strong>Data</strong> to see and edit every record.</p>
     <div className="ml-grammar-note">
       <p><span className="ml-key-ink"/> Solid lines are recorded in your source.</p>
       <p><span className="ml-key-pencil"/> Dotted lines are suggestions, not facts.</p>

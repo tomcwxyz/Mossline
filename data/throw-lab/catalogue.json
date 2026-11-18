@@ -1,0 +1,900 @@
+{
+  "schemaVersion": 1,
+  "decisionDate": "2026-11-11",
+  "description": "Fictional Throw Lab catalogue. Engine regressions do not prove the intended first visualisation is implemented. Gaps are deliberate and visible.",
+  "caseCount": 60,
+  "cases": [
+    {
+      "id": "simple-list",
+      "family": "lists-and-tables",
+      "title": "A simple list of local organisations",
+      "format": "CSV",
+      "idealFirstView": "directory",
+      "edit": "Change names, add types and tags",
+      "mustNot": "Never invent partnerships",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "organisations.csv",
+          "content": "Name,Theme\nAycliffe Food Club,Food\nThe Repair Shed,Climate\nCorner House,Youth"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "rich-records",
+      "family": "lists-and-tables",
+      "title": "Organisations with themes and postcodes",
+      "format": "CSV",
+      "idealFirstView": "directory/map",
+      "edit": "Choose what describes each organisation",
+      "mustNot": "A postcode is not a precise address",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "charities.csv",
+          "content": "Organisation,Charity No,Postcode,Themes\nFellside Trust,1990005,NE47 9ZZ,Food\nRiverside Network,1990006,NE46 1ZZ,Health"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "project-organisation-rows",
+      "family": "lists-and-tables",
+      "title": "Project and organisation in the same row",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Correct both types and the relationship meaning",
+      "mustNot": "Co-occurrence does not establish delivery",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "projects.csv",
+          "content": "Project,Organisation\nWarm Meals,Northfield Trust\nBike Shed,Northfield Trust"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "repeated-names",
+      "family": "lists-and-tables",
+      "title": "Repeated names with extra properties",
+      "format": "CSV",
+      "idealFirstView": "directory",
+      "edit": "Review duplicate labels and conflicting values",
+      "mustNot": "Do not merge unrelated people by name",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "items.csv",
+          "content": "Name,Theme\nRiver Survey,Nature\nRiver Survey,Water\nFood Club,Food"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "semicolon-list",
+      "family": "lists-and-tables",
+      "title": "A semicolon-separated table",
+      "format": "CSV",
+      "idealFirstView": "directory",
+      "edit": "Change separator and fields",
+      "mustNot": "Do not treat punctuation as links",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "groups.csv",
+          "content": "Name;Theme\nOpen Shed;Repair\nWoodland Group;Nature"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "inventory-values",
+      "family": "lists-and-tables",
+      "title": "Inventory with stock quantities",
+      "format": "CSV",
+      "idealFirstView": "bar",
+      "edit": "Change measures and units",
+      "mustNot": "Do not turn quantities into records",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "stock.csv",
+          "content": "Name,Quantity,Unit\nLaptops,8,items\nChairs,20,items"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "contacts",
+      "family": "lists-and-tables",
+      "title": "Personal contacts and organisations",
+      "format": "CSV",
+      "idealFirstView": "directory/network",
+      "edit": "Correct types and restrict sharing",
+      "mustNot": "Never publish personal details automatically",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "contacts.csv",
+          "content": "Name,Organisation\nAlice Example,Fellside Trust\nBob Example,Fellside Trust"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "multi-valued-cells",
+      "family": "lists-and-tables",
+      "title": "Several themes and partners in one cell",
+      "format": "CSV",
+      "idealFirstView": "themes",
+      "edit": "Change the separator and review each partner",
+      "mustNot": "Do not assume that similar themes imply collaboration",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "wide-years",
+      "family": "lists-and-tables",
+      "title": "One column per year",
+      "format": "XLSX",
+      "idealFirstView": "line",
+      "edit": "Unpivot or relabel years",
+      "mustNot": "Never mistake 2025 for an ID",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "headers-below-row-one",
+      "family": "lists-and-tables",
+      "title": "Notes and merged headings above the real table",
+      "format": "XLSX",
+      "idealFirstView": "directory",
+      "edit": "Choose header row and table bounds",
+      "mustNot": "Do not silently discard leading notes",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "bare-links",
+      "family": "relationships-and-structures",
+      "title": "Only From, To and Relationship",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Edit endpoint types and relationship direction",
+      "mustNot": "Endpoints are source-mentioned, not verified identities",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "connections.csv",
+          "content": "From,To,Relationship\nAlice,Bob,helps\nBob,Charlie,works with"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "signed-relations",
+      "family": "relationships-and-structures",
+      "title": "Signed directed cause-and-effect relationships",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Correct polarity and direction",
+      "mustNot": "No invented causal claims",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "systems.csv",
+          "content": "From,To,Relationship,Direction,Polarity\nFunding,Capacity,increases,directed,+"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "multi-target-links",
+      "family": "relationships-and-structures",
+      "title": "One source with several named targets",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Split targets, inspect evidence",
+      "mustNot": "Never lose an endpoint",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "many.csv",
+          "content": "From,To,Relationship\nLibrary,Youth Centre|Village Hall,signposts"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "self-loop",
+      "family": "relationships-and-structures",
+      "title": "A relationship returning to its own source",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Remove or relabel the loop",
+      "mustNot": "Do not discard a valid self-link",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "loop.csv",
+          "content": "From,To,Relationship\nCommunity Group,Community Group,reviews itself"
+        }
+      ],
+      "engineExpectation": {
+        "records": 1,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "case-variants",
+      "family": "relationships-and-structures",
+      "title": "Repeated endpoint names with mixed capitalisation",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Correct matching case and labels",
+      "mustNot": "No duplicates within the source table",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "mixed-case.csv",
+          "content": "From,To,Relationship\nAlice,Bob,helps\nALICE,BOB,advises"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "record-and-link-pair",
+      "family": "relationships-and-structures",
+      "title": "Separate records and connections files",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Correct joins, types and missing details",
+      "mustNot": "No duplicate placeholder endpoints",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "people.csv",
+          "content": "Name,Type\nAlice,person\nBob,person"
+        },
+        {
+          "name": "links.csv",
+          "content": "From,To,Relationship\nAlice,Bob,helps"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "kumu-elements-connections",
+      "family": "relationships-and-structures",
+      "title": "Kumu Elements and Connections",
+      "format": "XLSX",
+      "idealFirstView": "network",
+      "edit": "Edit relation types, signs and labels",
+      "mustNot": "Maintain original row receipts",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "adjacency-matrix",
+      "family": "relationships-and-structures",
+      "title": "Organisations on both axes of a numeric matrix",
+      "format": "CSV",
+      "idealFirstView": "matrix/network",
+      "edit": "Choose directed/undirected and meaning of cell values",
+      "mustNot": "A zero is not a missing observation",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "participation-matrix",
+      "family": "relationships-and-structures",
+      "title": "People by activities, cells say attended",
+      "format": "CSV",
+      "idealFirstView": "matrix",
+      "edit": "Change participant/activity dimension",
+      "mustNot": "Co-attendance is not proof of friendship",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "org-hierarchy",
+      "family": "relationships-and-structures",
+      "title": "A parent/child organisational chart",
+      "format": "CSV",
+      "idealFirstView": "tree",
+      "edit": "Change parent links and levels",
+      "mustNot": "Do not infer managerial authority from proximity",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "small-grant-ledger",
+      "family": "events-measures-flows",
+      "title": "Funder, recipient, award reference, value and date",
+      "format": "CSV",
+      "idealFirstView": "funding",
+      "edit": "Change currencies and join recipients",
+      "mustNot": "Never count an amount without its units",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "awards.csv",
+          "content": "Funder,Recipient,Grant ID,Amount,Date\nExample Foundation,Community Garden,G001,2500,2025-04-10\nExample Foundation,Food Shed,G002,8000,2025-05-02"
+        }
+      ],
+      "engineExpectation": {
+        "records": 5,
+        "recordedLinks": 4
+      }
+    },
+    {
+      "id": "budget-transactions",
+      "family": "events-measures-flows",
+      "title": "A spending ledger",
+      "format": "CSV",
+      "idealFirstView": "flow",
+      "edit": "Edit categories, sign and units",
+      "mustNot": "Do not assume all transfers are grants",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "spend.csv",
+          "content": "Name,Amount,Date\nWorkshop materials,220,2025-03-01\nVenue hire,400,2025-03-15"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "monthly-measures",
+      "family": "events-measures-flows",
+      "title": "Measurements over time",
+      "format": "CSV",
+      "idealFirstView": "line",
+      "edit": "Change time axis, aggregation and units",
+      "mustNot": "Missing values are not zero",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "numbers.csv",
+          "content": "Name,Value,Date\nJanuary footfall,120,2025-01-31\nFebruary footfall,155,2025-02-28"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "volunteer-sessions",
+      "family": "events-measures-flows",
+      "title": "Events and their organising body",
+      "format": "CSV",
+      "idealFirstView": "timeline",
+      "edit": "Correct event types and dates",
+      "mustNot": "A row does not prove a delivery partnership",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "sessions.csv",
+          "content": "Event,Organisation,Date\nRepair Day,Open Shed,2025-05-12\nBike Workshop,Open Shed,2025-06-01"
+        }
+      ],
+      "engineExpectation": {
+        "records": 3,
+        "recordedLinks": 2
+      }
+    },
+    {
+      "id": "referral-events",
+      "family": "events-measures-flows",
+      "title": "Referral source, destination and dates",
+      "format": "CSV",
+      "idealFirstView": "flow/timeline",
+      "edit": "Review each event and its meaning",
+      "mustNot": "Never turn a referral into a successful outcome",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "attendance-logs",
+      "family": "events-measures-flows",
+      "title": "Participant, session, date and attendance",
+      "format": "CSV",
+      "idealFirstView": "timeline/matrix",
+      "edit": "Choose counts, rates and cohorts",
+      "mustNot": "Do not publish identifying attendance",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "monthly-series-wide",
+      "family": "events-measures-flows",
+      "title": "Months as separate columns",
+      "format": "XLSX",
+      "idealFirstView": "line",
+      "edit": "Unpivot and choose time basis",
+      "mustNot": "No arbitrary node for each cell",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "monthly-series-long",
+      "family": "events-measures-flows",
+      "title": "Month, site, measure, value and units",
+      "format": "CSV",
+      "idealFirstView": "line",
+      "edit": "Change aggregation and facets",
+      "mustNot": "No comparing incompatible units",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "supplier-flows",
+      "family": "events-measures-flows",
+      "title": "Suppliers, buyers, deliveries, quantities",
+      "format": "CSV",
+      "idealFirstView": "flow/map",
+      "edit": "Choose weights and directions",
+      "mustNot": "Never equate transactions with partnership",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "survey-responses",
+      "family": "events-measures-flows",
+      "title": "Coded answers, categories and free text",
+      "format": "CSV",
+      "idealFirstView": "distribution/themes",
+      "edit": "Choose variable types and category labels",
+      "mustNot": "Do not treat respondent co-occurrence as a relationship",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "lat-lon-points",
+      "family": "geography-and-time",
+      "title": "A small list of source coordinates",
+      "format": "CSV",
+      "idealFirstView": "map",
+      "edit": "Choose marker types and correct locations",
+      "mustNot": "No geocoding from place names",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "observations.csv",
+          "content": "Name,Latitude,Longitude\nTrigg Point,54.66,-1.55\nRiver Bend,54.70,-1.61"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "uk-postcodes",
+      "family": "geography-and-time",
+      "title": "UK postcode locations",
+      "format": "CSV",
+      "idealFirstView": "map",
+      "edit": "Approve approximate locations",
+      "mustNot": "Never claim building-level precision",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "venues.csv",
+          "content": "Name,Postcode\nThe Hall,NE47 9ZZ\nThe School,NE46 1ZZ"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "geojson-polygons",
+      "family": "geography-and-time",
+      "title": "Neighbourhood polygons with attributes",
+      "format": "GeoJSON",
+      "idealFirstView": "map",
+      "edit": "Style boundaries and join indicators",
+      "mustNot": "A polygon is not a point at its centroid",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "gpx-routes",
+      "family": "geography-and-time",
+      "title": "Several GPS tracks with elevations",
+      "format": "GPX",
+      "idealFirstView": "map/timeline",
+      "edit": "Change date, speed and elevation displays",
+      "mustNot": "Never assume a track is an organisation",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "wkt-lines",
+      "family": "geography-and-time",
+      "title": "Road and river geometries expressed as WKT",
+      "format": "CSV",
+      "idealFirstView": "map",
+      "edit": "Choose geometry column and projection",
+      "mustNot": "Don't discard the actual line",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "points-and-lines",
+      "family": "geography-and-time",
+      "title": "Observations plus recorded connections between places",
+      "format": "GeoJSON/CSV",
+      "idealFirstView": "map",
+      "edit": "Style the connections and point records",
+      "mustNot": "No pin-only downgrade of explicit links",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "mixed-projections",
+      "family": "geography-and-time",
+      "title": "Geometries from different coordinate reference systems",
+      "format": "GeoJSON",
+      "idealFirstView": "map",
+      "edit": "Review projection transformations",
+      "mustNot": "Never interpret easting as longitude",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "outside-uk",
+      "family": "geography-and-time",
+      "title": "Global coordinates outside the UK",
+      "format": "CSV",
+      "idealFirstView": "map",
+      "edit": "Reframe global map view",
+      "mustNot": "Do not hide points because they lie outside Britain",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "time-zone-timestamps",
+      "family": "geography-and-time",
+      "title": "Events across time zones",
+      "format": "JSON",
+      "idealFirstView": "timeline",
+      "edit": "Choose local time display",
+      "mustNot": "Retain source timezone",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "year-only-dates",
+      "family": "geography-and-time",
+      "title": "Historic records with only years",
+      "format": "CSV",
+      "idealFirstView": "timeline",
+      "edit": "Choose interval resolution",
+      "mustNot": "Do not invent exact days",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "nested-json-people",
+      "family": "documents-and-text",
+      "title": "JSON collection of named records",
+      "format": "JSON",
+      "idealFirstView": "directory",
+      "edit": "Review fields and nested values",
+      "mustNot": "Don't invent relations between siblings",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "groups.json",
+          "content": "{\"people\":[{\"name\":\"Alex Example\",\"group\":\"West\"},{\"name\":\"Morgan Example\",\"group\":\"East\"}]}"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "json-array",
+      "family": "documents-and-text",
+      "title": "A simple JSON array of records",
+      "format": "JSON",
+      "idealFirstView": "directory",
+      "edit": "Change the record name field",
+      "mustNot": "Don't discard unknown properties",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "items.json",
+          "content": "[{\"Name\":\"Canal Bridge\",\"Theme\":\"Water\"},{\"Name\":\"Community Hall\",\"Theme\":\"People\"}]"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 0
+      }
+    },
+    {
+      "id": "mossy-graph-backup",
+      "family": "documents-and-text",
+      "title": "A saved Mossy graph with evidence receipts",
+      "format": "JSON",
+      "idealFirstView": "network",
+      "edit": "Edit records beside the source",
+      "mustNot": "Don't lose edges or receipts",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "deep-nested-api",
+      "family": "documents-and-text",
+      "title": "Projects containing arrays of partners, places and activities",
+      "format": "JSON",
+      "idealFirstView": "network",
+      "edit": "Review which nesting means relationships",
+      "mustNot": "Containment isn't automatically collaboration",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "report-pdf",
+      "family": "documents-and-text",
+      "title": "Research report with text and tables",
+      "format": "PDF",
+      "idealFirstView": "evidence/themes",
+      "edit": "Approve extracted claims and tables",
+      "mustNot": "No claim without a page and quotation",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "scanned-pdf",
+      "family": "documents-and-text",
+      "title": "Image-only report",
+      "format": "PDF",
+      "idealFirstView": "evidence",
+      "edit": "Review transcription and provenance",
+      "mustNot": "Never silently present OCR as exact",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "meeting-notes",
+      "family": "documents-and-text",
+      "title": "Unstructured notes containing actions and people",
+      "format": "TXT",
+      "idealFirstView": "timeline/network",
+      "edit": "Review named entities and action owners",
+      "mustNot": "Mention does not mean endorsement",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "interview-transcripts",
+      "family": "documents-and-text",
+      "title": "Qualitative interviews with speakers and timecodes",
+      "format": "TXT/DOCX",
+      "idealFirstView": "themes",
+      "edit": "Rename codes and exclude sensitive passages",
+      "mustNot": "No quote without attribution and context",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "reference-list",
+      "family": "documents-and-text",
+      "title": "Research bibliography with DOI and cited-by links",
+      "format": "RIS/BibTeX",
+      "idealFirstView": "network/timeline",
+      "edit": "Choose author/paper entities",
+      "mustNot": "Citation is not agreement",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "mixed-language-notes",
+      "family": "documents-and-text",
+      "title": "Reports written in more than one language",
+      "format": "DOCX",
+      "idealFirstView": "themes",
+      "edit": "Review language and translations",
+      "mustNot": "No silent translated quotations",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "json-plus-links",
+      "family": "mixed-and-messy",
+      "title": "JSON records plus a CSV of relationships",
+      "format": "JSON/CSV",
+      "idealFirstView": "network",
+      "edit": "Review cross-file links",
+      "mustNot": "Don't invent missing records when a records table exists",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "groups.json",
+          "content": "{\"people\":[{\"Name\":\"Alice\"},{\"Name\":\"Bob\"}]}"
+        },
+        {
+          "name": "links.csv",
+          "content": "From,To,Relationship\nAlice,Bob,helps"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "mixed-separators",
+      "family": "mixed-and-messy",
+      "title": "CSV and TSV files in one drop",
+      "format": "CSV/TSV",
+      "idealFirstView": "network",
+      "edit": "Correct delimiters and joins",
+      "mustNot": "No silent dropped tables",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "entities.tsv",
+          "content": "Name\tType\nAlice\tperson\nBob\tperson"
+        },
+        {
+          "name": "relations.csv",
+          "content": "From,To,Relationship\nAlice,Bob,helps"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "identifiers-and-links",
+      "family": "mixed-and-messy",
+      "title": "Named organisations with identifiers plus links by name",
+      "format": "CSV",
+      "idealFirstView": "network",
+      "edit": "Review name matching and evidence",
+      "mustNot": "Never discard stable identifier fields",
+      "actualStatus": "engine-regression-added",
+      "files": [
+        {
+          "name": "entities.csv",
+          "content": "Name,Charity No\nFellside Trust,1990005\nRiverside Group,1990006"
+        },
+        {
+          "name": "links.csv",
+          "content": "From,To,Relationship\nFellside Trust,Riverside Group,works with"
+        }
+      ],
+      "engineExpectation": {
+        "records": 2,
+        "recordedLinks": 1
+      }
+    },
+    {
+      "id": "duplicate-files",
+      "family": "mixed-and-messy",
+      "title": "Two copies of the same source",
+      "format": "CSV",
+      "idealFirstView": "directory",
+      "edit": "Pick authoritative version",
+      "mustNot": "Don't double-count",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "conflicting-identifiers",
+      "family": "mixed-and-messy",
+      "title": "Same name attached to different registered IDs",
+      "format": "CSV",
+      "idealFirstView": "directory",
+      "edit": "Choose whether records are distinct",
+      "mustNot": "Don't auto-merge on name",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "partial-corruption",
+      "family": "mixed-and-messy",
+      "title": "One good CSV and one unreadable file",
+      "format": "CSV/JSON",
+      "idealFirstView": "directory",
+      "edit": "Exclude bad source and retain good one",
+      "mustNot": "One bad file must not blank the result",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "different-date-formats",
+      "family": "mixed-and-messy",
+      "title": "Dates written as UK, ISO, month and year",
+      "format": "CSV",
+      "idealFirstView": "timeline",
+      "edit": "Review dates and ambiguity",
+      "mustNot": "Don't silently switch day and month",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "blanks-and-totals",
+      "family": "mixed-and-messy",
+      "title": "Data rows with subtotals and blanks",
+      "format": "CSV",
+      "idealFirstView": "bar",
+      "edit": "Select which rows are summaries",
+      "mustNot": "Don't count totals as records",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "massive-grants",
+      "family": "mixed-and-messy",
+      "title": "A grant register of hundreds of thousands of rows",
+      "format": "CSV",
+      "idealFirstView": "funding",
+      "edit": "Choose relevant geography and scope",
+      "mustNot": "No loading freeze or misleading sample-only totals",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    },
+    {
+      "id": "sensitive-bundle",
+      "family": "mixed-and-messy",
+      "title": "Personal information alongside public programme data",
+      "format": "XLSX/PDF",
+      "idealFirstView": "directory",
+      "edit": "Exclude private columns and approve publication",
+      "mustNot": "Never upload or publish without consent",
+      "actualStatus": "not-implemented",
+      "missing": "No runnable fixture yet: this case is explicitly tracked, not claimed as supported."
+    }
+  ]
+}

@@ -1,0 +1,531 @@
+From,To,Relationship,Direction,Since
+Vancouver Bracken Growers 001,Guadalajara Community Kitchen 007,supplies,directed,2022
+Toronto Harbour Growers 002,Guadalajara Community Kitchen 019,supplies,directed,2023
+Montreal Mosaic Growers 003,Montreal Community Kitchen 027,supplies,directed,2024
+Calgary Beacon Growers 004,Guadalajara Community Kitchen 043,supplies,directed,2025
+Mexico City Willow Growers 005,"Chicago, IL Community Kitchen 058",supplies,directed,2022
+Monterrey Cornerstone Growers 006,"Austin, TX Community Kitchen 072",supplies,directed,2023
+Guadalajara Bridgewater Growers 007,Vancouver Community Kitchen 085,supplies,directed,2024
+Oaxaca Hearth Growers 008,Guadalajara Community Kitchen 007,supplies,directed,2025
+"Seattle, WA Meadow Growers 009",Vancouver Community Kitchen 025,supplies,directed,2022
+"Chicago, IL Highfield Growers 010",Vancouver Community Kitchen 037,supplies,directed,2023
+"Los Angeles, CA Lantern Growers 011",Montreal Community Kitchen 051,supplies,directed,2024
+"Austin, TX Riverside Growers 012",Calgary Community Kitchen 064,supplies,directed,2025
+Vancouver Northbank Growers 013,Toronto Community Kitchen 074,supplies,directed,2022
+Toronto Seedling Growers 014,Montreal Community Kitchen 003,supplies,directed,2023
+Montreal Cedar Growers 015,Toronto Community Kitchen 014,supplies,directed,2024
+Calgary Hilltop Growers 016,Calgary Community Kitchen 028,supplies,directed,2025
+Mexico City Tideway Growers 017,Guadalajara Community Kitchen 043,supplies,directed,2022
+Monterrey Foundry Growers 018,Guadalajara Community Kitchen 055,supplies,directed,2023
+Guadalajara Bracken Growers 019,"Los Angeles, CA Community Kitchen 071",supplies,directed,2024
+Oaxaca Harbour Growers 020,Guadalajara Community Kitchen 079,supplies,directed,2025
+"Seattle, WA Mosaic Growers 021",Guadalajara Community Kitchen 007,supplies,directed,2022
+"Chicago, IL Beacon Growers 022",Vancouver Community Kitchen 025,supplies,directed,2023
+"Los Angeles, CA Willow Growers 023","Los Angeles, CA Community Kitchen 035",supplies,directed,2024
+"Austin, TX Cornerstone Growers 024",Montreal Community Kitchen 051,supplies,directed,2025
+Vancouver Bridgewater Growers 025,Montreal Community Kitchen 063,supplies,directed,2022
+Toronto Hearth Growers 026,Vancouver Community Kitchen 073,supplies,directed,2023
+Montreal Meadow Growers 027,Mexico City Community Kitchen 005,supplies,directed,2024
+Calgary Highfield Growers 028,Toronto Community Kitchen 014,supplies,directed,2025
+Mexico City Lantern Growers 029,Toronto Community Kitchen 026,supplies,directed,2022
+Monterrey Riverside Growers 030,Toronto Community Kitchen 038,supplies,directed,2023
+Guadalajara Northbank Growers 031,Mexico City Community Kitchen 053,supplies,directed,2024
+Oaxaca Seedling Growers 032,Guadalajara Community Kitchen 067,supplies,directed,2025
+"Seattle, WA Cedar Growers 033","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Chicago, IL Hilltop Growers 034","Los Angeles, CA Community Kitchen 011",supplies,directed,2023
+"Los Angeles, CA Tideway Growers 035",Guadalajara Community Kitchen 019,supplies,directed,2024
+"Austin, TX Foundry Growers 036",Oaxaca Community Kitchen 032,supplies,directed,2025
+Vancouver Bracken Growers 037,"Austin, TX Community Kitchen 048",supplies,directed,2022
+Toronto Harbour Growers 038,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Montreal Mosaic Growers 039,Toronto Community Kitchen 074,supplies,directed,2024
+Calgary Beacon Growers 040,Calgary Community Kitchen 004,supplies,directed,2025
+Mexico City Willow Growers 041,"Los Angeles, CA Community Kitchen 011",supplies,directed,2022
+Monterrey Cornerstone Growers 042,Montreal Community Kitchen 027,supplies,directed,2023
+Guadalajara Bridgewater Growers 043,Vancouver Community Kitchen 037,supplies,directed,2024
+Oaxaca Hearth Growers 044,Oaxaca Community Kitchen 056,supplies,directed,2025
+"Seattle, WA Meadow Growers 045",Calgary Community Kitchen 064,supplies,directed,2022
+"Chicago, IL Highfield Growers 046","Seattle, WA Community Kitchen 081",supplies,directed,2023
+"Los Angeles, CA Lantern Growers 047",Oaxaca Community Kitchen 008,supplies,directed,2024
+"Austin, TX Riverside Growers 048",Monterrey Community Kitchen 018,supplies,directed,2025
+Vancouver Northbank Growers 049,"Austin, TX Community Kitchen 036",supplies,directed,2022
+Toronto Seedling Growers 050,"Los Angeles, CA Community Kitchen 047",supplies,directed,2023
+Montreal Cedar Growers 051,"Chicago, IL Community Kitchen 058",supplies,directed,2024
+Calgary Hilltop Growers 052,"Austin, TX Community Kitchen 072",supplies,directed,2025
+Mexico City Tideway Growers 053,Montreal Community Kitchen 003,supplies,directed,2022
+Monterrey Foundry Growers 054,Montreal Community Kitchen 015,supplies,directed,2023
+Guadalajara Bracken Growers 055,"Los Angeles, CA Community Kitchen 023",supplies,directed,2024
+Oaxaca Harbour Growers 056,Toronto Community Kitchen 038,supplies,directed,2025
+"Seattle, WA Mosaic Growers 057",Calgary Community Kitchen 052,supplies,directed,2022
+"Chicago, IL Beacon Growers 058",Mexico City Community Kitchen 065,supplies,directed,2023
+"Los Angeles, CA Willow Growers 059",Calgary Community Kitchen 076,supplies,directed,2024
+"Austin, TX Cornerstone Growers 060",Oaxaca Community Kitchen 008,supplies,directed,2025
+Vancouver Bridgewater Growers 061,Monterrey Community Kitchen 018,supplies,directed,2022
+Toronto Hearth Growers 062,Guadalajara Community Kitchen 031,supplies,directed,2023
+Montreal Meadow Growers 063,"Chicago, IL Community Kitchen 046",supplies,directed,2024
+Calgary Highfield Growers 064,Vancouver Community Kitchen 061,supplies,directed,2025
+Mexico City Lantern Growers 065,Oaxaca Community Kitchen 068,supplies,directed,2022
+Monterrey Riverside Growers 066,"Austin, TX Community Kitchen 084",supplies,directed,2023
+Guadalajara Northbank Growers 067,"Los Angeles, CA Community Kitchen 011",supplies,directed,2024
+Oaxaca Seedling Growers 068,"Austin, TX Community Kitchen 024",supplies,directed,2025
+"Seattle, WA Cedar Growers 069","Los Angeles, CA Community Kitchen 035",supplies,directed,2022
+"Chicago, IL Hilltop Growers 070",Calgary Community Kitchen 052,supplies,directed,2023
+"Los Angeles, CA Tideway Growers 071",Montreal Community Kitchen 063,supplies,directed,2024
+"Austin, TX Foundry Growers 072",Monterrey Community Kitchen 078,supplies,directed,2025
+Vancouver Bracken Growers 073,Calgary Community Kitchen 004,supplies,directed,2022
+Toronto Harbour Growers 074,"Seattle, WA Community Kitchen 021",supplies,directed,2023
+Montreal Mosaic Growers 075,"Chicago, IL Community Kitchen 034",supplies,directed,2024
+Calgary Beacon Growers 076,"Los Angeles, CA Community Kitchen 047",supplies,directed,2025
+Mexico City Willow Growers 077,"Austin, TX Community Kitchen 060",supplies,directed,2022
+Monterrey Cornerstone Growers 078,Oaxaca Community Kitchen 068,supplies,directed,2023
+Guadalajara Bridgewater Growers 079,Vancouver Community Kitchen 085,supplies,directed,2024
+Oaxaca Hearth Growers 080,"Seattle, WA Community Kitchen 009",supplies,directed,2025
+"Seattle, WA Meadow Growers 081",Vancouver Community Kitchen 025,supplies,directed,2022
+"Chicago, IL Highfield Growers 082","Chicago, IL Community Kitchen 034",supplies,directed,2023
+"Los Angeles, CA Lantern Growers 083","Los Angeles, CA Community Kitchen 047",supplies,directed,2024
+"Austin, TX Riverside Growers 084",Calgary Community Kitchen 064,supplies,directed,2025
+Vancouver Northbank Growers 085,Vancouver Community Kitchen 073,supplies,directed,2022
+Toronto Seedling Growers 086,Montreal Community Kitchen 003,supplies,directed,2023
+Montreal Cedar Growers 087,Oaxaca Community Kitchen 020,supplies,directed,2024
+Calgary Hilltop Growers 088,Monterrey Community Kitchen 030,supplies,directed,2025
+Mexico City Tideway Growers 089,Mexico City Community Kitchen 041,supplies,directed,2022
+Monterrey Foundry Growers 090,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Guadalajara Bracken Growers 091,"Austin, TX Community Kitchen 072",supplies,directed,2024
+Oaxaca Harbour Growers 092,"Los Angeles, CA Community Kitchen 083",supplies,directed,2025
+"Seattle, WA Mosaic Growers 093",Oaxaca Community Kitchen 008,supplies,directed,2022
+"Chicago, IL Beacon Growers 094","Los Angeles, CA Community Kitchen 023",supplies,directed,2023
+"Los Angeles, CA Willow Growers 095","Austin, TX Community Kitchen 036",supplies,directed,2024
+Vancouver Bracken Growers 001,Montreal Community Kitchen 051,supplies,directed,2025
+Toronto Harbour Growers 002,Mexico City Community Kitchen 065,supplies,directed,2022
+Montreal Mosaic Growers 003,Montreal Community Kitchen 075,supplies,directed,2023
+Calgary Beacon Growers 004,Toronto Community Kitchen 002,supplies,directed,2024
+Mexico City Willow Growers 005,Monterrey Community Kitchen 018,supplies,directed,2025
+Monterrey Cornerstone Growers 006,Toronto Community Kitchen 026,supplies,directed,2022
+Guadalajara Bridgewater Growers 007,Calgary Community Kitchen 040,supplies,directed,2023
+Oaxaca Hearth Growers 008,Guadalajara Community Kitchen 055,supplies,directed,2024
+"Seattle, WA Meadow Growers 009",Oaxaca Community Kitchen 068,supplies,directed,2025
+"Chicago, IL Highfield Growers 010","Chicago, IL Community Kitchen 082",supplies,directed,2022
+"Los Angeles, CA Lantern Growers 011","Los Angeles, CA Community Kitchen 011",supplies,directed,2023
+"Austin, TX Riverside Growers 012","Austin, TX Community Kitchen 024",supplies,directed,2024
+Vancouver Northbank Growers 013,Toronto Community Kitchen 038,supplies,directed,2025
+Toronto Seedling Growers 014,Toronto Community Kitchen 050,supplies,directed,2022
+Montreal Cedar Growers 015,"Chicago, IL Community Kitchen 058",supplies,directed,2023
+Calgary Hilltop Growers 016,"Los Angeles, CA Community Kitchen 071",supplies,directed,2024
+Mexico City Tideway Growers 017,Calgary Community Kitchen 004,supplies,directed,2025
+Monterrey Foundry Growers 018,Calgary Community Kitchen 016,supplies,directed,2022
+Guadalajara Bracken Growers 019,Guadalajara Community Kitchen 031,supplies,directed,2023
+Oaxaca Harbour Growers 020,Toronto Community Kitchen 038,supplies,directed,2024
+"Seattle, WA Mosaic Growers 021",Oaxaca Community Kitchen 056,supplies,directed,2025
+"Chicago, IL Beacon Growers 022",Calgary Community Kitchen 064,supplies,directed,2022
+"Los Angeles, CA Willow Growers 023","Chicago, IL Community Kitchen 082",supplies,directed,2023
+"Austin, TX Cornerstone Growers 024",Oaxaca Community Kitchen 008,supplies,directed,2024
+Vancouver Bridgewater Growers 025,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Toronto Hearth Growers 026,Oaxaca Community Kitchen 032,supplies,directed,2022
+Montreal Meadow Growers 027,Oaxaca Community Kitchen 044,supplies,directed,2023
+Calgary Highfield Growers 028,Montreal Community Kitchen 063,supplies,directed,2024
+Mexico City Lantern Growers 029,Vancouver Community Kitchen 073,supplies,directed,2025
+Monterrey Riverside Growers 030,Vancouver Community Kitchen 085,supplies,directed,2022
+Guadalajara Northbank Growers 031,Vancouver Community Kitchen 013,supplies,directed,2023
+Oaxaca Seedling Growers 032,Toronto Community Kitchen 026,supplies,directed,2024
+"Seattle, WA Cedar Growers 033",Monterrey Community Kitchen 042,supplies,directed,2025
+"Chicago, IL Hilltop Growers 034",Oaxaca Community Kitchen 056,supplies,directed,2022
+"Los Angeles, CA Tideway Growers 035",Guadalajara Community Kitchen 067,supplies,directed,2023
+"Austin, TX Foundry Growers 036","Seattle, WA Community Kitchen 081",supplies,directed,2024
+Vancouver Bracken Growers 037,Oaxaca Community Kitchen 008,supplies,directed,2025
+Toronto Harbour Growers 038,"Los Angeles, CA Community Kitchen 023",supplies,directed,2022
+Montreal Mosaic Growers 039,Monterrey Community Kitchen 030,supplies,directed,2023
+Calgary Beacon Growers 040,Vancouver Community Kitchen 049,supplies,directed,2024
+Mexico City Willow Growers 041,"Los Angeles, CA Community Kitchen 059",supplies,directed,2025
+Monterrey Cornerstone Growers 042,"Austin, TX Community Kitchen 072",supplies,directed,2022
+Guadalajara Bridgewater Growers 043,Toronto Community Kitchen 002,supplies,directed,2023
+Oaxaca Hearth Growers 044,Montreal Community Kitchen 015,supplies,directed,2024
+"Seattle, WA Meadow Growers 045","Austin, TX Community Kitchen 024",supplies,directed,2025
+"Chicago, IL Highfield Growers 046",Vancouver Community Kitchen 037,supplies,directed,2022
+"Los Angeles, CA Lantern Growers 047",Calgary Community Kitchen 052,supplies,directed,2023
+"Austin, TX Riverside Growers 048",Toronto Community Kitchen 062,supplies,directed,2024
+Vancouver Northbank Growers 049,Oaxaca Community Kitchen 080,supplies,directed,2025
+Toronto Seedling Growers 050,Monterrey Community Kitchen 006,supplies,directed,2022
+Montreal Cedar Growers 051,Oaxaca Community Kitchen 020,supplies,directed,2023
+Calgary Hilltop Growers 052,Guadalajara Community Kitchen 031,supplies,directed,2024
+Mexico City Tideway Growers 053,"Chicago, IL Community Kitchen 046",supplies,directed,2025
+Monterrey Foundry Growers 054,Vancouver Community Kitchen 061,supplies,directed,2022
+Guadalajara Bracken Growers 055,Toronto Community Kitchen 074,supplies,directed,2023
+Oaxaca Harbour Growers 056,Vancouver Community Kitchen 001,supplies,directed,2024
+"Seattle, WA Mosaic Growers 057",Vancouver Community Kitchen 013,supplies,directed,2025
+"Chicago, IL Beacon Growers 058",Montreal Community Kitchen 027,supplies,directed,2022
+"Los Angeles, CA Willow Growers 059",Vancouver Community Kitchen 037,supplies,directed,2023
+"Austin, TX Cornerstone Growers 060",Toronto Community Kitchen 050,supplies,directed,2024
+Vancouver Bridgewater Growers 061,Monterrey Community Kitchen 066,supplies,directed,2025
+Toronto Hearth Growers 062,Oaxaca Community Kitchen 080,supplies,directed,2022
+Montreal Meadow Growers 063,Montreal Community Kitchen 003,supplies,directed,2023
+Calgary Highfield Growers 064,Montreal Community Kitchen 015,supplies,directed,2024
+Mexico City Lantern Growers 065,Calgary Community Kitchen 028,supplies,directed,2025
+Monterrey Riverside Growers 066,"Los Angeles, CA Community Kitchen 047",supplies,directed,2022
+Guadalajara Northbank Growers 067,"Los Angeles, CA Community Kitchen 059",supplies,directed,2023
+Oaxaca Seedling Growers 068,Vancouver Community Kitchen 073,supplies,directed,2024
+"Seattle, WA Cedar Growers 069","Austin, TX Community Kitchen 084",supplies,directed,2025
+"Chicago, IL Hilltop Growers 070","Chicago, IL Community Kitchen 010",supplies,directed,2022
+"Los Angeles, CA Tideway Growers 071","Chicago, IL Community Kitchen 022",supplies,directed,2023
+"Austin, TX Foundry Growers 072","Austin, TX Community Kitchen 036",supplies,directed,2024
+Vancouver Bracken Growers 073,Vancouver Community Kitchen 049,supplies,directed,2025
+Toronto Harbour Growers 074,Vancouver Community Kitchen 061,supplies,directed,2022
+Montreal Mosaic Growers 075,Mexico City Community Kitchen 077,supplies,directed,2023
+Calgary Beacon Growers 076,Vancouver Community Kitchen 001,supplies,directed,2024
+Mexico City Willow Growers 077,Mexico City Community Kitchen 017,supplies,directed,2025
+Monterrey Cornerstone Growers 078,Mexico City Community Kitchen 029,supplies,directed,2022
+Guadalajara Bridgewater Growers 079,"Seattle, WA Community Kitchen 045",supplies,directed,2023
+Oaxaca Hearth Growers 080,"Los Angeles, CA Community Kitchen 059",supplies,directed,2024
+"Seattle, WA Meadow Growers 081",Monterrey Community Kitchen 066,supplies,directed,2025
+"Chicago, IL Highfield Growers 082","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Los Angeles, CA Lantern Growers 083",Oaxaca Community Kitchen 008,supplies,directed,2023
+"Austin, TX Riverside Growers 084","Austin, TX Community Kitchen 024",supplies,directed,2024
+Vancouver Northbank Growers 085,"Austin, TX Community Kitchen 036",supplies,directed,2025
+Toronto Seedling Growers 086,Calgary Community Kitchen 052,supplies,directed,2022
+Montreal Cedar Growers 087,Vancouver Community Kitchen 061,supplies,directed,2023
+Calgary Hilltop Growers 088,Vancouver Community Kitchen 073,supplies,directed,2024
+Mexico City Tideway Growers 089,Vancouver Community Kitchen 001,supplies,directed,2025
+Monterrey Foundry Growers 090,Montreal Community Kitchen 015,supplies,directed,2022
+Guadalajara Bracken Growers 091,Calgary Community Kitchen 028,supplies,directed,2023
+Oaxaca Harbour Growers 092,Calgary Community Kitchen 040,supplies,directed,2024
+"Seattle, WA Mosaic Growers 093",Oaxaca Community Kitchen 056,supplies,directed,2025
+"Chicago, IL Beacon Growers 094",Monterrey Community Kitchen 066,supplies,directed,2022
+"Los Angeles, CA Willow Growers 095",Monterrey Community Kitchen 078,supplies,directed,2023
+Vancouver Bracken Growers 001,Oaxaca Community Kitchen 008,supplies,directed,2024
+Toronto Harbour Growers 002,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Montreal Mosaic Growers 003,Vancouver Community Kitchen 037,supplies,directed,2022
+Calgary Beacon Growers 004,"Chicago, IL Community Kitchen 046",supplies,directed,2023
+Mexico City Willow Growers 005,Calgary Community Kitchen 064,supplies,directed,2024
+Monterrey Cornerstone Growers 006,Mexico City Community Kitchen 077,supplies,directed,2025
+Guadalajara Bridgewater Growers 007,Vancouver Community Kitchen 001,supplies,directed,2022
+Oaxaca Hearth Growers 008,"Austin, TX Community Kitchen 012",supplies,directed,2023
+"Seattle, WA Meadow Growers 009",Mexico City Community Kitchen 029,supplies,directed,2024
+"Chicago, IL Highfield Growers 010",Calgary Community Kitchen 040,supplies,directed,2025
+"Los Angeles, CA Lantern Growers 011",Montreal Community Kitchen 051,supplies,directed,2022
+"Austin, TX Riverside Growers 012",Guadalajara Community Kitchen 067,supplies,directed,2023
+Vancouver Northbank Growers 013,Monterrey Community Kitchen 078,supplies,directed,2024
+Toronto Seedling Growers 014,Guadalajara Community Kitchen 007,supplies,directed,2025
+Montreal Cedar Growers 015,"Chicago, IL Community Kitchen 022",supplies,directed,2022
+Calgary Hilltop Growers 016,"Chicago, IL Community Kitchen 034",supplies,directed,2023
+Mexico City Tideway Growers 017,"Chicago, IL Community Kitchen 046",supplies,directed,2024
+Monterrey Foundry Growers 018,"Austin, TX Community Kitchen 060",supplies,directed,2025
+Guadalajara Bracken Growers 019,"Chicago, IL Community Kitchen 070",supplies,directed,2022
+Oaxaca Harbour Growers 020,Vancouver Community Kitchen 001,supplies,directed,2023
+"Seattle, WA Mosaic Growers 021",Toronto Community Kitchen 014,supplies,directed,2024
+"Chicago, IL Beacon Growers 022",Calgary Community Kitchen 028,supplies,directed,2025
+"Los Angeles, CA Willow Growers 023",Vancouver Community Kitchen 037,supplies,directed,2022
+"Austin, TX Cornerstone Growers 024",Guadalajara Community Kitchen 055,supplies,directed,2023
+Vancouver Bridgewater Growers 025,"Seattle, WA Community Kitchen 069",supplies,directed,2024
+Toronto Hearth Growers 026,Monterrey Community Kitchen 078,supplies,directed,2025
+Montreal Meadow Growers 027,Mexico City Community Kitchen 005,supplies,directed,2022
+Calgary Highfield Growers 028,Oaxaca Community Kitchen 020,supplies,directed,2023
+Mexico City Lantern Growers 029,"Chicago, IL Community Kitchen 034",supplies,directed,2024
+Monterrey Riverside Growers 030,"Seattle, WA Community Kitchen 045",supplies,directed,2025
+Guadalajara Northbank Growers 031,"Seattle, WA Community Kitchen 057",supplies,directed,2022
+Oaxaca Seedling Growers 032,"Seattle, WA Community Kitchen 069",supplies,directed,2023
+"Seattle, WA Cedar Growers 033",Vancouver Community Kitchen 001,supplies,directed,2024
+"Chicago, IL Hilltop Growers 034",Vancouver Community Kitchen 013,supplies,directed,2025
+"Los Angeles, CA Tideway Growers 035",Calgary Community Kitchen 028,supplies,directed,2022
+"Austin, TX Foundry Growers 036",Montreal Community Kitchen 039,supplies,directed,2023
+Vancouver Bracken Growers 037,Mexico City Community Kitchen 053,supplies,directed,2024
+Toronto Harbour Growers 038,Oaxaca Community Kitchen 068,supplies,directed,2025
+Montreal Mosaic Growers 039,Monterrey Community Kitchen 078,supplies,directed,2022
+Calgary Beacon Growers 040,Guadalajara Community Kitchen 007,supplies,directed,2023
+Mexico City Willow Growers 041,Monterrey Community Kitchen 018,supplies,directed,2024
+Monterrey Cornerstone Growers 042,Oaxaca Community Kitchen 032,supplies,directed,2025
+Guadalajara Bridgewater Growers 043,Guadalajara Community Kitchen 043,supplies,directed,2022
+Oaxaca Hearth Growers 044,"Los Angeles, CA Community Kitchen 059",supplies,directed,2023
+"Seattle, WA Meadow Growers 045","Austin, TX Community Kitchen 072",supplies,directed,2024
+"Chicago, IL Highfield Growers 046","Seattle, WA Community Kitchen 081",supplies,directed,2025
+"Los Angeles, CA Lantern Growers 047",Vancouver Community Kitchen 013,supplies,directed,2022
+"Austin, TX Riverside Growers 048","Los Angeles, CA Community Kitchen 023",supplies,directed,2023
+Vancouver Northbank Growers 049,Montreal Community Kitchen 039,supplies,directed,2024
+Toronto Seedling Growers 050,Mexico City Community Kitchen 053,supplies,directed,2025
+Montreal Cedar Growers 051,Guadalajara Community Kitchen 067,supplies,directed,2022
+Calgary Hilltop Growers 052,Montreal Community Kitchen 075,supplies,directed,2023
+Mexico City Tideway Growers 053,Oaxaca Community Kitchen 008,supplies,directed,2024
+Monterrey Foundry Growers 054,Mexico City Community Kitchen 017,supplies,directed,2025
+Guadalajara Bracken Growers 055,Mexico City Community Kitchen 029,supplies,directed,2022
+Oaxaca Harbour Growers 056,Mexico City Community Kitchen 041,supplies,directed,2023
+"Seattle, WA Mosaic Growers 057","Seattle, WA Community Kitchen 057",supplies,directed,2024
+"Chicago, IL Beacon Growers 058",Guadalajara Community Kitchen 067,supplies,directed,2025
+"Los Angeles, CA Willow Growers 059","Seattle, WA Community Kitchen 081",supplies,directed,2022
+"Austin, TX Cornerstone Growers 060","Chicago, IL Community Kitchen 010",supplies,directed,2023
+Vancouver Bridgewater Growers 061,"Seattle, WA Community Kitchen 021",supplies,directed,2024
+Toronto Hearth Growers 062,"Los Angeles, CA Community Kitchen 035",supplies,directed,2025
+Montreal Meadow Growers 063,"Los Angeles, CA Community Kitchen 047",supplies,directed,2022
+Calgary Highfield Growers 064,Calgary Community Kitchen 064,supplies,directed,2023
+Mexico City Lantern Growers 065,Vancouver Community Kitchen 073,supplies,directed,2024
+Monterrey Riverside Growers 066,Guadalajara Community Kitchen 007,supplies,directed,2025
+Guadalajara Northbank Growers 067,Toronto Community Kitchen 014,supplies,directed,2022
+Oaxaca Seedling Growers 068,Mexico City Community Kitchen 029,supplies,directed,2023
+"Seattle, WA Cedar Growers 069",Oaxaca Community Kitchen 044,supplies,directed,2024
+"Chicago, IL Hilltop Growers 070","Seattle, WA Community Kitchen 057",supplies,directed,2025
+"Los Angeles, CA Tideway Growers 071","Chicago, IL Community Kitchen 070",supplies,directed,2022
+"Austin, TX Foundry Growers 072","Los Angeles, CA Community Kitchen 083",supplies,directed,2023
+Vancouver Bracken Growers 073,"Chicago, IL Community Kitchen 010",supplies,directed,2024
+Toronto Harbour Growers 074,"Austin, TX Community Kitchen 024",supplies,directed,2025
+Montreal Mosaic Growers 075,"Chicago, IL Community Kitchen 034",supplies,directed,2022
+Calgary Beacon Growers 076,"Los Angeles, CA Community Kitchen 047",supplies,directed,2023
+Mexico City Willow Growers 077,Montreal Community Kitchen 063,supplies,directed,2024
+Monterrey Cornerstone Growers 078,Toronto Community Kitchen 074,supplies,directed,2025
+Guadalajara Bridgewater Growers 079,Montreal Community Kitchen 003,supplies,directed,2022
+Oaxaca Hearth Growers 080,Toronto Community Kitchen 014,supplies,directed,2023
+"Seattle, WA Meadow Growers 081",Calgary Community Kitchen 028,supplies,directed,2024
+"Chicago, IL Highfield Growers 082",Montreal Community Kitchen 039,supplies,directed,2025
+"Los Angeles, CA Lantern Growers 083",Mexico City Community Kitchen 053,supplies,directed,2022
+"Austin, TX Riverside Growers 084","Los Angeles, CA Community Kitchen 071",supplies,directed,2023
+Vancouver Northbank Growers 085,Oaxaca Community Kitchen 080,supplies,directed,2024
+Toronto Seedling Growers 086,"Austin, TX Community Kitchen 012",supplies,directed,2025
+Montreal Cedar Growers 087,Oaxaca Community Kitchen 020,supplies,directed,2022
+Calgary Hilltop Growers 088,"Seattle, WA Community Kitchen 033",supplies,directed,2023
+Mexico City Tideway Growers 089,Toronto Community Kitchen 050,supplies,directed,2024
+Monterrey Foundry Growers 090,"Austin, TX Community Kitchen 060",supplies,directed,2025
+Guadalajara Bracken Growers 091,"Los Angeles, CA Community Kitchen 071",supplies,directed,2022
+Oaxaca Harbour Growers 092,Calgary Community Kitchen 004,supplies,directed,2023
+"Seattle, WA Mosaic Growers 093",Mexico City Community Kitchen 017,supplies,directed,2024
+"Chicago, IL Beacon Growers 094",Montreal Community Kitchen 027,supplies,directed,2025
+"Los Angeles, CA Willow Growers 095",Montreal Community Kitchen 039,supplies,directed,2022
+Vancouver Bracken Growers 001,Calgary Community Kitchen 052,supplies,directed,2023
+Toronto Harbour Growers 002,Calgary Community Kitchen 064,supplies,directed,2024
+Montreal Mosaic Growers 003,"Chicago, IL Community Kitchen 082",supplies,directed,2025
+Calgary Beacon Growers 004,Monterrey Community Kitchen 006,supplies,directed,2022
+Mexico City Willow Growers 005,Guadalajara Community Kitchen 019,supplies,directed,2023
+Vancouver Bracken Growers 001,Vancouver Food Hub 001,delivers to,directed,2023
+Oaxaca Hearth Growers 008,Toronto Food Hub 002,delivers to,directed,2024
+Montreal Cedar Growers 015,Montreal Food Hub 003,delivers to,directed,2025
+"Chicago, IL Beacon Growers 022",Calgary Food Hub 004,delivers to,directed,2023
+Mexico City Lantern Growers 029,Mexico City Food Hub 005,delivers to,directed,2024
+"Austin, TX Foundry Growers 036",Monterrey Food Hub 006,delivers to,directed,2025
+Guadalajara Bridgewater Growers 043,Guadalajara Food Hub 007,delivers to,directed,2023
+Toronto Seedling Growers 050,Oaxaca Food Hub 008,delivers to,directed,2024
+"Seattle, WA Mosaic Growers 057","Seattle, WA Food Hub 009",delivers to,directed,2025
+Calgary Highfield Growers 064,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Los Angeles, CA Tideway Growers 071","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Monterrey Cornerstone Growers 078,"Austin, TX Food Hub 012",delivers to,directed,2025
+Vancouver Northbank Growers 085,Vancouver Food Hub 013,delivers to,directed,2023
+Oaxaca Harbour Growers 092,Toronto Food Hub 014,delivers to,directed,2024
+Calgary Beacon Growers 004,Montreal Food Hub 015,delivers to,directed,2025
+"Los Angeles, CA Lantern Growers 011",Calgary Food Hub 016,delivers to,directed,2023
+Monterrey Foundry Growers 018,Mexico City Food Hub 017,delivers to,directed,2024
+Vancouver Bridgewater Growers 025,Monterrey Food Hub 018,delivers to,directed,2025
+Oaxaca Seedling Growers 032,Guadalajara Food Hub 019,delivers to,directed,2023
+Montreal Mosaic Growers 039,Oaxaca Food Hub 020,delivers to,directed,2024
+"Chicago, IL Highfield Growers 046","Seattle, WA Food Hub 021",delivers to,directed,2025
+Mexico City Tideway Growers 053,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Austin, TX Cornerstone Growers 060",Vancouver Food Hub 001,delivers to,directed,2024
+Guadalajara Northbank Growers 067,Toronto Food Hub 002,delivers to,directed,2025
+Toronto Harbour Growers 074,Montreal Food Hub 003,delivers to,directed,2023
+"Seattle, WA Meadow Growers 081",Calgary Food Hub 004,delivers to,directed,2024
+Calgary Hilltop Growers 088,Mexico City Food Hub 005,delivers to,directed,2025
+"Los Angeles, CA Willow Growers 095",Monterrey Food Hub 006,delivers to,directed,2023
+Guadalajara Bridgewater Growers 007,Guadalajara Food Hub 007,delivers to,directed,2024
+Toronto Seedling Growers 014,Oaxaca Food Hub 008,delivers to,directed,2025
+"Seattle, WA Mosaic Growers 021","Seattle, WA Food Hub 009",delivers to,directed,2023
+Calgary Highfield Growers 028,"Chicago, IL Food Hub 010",delivers to,directed,2024
+"Los Angeles, CA Tideway Growers 035","Los Angeles, CA Food Hub 011",delivers to,directed,2025
+Monterrey Cornerstone Growers 042,"Austin, TX Food Hub 012",delivers to,directed,2023
+Vancouver Northbank Growers 049,Vancouver Food Hub 013,delivers to,directed,2024
+Oaxaca Harbour Growers 056,Toronto Food Hub 014,delivers to,directed,2025
+Montreal Meadow Growers 063,Montreal Food Hub 015,delivers to,directed,2023
+"Chicago, IL Hilltop Growers 070",Calgary Food Hub 016,delivers to,directed,2024
+Mexico City Willow Growers 077,Mexico City Food Hub 017,delivers to,directed,2025
+"Austin, TX Riverside Growers 084",Monterrey Food Hub 018,delivers to,directed,2023
+Guadalajara Bracken Growers 091,Guadalajara Food Hub 019,delivers to,directed,2024
+Montreal Mosaic Growers 003,Oaxaca Food Hub 020,delivers to,directed,2025
+"Chicago, IL Highfield Growers 010","Seattle, WA Food Hub 021",delivers to,directed,2023
+Mexico City Tideway Growers 017,"Chicago, IL Food Hub 022",delivers to,directed,2024
+"Austin, TX Cornerstone Growers 024",Vancouver Food Hub 001,delivers to,directed,2025
+Guadalajara Northbank Growers 031,Toronto Food Hub 002,delivers to,directed,2023
+Toronto Harbour Growers 038,Montreal Food Hub 003,delivers to,directed,2024
+"Seattle, WA Meadow Growers 045",Calgary Food Hub 004,delivers to,directed,2025
+Calgary Hilltop Growers 052,Mexico City Food Hub 005,delivers to,directed,2023
+"Los Angeles, CA Willow Growers 059",Monterrey Food Hub 006,delivers to,directed,2024
+Monterrey Riverside Growers 066,Guadalajara Food Hub 007,delivers to,directed,2025
+Vancouver Bracken Growers 073,Oaxaca Food Hub 008,delivers to,directed,2023
+Oaxaca Hearth Growers 080,"Seattle, WA Food Hub 009",delivers to,directed,2024
+Montreal Cedar Growers 087,"Chicago, IL Food Hub 010",delivers to,directed,2025
+"Chicago, IL Beacon Growers 094","Los Angeles, CA Food Hub 011",delivers to,directed,2023
+Monterrey Cornerstone Growers 006,"Austin, TX Food Hub 012",delivers to,directed,2024
+Vancouver Northbank Growers 013,Vancouver Food Hub 013,delivers to,directed,2025
+Oaxaca Harbour Growers 020,Toronto Food Hub 014,delivers to,directed,2023
+Montreal Meadow Growers 027,Montreal Food Hub 015,delivers to,directed,2024
+"Chicago, IL Hilltop Growers 034",Calgary Food Hub 016,delivers to,directed,2025
+Mexico City Willow Growers 041,Mexico City Food Hub 017,delivers to,directed,2023
+"Austin, TX Riverside Growers 048",Monterrey Food Hub 018,delivers to,directed,2024
+Guadalajara Bracken Growers 055,Guadalajara Food Hub 019,delivers to,directed,2025
+Toronto Hearth Growers 062,Oaxaca Food Hub 020,delivers to,directed,2023
+"Seattle, WA Cedar Growers 069","Seattle, WA Food Hub 021",delivers to,directed,2024
+Calgary Beacon Growers 076,"Chicago, IL Food Hub 022",delivers to,directed,2025
+"Los Angeles, CA Lantern Growers 083",Vancouver Food Hub 001,delivers to,directed,2023
+Monterrey Foundry Growers 090,Toronto Food Hub 002,delivers to,directed,2024
+Toronto Harbour Growers 002,Montreal Food Hub 003,delivers to,directed,2025
+"Seattle, WA Meadow Growers 009",Calgary Food Hub 004,delivers to,directed,2023
+Calgary Hilltop Growers 016,Mexico City Food Hub 005,delivers to,directed,2024
+"Los Angeles, CA Willow Growers 023",Monterrey Food Hub 006,delivers to,directed,2025
+Monterrey Riverside Growers 030,Guadalajara Food Hub 007,delivers to,directed,2023
+Vancouver Bracken Growers 037,Oaxaca Food Hub 008,delivers to,directed,2024
+Oaxaca Hearth Growers 044,"Seattle, WA Food Hub 009",delivers to,directed,2025
+Montreal Cedar Growers 051,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Chicago, IL Beacon Growers 058","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Mexico City Lantern Growers 065,"Austin, TX Food Hub 012",delivers to,directed,2025
+"Austin, TX Foundry Growers 072",Vancouver Food Hub 013,delivers to,directed,2023
+Guadalajara Bridgewater Growers 079,Toronto Food Hub 014,delivers to,directed,2024
+Toronto Seedling Growers 086,Montreal Food Hub 015,delivers to,directed,2025
+"Seattle, WA Mosaic Growers 093",Calgary Food Hub 016,delivers to,directed,2023
+Mexico City Willow Growers 005,Mexico City Food Hub 017,delivers to,directed,2024
+"Austin, TX Riverside Growers 012",Monterrey Food Hub 018,delivers to,directed,2025
+Guadalajara Bracken Growers 019,Guadalajara Food Hub 019,delivers to,directed,2023
+Toronto Hearth Growers 026,Oaxaca Food Hub 020,delivers to,directed,2024
+"Seattle, WA Cedar Growers 033","Seattle, WA Food Hub 021",delivers to,directed,2025
+Calgary Beacon Growers 040,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Los Angeles, CA Lantern Growers 047",Vancouver Food Hub 001,delivers to,directed,2024
+Monterrey Foundry Growers 054,Toronto Food Hub 002,delivers to,directed,2025
+Vancouver Bridgewater Growers 061,Montreal Food Hub 003,delivers to,directed,2023
+Oaxaca Seedling Growers 068,Calgary Food Hub 004,delivers to,directed,2024
+Montreal Mosaic Growers 075,Mexico City Food Hub 005,delivers to,directed,2025
+"Chicago, IL Highfield Growers 082",Monterrey Food Hub 006,delivers to,directed,2023
+Mexico City Tideway Growers 089,Guadalajara Food Hub 007,delivers to,directed,2024
+Vancouver Bracken Growers 001,Oaxaca Food Hub 008,delivers to,directed,2025
+Oaxaca Hearth Growers 008,"Seattle, WA Food Hub 009",delivers to,directed,2023
+Montreal Cedar Growers 015,"Chicago, IL Food Hub 010",delivers to,directed,2024
+"Chicago, IL Beacon Growers 022","Los Angeles, CA Food Hub 011",delivers to,directed,2025
+Mexico City Lantern Growers 029,"Austin, TX Food Hub 012",delivers to,directed,2023
+"Austin, TX Foundry Growers 036",Vancouver Food Hub 013,delivers to,directed,2024
+Guadalajara Bridgewater Growers 043,Toronto Food Hub 014,delivers to,directed,2025
+Toronto Seedling Growers 050,Montreal Food Hub 015,delivers to,directed,2023
+"Seattle, WA Mosaic Growers 057",Calgary Food Hub 016,delivers to,directed,2024
+Calgary Highfield Growers 064,Mexico City Food Hub 017,delivers to,directed,2025
+"Los Angeles, CA Tideway Growers 071",Monterrey Food Hub 018,delivers to,directed,2023
+Monterrey Cornerstone Growers 078,Guadalajara Food Hub 019,delivers to,directed,2024
+Vancouver Northbank Growers 085,Oaxaca Food Hub 020,delivers to,directed,2025
+Oaxaca Harbour Growers 092,"Seattle, WA Food Hub 021",delivers to,directed,2023
+Calgary Beacon Growers 004,"Chicago, IL Food Hub 022",delivers to,directed,2024
+"Los Angeles, CA Lantern Growers 011",Vancouver Food Hub 001,delivers to,directed,2025
+Monterrey Foundry Growers 018,Toronto Food Hub 002,delivers to,directed,2023
+Vancouver Bridgewater Growers 025,Montreal Food Hub 003,delivers to,directed,2024
+Oaxaca Seedling Growers 032,Calgary Food Hub 004,delivers to,directed,2025
+Montreal Mosaic Growers 039,Mexico City Food Hub 005,delivers to,directed,2023
+"Chicago, IL Highfield Growers 046",Monterrey Food Hub 006,delivers to,directed,2024
+Mexico City Tideway Growers 053,Guadalajara Food Hub 007,delivers to,directed,2025
+"Austin, TX Cornerstone Growers 060",Oaxaca Food Hub 008,delivers to,directed,2023
+Guadalajara Northbank Growers 067,"Seattle, WA Food Hub 009",delivers to,directed,2024
+Toronto Harbour Growers 074,"Chicago, IL Food Hub 010",delivers to,directed,2025
+"Seattle, WA Meadow Growers 081","Los Angeles, CA Food Hub 011",delivers to,directed,2023
+Calgary Hilltop Growers 088,"Austin, TX Food Hub 012",delivers to,directed,2024
+"Los Angeles, CA Willow Growers 095",Vancouver Food Hub 013,delivers to,directed,2025
+Guadalajara Bridgewater Growers 007,Toronto Food Hub 014,delivers to,directed,2023
+Toronto Seedling Growers 014,Montreal Food Hub 015,delivers to,directed,2024
+"Seattle, WA Mosaic Growers 021",Calgary Food Hub 016,delivers to,directed,2025
+Calgary Highfield Growers 028,Mexico City Food Hub 017,delivers to,directed,2023
+"Los Angeles, CA Tideway Growers 035",Monterrey Food Hub 018,delivers to,directed,2024
+Monterrey Cornerstone Growers 042,Guadalajara Food Hub 019,delivers to,directed,2025
+Vancouver Northbank Growers 049,Oaxaca Food Hub 020,delivers to,directed,2023
+Oaxaca Harbour Growers 056,"Seattle, WA Food Hub 021",delivers to,directed,2024
+Montreal Meadow Growers 063,"Chicago, IL Food Hub 022",delivers to,directed,2025
+"Chicago, IL Hilltop Growers 070",Vancouver Food Hub 001,delivers to,directed,2023
+Mexico City Willow Growers 077,Toronto Food Hub 002,delivers to,directed,2024
+"Austin, TX Riverside Growers 084",Montreal Food Hub 003,delivers to,directed,2025
+Guadalajara Bracken Growers 091,Calgary Food Hub 004,delivers to,directed,2023
+Montreal Mosaic Growers 003,Mexico City Food Hub 005,delivers to,directed,2024
+"Chicago, IL Highfield Growers 010",Monterrey Food Hub 006,delivers to,directed,2025
+Mexico City Tideway Growers 017,Guadalajara Food Hub 007,delivers to,directed,2023
+"Austin, TX Cornerstone Growers 024",Oaxaca Food Hub 008,delivers to,directed,2024
+Guadalajara Northbank Growers 031,"Seattle, WA Food Hub 009",delivers to,directed,2025
+Toronto Harbour Growers 038,"Chicago, IL Food Hub 010",delivers to,directed,2023
+"Seattle, WA Meadow Growers 045","Los Angeles, CA Food Hub 011",delivers to,directed,2024
+Calgary Hilltop Growers 052,"Austin, TX Food Hub 012",delivers to,directed,2025
+"Los Angeles, CA Willow Growers 059",Vancouver Food Hub 013,delivers to,directed,2023
+Monterrey Riverside Growers 066,Toronto Food Hub 014,delivers to,directed,2024
+Vancouver Bracken Growers 073,Montreal Food Hub 015,delivers to,directed,2025
+Oaxaca Hearth Growers 080,Calgary Food Hub 016,delivers to,directed,2023
+Montreal Cedar Growers 087,Mexico City Food Hub 017,delivers to,directed,2024
+"Chicago, IL Beacon Growers 094",Monterrey Food Hub 018,delivers to,directed,2025
+Monterrey Cornerstone Growers 006,Guadalajara Food Hub 019,delivers to,directed,2023
+Vancouver Northbank Growers 013,Oaxaca Food Hub 020,delivers to,directed,2024
+Oaxaca Harbour Growers 020,"Seattle, WA Food Hub 021",delivers to,directed,2025
+Montreal Meadow Growers 027,"Chicago, IL Food Hub 022",delivers to,directed,2023
+"Chicago, IL Hilltop Growers 034",Vancouver Food Hub 001,delivers to,directed,2024
+Mexico City Willow Growers 041,Toronto Food Hub 002,delivers to,directed,2025
+"Austin, TX Riverside Growers 048",Montreal Food Hub 003,delivers to,directed,2023
+Guadalajara Bracken Growers 055,Calgary Food Hub 004,delivers to,directed,2024
+Toronto Hearth Growers 062,Mexico City Food Hub 005,delivers to,directed,2025
+"Seattle, WA Cedar Growers 069",Monterrey Food Hub 006,delivers to,directed,2023
+Vancouver Food Hub 001,Montreal Community Kitchen 003,distributes to,directed,2023
+Toronto Food Hub 002,"Austin, TX Community Kitchen 012",distributes to,directed,2024
+Montreal Food Hub 003,"Seattle, WA Community Kitchen 021",distributes to,directed,2025
+Calgary Food Hub 004,Monterrey Community Kitchen 030,distributes to,directed,2023
+Mexico City Food Hub 005,Montreal Community Kitchen 039,distributes to,directed,2024
+Monterrey Food Hub 006,"Austin, TX Community Kitchen 048",distributes to,directed,2025
+Guadalajara Food Hub 007,"Seattle, WA Community Kitchen 057",distributes to,directed,2023
+Oaxaca Food Hub 008,Monterrey Community Kitchen 066,distributes to,directed,2024
+"Seattle, WA Food Hub 009",Montreal Community Kitchen 075,distributes to,directed,2025
+"Chicago, IL Food Hub 010","Austin, TX Community Kitchen 084",distributes to,directed,2023
+"Los Angeles, CA Food Hub 011",Oaxaca Community Kitchen 008,distributes to,directed,2024
+"Austin, TX Food Hub 012",Mexico City Community Kitchen 017,distributes to,directed,2025
+Vancouver Food Hub 013,Toronto Community Kitchen 026,distributes to,directed,2023
+Toronto Food Hub 014,"Los Angeles, CA Community Kitchen 035",distributes to,directed,2024
+Montreal Food Hub 015,Oaxaca Community Kitchen 044,distributes to,directed,2025
+Calgary Food Hub 016,Mexico City Community Kitchen 053,distributes to,directed,2023
+Mexico City Food Hub 017,Toronto Community Kitchen 062,distributes to,directed,2024
+Monterrey Food Hub 018,"Los Angeles, CA Community Kitchen 071",distributes to,directed,2025
+Guadalajara Food Hub 019,Oaxaca Community Kitchen 080,distributes to,directed,2023
+Oaxaca Food Hub 020,Calgary Community Kitchen 004,distributes to,directed,2024
+"Seattle, WA Food Hub 021",Vancouver Community Kitchen 013,distributes to,directed,2025
+"Chicago, IL Food Hub 022","Chicago, IL Community Kitchen 022",distributes to,directed,2023
+Vancouver Food Hub 001,Guadalajara Community Kitchen 031,distributes to,directed,2024
+Toronto Food Hub 002,Calgary Community Kitchen 040,distributes to,directed,2025
+Montreal Food Hub 003,Vancouver Community Kitchen 049,distributes to,directed,2023
+Calgary Food Hub 004,"Chicago, IL Community Kitchen 058",distributes to,directed,2024
+Mexico City Food Hub 005,Guadalajara Community Kitchen 067,distributes to,directed,2025
+Monterrey Food Hub 006,Calgary Community Kitchen 076,distributes to,directed,2023
+Guadalajara Food Hub 007,Vancouver Community Kitchen 085,distributes to,directed,2024
+Oaxaca Food Hub 008,"Seattle, WA Community Kitchen 009",distributes to,directed,2025
+"Seattle, WA Food Hub 009",Monterrey Community Kitchen 018,distributes to,directed,2023
+"Chicago, IL Food Hub 010",Montreal Community Kitchen 027,distributes to,directed,2024
+"Los Angeles, CA Food Hub 011","Austin, TX Community Kitchen 036",distributes to,directed,2025
+"Austin, TX Food Hub 012","Seattle, WA Community Kitchen 045",distributes to,directed,2023
+Vancouver Food Hub 013,Monterrey Community Kitchen 054,distributes to,directed,2024
+Toronto Food Hub 014,Montreal Community Kitchen 063,distributes to,directed,2025
+Montreal Food Hub 015,"Austin, TX Community Kitchen 072",distributes to,directed,2023
+Calgary Food Hub 016,"Seattle, WA Community Kitchen 081",distributes to,directed,2024
+Mexico City Food Hub 017,Mexico City Community Kitchen 005,distributes to,directed,2025
+Monterrey Food Hub 018,Toronto Community Kitchen 014,distributes to,directed,2023
+Guadalajara Food Hub 019,"Los Angeles, CA Community Kitchen 023",distributes to,directed,2024
+Oaxaca Food Hub 020,Oaxaca Community Kitchen 032,distributes to,directed,2025
+"Seattle, WA Food Hub 021",Mexico City Community Kitchen 041,distributes to,directed,2023
+"Chicago, IL Food Hub 022",Toronto Community Kitchen 050,distributes to,directed,2024
+Vancouver Food Hub 001,"Los Angeles, CA Community Kitchen 059",distributes to,directed,2025
+Toronto Food Hub 002,Oaxaca Community Kitchen 068,distributes to,directed,2023
+Montreal Food Hub 003,Mexico City Community Kitchen 077,distributes to,directed,2024
+Calgary Food Hub 004,Vancouver Community Kitchen 001,distributes to,directed,2025
+Mexico City Food Hub 005,"Chicago, IL Community Kitchen 010",distributes to,directed,2023
+Monterrey Food Hub 006,Guadalajara Community Kitchen 019,distributes to,directed,2024
+Guadalajara Food Hub 007,Calgary Community Kitchen 028,distributes to,directed,2025
+Oaxaca Food Hub 008,Vancouver Community Kitchen 037,distributes to,directed,2023
+"Seattle, WA Food Hub 009","Chicago, IL Community Kitchen 046",distributes to,directed,2024
+"Chicago, IL Food Hub 010",Guadalajara Community Kitchen 055,distributes to,directed,2025
+"Los Angeles, CA Food Hub 011",Calgary Community Kitchen 064,distributes to,directed,2023
+"Austin, TX Food Hub 012",Vancouver Community Kitchen 073,distributes to,directed,2024
+Vancouver Food Hub 013,"Chicago, IL Community Kitchen 082",distributes to,directed,2025
+Toronto Food Hub 014,Monterrey Community Kitchen 006,distributes to,directed,2023
+Montreal Food Hub 015,Montreal Community Kitchen 015,distributes to,directed,2024
+Calgary Food Hub 016,"Austin, TX Community Kitchen 024",distributes to,directed,2025
+Mexico City Food Hub 017,"Seattle, WA Community Kitchen 033",distributes to,directed,2023
+Monterrey Food Hub 018,Monterrey Community Kitchen 042,distributes to,directed,2024
+Guadalajara Food Hub 019,Montreal Community Kitchen 051,distributes to,directed,2025
+Oaxaca Food Hub 020,"Austin, TX Community Kitchen 060",distributes to,directed,2023
+"Seattle, WA Food Hub 021","Seattle, WA Community Kitchen 069",distributes to,directed,2024
+"Chicago, IL Food Hub 022",Monterrey Community Kitchen 078,distributes to,directed,2025
+Vancouver Food Hub 001,Toronto Community Kitchen 002,distributes to,directed,2023
+Toronto Food Hub 002,"Los Angeles, CA Community Kitchen 011",distributes to,directed,2024
+Montreal Food Hub 003,Oaxaca Community Kitchen 020,distributes to,directed,2025
+Calgary Food Hub 004,Mexico City Community Kitchen 029,distributes to,directed,2023
+Mexico City Food Hub 005,Toronto Community Kitchen 038,distributes to,directed,2024
+Monterrey Food Hub 006,"Los Angeles, CA Community Kitchen 047",distributes to,directed,2025
+Guadalajara Food Hub 007,Oaxaca Community Kitchen 056,distributes to,directed,2023
+Oaxaca Food Hub 008,Mexico City Community Kitchen 065,distributes to,directed,2024
+"Seattle, WA Food Hub 009",Toronto Community Kitchen 074,distributes to,directed,2025
+"Chicago, IL Food Hub 010","Los Angeles, CA Community Kitchen 083",distributes to,directed,2023
+"Los Angeles, CA Food Hub 011",Guadalajara Community Kitchen 007,distributes to,directed,2024
+"Austin, TX Food Hub 012",Calgary Community Kitchen 016,distributes to,directed,2025
+Vancouver Food Hub 013,Vancouver Community Kitchen 025,distributes to,directed,2023
+Toronto Food Hub 014,"Chicago, IL Community Kitchen 034",distributes to,directed,2024

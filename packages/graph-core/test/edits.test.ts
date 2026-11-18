@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { unzipSync, strFromU8 } from "fflate";
 import {
   applyEdits, describeEdit, edgePolarity, edgeValues, emptyEdits, evidenceReceipt, feedbackLoops, makeEdit, newRecordId,
-  nodeValues, parseEdits, parseQuickLink, planQuickLinks, quickLinkEdits, readXlsx, recordEdit, setUndone, toKumuWorkbook
+  nodeValues, readAtlasLocation, parseEdits, parseQuickLink, planQuickLinks, quickLinkEdits, readXlsx, recordEdit, setUndone, toKumuWorkbook
 } from "../src/index.ts";
 import { parseGraphDocument } from "../src/schema.ts";
 
@@ -101,4 +101,33 @@ test("exports a workbook Kumu can import, noting where each item came from", () 
   assert.equal(elements.rows.find(r => r[1] === "Allendale Larder")![7], "orgs.csv #2");
   assert.deepEqual(connections.rows.find(r => r[1] === "Meals served")!.slice(0, 5), ["Allendale Larder", "Meals served", "increases", "directed", "+"]);
   assert.ok(strFromU8(unzipSync(book)["xl/workbook.xml"]).includes('name="Connections"'));
+});
+
+
+test("a changed map position moves the record without overwriting original source coordinates",()=>{
+  const original=parseGraphDocument({
+    ...base,
+    nodes:base.nodes.map(n=>n.id==="a"?{...n,properties:{Latitude:54.9779,Longitude:-1.6135}}:n)
+  });
+  const before=readAtlasLocation(original.nodes[0]);
+  assert.deepEqual(before,{latitude:54.9779,longitude:-1.6135});
+  const edit=makeEdit({kind:"update-node",id:"a",
+    set:{location:{latitude:54.5253,longitude:-1.559}},
+    was:nodeValues(original.nodes[0],["location"])},"Sam","Corrected location");
+  const layer=recordEdit(emptyEdits(),edit);
+  const mapped=applyEdits(original,layer).graph.nodes[0];
+  assert.deepEqual(readAtlasLocation(mapped),{latitude:54.5253,longitude:-1.559});
+  assert.equal(mapped.properties?.Latitude,54.9779,"original latitude stays in the record");
+  assert.equal(mapped.properties?.Longitude,-1.6135,"original longitude stays in the record");
+  assert.equal(mapped.receipts?.at(-1)?.fields?.by,"Sam");
+  const restored=applyEdits(original,setUndone(layer,edit.id,true)).graph.nodes[0];
+  assert.deepEqual(readAtlasLocation(restored),before,"undo restores plotted position");
+  const cleared=applyEdits(original,recordEdit(emptyEdits(),makeEdit({
+    kind:"update-node",id:"a",set:{location:null},
+    was:nodeValues(original.nodes[0],["location"])},"Sam"))).graph.nodes[0];
+  assert.equal(readAtlasLocation(cleared),null,"clearing hides a previously sourced position without deleting the source");
+  assert.deepEqual(readAtlasLocation(original.nodes[0]),before);
+  assert.deepEqual(parseEdits({kind:"mossline-edits",version:1,entries:[{
+    ...edit,op:{...edit.op,set:{location:{latitude:100,longitude:0}}}
+  }]}),emptyEdits(),"out-of-range coordinates must not enter the edit history");
 });

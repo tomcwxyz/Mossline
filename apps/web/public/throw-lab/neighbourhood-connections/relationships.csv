@@ -1,0 +1,351 @@
+From,To,Relationship,Direction,Since
+Newcastle Bracken Co-operative 001,Newcastle Food Programme 001,supports,directed,2022
+Newcastle Food Programme 001,Aberdeen Riverside Group 012,works alongside,mutual,2023
+Belfast Beacon Co-operative 004,Edinburgh Health Programme 002,supports,directed,2023
+Edinburgh Health Programme 002,Newcastle Cedar Group 015,works alongside,mutual,2024
+London Bridgewater Co-operative 007,Glasgow Housing Programme 003,supports,directed,2024
+Glasgow Housing Programme 003,Belfast Foundry Group 018,works alongside,mutual,2025
+Leeds Highfield Co-operative 010,Belfast Nature Programme 004,supports,directed,2025
+Belfast Nature Programme 004,London Mosaic Group 021,works alongside,mutual,2023
+Exeter Northbank Co-operative 013,Cardiff Transport Programme 005,supports,directed,2022
+Cardiff Transport Programme 005,Leeds Cornerstone Group 024,works alongside,mutual,2024
+Edinburgh Hilltop Co-operative 016,Bristol Culture Programme 006,supports,directed,2023
+Bristol Culture Programme 006,Exeter Meadow Group 027,works alongside,mutual,2025
+Cardiff Bracken Co-operative 019,London Young people Programme 007,supports,directed,2024
+London Young people Programme 007,Edinburgh Riverside Group 030,works alongside,mutual,2023
+Birmingham Beacon Co-operative 022,Birmingham Energy Programme 008,supports,directed,2025
+Birmingham Energy Programme 008,Cardiff Cedar Group 033,works alongside,mutual,2024
+Sheffield Bridgewater Co-operative 025,Manchester Community care Programme 009,supports,directed,2022
+Manchester Community care Programme 009,Birmingham Foundry Group 036,works alongside,mutual,2025
+Swansea Highfield Co-operative 028,Leeds Learning Programme 010,supports,directed,2023
+Leeds Learning Programme 010,Sheffield Mosaic Group 039,works alongside,mutual,2023
+Glasgow Northbank Co-operative 031,Sheffield Food Programme 011,supports,directed,2024
+Sheffield Food Programme 011,Swansea Cornerstone Group 042,works alongside,mutual,2024
+Bristol Hilltop Co-operative 034,Aberdeen Health Programme 012,supports,directed,2025
+Aberdeen Health Programme 012,Glasgow Meadow Group 045,works alongside,mutual,2025
+Manchester Bracken Co-operative 037,Exeter Housing Programme 013,supports,directed,2022
+Exeter Housing Programme 013,Bristol Riverside Group 048,works alongside,mutual,2023
+Aberdeen Beacon Co-operative 040,Swansea Nature Programme 014,supports,directed,2023
+Swansea Nature Programme 014,Manchester Cedar Group 051,works alongside,mutual,2024
+Newcastle Bridgewater Co-operative 043,Newcastle Transport Programme 015,supports,directed,2024
+Newcastle Transport Programme 015,Aberdeen Foundry Group 054,works alongside,mutual,2025
+Belfast Highfield Co-operative 046,Edinburgh Culture Programme 016,supports,directed,2025
+Edinburgh Culture Programme 016,Newcastle Mosaic Group 057,works alongside,mutual,2023
+London Northbank Co-operative 049,Glasgow Young people Programme 017,supports,directed,2022
+Glasgow Young people Programme 017,Belfast Cornerstone Group 060,works alongside,mutual,2024
+Leeds Hilltop Co-operative 052,Belfast Energy Programme 018,supports,directed,2023
+Belfast Energy Programme 018,London Meadow Group 063,works alongside,mutual,2025
+Exeter Bracken Co-operative 055,Cardiff Community care Programme 019,supports,directed,2024
+Cardiff Community care Programme 019,Leeds Riverside Group 066,works alongside,mutual,2023
+Edinburgh Beacon Co-operative 058,Bristol Learning Programme 020,supports,directed,2025
+Bristol Learning Programme 020,Exeter Cedar Group 069,works alongside,mutual,2024
+Cardiff Bridgewater Co-operative 061,London Food Programme 021,supports,directed,2022
+London Food Programme 021,Edinburgh Foundry Group 072,works alongside,mutual,2025
+Birmingham Highfield Co-operative 064,Birmingham Health Programme 022,supports,directed,2023
+Birmingham Health Programme 022,Cardiff Mosaic Group 075,works alongside,mutual,2023
+Sheffield Northbank Co-operative 067,Manchester Housing Programme 023,supports,directed,2024
+Manchester Housing Programme 023,Birmingham Cornerstone Group 078,works alongside,mutual,2024
+Swansea Hilltop Co-operative 070,Leeds Nature Programme 024,supports,directed,2025
+Leeds Nature Programme 024,Sheffield Meadow Group 081,works alongside,mutual,2025
+Glasgow Bracken Co-operative 073,Sheffield Transport Programme 025,supports,directed,2022
+Sheffield Transport Programme 025,Swansea Riverside Group 084,works alongside,mutual,2023
+Bristol Beacon Co-operative 076,Aberdeen Culture Programme 026,supports,directed,2023
+Aberdeen Culture Programme 026,Glasgow Cedar Group 087,works alongside,mutual,2024
+Manchester Bridgewater Co-operative 079,Exeter Young people Programme 027,supports,directed,2024
+Exeter Young people Programme 027,Bristol Foundry Group 090,works alongside,mutual,2025
+Aberdeen Highfield Co-operative 082,Swansea Energy Programme 028,supports,directed,2025
+Swansea Energy Programme 028,Manchester Mosaic Group 093,works alongside,mutual,2023
+Newcastle Northbank Co-operative 085,Newcastle Community care Programme 029,supports,directed,2022
+Newcastle Community care Programme 029,Aberdeen Cornerstone Group 096,works alongside,mutual,2024
+Belfast Hilltop Co-operative 088,Edinburgh Learning Programme 030,supports,directed,2023
+Edinburgh Learning Programme 030,Newcastle Meadow Group 099,works alongside,mutual,2025
+London Bracken Co-operative 091,Glasgow Food Programme 031,supports,directed,2024
+Glasgow Food Programme 031,Belfast Riverside Group 102,works alongside,mutual,2023
+Leeds Beacon Co-operative 094,Belfast Health Programme 032,supports,directed,2025
+Belfast Health Programme 032,London Cedar Group 105,works alongside,mutual,2024
+Exeter Bridgewater Co-operative 097,Cardiff Housing Programme 033,supports,directed,2022
+Cardiff Housing Programme 033,Leeds Foundry Group 108,works alongside,mutual,2025
+Edinburgh Highfield Co-operative 100,Bristol Nature Programme 034,supports,directed,2023
+Bristol Nature Programme 034,Exeter Mosaic Group 111,works alongside,mutual,2023
+Cardiff Northbank Co-operative 103,London Transport Programme 035,supports,directed,2024
+London Transport Programme 035,Edinburgh Cornerstone Group 114,works alongside,mutual,2024
+Birmingham Hilltop Co-operative 106,Birmingham Culture Programme 036,supports,directed,2025
+Birmingham Culture Programme 036,Edinburgh Harbour Trust 002,works alongside,mutual,2025
+Sheffield Bracken Co-operative 109,Manchester Young people Programme 037,supports,directed,2022
+Manchester Young people Programme 037,Cardiff Willow Trust 005,works alongside,mutual,2023
+Swansea Beacon Co-operative 112,Leeds Energy Programme 038,supports,directed,2023
+Leeds Energy Programme 038,Birmingham Hearth Trust 008,works alongside,mutual,2024
+Glasgow Bridgewater Co-operative 115,Sheffield Community care Programme 039,supports,directed,2024
+Sheffield Community care Programme 039,Sheffield Lantern Trust 011,works alongside,mutual,2025
+Glasgow Mosaic Group 003,Aberdeen Learning Programme 040,supports,directed,2025
+Aberdeen Learning Programme 040,Swansea Seedling Trust 014,works alongside,mutual,2023
+Bristol Cornerstone Group 006,Exeter Food Programme 041,supports,directed,2022
+Exeter Food Programme 041,Glasgow Tideway Trust 017,works alongside,mutual,2024
+Manchester Meadow Group 009,Swansea Health Programme 042,supports,directed,2023
+Swansea Health Programme 042,Bristol Harbour Trust 020,works alongside,mutual,2025
+Aberdeen Riverside Group 012,Newcastle Housing Programme 043,supports,directed,2024
+Newcastle Housing Programme 043,Manchester Willow Trust 023,works alongside,mutual,2023
+Newcastle Cedar Group 015,Edinburgh Nature Programme 044,supports,directed,2025
+Edinburgh Nature Programme 044,Aberdeen Hearth Trust 026,works alongside,mutual,2024
+Belfast Foundry Group 018,Glasgow Transport Programme 045,supports,directed,2022
+Glasgow Transport Programme 045,Newcastle Lantern Trust 029,works alongside,mutual,2025
+London Mosaic Group 021,Belfast Culture Programme 046,supports,directed,2023
+Belfast Culture Programme 046,Belfast Seedling Trust 032,works alongside,mutual,2023
+Leeds Cornerstone Group 024,Cardiff Young people Programme 047,supports,directed,2024
+Cardiff Young people Programme 047,London Tideway Trust 035,works alongside,mutual,2024
+Exeter Meadow Group 027,Bristol Energy Programme 048,supports,directed,2025
+Bristol Energy Programme 048,Leeds Harbour Trust 038,works alongside,mutual,2025
+Edinburgh Riverside Group 030,London Community care Programme 049,supports,directed,2022
+London Community care Programme 049,Exeter Willow Trust 041,works alongside,mutual,2023
+Cardiff Cedar Group 033,Birmingham Learning Programme 050,supports,directed,2023
+Birmingham Learning Programme 050,Edinburgh Hearth Trust 044,works alongside,mutual,2024
+Birmingham Foundry Group 036,Manchester Food Programme 051,supports,directed,2024
+Manchester Food Programme 051,Cardiff Lantern Trust 047,works alongside,mutual,2025
+Sheffield Mosaic Group 039,Leeds Health Programme 052,supports,directed,2025
+Leeds Health Programme 052,Birmingham Seedling Trust 050,works alongside,mutual,2023
+Swansea Cornerstone Group 042,Sheffield Housing Programme 053,supports,directed,2022
+Sheffield Housing Programme 053,Sheffield Tideway Trust 053,works alongside,mutual,2024
+Glasgow Meadow Group 045,Aberdeen Nature Programme 054,supports,directed,2023
+Aberdeen Nature Programme 054,Swansea Harbour Trust 056,works alongside,mutual,2025
+Bristol Riverside Group 048,Exeter Transport Programme 055,supports,directed,2024
+Exeter Transport Programme 055,Glasgow Willow Trust 059,works alongside,mutual,2023
+Manchester Cedar Group 051,Swansea Culture Programme 056,supports,directed,2025
+Swansea Culture Programme 056,Bristol Hearth Trust 062,works alongside,mutual,2024
+Aberdeen Foundry Group 054,Newcastle Young people Programme 057,supports,directed,2022
+Newcastle Young people Programme 057,Manchester Lantern Trust 065,works alongside,mutual,2025
+Newcastle Mosaic Group 057,Edinburgh Energy Programme 058,supports,directed,2023
+Edinburgh Energy Programme 058,Aberdeen Seedling Trust 068,works alongside,mutual,2023
+Belfast Cornerstone Group 060,Glasgow Community care Programme 059,supports,directed,2024
+Glasgow Community care Programme 059,Newcastle Tideway Trust 071,works alongside,mutual,2024
+London Meadow Group 063,Belfast Learning Programme 060,supports,directed,2025
+Belfast Learning Programme 060,Belfast Harbour Trust 074,works alongside,mutual,2025
+Leeds Riverside Group 066,Cardiff Food Programme 061,supports,directed,2022
+Cardiff Food Programme 061,London Willow Trust 077,works alongside,mutual,2023
+Exeter Cedar Group 069,Bristol Health Programme 062,supports,directed,2023
+Bristol Health Programme 062,Leeds Hearth Trust 080,works alongside,mutual,2024
+Newcastle Bracken Co-operative 001,Swansea Seedling Trust 014,shares a venue with,mutual,2020
+Edinburgh Harbour Trust 002,London Mosaic Group 021,collaborates with,mutual,2021
+Glasgow Mosaic Group 003,Swansea Highfield Co-operative 028,collaborates with,mutual,2022
+Belfast Beacon Co-operative 004,London Tideway Trust 035,collaborates with,mutual,2023
+Cardiff Willow Trust 005,Swansea Cornerstone Group 042,collaborates with,mutual,2024
+Bristol Cornerstone Group 006,London Northbank Co-operative 049,shares a venue with,mutual,2025
+London Bridgewater Co-operative 007,Swansea Harbour Trust 056,collaborates with,mutual,2020
+Birmingham Hearth Trust 008,London Meadow Group 063,collaborates with,mutual,2021
+Manchester Meadow Group 009,Swansea Hilltop Co-operative 070,collaborates with,mutual,2022
+Leeds Highfield Co-operative 010,London Willow Trust 077,collaborates with,mutual,2023
+Sheffield Lantern Trust 011,Swansea Riverside Group 084,shares a venue with,mutual,2024
+Aberdeen Riverside Group 012,London Bracken Co-operative 091,collaborates with,mutual,2025
+Exeter Northbank Co-operative 013,Swansea Hearth Trust 098,collaborates with,mutual,2020
+Swansea Seedling Trust 014,London Cedar Group 105,collaborates with,mutual,2021
+Newcastle Cedar Group 015,Edinburgh Harbour Trust 002,collaborates with,mutual,2022
+Edinburgh Hilltop Co-operative 016,Manchester Meadow Group 009,shares a venue with,mutual,2023
+Glasgow Tideway Trust 017,Edinburgh Hilltop Co-operative 016,collaborates with,mutual,2024
+Belfast Foundry Group 018,Manchester Willow Trust 023,collaborates with,mutual,2025
+Cardiff Bracken Co-operative 019,Edinburgh Riverside Group 030,collaborates with,mutual,2020
+Bristol Harbour Trust 020,Manchester Bracken Co-operative 037,collaborates with,mutual,2021
+London Mosaic Group 021,Edinburgh Hearth Trust 044,shares a venue with,mutual,2022
+Birmingham Beacon Co-operative 022,Manchester Cedar Group 051,collaborates with,mutual,2023
+Manchester Willow Trust 023,Edinburgh Beacon Co-operative 058,collaborates with,mutual,2024
+Leeds Cornerstone Group 024,Manchester Lantern Trust 065,collaborates with,mutual,2025
+Sheffield Bridgewater Co-operative 025,Edinburgh Foundry Group 072,collaborates with,mutual,2020
+Aberdeen Hearth Trust 026,Manchester Bridgewater Co-operative 079,shares a venue with,mutual,2021
+Exeter Meadow Group 027,Edinburgh Seedling Trust 086,collaborates with,mutual,2022
+Swansea Highfield Co-operative 028,Manchester Mosaic Group 093,collaborates with,mutual,2023
+Newcastle Lantern Trust 029,Edinburgh Highfield Co-operative 100,collaborates with,mutual,2024
+Edinburgh Riverside Group 030,Manchester Tideway Trust 107,collaborates with,mutual,2025
+Glasgow Northbank Co-operative 031,Belfast Beacon Co-operative 004,shares a venue with,mutual,2020
+Belfast Seedling Trust 032,Sheffield Lantern Trust 011,collaborates with,mutual,2021
+Cardiff Cedar Group 033,Belfast Foundry Group 018,collaborates with,mutual,2022
+Bristol Hilltop Co-operative 034,Sheffield Bridgewater Co-operative 025,collaborates with,mutual,2023
+London Tideway Trust 035,Belfast Seedling Trust 032,collaborates with,mutual,2024
+Birmingham Foundry Group 036,Sheffield Mosaic Group 039,shares a venue with,mutual,2025
+Manchester Bracken Co-operative 037,Belfast Highfield Co-operative 046,collaborates with,mutual,2020
+Leeds Harbour Trust 038,Sheffield Tideway Trust 053,collaborates with,mutual,2021
+Sheffield Mosaic Group 039,Belfast Cornerstone Group 060,collaborates with,mutual,2022
+Aberdeen Beacon Co-operative 040,Sheffield Northbank Co-operative 067,collaborates with,mutual,2023
+Exeter Willow Trust 041,Belfast Harbour Trust 074,shares a venue with,mutual,2024
+Swansea Cornerstone Group 042,Sheffield Meadow Group 081,collaborates with,mutual,2025
+Newcastle Bridgewater Co-operative 043,Belfast Hilltop Co-operative 088,collaborates with,mutual,2020
+Edinburgh Hearth Trust 044,Sheffield Willow Trust 095,collaborates with,mutual,2021
+Glasgow Meadow Group 045,Belfast Riverside Group 102,collaborates with,mutual,2022
+Belfast Highfield Co-operative 046,Sheffield Bracken Co-operative 109,shares a venue with,mutual,2023
+Cardiff Lantern Trust 047,Bristol Cornerstone Group 006,collaborates with,mutual,2024
+Bristol Riverside Group 048,Exeter Northbank Co-operative 013,collaborates with,mutual,2025
+London Northbank Co-operative 049,Bristol Harbour Trust 020,collaborates with,mutual,2020
+Birmingham Seedling Trust 050,Exeter Meadow Group 027,collaborates with,mutual,2021
+Manchester Cedar Group 051,Bristol Hilltop Co-operative 034,shares a venue with,mutual,2022
+Leeds Hilltop Co-operative 052,Exeter Willow Trust 041,collaborates with,mutual,2023
+Sheffield Tideway Trust 053,Bristol Riverside Group 048,collaborates with,mutual,2024
+Aberdeen Foundry Group 054,Exeter Bracken Co-operative 055,collaborates with,mutual,2025
+Exeter Bracken Co-operative 055,Bristol Hearth Trust 062,collaborates with,mutual,2020
+Swansea Harbour Trust 056,Exeter Cedar Group 069,shares a venue with,mutual,2021
+Newcastle Mosaic Group 057,Bristol Beacon Co-operative 076,collaborates with,mutual,2022
+Edinburgh Beacon Co-operative 058,Exeter Lantern Trust 083,collaborates with,mutual,2023
+Glasgow Willow Trust 059,Bristol Foundry Group 090,collaborates with,mutual,2024
+Belfast Cornerstone Group 060,Exeter Bridgewater Co-operative 097,collaborates with,mutual,2025
+Cardiff Bridgewater Co-operative 061,Bristol Seedling Trust 104,shares a venue with,mutual,2020
+Bristol Hearth Trust 062,Newcastle Bracken Co-operative 001,collaborates with,mutual,2021
+London Meadow Group 063,Birmingham Hearth Trust 008,collaborates with,mutual,2022
+Birmingham Highfield Co-operative 064,Newcastle Cedar Group 015,collaborates with,mutual,2023
+Manchester Lantern Trust 065,Birmingham Beacon Co-operative 022,collaborates with,mutual,2024
+Leeds Riverside Group 066,Newcastle Lantern Trust 029,shares a venue with,mutual,2025
+Sheffield Northbank Co-operative 067,Birmingham Foundry Group 036,collaborates with,mutual,2020
+Aberdeen Seedling Trust 068,Newcastle Bridgewater Co-operative 043,collaborates with,mutual,2021
+Exeter Cedar Group 069,Birmingham Seedling Trust 050,collaborates with,mutual,2022
+Swansea Hilltop Co-operative 070,Newcastle Mosaic Group 057,collaborates with,mutual,2023
+Newcastle Tideway Trust 071,Birmingham Highfield Co-operative 064,shares a venue with,mutual,2024
+Edinburgh Foundry Group 072,Newcastle Tideway Trust 071,collaborates with,mutual,2025
+Glasgow Bracken Co-operative 073,Birmingham Cornerstone Group 078,collaborates with,mutual,2020
+Belfast Harbour Trust 074,Newcastle Northbank Co-operative 085,collaborates with,mutual,2021
+Cardiff Mosaic Group 075,Birmingham Harbour Trust 092,collaborates with,mutual,2022
+Bristol Beacon Co-operative 076,Newcastle Meadow Group 099,shares a venue with,mutual,2023
+London Willow Trust 077,Birmingham Hilltop Co-operative 106,collaborates with,mutual,2024
+Birmingham Cornerstone Group 078,Glasgow Mosaic Group 003,collaborates with,mutual,2025
+Manchester Bridgewater Co-operative 079,Leeds Highfield Co-operative 010,collaborates with,mutual,2020
+Leeds Hearth Trust 080,Glasgow Tideway Trust 017,collaborates with,mutual,2021
+Sheffield Meadow Group 081,Leeds Cornerstone Group 024,shares a venue with,mutual,2022
+Aberdeen Highfield Co-operative 082,Glasgow Northbank Co-operative 031,collaborates with,mutual,2023
+Exeter Lantern Trust 083,Leeds Harbour Trust 038,collaborates with,mutual,2024
+Swansea Riverside Group 084,Glasgow Meadow Group 045,collaborates with,mutual,2025
+Newcastle Northbank Co-operative 085,Leeds Hilltop Co-operative 052,collaborates with,mutual,2020
+Edinburgh Seedling Trust 086,Glasgow Willow Trust 059,shares a venue with,mutual,2021
+Glasgow Cedar Group 087,Leeds Riverside Group 066,collaborates with,mutual,2022
+Belfast Hilltop Co-operative 088,Glasgow Bracken Co-operative 073,collaborates with,mutual,2023
+Cardiff Tideway Trust 089,Leeds Hearth Trust 080,collaborates with,mutual,2024
+Bristol Foundry Group 090,Glasgow Cedar Group 087,collaborates with,mutual,2025
+London Bracken Co-operative 091,Leeds Beacon Co-operative 094,shares a venue with,mutual,2020
+Birmingham Harbour Trust 092,Glasgow Lantern Trust 101,collaborates with,mutual,2021
+Manchester Mosaic Group 093,Leeds Foundry Group 108,collaborates with,mutual,2022
+Leeds Beacon Co-operative 094,Cardiff Willow Trust 005,collaborates with,mutual,2023
+Sheffield Willow Trust 095,Aberdeen Riverside Group 012,collaborates with,mutual,2024
+Aberdeen Cornerstone Group 096,Cardiff Bracken Co-operative 019,shares a venue with,mutual,2025
+Exeter Bridgewater Co-operative 097,Aberdeen Hearth Trust 026,collaborates with,mutual,2020
+Swansea Hearth Trust 098,Cardiff Cedar Group 033,collaborates with,mutual,2021
+Newcastle Meadow Group 099,Aberdeen Beacon Co-operative 040,collaborates with,mutual,2022
+Edinburgh Highfield Co-operative 100,Cardiff Lantern Trust 047,collaborates with,mutual,2023
+Newcastle Bracken Co-operative 001,Aberdeen Foundry Group 054,shares a venue with,mutual,2024
+Edinburgh Harbour Trust 002,Cardiff Bridgewater Co-operative 061,collaborates with,mutual,2025
+Glasgow Mosaic Group 003,Aberdeen Seedling Trust 068,collaborates with,mutual,2020
+Belfast Beacon Co-operative 004,Cardiff Mosaic Group 075,collaborates with,mutual,2021
+Cardiff Willow Trust 005,Aberdeen Highfield Co-operative 082,collaborates with,mutual,2022
+Bristol Cornerstone Group 006,Cardiff Tideway Trust 089,shares a venue with,mutual,2023
+London Bridgewater Co-operative 007,Aberdeen Cornerstone Group 096,collaborates with,mutual,2024
+Birmingham Hearth Trust 008,Cardiff Northbank Co-operative 103,collaborates with,mutual,2025
+Manchester Meadow Group 009,Aberdeen Harbour Trust 110,collaborates with,mutual,2020
+Leeds Highfield Co-operative 010,London Bridgewater Co-operative 007,collaborates with,mutual,2021
+Sheffield Lantern Trust 011,Swansea Seedling Trust 014,shares a venue with,mutual,2022
+Aberdeen Riverside Group 012,London Mosaic Group 021,collaborates with,mutual,2023
+Exeter Northbank Co-operative 013,Swansea Highfield Co-operative 028,collaborates with,mutual,2024
+Swansea Seedling Trust 014,London Tideway Trust 035,collaborates with,mutual,2025
+Newcastle Cedar Group 015,Swansea Cornerstone Group 042,collaborates with,mutual,2020
+Edinburgh Hilltop Co-operative 016,London Northbank Co-operative 049,shares a venue with,mutual,2021
+Glasgow Tideway Trust 017,Swansea Harbour Trust 056,collaborates with,mutual,2022
+Belfast Foundry Group 018,London Meadow Group 063,collaborates with,mutual,2023
+Cardiff Bracken Co-operative 019,Swansea Hilltop Co-operative 070,collaborates with,mutual,2024
+Bristol Harbour Trust 020,London Willow Trust 077,collaborates with,mutual,2025
+London Mosaic Group 021,Swansea Riverside Group 084,shares a venue with,mutual,2020
+Birmingham Beacon Co-operative 022,London Bracken Co-operative 091,collaborates with,mutual,2021
+Manchester Willow Trust 023,Swansea Hearth Trust 098,collaborates with,mutual,2022
+Leeds Cornerstone Group 024,London Cedar Group 105,collaborates with,mutual,2023
+Sheffield Bridgewater Co-operative 025,Edinburgh Harbour Trust 002,collaborates with,mutual,2024
+Aberdeen Hearth Trust 026,Manchester Meadow Group 009,shares a venue with,mutual,2025
+Exeter Meadow Group 027,Edinburgh Hilltop Co-operative 016,collaborates with,mutual,2020
+Swansea Highfield Co-operative 028,Manchester Willow Trust 023,collaborates with,mutual,2021
+Newcastle Lantern Trust 029,Edinburgh Riverside Group 030,collaborates with,mutual,2022
+Edinburgh Riverside Group 030,Manchester Bracken Co-operative 037,collaborates with,mutual,2023
+Glasgow Northbank Co-operative 031,Edinburgh Hearth Trust 044,shares a venue with,mutual,2024
+Belfast Seedling Trust 032,Manchester Cedar Group 051,collaborates with,mutual,2025
+Cardiff Cedar Group 033,Edinburgh Beacon Co-operative 058,collaborates with,mutual,2020
+Bristol Hilltop Co-operative 034,Manchester Lantern Trust 065,collaborates with,mutual,2021
+London Tideway Trust 035,Edinburgh Foundry Group 072,collaborates with,mutual,2022
+Birmingham Foundry Group 036,Manchester Bridgewater Co-operative 079,shares a venue with,mutual,2023
+Manchester Bracken Co-operative 037,Edinburgh Seedling Trust 086,collaborates with,mutual,2024
+Leeds Harbour Trust 038,Manchester Mosaic Group 093,collaborates with,mutual,2025
+Sheffield Mosaic Group 039,Edinburgh Highfield Co-operative 100,collaborates with,mutual,2020
+Aberdeen Beacon Co-operative 040,Manchester Tideway Trust 107,collaborates with,mutual,2021
+Exeter Willow Trust 041,Belfast Beacon Co-operative 004,shares a venue with,mutual,2022
+Swansea Cornerstone Group 042,Sheffield Lantern Trust 011,collaborates with,mutual,2023
+Newcastle Bridgewater Co-operative 043,Belfast Foundry Group 018,collaborates with,mutual,2024
+Edinburgh Hearth Trust 044,Sheffield Bridgewater Co-operative 025,collaborates with,mutual,2025
+Glasgow Meadow Group 045,Belfast Seedling Trust 032,collaborates with,mutual,2020
+Belfast Highfield Co-operative 046,Sheffield Mosaic Group 039,shares a venue with,mutual,2021
+Cardiff Lantern Trust 047,Belfast Highfield Co-operative 046,collaborates with,mutual,2022
+Bristol Riverside Group 048,Sheffield Tideway Trust 053,collaborates with,mutual,2023
+London Northbank Co-operative 049,Belfast Cornerstone Group 060,collaborates with,mutual,2024
+Birmingham Seedling Trust 050,Sheffield Northbank Co-operative 067,collaborates with,mutual,2025
+Manchester Cedar Group 051,Belfast Harbour Trust 074,shares a venue with,mutual,2020
+Leeds Hilltop Co-operative 052,Sheffield Meadow Group 081,collaborates with,mutual,2021
+Sheffield Tideway Trust 053,Belfast Hilltop Co-operative 088,collaborates with,mutual,2022
+Aberdeen Foundry Group 054,Sheffield Willow Trust 095,collaborates with,mutual,2023
+Exeter Bracken Co-operative 055,Belfast Riverside Group 102,collaborates with,mutual,2024
+Swansea Harbour Trust 056,Sheffield Bracken Co-operative 109,shares a venue with,mutual,2025
+Newcastle Mosaic Group 057,Bristol Cornerstone Group 006,collaborates with,mutual,2020
+Edinburgh Beacon Co-operative 058,Exeter Northbank Co-operative 013,collaborates with,mutual,2021
+Glasgow Willow Trust 059,Bristol Harbour Trust 020,collaborates with,mutual,2022
+Belfast Cornerstone Group 060,Exeter Meadow Group 027,collaborates with,mutual,2023
+Newcastle Bracken Co-operative 001,Newcastle Community Space 001,uses,directed,2022
+Edinburgh Harbour Trust 002,Edinburgh Community Space 002,uses,directed,2023
+Glasgow Mosaic Group 003,Glasgow Community Space 003,uses,directed,2024
+Belfast Beacon Co-operative 004,Belfast Community Space 004,uses,directed,2025
+Cardiff Willow Trust 005,Cardiff Community Space 005,uses,directed,2022
+Bristol Cornerstone Group 006,Bristol Community Space 006,uses,directed,2023
+London Bridgewater Co-operative 007,London Community Space 007,uses,directed,2024
+Birmingham Hearth Trust 008,Birmingham Community Space 008,uses,directed,2025
+Manchester Meadow Group 009,Manchester Community Space 009,uses,directed,2022
+Leeds Highfield Co-operative 010,Leeds Community Space 010,uses,directed,2023
+Sheffield Lantern Trust 011,Sheffield Community Space 011,uses,directed,2024
+Aberdeen Riverside Group 012,Aberdeen Community Space 012,uses,directed,2025
+Exeter Northbank Co-operative 013,Exeter Community Space 013,uses,directed,2022
+Swansea Seedling Trust 014,Swansea Community Space 014,uses,directed,2023
+Newcastle Cedar Group 015,Newcastle Community Space 001,uses,directed,2024
+Edinburgh Hilltop Co-operative 016,Edinburgh Community Space 002,uses,directed,2025
+Glasgow Tideway Trust 017,Glasgow Community Space 003,uses,directed,2022
+Belfast Foundry Group 018,Belfast Community Space 004,uses,directed,2023
+Cardiff Bracken Co-operative 019,Cardiff Community Space 005,uses,directed,2024
+Bristol Harbour Trust 020,Bristol Community Space 006,uses,directed,2025
+London Mosaic Group 021,London Community Space 007,uses,directed,2022
+Birmingham Beacon Co-operative 022,Birmingham Community Space 008,uses,directed,2023
+Manchester Willow Trust 023,Manchester Community Space 009,uses,directed,2024
+Leeds Cornerstone Group 024,Leeds Community Space 010,uses,directed,2025
+Sheffield Bridgewater Co-operative 025,Sheffield Community Space 011,uses,directed,2022
+Aberdeen Hearth Trust 026,Aberdeen Community Space 012,uses,directed,2023
+Exeter Meadow Group 027,Exeter Community Space 013,uses,directed,2024
+Swansea Highfield Co-operative 028,Swansea Community Space 014,uses,directed,2025
+Newcastle Lantern Trust 029,Newcastle Community Space 001,uses,directed,2022
+Edinburgh Riverside Group 030,Edinburgh Community Space 002,uses,directed,2023
+Glasgow Northbank Co-operative 031,Glasgow Community Space 003,uses,directed,2024
+Belfast Seedling Trust 032,Belfast Community Space 004,uses,directed,2025
+Cardiff Cedar Group 033,Cardiff Community Space 005,uses,directed,2022
+Bristol Hilltop Co-operative 034,Bristol Community Space 006,uses,directed,2023
+London Tideway Trust 035,London Community Space 007,uses,directed,2024
+Birmingham Foundry Group 036,Birmingham Community Space 008,uses,directed,2025
+Manchester Bracken Co-operative 037,Manchester Community Space 009,uses,directed,2022
+Leeds Harbour Trust 038,Leeds Community Space 010,uses,directed,2023
+Sheffield Mosaic Group 039,Sheffield Community Space 011,uses,directed,2024
+Aberdeen Beacon Co-operative 040,Aberdeen Community Space 012,uses,directed,2025
+Exeter Willow Trust 041,Exeter Community Space 013,uses,directed,2022
+Swansea Cornerstone Group 042,Swansea Community Space 014,uses,directed,2023
+Newcastle Bridgewater Co-operative 043,Newcastle Community Space 001,uses,directed,2024
+Edinburgh Hearth Trust 044,Edinburgh Community Space 002,uses,directed,2025
+Glasgow Meadow Group 045,Glasgow Community Space 003,uses,directed,2022
+Newcastle Bracken Co-operative 001,Sheffield Meadow Group 081,connects across areas,mutual,2024
+Edinburgh Harbour Trust 002,Aberdeen Highfield Co-operative 082,connects across areas,mutual,2024
+Glasgow Mosaic Group 003,Exeter Lantern Trust 083,connects across areas,mutual,2024
+Belfast Beacon Co-operative 004,Swansea Riverside Group 084,connects across areas,mutual,2024
+Cardiff Willow Trust 005,Newcastle Northbank Co-operative 085,connects across areas,mutual,2024
+Bristol Cornerstone Group 006,Edinburgh Seedling Trust 086,connects across areas,mutual,2024
+London Bridgewater Co-operative 007,Glasgow Cedar Group 087,connects across areas,mutual,2024
+Birmingham Hearth Trust 008,Belfast Hilltop Co-operative 088,connects across areas,mutual,2024
+Manchester Meadow Group 009,Cardiff Tideway Trust 089,connects across areas,mutual,2024
+Leeds Highfield Co-operative 010,Bristol Foundry Group 090,connects across areas,mutual,2024
+Sheffield Lantern Trust 011,London Bracken Co-operative 091,connects across areas,mutual,2024
+Aberdeen Riverside Group 012,Birmingham Harbour Trust 092,connects across areas,mutual,2024
+Exeter Northbank Co-operative 013,Manchester Mosaic Group 093,connects across areas,mutual,2024
+Swansea Seedling Trust 014,Leeds Beacon Co-operative 094,connects across areas,mutual,2024
+Newcastle Bracken Co-operative 001,Sheffield Willow Trust 095,connects across areas,mutual,2024
+Edinburgh Harbour Trust 002,Aberdeen Cornerstone Group 096,connects across areas,mutual,2024
+Glasgow Mosaic Group 003,Exeter Bridgewater Co-operative 097,connects across areas,mutual,2024
+Belfast Beacon Co-operative 004,Swansea Hearth Trust 098,connects across areas,mutual,2024
+Cardiff Willow Trust 005,Newcastle Meadow Group 099,connects across areas,mutual,2024
+Bristol Cornerstone Group 006,Edinburgh Highfield Co-operative 100,connects across areas,mutual,2024
+London Bridgewater Co-operative 007,Glasgow Lantern Trust 101,connects across areas,mutual,2024

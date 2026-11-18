@@ -23,8 +23,9 @@ const POLL_MS = 10_000;
 
 export type SyncStatus = { state: "local" } | { state: "syncing" } | { state: "synced"; at: number } | { state: "offline"; message: string };
 
-export function useMapEdits(mapId: string | undefined, enabled = true, shared?: SharedLink) {
-  const sharedId = enabled ? shared?.id : undefined;
+export function useMapEdits(mapId: string | undefined, enabled = true, shared?: SharedLink,
+  /** Preview edits must never write to local storage or shared servers. */ ephemeral = false) {
+  const sharedId = enabled && !ephemeral ? shared?.id : undefined;
   const key = sharedId ? SHARED_KEY + sharedId : KEY + (mapId ?? "unsaved");
   const [layer, setLayer] = useState<EditLayer>(emptyEdits);
   const [sync, setSync] = useState<SharedEdits>(emptyShared);
@@ -37,7 +38,10 @@ export function useMapEdits(mapId: string | undefined, enabled = true, shared?: 
   const busy = useRef(false);
 
   useEffect(() => {
-    if (!enabled) { setLayer(emptyEdits()); setReady(true); return; }
+    if (!enabled || ephemeral) {
+      setLayer(emptyEdits()); setStatus({ state: "local" }); setReady(true);
+      setEditorState(""); return;
+    }
     if (sharedId) {
       let cached = emptyShared();
       try { cached = parseShared(JSON.parse(window.localStorage.getItem(key) ?? "null")); } catch { /* start empty */ }
@@ -48,12 +52,12 @@ export function useMapEdits(mapId: string | undefined, enabled = true, shared?: 
     }
     try { setEditorState(window.localStorage.getItem(EDITOR_KEY) ?? ""); } catch { /* storage blocked */ }
     setReady(true);
-  }, [key, enabled, sharedId]);
+  }, [key, enabled, sharedId, ephemeral]);
 
   const keep = useCallback((next: SharedEdits) => {
     syncRef.current = next; setSync(next);
-    try { window.localStorage.setItem(key, JSON.stringify(next)); } catch { /* the server has it */ }
-  }, [key]);
+    if (!ephemeral) try { window.localStorage.setItem(key, JSON.stringify(next)); } catch { /* the server has it */ }
+  }, [key, ephemeral]);
 
   /** Sends what's waiting, then asks for everything new. One round at a time. */
   const flush = useCallback(async () => {
@@ -102,9 +106,10 @@ export function useMapEdits(mapId: string | undefined, enabled = true, shared?: 
 
   const saveLocal = useCallback((next: EditLayer) => {
     setLayer(next);
+    if (ephemeral) return true;
     if (!enabled) return false;
     try { window.localStorage.setItem(key, JSON.stringify(next)); return true; } catch { return false; }
-  }, [key, enabled]);
+  }, [key, enabled, ephemeral]);
 
   const current = useMemo(() => sharedId ? sharedLayer(sync) : layer, [sharedId, sync, layer]);
   const add = useCallback((edits: Edit[]) => {
@@ -125,8 +130,8 @@ export function useMapEdits(mapId: string | undefined, enabled = true, shared?: 
   }, [sharedId, add, saveLocal]);
   const setEditor = useCallback((name: string) => {
     setEditorState(name);
-    try { window.localStorage.setItem(EDITOR_KEY, name); } catch { /* storage blocked */ }
-  }, []);
+    if (!ephemeral) try { window.localStorage.setItem(EDITOR_KEY, name); } catch { /* storage blocked */ }
+  }, [ephemeral]);
   return { layer: current, ready, add, undo, replace, editor, setEditor, status, pending: sync.pending.length + sync.toggles.length, refresh: flush, remoteSource };
 }
 

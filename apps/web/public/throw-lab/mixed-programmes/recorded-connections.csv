@@ -1,0 +1,356 @@
+From,To,Relationship,Direction
+Accra Cornerstone Social Group 006,London Food Initiative 001,shares resources with,directed
+Kathmandu Meadow Social Group 009,Manchester Health Initiative 002,helps deliver,directed
+Vancouver Riverside Social Group 012,Amsterdam Housing Initiative 003,helps deliver,directed
+London Cedar Social Group 015,Nairobi Nature Initiative 004,helps deliver,directed
+Nairobi Foundry Social Group 018,Kampala Transport Initiative 005,shares resources with,directed
+Lagos Mosaic Social Group 021,Accra Culture Initiative 006,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,Lagos Young people Initiative 007,helps deliver,directed
+Berlin Meadow Social Group 027,Mumbai Energy Initiative 008,helps deliver,directed
+Manchester Riverside Social Group 030,Kathmandu Community care Initiative 009,shares resources with,directed
+Kampala Cedar Social Group 033,Johannesburg Learning Initiative 010,helps deliver,directed
+Mumbai Foundry Social Group 036,Buenos Aires Food Initiative 011,helps deliver,directed
+Buenos Aires Mosaic Social Group 039,Vancouver Health Initiative 012,helps deliver,directed
+Oslo Cornerstone Social Group 042,Berlin Housing Initiative 013,shares resources with,directed
+Amsterdam Meadow Social Group 045,Oslo Nature Initiative 014,helps deliver,directed
+Accra Riverside Social Group 048,London Transport Initiative 015,helps deliver,directed
+Kathmandu Cedar Social Group 051,Manchester Culture Initiative 016,helps deliver,directed
+Vancouver Foundry Social Group 054,Amsterdam Young people Initiative 017,shares resources with,directed
+London Mosaic Social Group 057,Nairobi Energy Initiative 018,helps deliver,directed
+Nairobi Cornerstone Social Group 060,Kampala Community care Initiative 019,helps deliver,directed
+Lagos Meadow Social Group 063,Accra Learning Initiative 020,helps deliver,directed
+Johannesburg Riverside Social Group 066,Lagos Food Initiative 021,shares resources with,directed
+Berlin Cedar Social Group 069,Mumbai Health Initiative 022,helps deliver,directed
+Manchester Foundry Social Group 072,Kathmandu Housing Initiative 023,helps deliver,directed
+Kampala Mosaic Social Group 075,Johannesburg Nature Initiative 024,helps deliver,directed
+Mumbai Cornerstone Social Group 078,Buenos Aires Transport Initiative 025,shares resources with,directed
+Buenos Aires Meadow Social Group 081,Vancouver Culture Initiative 026,helps deliver,directed
+Oslo Riverside Social Group 084,Berlin Young people Initiative 027,helps deliver,directed
+Amsterdam Cedar Social Group 087,Oslo Energy Initiative 028,helps deliver,directed
+Accra Foundry Social Group 090,London Community care Initiative 029,shares resources with,directed
+Kathmandu Mosaic Social Group 093,Manchester Learning Initiative 030,helps deliver,directed
+Manchester Harbour Social Group 002,Amsterdam Food Initiative 031,helps deliver,directed
+Kampala Willow Social Group 005,Nairobi Health Initiative 032,helps deliver,directed
+Mumbai Hearth Social Group 008,Kampala Housing Initiative 033,shares resources with,directed
+Buenos Aires Lantern Social Group 011,Accra Nature Initiative 034,helps deliver,directed
+Oslo Seedling Social Group 014,Lagos Transport Initiative 035,helps deliver,directed
+Amsterdam Tideway Social Group 017,Mumbai Culture Initiative 036,helps deliver,directed
+Accra Harbour Social Group 020,Kathmandu Young people Initiative 037,shares resources with,directed
+Kathmandu Willow Social Group 023,Johannesburg Energy Initiative 038,helps deliver,directed
+Vancouver Hearth Social Group 026,Buenos Aires Community care Initiative 039,helps deliver,directed
+London Lantern Social Group 029,Vancouver Learning Initiative 040,helps deliver,directed
+Nairobi Seedling Social Group 032,Berlin Food Initiative 041,shares resources with,directed
+Lagos Tideway Social Group 035,Oslo Health Initiative 042,helps deliver,directed
+Johannesburg Harbour Social Group 038,London Housing Initiative 043,helps deliver,directed
+Berlin Willow Social Group 041,Manchester Nature Initiative 044,helps deliver,directed
+Manchester Hearth Social Group 044,Amsterdam Transport Initiative 045,shares resources with,directed
+Kampala Lantern Social Group 047,Nairobi Culture Initiative 046,helps deliver,directed
+Mumbai Seedling Social Group 050,Kampala Young people Initiative 047,helps deliver,directed
+Buenos Aires Tideway Social Group 053,Accra Energy Initiative 048,helps deliver,directed
+Oslo Harbour Social Group 056,Lagos Community care Initiative 049,shares resources with,directed
+Amsterdam Willow Social Group 059,Mumbai Learning Initiative 050,helps deliver,directed
+Accra Hearth Social Group 062,Kathmandu Food Initiative 051,helps deliver,directed
+Kathmandu Lantern Social Group 065,Johannesburg Health Initiative 052,helps deliver,directed
+Vancouver Seedling Social Group 068,Buenos Aires Housing Initiative 053,shares resources with,directed
+London Tideway Social Group 071,Vancouver Nature Initiative 054,helps deliver,directed
+Nairobi Harbour Social Group 074,Berlin Transport Initiative 055,helps deliver,directed
+Lagos Willow Social Group 077,Oslo Culture Initiative 056,helps deliver,directed
+Johannesburg Hearth Social Group 080,London Young people Initiative 057,shares resources with,directed
+Berlin Lantern Social Group 083,Manchester Energy Initiative 058,helps deliver,directed
+Manchester Seedling Social Group 086,Amsterdam Community care Initiative 059,helps deliver,directed
+Kampala Tideway Social Group 089,Nairobi Learning Initiative 060,helps deliver,directed
+Mumbai Harbour Social Group 092,Kampala Food Initiative 061,shares resources with,directed
+London Bracken Social Group 001,Accra Health Initiative 062,helps deliver,directed
+Nairobi Beacon Social Group 004,Lagos Housing Initiative 063,helps deliver,directed
+Lagos Bridgewater Social Group 007,Mumbai Nature Initiative 064,helps deliver,directed
+Johannesburg Highfield Social Group 010,Kathmandu Transport Initiative 065,shares resources with,directed
+Berlin Northbank Social Group 013,Johannesburg Culture Initiative 066,helps deliver,directed
+Manchester Hilltop Social Group 016,Buenos Aires Young people Initiative 067,helps deliver,directed
+Kampala Bracken Social Group 019,Vancouver Energy Initiative 068,helps deliver,directed
+Mumbai Beacon Social Group 022,Berlin Community care Initiative 069,shares resources with,directed
+Buenos Aires Bridgewater Social Group 025,Oslo Learning Initiative 070,helps deliver,directed
+Oslo Highfield Social Group 028,London Food Initiative 071,helps deliver,directed
+Amsterdam Northbank Social Group 031,Manchester Health Initiative 072,helps deliver,directed
+Accra Hilltop Social Group 034,Amsterdam Housing Initiative 073,shares resources with,directed
+Kathmandu Bracken Social Group 037,Nairobi Nature Initiative 074,helps deliver,directed
+Vancouver Beacon Social Group 040,Kampala Transport Initiative 075,helps deliver,directed
+London Bridgewater Social Group 043,Accra Culture Initiative 076,helps deliver,directed
+Nairobi Highfield Social Group 046,London Food Initiative 001,shares resources with,directed
+Lagos Northbank Social Group 049,Manchester Health Initiative 002,helps deliver,directed
+Johannesburg Hilltop Social Group 052,Amsterdam Housing Initiative 003,helps deliver,directed
+Berlin Bracken Social Group 055,Nairobi Nature Initiative 004,helps deliver,directed
+Manchester Beacon Social Group 058,Kampala Transport Initiative 005,shares resources with,directed
+Kampala Bridgewater Social Group 061,Accra Culture Initiative 006,helps deliver,directed
+Mumbai Highfield Social Group 064,Lagos Young people Initiative 007,helps deliver,directed
+Buenos Aires Northbank Social Group 067,Mumbai Energy Initiative 008,helps deliver,directed
+Oslo Hilltop Social Group 070,Kathmandu Community care Initiative 009,shares resources with,directed
+Amsterdam Bracken Social Group 073,Johannesburg Learning Initiative 010,helps deliver,directed
+Accra Beacon Social Group 076,Buenos Aires Food Initiative 011,helps deliver,directed
+Kathmandu Bridgewater Social Group 079,Vancouver Health Initiative 012,helps deliver,directed
+Vancouver Highfield Social Group 082,Berlin Housing Initiative 013,shares resources with,directed
+London Northbank Social Group 085,Oslo Nature Initiative 014,helps deliver,directed
+Nairobi Hilltop Social Group 088,London Transport Initiative 015,helps deliver,directed
+Lagos Bracken Social Group 091,Manchester Culture Initiative 016,helps deliver,directed
+Johannesburg Beacon Social Group 094,Amsterdam Young people Initiative 017,shares resources with,directed
+Amsterdam Mosaic Social Group 003,Nairobi Energy Initiative 018,helps deliver,directed
+Accra Cornerstone Social Group 006,Kampala Community care Initiative 019,helps deliver,directed
+Kathmandu Meadow Social Group 009,Accra Learning Initiative 020,helps deliver,directed
+Vancouver Riverside Social Group 012,Lagos Food Initiative 021,shares resources with,directed
+London Cedar Social Group 015,Mumbai Health Initiative 022,helps deliver,directed
+Nairobi Foundry Social Group 018,Kathmandu Housing Initiative 023,helps deliver,directed
+Lagos Mosaic Social Group 021,Johannesburg Nature Initiative 024,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,Buenos Aires Transport Initiative 025,shares resources with,directed
+Berlin Meadow Social Group 027,Vancouver Culture Initiative 026,helps deliver,directed
+Manchester Riverside Social Group 030,Berlin Young people Initiative 027,helps deliver,directed
+Kampala Cedar Social Group 033,Oslo Energy Initiative 028,helps deliver,directed
+Mumbai Foundry Social Group 036,London Community care Initiative 029,shares resources with,directed
+Buenos Aires Mosaic Social Group 039,Manchester Learning Initiative 030,helps deliver,directed
+Oslo Cornerstone Social Group 042,Amsterdam Food Initiative 031,helps deliver,directed
+Amsterdam Meadow Social Group 045,Nairobi Health Initiative 032,helps deliver,directed
+Accra Riverside Social Group 048,Kampala Housing Initiative 033,shares resources with,directed
+Kathmandu Cedar Social Group 051,Accra Nature Initiative 034,helps deliver,directed
+Vancouver Foundry Social Group 054,Lagos Transport Initiative 035,helps deliver,directed
+London Mosaic Social Group 057,Mumbai Culture Initiative 036,helps deliver,directed
+Nairobi Cornerstone Social Group 060,Kathmandu Young people Initiative 037,shares resources with,directed
+Lagos Meadow Social Group 063,Johannesburg Energy Initiative 038,helps deliver,directed
+Johannesburg Riverside Social Group 066,Buenos Aires Community care Initiative 039,helps deliver,directed
+Berlin Cedar Social Group 069,Vancouver Learning Initiative 040,helps deliver,directed
+Manchester Foundry Social Group 072,Berlin Food Initiative 041,shares resources with,directed
+Kampala Mosaic Social Group 075,Oslo Health Initiative 042,helps deliver,directed
+Mumbai Cornerstone Social Group 078,London Housing Initiative 043,helps deliver,directed
+Buenos Aires Meadow Social Group 081,Manchester Nature Initiative 044,helps deliver,directed
+Oslo Riverside Social Group 084,Amsterdam Transport Initiative 045,shares resources with,directed
+Amsterdam Cedar Social Group 087,Nairobi Culture Initiative 046,helps deliver,directed
+Accra Foundry Social Group 090,Kampala Young people Initiative 047,helps deliver,directed
+Kathmandu Mosaic Social Group 093,Accra Energy Initiative 048,helps deliver,directed
+Manchester Harbour Social Group 002,Lagos Community care Initiative 049,shares resources with,directed
+Kampala Willow Social Group 005,Mumbai Learning Initiative 050,helps deliver,directed
+Mumbai Hearth Social Group 008,Kathmandu Food Initiative 051,helps deliver,directed
+Buenos Aires Lantern Social Group 011,Johannesburg Health Initiative 052,helps deliver,directed
+Oslo Seedling Social Group 014,Buenos Aires Housing Initiative 053,shares resources with,directed
+Amsterdam Tideway Social Group 017,Vancouver Nature Initiative 054,helps deliver,directed
+Accra Harbour Social Group 020,Berlin Transport Initiative 055,helps deliver,directed
+Kathmandu Willow Social Group 023,Oslo Culture Initiative 056,helps deliver,directed
+Vancouver Hearth Social Group 026,London Young people Initiative 057,shares resources with,directed
+London Lantern Social Group 029,Manchester Energy Initiative 058,helps deliver,directed
+Nairobi Seedling Social Group 032,Amsterdam Community care Initiative 059,helps deliver,directed
+Lagos Tideway Social Group 035,Nairobi Learning Initiative 060,helps deliver,directed
+Johannesburg Harbour Social Group 038,Kampala Food Initiative 061,shares resources with,directed
+Berlin Willow Social Group 041,Accra Health Initiative 062,helps deliver,directed
+Manchester Hearth Social Group 044,Lagos Housing Initiative 063,helps deliver,directed
+Kampala Lantern Social Group 047,Mumbai Nature Initiative 064,helps deliver,directed
+Mumbai Seedling Social Group 050,Kathmandu Transport Initiative 065,shares resources with,directed
+Buenos Aires Tideway Social Group 053,Johannesburg Culture Initiative 066,helps deliver,directed
+Oslo Harbour Social Group 056,Buenos Aires Young people Initiative 067,helps deliver,directed
+Amsterdam Willow Social Group 059,Vancouver Energy Initiative 068,helps deliver,directed
+Accra Hearth Social Group 062,Berlin Community care Initiative 069,shares resources with,directed
+Kathmandu Lantern Social Group 065,Oslo Learning Initiative 070,helps deliver,directed
+Vancouver Seedling Social Group 068,London Food Initiative 071,helps deliver,directed
+London Tideway Social Group 071,Manchester Health Initiative 072,helps deliver,directed
+Nairobi Harbour Social Group 074,Amsterdam Housing Initiative 073,shares resources with,directed
+Lagos Willow Social Group 077,Nairobi Nature Initiative 074,helps deliver,directed
+Johannesburg Hearth Social Group 080,Kampala Transport Initiative 075,helps deliver,directed
+Berlin Lantern Social Group 083,Accra Culture Initiative 076,helps deliver,directed
+Manchester Seedling Social Group 086,London Food Initiative 001,shares resources with,directed
+Kampala Tideway Social Group 089,Manchester Health Initiative 002,helps deliver,directed
+Mumbai Harbour Social Group 092,Amsterdam Housing Initiative 003,helps deliver,directed
+London Bracken Social Group 001,Nairobi Nature Initiative 004,helps deliver,directed
+Nairobi Beacon Social Group 004,Kampala Transport Initiative 005,shares resources with,directed
+Lagos Bridgewater Social Group 007,Accra Culture Initiative 006,helps deliver,directed
+Johannesburg Highfield Social Group 010,Lagos Young people Initiative 007,helps deliver,directed
+Berlin Northbank Social Group 013,Mumbai Energy Initiative 008,helps deliver,directed
+Manchester Hilltop Social Group 016,Kathmandu Community care Initiative 009,shares resources with,directed
+Kampala Bracken Social Group 019,Johannesburg Learning Initiative 010,helps deliver,directed
+Mumbai Beacon Social Group 022,Buenos Aires Food Initiative 011,helps deliver,directed
+Buenos Aires Bridgewater Social Group 025,Vancouver Health Initiative 012,helps deliver,directed
+Oslo Highfield Social Group 028,Berlin Housing Initiative 013,shares resources with,directed
+Amsterdam Northbank Social Group 031,Oslo Nature Initiative 014,helps deliver,directed
+Accra Hilltop Social Group 034,London Transport Initiative 015,helps deliver,directed
+Kathmandu Bracken Social Group 037,Manchester Culture Initiative 016,helps deliver,directed
+Vancouver Beacon Social Group 040,Amsterdam Young people Initiative 017,shares resources with,directed
+London Bridgewater Social Group 043,Nairobi Energy Initiative 018,helps deliver,directed
+Nairobi Highfield Social Group 046,Kampala Community care Initiative 019,helps deliver,directed
+Lagos Northbank Social Group 049,Accra Learning Initiative 020,helps deliver,directed
+Johannesburg Hilltop Social Group 052,Lagos Food Initiative 021,shares resources with,directed
+Berlin Bracken Social Group 055,Mumbai Health Initiative 022,helps deliver,directed
+Manchester Beacon Social Group 058,Kathmandu Housing Initiative 023,helps deliver,directed
+Kampala Bridgewater Social Group 061,Johannesburg Nature Initiative 024,helps deliver,directed
+Mumbai Highfield Social Group 064,Buenos Aires Transport Initiative 025,shares resources with,directed
+Buenos Aires Northbank Social Group 067,Vancouver Culture Initiative 026,helps deliver,directed
+Oslo Hilltop Social Group 070,Berlin Young people Initiative 027,helps deliver,directed
+Amsterdam Bracken Social Group 073,Oslo Energy Initiative 028,helps deliver,directed
+Accra Beacon Social Group 076,London Community care Initiative 029,shares resources with,directed
+Kathmandu Bridgewater Social Group 079,Manchester Learning Initiative 030,helps deliver,directed
+Vancouver Highfield Social Group 082,Amsterdam Food Initiative 031,helps deliver,directed
+London Northbank Social Group 085,Nairobi Health Initiative 032,helps deliver,directed
+Nairobi Hilltop Social Group 088,Kampala Housing Initiative 033,shares resources with,directed
+Lagos Bracken Social Group 091,Accra Nature Initiative 034,helps deliver,directed
+Johannesburg Beacon Social Group 094,Lagos Transport Initiative 035,helps deliver,directed
+Amsterdam Mosaic Social Group 003,Mumbai Culture Initiative 036,helps deliver,directed
+Accra Cornerstone Social Group 006,Kathmandu Young people Initiative 037,shares resources with,directed
+Kathmandu Meadow Social Group 009,Johannesburg Energy Initiative 038,helps deliver,directed
+Vancouver Riverside Social Group 012,Buenos Aires Community care Initiative 039,helps deliver,directed
+London Cedar Social Group 015,Vancouver Learning Initiative 040,helps deliver,directed
+Nairobi Foundry Social Group 018,Berlin Food Initiative 041,shares resources with,directed
+Lagos Mosaic Social Group 021,Oslo Health Initiative 042,helps deliver,directed
+Johannesburg Cornerstone Social Group 024,London Housing Initiative 043,helps deliver,directed
+Berlin Meadow Social Group 027,Manchester Nature Initiative 044,helps deliver,directed
+Manchester Riverside Social Group 030,Amsterdam Transport Initiative 045,shares resources with,directed
+Kampala Cedar Social Group 033,Nairobi Culture Initiative 046,helps deliver,directed
+Mumbai Foundry Social Group 036,Kampala Young people Initiative 047,helps deliver,directed
+Buenos Aires Mosaic Social Group 039,Accra Energy Initiative 048,helps deliver,directed
+Oslo Cornerstone Social Group 042,Lagos Community care Initiative 049,shares resources with,directed
+Amsterdam Meadow Social Group 045,Mumbai Learning Initiative 050,helps deliver,directed
+Accra Riverside Social Group 048,Kathmandu Food Initiative 051,helps deliver,directed
+Kathmandu Cedar Social Group 051,Johannesburg Health Initiative 052,helps deliver,directed
+Vancouver Foundry Social Group 054,Buenos Aires Housing Initiative 053,shares resources with,directed
+London Mosaic Social Group 057,Vancouver Nature Initiative 054,helps deliver,directed
+Nairobi Cornerstone Social Group 060,Berlin Transport Initiative 055,helps deliver,directed
+Lagos Meadow Social Group 063,Oslo Culture Initiative 056,helps deliver,directed
+Johannesburg Riverside Social Group 066,London Young people Initiative 057,shares resources with,directed
+Berlin Cedar Social Group 069,Manchester Energy Initiative 058,helps deliver,directed
+Manchester Foundry Social Group 072,Amsterdam Community care Initiative 059,helps deliver,directed
+Kampala Mosaic Social Group 075,Nairobi Learning Initiative 060,helps deliver,directed
+Mumbai Cornerstone Social Group 078,Kampala Food Initiative 061,shares resources with,directed
+Buenos Aires Meadow Social Group 081,Accra Health Initiative 062,helps deliver,directed
+Oslo Riverside Social Group 084,Lagos Housing Initiative 063,helps deliver,directed
+Amsterdam Cedar Social Group 087,Mumbai Nature Initiative 064,helps deliver,directed
+Accra Foundry Social Group 090,Kathmandu Transport Initiative 065,shares resources with,directed
+Kathmandu Mosaic Social Group 093,Johannesburg Culture Initiative 066,helps deliver,directed
+Manchester Harbour Social Group 002,Buenos Aires Young people Initiative 067,helps deliver,directed
+Kampala Willow Social Group 005,Vancouver Energy Initiative 068,helps deliver,directed
+Mumbai Hearth Social Group 008,Berlin Community care Initiative 069,shares resources with,directed
+Buenos Aires Lantern Social Group 011,Oslo Learning Initiative 070,helps deliver,directed
+Oslo Seedling Social Group 014,London Food Initiative 071,helps deliver,directed
+Amsterdam Tideway Social Group 017,Manchester Health Initiative 072,helps deliver,directed
+Accra Harbour Social Group 020,Amsterdam Housing Initiative 073,shares resources with,directed
+Kathmandu Willow Social Group 023,Nairobi Nature Initiative 074,helps deliver,directed
+Vancouver Hearth Social Group 026,Kampala Transport Initiative 075,helps deliver,directed
+London Lantern Social Group 029,Accra Culture Initiative 076,helps deliver,directed
+Nairobi Seedling Social Group 032,London Food Initiative 001,shares resources with,directed
+Lagos Tideway Social Group 035,Manchester Health Initiative 002,helps deliver,directed
+Johannesburg Harbour Social Group 038,Amsterdam Housing Initiative 003,helps deliver,directed
+Berlin Willow Social Group 041,Nairobi Nature Initiative 004,helps deliver,directed
+Manchester Hearth Social Group 044,Kampala Transport Initiative 005,shares resources with,directed
+Kampala Lantern Social Group 047,Accra Culture Initiative 006,helps deliver,directed
+Mumbai Seedling Social Group 050,Lagos Young people Initiative 007,helps deliver,directed
+Buenos Aires Tideway Social Group 053,Mumbai Energy Initiative 008,helps deliver,directed
+Oslo Harbour Social Group 056,Kathmandu Community care Initiative 009,shares resources with,directed
+Amsterdam Willow Social Group 059,Johannesburg Learning Initiative 010,helps deliver,directed
+Accra Hearth Social Group 062,Buenos Aires Food Initiative 011,helps deliver,directed
+Kathmandu Lantern Social Group 065,Vancouver Health Initiative 012,helps deliver,directed
+Vancouver Seedling Social Group 068,Berlin Housing Initiative 013,shares resources with,directed
+London Tideway Social Group 071,Oslo Nature Initiative 014,helps deliver,directed
+Nairobi Harbour Social Group 074,London Transport Initiative 015,helps deliver,directed
+Lagos Willow Social Group 077,Manchester Culture Initiative 016,helps deliver,directed
+Johannesburg Hearth Social Group 080,Amsterdam Young people Initiative 017,shares resources with,directed
+Berlin Lantern Social Group 083,Nairobi Energy Initiative 018,helps deliver,directed
+Manchester Seedling Social Group 086,Kampala Community care Initiative 019,helps deliver,directed
+Kampala Tideway Social Group 089,Accra Learning Initiative 020,helps deliver,directed
+Mumbai Harbour Social Group 092,Lagos Food Initiative 021,shares resources with,directed
+London Bracken Social Group 001,Mumbai Health Initiative 022,helps deliver,directed
+Nairobi Beacon Social Group 004,Kathmandu Housing Initiative 023,helps deliver,directed
+Lagos Bridgewater Social Group 007,Johannesburg Nature Initiative 024,helps deliver,directed
+Johannesburg Highfield Social Group 010,Buenos Aires Transport Initiative 025,shares resources with,directed
+Berlin Northbank Social Group 013,Vancouver Culture Initiative 026,helps deliver,directed
+Manchester Hilltop Social Group 016,Berlin Young people Initiative 027,helps deliver,directed
+Kampala Bracken Social Group 019,Oslo Energy Initiative 028,helps deliver,directed
+Mumbai Beacon Social Group 022,London Community care Initiative 029,shares resources with,directed
+Buenos Aires Bridgewater Social Group 025,Manchester Learning Initiative 030,helps deliver,directed
+Oslo Highfield Social Group 028,Amsterdam Food Initiative 031,helps deliver,directed
+Amsterdam Northbank Social Group 031,Nairobi Health Initiative 032,helps deliver,directed
+Accra Hilltop Social Group 034,Kampala Housing Initiative 033,shares resources with,directed
+Kathmandu Bracken Social Group 037,Accra Nature Initiative 034,helps deliver,directed
+Vancouver Beacon Social Group 040,Lagos Transport Initiative 035,helps deliver,directed
+London Bridgewater Social Group 043,Mumbai Culture Initiative 036,helps deliver,directed
+Nairobi Highfield Social Group 046,Kathmandu Young people Initiative 037,shares resources with,directed
+Lagos Northbank Social Group 049,Johannesburg Energy Initiative 038,helps deliver,directed
+Johannesburg Hilltop Social Group 052,Buenos Aires Community care Initiative 039,helps deliver,directed
+Berlin Bracken Social Group 055,Vancouver Learning Initiative 040,helps deliver,directed
+Manchester Beacon Social Group 058,Berlin Food Initiative 041,shares resources with,directed
+Kampala Bridgewater Social Group 061,Oslo Health Initiative 042,helps deliver,directed
+Mumbai Highfield Social Group 064,London Housing Initiative 043,helps deliver,directed
+Buenos Aires Northbank Social Group 067,Manchester Nature Initiative 044,helps deliver,directed
+Oslo Hilltop Social Group 070,Amsterdam Transport Initiative 045,shares resources with,directed
+Amsterdam Bracken Social Group 073,Nairobi Culture Initiative 046,helps deliver,directed
+Accra Beacon Social Group 076,Kampala Young people Initiative 047,helps deliver,directed
+Kathmandu Bridgewater Social Group 079,Accra Energy Initiative 048,helps deliver,directed
+Vancouver Highfield Social Group 082,Lagos Community care Initiative 049,shares resources with,directed
+London Northbank Social Group 085,Mumbai Learning Initiative 050,helps deliver,directed
+Nairobi Hilltop Social Group 088,Kathmandu Food Initiative 051,helps deliver,directed
+Lagos Bracken Social Group 091,Johannesburg Health Initiative 052,helps deliver,directed
+London Bracken Social Group 001,Johannesburg Cornerstone Social Group 024,works with,mutual
+Manchester Harbour Social Group 002,Amsterdam Northbank Social Group 031,works with,mutual
+Amsterdam Mosaic Social Group 003,Johannesburg Harbour Social Group 038,works with,mutual
+Nairobi Beacon Social Group 004,Amsterdam Meadow Social Group 045,works with,mutual
+Kampala Willow Social Group 005,Johannesburg Hilltop Social Group 052,works with,mutual
+Accra Cornerstone Social Group 006,Amsterdam Willow Social Group 059,works with,mutual
+Lagos Bridgewater Social Group 007,Johannesburg Riverside Social Group 066,works with,mutual
+Mumbai Hearth Social Group 008,Amsterdam Bracken Social Group 073,works with,mutual
+Kathmandu Meadow Social Group 009,Johannesburg Hearth Social Group 080,works with,mutual
+Johannesburg Highfield Social Group 010,Amsterdam Cedar Social Group 087,works with,mutual
+Buenos Aires Lantern Social Group 011,Johannesburg Beacon Social Group 094,works with,mutual
+Vancouver Riverside Social Group 012,Lagos Bridgewater Social Group 007,works with,mutual
+Berlin Northbank Social Group 013,Oslo Seedling Social Group 014,works with,mutual
+Oslo Seedling Social Group 014,Lagos Mosaic Social Group 021,works with,mutual
+London Cedar Social Group 015,Oslo Highfield Social Group 028,works with,mutual
+Manchester Hilltop Social Group 016,Lagos Tideway Social Group 035,works with,mutual
+Amsterdam Tideway Social Group 017,Oslo Cornerstone Social Group 042,works with,mutual
+Nairobi Foundry Social Group 018,Lagos Northbank Social Group 049,works with,mutual
+Kampala Bracken Social Group 019,Oslo Harbour Social Group 056,works with,mutual
+Accra Harbour Social Group 020,Lagos Meadow Social Group 063,works with,mutual
+Lagos Mosaic Social Group 021,Oslo Hilltop Social Group 070,works with,mutual
+Mumbai Beacon Social Group 022,Lagos Willow Social Group 077,works with,mutual
+Kathmandu Willow Social Group 023,Oslo Riverside Social Group 084,works with,mutual
+Johannesburg Cornerstone Social Group 024,Lagos Bracken Social Group 091,works with,mutual
+Buenos Aires Bridgewater Social Group 025,Nairobi Beacon Social Group 004,works with,mutual
+Vancouver Hearth Social Group 026,Buenos Aires Lantern Social Group 011,works with,mutual
+Berlin Meadow Social Group 027,Nairobi Foundry Social Group 018,works with,mutual
+Oslo Highfield Social Group 028,Buenos Aires Bridgewater Social Group 025,works with,mutual
+London Lantern Social Group 029,Nairobi Seedling Social Group 032,works with,mutual
+Manchester Riverside Social Group 030,Buenos Aires Mosaic Social Group 039,works with,mutual
+Amsterdam Northbank Social Group 031,Nairobi Highfield Social Group 046,works with,mutual
+Nairobi Seedling Social Group 032,Buenos Aires Tideway Social Group 053,works with,mutual
+Kampala Cedar Social Group 033,Nairobi Cornerstone Social Group 060,works with,mutual
+Accra Hilltop Social Group 034,Buenos Aires Northbank Social Group 067,works with,mutual
+Lagos Tideway Social Group 035,Nairobi Harbour Social Group 074,works with,mutual
+Mumbai Foundry Social Group 036,Buenos Aires Meadow Social Group 081,works with,mutual
+Kathmandu Bracken Social Group 037,Nairobi Hilltop Social Group 088,works with,mutual
+Johannesburg Harbour Social Group 038,London Bracken Social Group 001,works with,mutual
+Buenos Aires Mosaic Social Group 039,Mumbai Hearth Social Group 008,works with,mutual
+Vancouver Beacon Social Group 040,London Cedar Social Group 015,works with,mutual
+Berlin Willow Social Group 041,Mumbai Beacon Social Group 022,works with,mutual
+Oslo Cornerstone Social Group 042,London Lantern Social Group 029,works with,mutual
+London Bridgewater Social Group 043,Mumbai Foundry Social Group 036,works with,mutual
+Manchester Hearth Social Group 044,London Bridgewater Social Group 043,works with,mutual
+Amsterdam Meadow Social Group 045,Mumbai Seedling Social Group 050,works with,mutual
+Nairobi Highfield Social Group 046,London Mosaic Social Group 057,works with,mutual
+Kampala Lantern Social Group 047,Mumbai Highfield Social Group 064,works with,mutual
+Accra Riverside Social Group 048,London Tideway Social Group 071,works with,mutual
+Lagos Northbank Social Group 049,Mumbai Cornerstone Social Group 078,works with,mutual
+Mumbai Seedling Social Group 050,London Northbank Social Group 085,works with,mutual
+Kathmandu Cedar Social Group 051,Mumbai Harbour Social Group 092,works with,mutual
+Johannesburg Hilltop Social Group 052,Kampala Willow Social Group 005,works with,mutual
+Buenos Aires Tideway Social Group 053,Vancouver Riverside Social Group 012,works with,mutual
+Vancouver Foundry Social Group 054,Kampala Bracken Social Group 019,works with,mutual
+Berlin Bracken Social Group 055,Vancouver Hearth Social Group 026,works with,mutual
+Oslo Harbour Social Group 056,Kampala Cedar Social Group 033,works with,mutual
+London Mosaic Social Group 057,Vancouver Beacon Social Group 040,works with,mutual
+Manchester Beacon Social Group 058,Kampala Lantern Social Group 047,works with,mutual
+Amsterdam Willow Social Group 059,Vancouver Foundry Social Group 054,works with,mutual
+Nairobi Cornerstone Social Group 060,Kampala Bridgewater Social Group 061,works with,mutual
+Kampala Bridgewater Social Group 061,Vancouver Seedling Social Group 068,works with,mutual
+Accra Hearth Social Group 062,Kampala Mosaic Social Group 075,works with,mutual
+Lagos Meadow Social Group 063,Vancouver Highfield Social Group 082,works with,mutual
+Mumbai Highfield Social Group 064,Kampala Tideway Social Group 089,works with,mutual
+Kathmandu Lantern Social Group 065,Manchester Harbour Social Group 002,works with,mutual
+Johannesburg Riverside Social Group 066,Kathmandu Meadow Social Group 009,works with,mutual
+Buenos Aires Northbank Social Group 067,Manchester Hilltop Social Group 016,works with,mutual
+Vancouver Seedling Social Group 068,Kathmandu Willow Social Group 023,works with,mutual
+Berlin Cedar Social Group 069,Manchester Riverside Social Group 030,works with,mutual
+Oslo Hilltop Social Group 070,Kathmandu Bracken Social Group 037,works with,mutual
+London Tideway Social Group 071,Manchester Hearth Social Group 044,works with,mutual
+Manchester Foundry Social Group 072,Kathmandu Cedar Social Group 051,works with,mutual
+Amsterdam Bracken Social Group 073,Manchester Beacon Social Group 058,works with,mutual
+Nairobi Harbour Social Group 074,Kathmandu Lantern Social Group 065,works with,mutual
+Kampala Mosaic Social Group 075,Manchester Foundry Social Group 072,works with,mutual

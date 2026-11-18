@@ -68,7 +68,12 @@ export function suggestShape(table: SourceTable): Shape | null {
         ...(sign ? { polarity: brace(sign) } : {}), ...(dir ? { direction: brace(dir) } : {}) }] });
   }
 
-  const label = pick(h, ["label", "name", "organisation", "organisationname", "organization", "organizationname", "title", "entity", "project", "projectname", "charityname", "companyname"]) || h[0];
+  // Repeated event/activity rows are records in their own right. Choosing
+  // Organisation as the main label otherwise collapses several events into
+  // one organisation and silently loses their dates and observations.
+  const label = pick(h, ["label", "name", "event", "eventname", "session", "sessionname",
+    "activity", "activityname", "organisation", "organisationname", "organization",
+    "organizationname", "title", "entity", "project", "projectname", "charityname", "companyname"]) || h[0];
   const typeCol = pick(h, ["type", "elementtype", "entitytype", "category", "kind"]);
   const idCol = pick(h, ["id", "identifier", "orgid", "organisationidentifier", "reference", "ref"]);
   const charityCol = pick(h, ["charitynumber", "registeredcharitynumber", "charityno", "charityregistrationnumber", "regcharitynumber"]);
@@ -100,7 +105,10 @@ export function suggestShape(table: SourceTable): Shape | null {
     const labelType = pick(h, ["project", "projectname", "programme", "initiative"]) === label ? "project" : record.type;
     return parseShape({ ...base, name: "Rows naming several records", each: "Each row names " + [label, ...named.map(n => n.col)].join(", ") + ".",
       records: [{ ...record, type: labelType }, ...named.map(n => ({ key: n.t, type: n.t, label: brace(n.col) }))],
-      links: named.map(n => ({ from: "row", to: n.t, type: n.t === "funder" ? "funded by" : n.t === "project" ? "delivers" : "works with" })) });
+      // Co-occurrence in a row is recorded, but its social meaning is NOT.
+      // "Organisation, Project, Funder" does not by itself prove delivery,
+      // partnership or an awarded grant. Keep the link explicitly neutral.
+      links: named.map(n => ({ from: "row", to: n.t, type: "listed together in source", fields:"row" })) });
   }
   return parseShape({ ...base, name: "List of records", each: "Each row is one record named in “" + label + "”.", records: [record], links: [] });
 }

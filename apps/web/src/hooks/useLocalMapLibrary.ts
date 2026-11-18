@@ -124,12 +124,12 @@ export function useLocalMapLibrary({
     return persistMapLibrary(updated,entry);
   }
   function createNewMap(next:GraphDocument,fundingAnalysis?:FundingFullAnalysis,
-    fundingDatasetId?:string,generalDatasetId?:string,shared?:SharedLink):boolean{
+    fundingDatasetId?:string,generalDatasetId?:string,shared?:SharedLink,newId?:string):boolean{
     if(localMaps.length>=MAX_LOCAL_MAPS){
       setNotice("This browser has eight maps. Export one before creating another.");
       return false;
     }
-    const entry:LocalMap={id:crypto.randomUUID(),createdAt:Date.now(),
+    const entry:LocalMap={id:newId??crypto.randomUUID(),createdAt:Date.now(),
       title:next.title,graph:next,fundingAnalysis,fundingDatasetId,
       ...(shared?{shared}:{}),
       ...(generalDatasetId?{generalDatasetId,sourceCounts:generalMapCounts(next)}:{})};

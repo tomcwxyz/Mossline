@@ -27,18 +27,19 @@ spreadsheet all go through the same engine. There are no separate importers.
    record become one record with three receipts. Records with the same name
    but no shared identifier are listed for the person to merge or keep apart;
    people are never listed this way.
-4. **Two ways to use a table.** *Add as records* brings every row in. *Fill in*
+4. **Relationship-only input.** A standalone table containing `From`, `To` and relationship names can create a map even without a separate elements sheet. Each explicit endpoint name becomes a minimal, source-mentioned record of type `other` with its own receipt; it is **not** a verified person or organisation. If the batch also has real records, unmatched or ambiguous links are left unresolved for review rather than fabricating extra entities. Repeated names are linked within their source table only, not globally merged by name. Generic rows naming several things get neutral `listed together in source` links, never automatically `works with`, `delivers` or `funded by` claims.
+5. **Two ways to use a table.** *Add as records* brings every row in. *Fill in*
    uses only rows about records already in the map or added from another file
    in the same batch: themes from the register's classification table, company
    status, trustees of organisations you have. Register tables default to fill
    in when there are other records to fill.
-5. **Grants** become funder → grant → recipient, the form the Funding lens
+6. **Grants** become funder → grant → recipient, the form the Funding lens
    reads (`mosslineFundingGrant`, `amountAwarded`, `awardDate`; edges
    `awarded` and `awarded to`). Grants to individuals are left out.
-6. **Receipts.** Every record keeps one receipt per source row it came from
+7. **Receipts.** Every record keeps one receipt per source row it came from
    (file, row number, shape and the row's values), and its identifiers. The
    record panel lists them under *Where this comes from*.
-7. **Check, then save.** Nothing is saved until the person has seen what each
+8. **Check, then save.** Nothing is saved until the person has seen what each
    file adds, what joined, what was skipped and why, and where it goes: added
    to the open map or a new map.
 

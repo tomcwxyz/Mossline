@@ -10,6 +10,7 @@ import { copyCanvases, motion, registerLens } from "./snapshot";
 import { PALETTES, SHAPE, TYPE_LABEL, mix, type AtlasTheme, type MarkShape } from "./palette";
 import { OCEANS, REGIONS, SEAS, type BaseName } from "./gazetteer";
 import { spatialConnections, SPATIAL_LINK_LIMIT } from "../../lib/spatial-connections";
+import {connectionInkKey,pointCategoryKey} from "../../lib/map-visual-grammar";
 
 type Props = {
   graph: GraphDocument;
@@ -17,6 +18,7 @@ type Props = {
   theme: AtlasTheme;
   selectedId: string | null;
   onPick: (id: string | null) => void;
+  onEditNode?: (id: string) => void;
   /** Records in view with no source coordinates: listed, never guessed. */
   unplaced: GraphNode[];
   onBrowse: () => void;
@@ -96,7 +98,7 @@ const merc = (lon: number, lat: number) => {
   return [(lon + 180) / 360, (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2];
 };
 
-export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
+export function MapLens({ graph, flows, theme, selectedId, onPick, onEditNode, unplaced, onBrowse, marks, pins, markStyle, frame, frameKey, spotlight }: Props) {
   const markLayer = useRef<SVGSVGElement>(null);
   const marksRef = useRef(marks); marksRef.current = marks;
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -118,16 +120,40 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   const gratLabels = useRef<HTMLDivElement>(null);
   const insetRect = useRef<SVGRectElement>(null);
   const pick = useRef(onPick); pick.current = onPick;
+  const editNode = useRef(onEditNode); editNode.current = onEditNode;
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
   const [land, setLand] = useState<Land | null>(null);
   const [mode, setMode] = useState<"points" | "hexagons">("points");
   const [connectionsMode,setConnectionsMode] = useState<"all"|"selected"|"off">("all");
+  const [selectedLinkType,setSelectedLinkType]=useState<string|null>(null);
+  const [pointInkMode,setPointInkMode]=useState<"type"|"tag">("tag");
   const spatial=useMemo(()=>spatialConnections(graph),[graph]);
-  const displayed=useMemo(()=>spatial.links.slice(0,SPATIAL_LINK_LIMIT),[spatial]);
+  const connectionKey=useMemo(()=>connectionInkKey(spatial.links,theme),[spatial.links,theme]);
+  const visibleLinks=useMemo(()=>spatial.links.filter(link=>!selectedLinkType||link.type===selectedLinkType),
+    [spatial.links,selectedLinkType]);
+  const displayed=useMemo(()=>visibleLinks.slice(0,SPATIAL_LINK_LIMIT),[visibleLinks]);
+  useEffect(()=>{
+    if(selectedLinkType&&!connectionKey.entries.some(entry=>entry.label===selectedLinkType))
+      setSelectedLinkType(null);
+  },[selectedLinkType,connectionKey]);
   const [view, setView] = useState({ inView: 0, grantsInView: 0 });
   const [narrow, setNarrow] = useState(false);
   const [unplacedOpen, setUnplacedOpen] = useState(true);
+  // Phone maps start as a map, not a permanently-open control sheet.
+  const [mobileOptionsOpen,setMobileOptionsOpen]=useState(false);
+  const [mapFullScreen,setMapFullScreen]=useState(false);
+  useEffect(()=>{
+    if(!mobileOptionsOpen&&!mapFullScreen)return;
+    const onKey=(event:KeyboardEvent)=>{
+      if(event.key!=="Escape")return;
+      if(mobileOptionsOpen){setMobileOptionsOpen(false);event.stopPropagation();}
+      else if(mapFullScreen){setMapFullScreen(false);event.stopPropagation();}
+    };
+    document.addEventListener("keydown",onKey,true);
+    return ()=>document.removeEventListener("keydown",onKey,true);
+  },[mobileOptionsOpen,mapFullScreen]);
+
   const palette = PALETTES[theme];
   const byId = useMemo(() => new Map(graph.nodes.map(n => [n.id, n])), [graph]);
   const located = useMemo(() => graph.nodes.flatMap(n => {
@@ -135,6 +161,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     return c ? [{ node: n, lon: c.lon, lat: c.lat, approximate: c.approximate }] : [];
   }), [graph]);
   const approximate = useMemo(() => located.filter(p => p.approximate).length, [located]);
+  const pointKey=useMemo(()=>pointCategoryKey(located.map(({node})=>node),theme),[located,theme]);
+  const pointsByTag=pointKey.available&&pointInkMode==="tag";
+  const hoverTagRef=useRef(pointsByTag);hoverTagRef.current=pointsByTag;
   const degree = useMemo(() => {
     const d = new Map<string, number>();
     for (const e of graph.edges) if (isRecorded(e)) {
@@ -162,8 +191,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       if (small) setUnplacedOpen(false);
     };
     measure();
+    // Opening the live data table changes the canvas size without a window
+    // resize. MapLibre must measure its new viewport to keep marks clickable.
+    const observer=new ResizeObserver(()=>{
+      mapRef.current?.resize();
+      measure();
+    });
+    if(container.current)observer.observe(container.current);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {observer.disconnect();window.removeEventListener("resize", measure);};
   }, []);
 
   const data = useMemo(() => {
@@ -175,7 +211,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       : selectedId ? new Set([selectedId, ...neighbours, ...myGrants.map(f => f.recipientId)]) : null;
     const records = collection(located.map(({ node, lon, lat, approximate: approx }) => {
       const focus = !!focusSet?.has(node.id);
-      const base = palette.types[node.type] ?? palette.types.other;
+      // Source-given themes can colour small coherent categories (e.g. music
+      // versus theatre venues). Otherwise retain the normal node-type grammar.
+      const base = (pointsByTag?pointKey.colour(node.tags):null)??palette.types[node.type]??palette.types.other;
       const d = Math.sqrt(degree.get(node.id) ?? 0);
       // Resting marks are small and pale, like pencil on survey paper; the
       // selection and what it touches come forward in full colour.
@@ -192,16 +230,18 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     if(connectionsMode==="all"&&mode==="points"){
       for(const link of displayed) mappedLinks.push({
         type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
-        properties:{source:link.source,target:link.target,type:link.type,count:link.count}
+        properties:{source:link.source,target:link.target,type:link.type,count:link.count,
+          colour:connectionKey.colour(link.type)}
       });
     }
     // Always include all direct plotted neighbours when somebody selects a record,
     // even if the overview is capped or currently in hexagon mode.
     if(selectedId&&selectedNode?.type!=="funder"&&connectionsMode!=="off"){
-      for(const link of spatial.links) {
+      for(const link of visibleLinks) {
         if(link.source!==selectedId&&link.target!==selectedId)continue;
         ego.push({type:"Feature",geometry:{type:"LineString",coordinates:arc(link.from,link.to)},
-          properties:{source:link.source,target:link.target,type:link.type,count:link.count}});
+          properties:{source:link.source,target:link.target,type:link.type,count:link.count,
+            colour:connectionKey.colour(link.type)}});
       }
     }
     let hiddenArcs = 0;
@@ -218,7 +258,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       }
     }
     return { records, arcs: collection(arcs), ego: collection(ego), links:collection(mappedLinks), hiddenArcs };
-  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial, displayed, connectionsMode, mode]);
+  }, [located, selectedId, neighbours, selectedNode, myGrants, palette, degree, byId, spotlight?.join("|"), spatial,
+    visibleLinks, displayed, connectionsMode, mode, connectionKey, pointsByTag, pointKey]);
 
   // ---- Build the map once per theme; data changes update sources in place --
   useEffect(() => {
@@ -239,7 +280,9 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         let step = 5;
         map = new ml.Map({
           container: container.current, attributionControl: false, dragRotate: false, pitchWithRotate: false,
-          renderWorldCopies: false, maxZoom: 13, minZoom: 1.5,
+          // National, continental and worldwide examples must be able to zoom
+          // out to their full source extent; fixed regional minimums clip them.
+          renderWorldCopies: false, maxZoom: 13, minZoom: -2,
           style: {
             version: 8,
             sources: {
@@ -263,10 +306,10 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
                 paint: { "fill-color": ["interpolate", ["linear"], ["get", "t"], 0, mix(palette.wash, palette.paper, 0.78), 1, palette.moss],
                   "fill-opacity": 0.82, "fill-outline-color": palette.paper } },
               { id: "map-links", type: "line", source: "links", layout:{"line-cap":"round","line-join":"round"},
-                paint:{"line-color":palette.moss,"line-opacity":0.48,
+                paint:{"line-color":["get","colour"],"line-opacity":0.67,
                   "line-width":["interpolate",["linear"],["zoom"],2,0.9,6,1.55,10,2.1]} },
               { id: "ego", type: "line", source: "ego",layout:{"line-cap":"round"},
-                paint: { "line-color": palette.moss, "line-width": 3.1, "line-opacity": 0.9 } },
+                paint: { "line-color": ["get","colour"], "line-width": 3.1, "line-opacity": 0.96 } },
               { id: "arcs-casing", type: "line", source: "arcs", layout: { "line-cap": "round" },
                 paint: { "line-color": palette.paper, "line-opacity": 0.9, "line-width": ["+", ["get", "w"], 2.4] } },
               { id: "arcs", type: "line", source: "arcs", layout: { "line-cap": "round" },
@@ -277,7 +320,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
                 paint: { "icon-color": ["get", "color"], "icon-halo-color": palette.paper, "icon-halo-width": 0.8 } },
               // Place records are drawn the way a map draws a town: a dot and a name.
               { id: "places", type: "circle", source: "records", filter: ["==", ["get", "kind"], "place"],
-                paint: { "circle-radius": ["case", ["get", "focus"], 4.2, 3], "circle-color": palette.ink,
+                paint: { "circle-radius": ["case", ["get", "focus"], 4.6, 3.5], "circle-color": ["get","color"],
                   "circle-stroke-color": palette.paper, "circle-stroke-width": 1 } },
               { id: "selected", type: "circle", source: "records", filter: ["==", ["get", "id"], "__none__"],
                 paint: { "circle-radius": 16, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": palette.moss, "circle-stroke-width": 2 } }
@@ -296,6 +339,16 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         map.on("error", event => {
           const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? "");
           if (/webgl|context/i.test(message)) { setStatus("error"); setError(message); }
+        });
+        // Direct edit on the map, without going through a separate editing mode.
+        // Prevent default double-click zoom only when a source-backed point is hit.
+        map.on("dblclick", event => {
+          if(!map)return;
+          const hit=map.queryRenderedFeatures(event.point,{layers:["records","places"]})[0];
+          if(hit && editNode.current){
+            event.preventDefault();
+            editNode.current(String(hit.properties?.id));
+          }
         });
         map.on("click", event => {
           const hit = map?.queryRenderedFeatures(event.point, { layers: ["records", "places"] })[0];
@@ -317,7 +370,8 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
           if(id===selectedRef.current||(!node&&!link)){hoverMarker.current?.remove();hoverMarker.current=null;return;}
           const el=hoverMarker.current?.getElement()??document.createElement("div");
           el.className="ml-map-hover";
-          if(node)el.textContent=node.label;
+          if(node)el.textContent=hoverTagRef.current&&node.tags[0]
+            ? node.label+" · "+node.tags[0] : node.label;
           else if(link){
             const from=byIdRef.current.get(String(link.properties?.source));
             const to=byIdRef.current.get(String(link.properties?.target));
@@ -377,8 +431,15 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     for (const p of located) { w = Math.min(w, p.lon); e = Math.max(e, p.lon); s = Math.min(s, p.lat); n = Math.max(n, p.lat); }
     const small = (container.current?.clientWidth ?? 1000) < 700;
     if (w === e && s === n) { map.jumpTo({ center: [w, s], zoom: 8 }); return; }
-    map.fitBounds([[w, s], [e, n]], { padding: small ? { top: 70, bottom: 60, left: 24, right: 70 }
-      : { top: 80, bottom: 70, left: 330, right: 90 }, maxZoom: 9, duration: animate ? 450 : 0 });
+    // A UK local map benefits from room for the inspector and place labels.
+    // That much left padding hides distant countries on international maps.
+    const wideExtent=e-w>45 || n-s>32;
+    map.fitBounds([[w, s], [e, n]], { padding: wideExtent
+      ? (small ? { top: 36, bottom: 36, left: 12, right: 12 }
+        : { top: 56, bottom: 50, left: 48, right: 36 })
+      : (small ? { top: 70, bottom: 60, left: 24, right: 70 }
+        : { top: 80, bottom: 70, left: 330, right: 90 }),
+      maxZoom: 9, duration: animate ? 450 : 0 });
   }
 
   // ---- Names: places from the records, seas and uplands from the gazetteer --
@@ -419,7 +480,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     if (!map || status !== "ready") return;
     (map.getSource("records") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.records);
     (map.getSource("links") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.links);
-    map.setPaintProperty("map-links","line-opacity",selectedId?0.2:0.48);
+    map.setPaintProperty("map-links","line-opacity",selectedId?0.22:0.67);
     (map.getSource("arcs") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.arcs);
     (map.getSource("ego") as { setData?: (d: unknown) => void } | undefined)?.setData?.(data.ego);
     map.setFilter("selected", ["==", ["get", "id"], selectedId ?? "__none__"]);
@@ -432,7 +493,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
     map.getCanvas().setAttribute("aria-label",
       `Map: ${(located.length - approximate).toLocaleString("en-GB")} records plotted from their source coordinates` +
       (approximate ? `, ${approximate.toLocaleString("en-GB")} approximately from a postcode` : "") +
-      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Use Browse records for a list.`);
+      `. ${spatial.plotted.toLocaleString("en-GB")} recorded relationships between positioned records. Open Data for the accessible record list.`);
     // The selected record gets a name card, as a map would label a feature.
     focusMarkers.current.forEach(m => m.remove()); focusMarkers.current = [];
     const sel = selectedNode ? located.find(p => p.node.id === selectedNode.id) : null;
@@ -646,13 +707,13 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
   };
   const outside = located.length - view.inView;
   const grantsOutside = myGrants.length - view.grantsInView;
-  return <section className="ml-map" aria-label="Map of records with source coordinates">
+  return <section className={"ml-map"+(mapFullScreen?" ml-map--full-screen":"")} aria-label="Map of records with source coordinates">
     <div ref={container} className="ml-map-canvas"/>
     <div ref={gratLabels} className="ml-graticule-labels" aria-hidden="true"/>
     <MarkLayer ref={markLayer} marks={marks} pins={pins} markStyle={markStyle}/>
     {status === "error" && <div className="ml-map-fallback" role="status">
       <strong>This device cannot draw the map.</strong>
-      <p>{located.length.toLocaleString("en-GB")} records have a place; Browse records lists them all.</p>
+      <p>{located.length.toLocaleString("en-GB")} records have a place; Data lists them all.</p>
       {error && <small>{error}</small>}
     </div>}
     {inset && !narrow && <svg className="ml-map-inset" viewBox={`0 0 ${inset.width} ${inset.height}`} aria-hidden="true">
@@ -665,20 +726,72 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
       <button type="button" aria-label="Zoom out" onClick={() => zoom("out")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
       <button type="button" aria-label="Fit everything" onClick={() => zoom("fit")}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5V1.5H5M9 1.5h3.5V5M12.5 9v3.5H9M5 12.5H1.5V9"/></svg></button>
     </div>
-    <div className="ml-map-cards">
+    <div className="ml-map-mobile-actions" aria-label="Map options">
+      <button type="button" className="ml-map-mobile-menu" aria-controls="ml-mobile-map-panels"
+        aria-expanded={mobileOptionsOpen} onClick={()=>setMobileOptionsOpen(v=>!v)}>
+        {mobileOptionsOpen?"Hide key":"Key & layers"}
+      </button>
+      <button type="button" className="ml-map-mobile-expand" aria-pressed={mapFullScreen}
+        onClick={()=>{setMapFullScreen(v=>!v);setMobileOptionsOpen(false);}}>
+        {mapFullScreen?"Exit full map":"Full map"}
+      </button>
+    </div>
+    {selectedLinkType&&!mobileOptionsOpen&&<div className="ml-map-mobile-filter" role="status">
+      <span>Showing: {selectedLinkType}</span>
+      <button type="button" onClick={()=>setSelectedLinkType(null)} aria-label="Show all relationship types">×</button>
+    </div>}
+    <div id="ml-mobile-map-panels" className={"ml-map-cards"+(mobileOptionsOpen?" is-mobile-open":"")}>
       <section className="ml-overlay-card ml-map-connections" aria-label="Connections on the map">
-        <h3>Recorded connections</h3>
+        <div className="ml-map-card-head"><h3>Recorded connections</h3>
+          <button type="button" className="ml-map-mobile-close" onClick={()=>setMobileOptionsOpen(false)}
+            aria-label="Close map key">×</button>
+        </div>
         <div className="ml-segmented" role="group" aria-label="Show connections">
-          <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");}}>All</button>
-          <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>setConnectionsMode("selected")} disabled={!selectedId}>Selected</button>
-          <button type="button" aria-pressed={connectionsMode==="off"} onClick={()=>setConnectionsMode("off")}>Off</button>
+          <button type="button" aria-pressed={connectionsMode==="all"} onClick={()=>{setConnectionsMode("all");setMode("points");setMobileOptionsOpen(false);}}>All</button>
+          <button type="button" aria-pressed={connectionsMode==="selected"} onClick={()=>{setConnectionsMode("selected");setMobileOptionsOpen(false);}} disabled={!selectedId}>Selected</button>
+          <button type="button" aria-pressed={connectionsMode==="off"} onClick={()=>{setConnectionsMode("off");setMobileOptionsOpen(false);}}>Off</button>
         </div>
         <p>{spatial.plotted.toLocaleString("en-GB")} recorded mapped {spatial.plotted===1?"link":"links"}
           {spatial.unplaced>0&&<> · {spatial.unplaced.toLocaleString("en-GB")} cannot be drawn without locations</>}
           {spatial.colocated>0&&<> · {spatial.colocated.toLocaleString("en-GB")} at the same coordinates</>}
-          {connectionsMode==="all"&&spatial.links.length>SPATIAL_LINK_LIMIT&&<> · Showing {SPATIAL_LINK_LIMIT} distinct links at once</>}
+          {connectionsMode==="all"&&visibleLinks.length>SPATIAL_LINK_LIMIT&&<> · Showing {SPATIAL_LINK_LIMIT} distinct links at once</>}
           {mode==="hexagons"&&connectionsMode==="all"&&<> · Switch to Points for lines</>}
         </p>
+        {connectionKey.entries.length>1&&<div className="ml-map-grammar" aria-label="Recorded relationship types">
+          <div className="ml-map-grammar-head"><strong>Line colours · relationship</strong>
+            {selectedLinkType&&<button type="button" onClick={()=>{setSelectedLinkType(null);setMobileOptionsOpen(false);}}>Show all</button>}
+          </div>
+          <div className="ml-map-grammar-items">
+            {connectionKey.entries.map(entry=>entry.label==="Other relationships"
+              ? <span className="ml-map-grammar-item" key={entry.label}>
+                  <i className="ml-map-grammar-line" aria-hidden="true" style={{borderColor:entry.colour}}/>
+                  <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+                </span>
+              : <button type="button" className="ml-map-grammar-item" key={entry.label}
+                  aria-pressed={selectedLinkType===entry.label}
+                  aria-label={"Show "+entry.label+" relationships"}
+                  onClick={()=>{setSelectedLinkType(old=>old===entry.label?null:entry.label);
+                    setConnectionsMode("all");setMode("points");setMobileOptionsOpen(false);}}>
+                  <i className="ml-map-grammar-line" aria-hidden="true" style={{borderColor:entry.colour}}/>
+                  <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+                </button>)}
+          </div>
+          <p>Colours come from the recorded link type. Select one to filter the map.</p>
+        </div>}
+        {pointKey.available&&<details className="ml-map-point-grammar">
+          <summary>Point colours · {pointsByTag?"first recorded theme":"record type"}</summary>
+          <div className="ml-segmented" role="group" aria-label="Colour map points by">
+            <button type="button" aria-pressed={pointInkMode==="type"} onClick={()=>{setPointInkMode("type");setMobileOptionsOpen(false);}}>Record type</button>
+            <button type="button" aria-pressed={pointInkMode==="tag"} onClick={()=>{setPointInkMode("tag");setMobileOptionsOpen(false);}}>First theme</button>
+          </div>
+          {pointsByTag&&<ul className="ml-map-point-key">
+            {pointKey.entries.map(entry=><li key={entry.label}>
+              <i aria-hidden="true" style={{backgroundColor:entry.colour}}/>
+              <span>{entry.label}</span><small>{entry.count.toLocaleString("en-GB")}</small>
+            </li>)}
+          </ul>}
+          <p>Only source-provided themes are used. Record type and shape remain available.</p>
+        </details>}
       </section>
       {!narrow && <section className="ml-overlay-card ml-map-show" aria-label="Show places as">
         <h3>Show places as</h3>
@@ -700,7 +813,7 @@ export function MapLens({ graph, flows, theme, selectedId, onPick, unplaced, onB
         {unplacedOpen && <>
           <p>Kept here in the margin rather than guessed from a name or region. A postcode or coordinates in your data would place them.</p>
           <ul>{unplaced.slice(0, 3).map(n => <li key={n.id}><button type="button" onClick={() => pick.current(n.id)}>{n.label}</button></li>)}
-            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Browse</button></li>}</ul>
+            {unplaced.length > 3 && <li><button type="button" onClick={onBrowse}>+{(unplaced.length - 3).toLocaleString("en-GB")} in Data</button></li>}</ul>
         </>}
       </section>}
     </div>

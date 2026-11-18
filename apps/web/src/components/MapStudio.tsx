@@ -5,9 +5,9 @@ import type { ChangeEvent, FormEvent } from "react";
 import {
   applyAssetPack, applyNodeStyleImages, matchAssetPack, visualAssetUrl, buildUkAtlas,
   emptyLayoutHistory, recordLayoutMovement, undoLayoutMovement, redoLayoutMovement,
-  collaborationGraph, compareGraphDocuments, filterGraph, graphFingerprint, parseGraphDocument,
+  collaborationGraph, compareGraphDocuments, filterGraph, graphFingerprint, parseGraphDocument, applyEdits,
   findRecordedRoutes, findReachableDestinations, findStructuralJunctions,
-  type GraphDocument, type ConnectionTrail,
+  type GraphDocument, type EditLayer, type ConnectionTrail,
   type NodeType, type CollaborationBasis, type SavedPerspective, type NodeStyleOverride, type LayoutHistory, type LayoutPositions,
   type FundingFullAnalysis,
   MAP_LIBRARY_STORAGE_KEY,LEGACY_GRAPH_STORAGE_KEY
@@ -15,6 +15,7 @@ import {
 import { GraphCanvas, type LabelDensity, type NetworkLayout } from "./GraphCanvas";
 import {StartScreen} from "./StartScreen";
 import { MOSSY_EXAMPLES, isMossyExample, type MossyExampleId } from "../data/mossy-examples";
+import {richLabExample} from "../lib/throw-lab-examples";
 import {mossyOverview} from "../lib/mossy-findings";
 import type {AtlasLens} from "@mossline/graph-core";
 import {FieldAtlasWorkspace} from "./FieldAtlasWorkspace";
@@ -157,10 +158,24 @@ export function MapStudio() {
   const fileRef = useRef<HTMLInputElement>(null);
   const tracePanelRef = useRef<HTMLElement>(null);
   /** The one way in for files: where it was opened from decides the default target and the return. */
-  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"|"the-list"}|null>(null);
+  const [addData,setAddData]=useState<{from:"atlas"|"home"|"studio";intent:"general"|"funding"|"the-list";starterId?:string}|null>(null);
+  /** No entry is added to the map library until the person explicitly keeps this. */
+  const [previewMap,setPreviewMap]=useState<{source:GraphDocument;from:"atlas"|"home"|"studio";summary:string}|null>(null);
   const [atlasMessage,setAtlasMessage]=useState("");
   const clearAtlasMessage=useCallback(()=>setAtlasMessage(""),[]);
 
+
+  // A Throw Lab deep link opens actual fictional source files in the ordinary
+  // reversible Add data journey. Nothing is created or saved automatically.
+  const openedThrowLab=useRef(false);
+  useEffect(()=>{
+    if(openedThrowLab.current)return;
+    openedThrowLab.current=true;
+    const id=new URLSearchParams(window.location.search).get("throw");
+    if(!id || !richLabExample(id))return;
+    window.history.replaceState(null,"",window.location.pathname);
+    setAddData({from:"home",intent:"general",starterId:id});
+  },[]);
 
   // "/?open=<map>" reopens a saved map, e.g. on the way back from signing in.
   const reopened=useRef(false);
@@ -582,6 +597,59 @@ export function MapStudio() {
     return true;
   }
 
+  function previewAddedData(source:GraphDocument,title:string,summary:string){
+    if(!addData)return;
+    setPreviewMap({source:{...source,title:title.slice(0,100)},from:addData.from,summary});
+    setPreferredLens(mossyOverview(source).recommended);
+    setFieldAtlasOpen(true);
+    setExperienceSpace("studio");
+    setAddData(null);
+    window.scrollTo(0,0);
+  }
+  function discardPreview(){
+    if(!previewMap)return;
+    if(!window.confirm("Discard this unsaved preview and its edits? Your original files are untouched."))return;
+    const from=previewMap.from;
+    setPreviewMap(null);
+    setExperienceSpace(from==="home"?"home":"studio");
+  }
+  async function keepPreview(source:GraphDocument,layer:EditLayer):Promise<true|string>{
+    if(!previewMap)return "This preview has already closed.";
+    if(localMaps.length>=MAX_LOCAL_MAPS)
+      return "This browser already holds "+MAX_LOCAL_MAPS+" maps. Export and remove one before keeping this preview.";
+    const id=crypto.randomUUID();
+    const editKey="mossline:edits:v1:"+id;
+    let editsStored=false;
+    try{
+      // Keep the unmodified source and its changes separately: reopening the
+      // map preserves the source receipts and permits Undo of preview edits.
+      if(layer.entries.length){
+        window.localStorage.setItem(editKey,JSON.stringify(layer));
+        editsStored=true;
+      }
+      let storageId:string|undefined;
+      if(shouldStoreGeneralGraph(source)){
+        storageId=crypto.randomUUID();
+        await saveGeneralGraph(storageId,source);
+      }
+      const ok=createNewMap(source,undefined,undefined,storageId,undefined,id);
+      if(!ok){
+        if(editsStored)window.localStorage.removeItem(editKey);
+        return "Could not keep the map in this browser. Your unsaved preview is still open.";
+      }
+      const complete=applyEdits(source,layer).graph;
+      setPreferredLens(mossyOverview(complete).recommended);
+      setAtlasMessage("Kept ‘"+source.title+"’. Your original sources and "+layer.entries.filter(e=>!e.undone).length+
+        " preview edits can be revisited and undone.");
+      setPreviewMap(null);
+      setFieldAtlasOpen(true);setExperienceSpace("studio");
+      return true;
+    }catch(error){
+      if(editsStored)try{window.localStorage.removeItem(editKey);}catch{}
+      return error instanceof Error?error.message:"Could not keep the map. Your preview is still open.";
+    }
+  }
+
   function resetDemo() {
     if(createNewMap(ORIGINAL))setNotice("Created a separate illustrative map; your other maps remain saved.");
   }
@@ -639,9 +707,16 @@ export function MapStudio() {
     const fundingMap=!!activeFundingMap?.fundingDatasetId;
     return <AddData base={graph} baseTitle={graph.title} canAddToBase={!fundingMap}
       startWith={addData.from==="home"||graphKey===DEMO_KEY?"new":"add"} intent={addData.intent}
-      onClose={()=>setAddData(null)} onCommit={commitAddedData}
+      starter={addData.starterId?richLabExample(addData.starterId):undefined}
+      onClose={()=>setAddData(null)} onCommit={commitAddedData} onPreview={previewAddedData}
       onLargeFunding={()=>{setAddData(null);setFundingInitialFile(null);setShowFundingWorkbench(true);setExperienceSpace("studio");}}/>;
   }
+
+  if(previewMap)return <div className="mossline-field-atlas-entry">
+    <FieldAtlasWorkspace key={"preview:"+graphFingerprint(previewMap.source)}
+      graph={previewMap.source} initialLens={preferredLens} preview={{onKeep:keepPreview,onDiscard:discardPreview}}
+      onBack={discardPreview} onImport={()=>{}} onAdvanced={()=>{}}/>
+  </div>;
 
   if(experienceSpace==="studio"&&fieldAtlasOpen&&!showFundingWorkbench&&!importPreview&&!discovery)
     return <div className="mossline-field-atlas-entry">

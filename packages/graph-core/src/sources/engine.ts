@@ -389,15 +389,48 @@ export function applySources(plans: PlannedTable[], base: GraphDocument | null, 
       origin: { ...d.receipt, recordId: "grant:" + d.receipt.recordId }, properties: d.grant.date ? { "Award Date": d.grant.date } : {} }, report);
   }
 
-  /* ---- Links ---- */
+  /* ---- Links ----
+   * A links-only source is meaningful in its own right. Where there are no
+   * richer records at all, names written at each end become minimal,
+   * source-mentioned endpoints. Their identity/type is NOT verified.
+   *
+   * Do not do this when a real record table or base graph is present:
+   * unresolved names could be ambiguous and must still be reviewed.
+   */
+  const bareLinkTables = new Set(plans.filter(p=>p.use==="records" && p.shape.records.length===0 &&
+    p.shape.links.length>0).map(p=>p.table.name));
+  const canMentionEndpoints = drafts.length===0 && existing.length===0;
+  const mentioned = new Map<string,string>();
   for (const l of links) {
     if (!keepRow.get(l.row)) continue;
     const report = rowsOf.get(l.row)?.report;
-    const end = (ref: Ref) => {
+    const end = (ref: Ref):string|null => {
       const e = resolve(ref, l.file);
-      if (!e) return null;
-      if ("node" in e) return e.node.id;
-      return liveGroup.get(e.root) ? nodeOf.get(e.root) ?? null : null;
+      if(e){
+        if ("node" in e) return e.node.id;
+        return liveGroup.get(e.root) ? nodeOf.get(e.root) ?? null : null;
+      }
+      if(!canMentionEndpoints || !bareLinkTables.has(l.table) || !("ref" in ref) ||
+        (ref.scheme && ref.scheme!=="local"))return null;
+      const label=ref.ref.trim();
+      if(!label)return null;
+      // Identity is scoped to this source table, not globally guessed by name.
+      const key=l.table+"\u0000"+label.toLocaleLowerCase("en-GB");
+      let id=mentioned.get(key);
+      const receipt:SourceOrigin={...l.receipt,recordId:"mentioned:"+label};
+      if(!id){
+        id="src:mentioned:"+encodeURIComponent(l.table)+":"+encodeURIComponent(label.toLocaleLowerCase("en-GB"));
+        while(usedIds.has(id))id+="'";
+        usedIds.add(id);mentioned.set(key,id);
+        nodes.set(id,{id,label,type:"other",tags:[],origin:receipt,receipts:[receipt]});
+        newRecords++;
+        if(report)report.added.other=(report.added.other??0)+1;
+      }else{
+        const node=nodes.get(id)!;
+        if(!node.receipts?.some(x=>x.fileName===receipt.fileName&&x.recordNumber===receipt.recordNumber))
+          node.receipts=[...(node.receipts??[]),receipt];
+      }
+      return id;
     };
     const source = end(l.from), target = end(l.to);
     if (!source || !target) { if (report) report.unresolvedLinks++; continue; }

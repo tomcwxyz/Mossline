@@ -28,7 +28,7 @@ async function person(browser:Browser){
   return context.newPage();
 }
 const findRecord=async(page:Page,name:string)=>{
-  await page.getByRole("button",{name:/Browse records/}).click();
+  await page.locator(".ml-data-toggle").click();
   await page.locator(".ml-search input").fill(name);
 };
 
@@ -50,8 +50,10 @@ test("stories travel with a shared map: moved in, written together, clashes keep
   await sam.goto("/");
   await sam.getByRole("button",{name:/Add your data/}).click();
   await sam.getByRole("button",{name:"Try a cause-and-effect map"}).click();
-  await sam.getByRole("button",{name:/Check what this adds/}).click();
-  await sam.getByRole("button",{name:"Create the map"}).click();
+  await expect(sam.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
+  await sam.getByRole("button",{name:"Preview my map"}).click();
+  await expect(sam.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await sam.getByRole("button",{name:"Keep this map"}).click();
   await sam.locator(".ml-toast button").click();
   await openStories(sam);
   let writing=sam.getByRole("complementary",{name:"Writing a story"});
