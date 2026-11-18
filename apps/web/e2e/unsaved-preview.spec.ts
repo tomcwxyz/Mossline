@@ -63,5 +63,6 @@ test("keeping a preview preserves original source and reversible changes on reop
   await page.reload();
   await page.getByRole("button",{name:/local projects/i}).click();
   await expect(page.getByRole("heading",{name:"What Mossy found"})).toBeVisible();
+  await page.getByText("What Mossy knows about this data",{exact:true}).click();
   await expect(page.getByText("local-projects.csv")).toBeVisible();
 });
