@@ -57,6 +57,8 @@ test("keeping a preview preserves original source and reversible changes on reop
   await page.getByRole("button",{name:"Keep this map"}).click();
   await expect(page.getByRole("region",{name:"Unsaved map preview"})).toHaveCount(0);
   await expect(page.locator(".ml-toast")).toContainText("Kept");
+  // A kept map starts in normal browsing mode; its Data drawer is opened on demand.
+  await page.locator(".ml-data-toggle").click();
   await expect(page.locator(".ml-data-table")).toContainText("Harbour Skills Workshop");
   await page.reload();
   await page.getByRole("button",{name:/local projects/i}).click();
