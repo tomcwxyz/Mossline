@@ -6,7 +6,9 @@ test("a map can be built and changed in place, with receipts, undo and a Kumu ex
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   await page.locator(".ml-toast button").click();
   await page.getByRole("button",{name:"Edit",exact:true}).click();
   await page.getByLabel("Your name on changes").fill("Sam");
@@ -70,7 +72,9 @@ test("one editable data view changes the graph, and a graph connection appears i
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   await page.locator(".ml-data-toggle").click();
   const records=page.getByRole("region",{name:"Records table"});
   const funding=records.locator("tr").filter({hasText:"Grant funding"});
