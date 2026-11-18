@@ -81,6 +81,39 @@ a unified data browser (removing duplicate Browse/Details routes), and richer
 editable source properties. Avoid claiming free-form arbitrary columns are
 editable until the canonical schema can preserve and validate them.
 
+## See and edit before deciding to keep (18 November 2026)
+
+**A personal, new-map import should feel like exploring, not filing paperwork.**
+After Mossy has read the real source files and presented any omissions or
+ambiguous joins, the explicit **Preview my map** action opens an interactive
+Atlas in a session-only state. It is clearly labelled *Preview · not saved*.
+
+- The Map, Network, Themes, Funding, Timeline and Data table all show the same
+  working graph. Table edits, direct node edits and new recorded connections
+  work **before saving**.
+- Preview editing uses an **in-memory change layer**, never the saved-map key,
+  anonymous `unsaved` cache, annotation storage or shared-map server. Even the
+  preview editor-name setting is not persisted.
+- **Keep this map** allocates a stable local map ID and stores the untouched
+  source and its undoable preview edit layer separately. After reloading,
+  the edits still appear and can be undone back to source values.
+- **Discard preview** asks before dropping the temporary state. Leaving or
+  reloading the page should also warn where the browser supports this.
+- Curated, verified Throw Lab source bundles may still open directly after a
+  clean worker read, because choosing one is itself deliberate. Adding data
+  to an *existing* map retains its explicit review/save behaviour for now.
+- A technically ambiguous interpretation must still be apparent **before**
+  Preview. Source rows skipped, ambiguous identities and unjoined endpoints
+  are not disguised or silently repaired.
+- A known next step is to let people return from the visual preview to the
+  source-column interpretation without re-uploading files. This initial
+  version supports correcting records and relationships in the visual editor;
+  it does not yet offer that round-trip schema remapping.
+
+The acceptance test is substantive: make an edit, verify no source/map data
+entered persistent browser storage, discard without a map being created; then
+repeat, keep the map, reload, and undo the edit. Source receipts must remain.
+
 ## Product contract
 **Input**: files, paste or link → source bundle with optional partial failures.
 **Understand**: detect tables, nested objects, headers, joins, entities, relationships, event/time/value fields, geometry, measures, possible evidence; record confidence and alternative readings.
