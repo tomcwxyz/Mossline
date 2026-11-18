@@ -7,7 +7,9 @@ test("a systems map shows direction, signs, feedback loops and routes that follo
   await page.getByRole("button",{name:/Add your data/}).click();
   await page.getByRole("button",{name:"Try a cause-and-effect map"}).click();
   await expect(page.getByRole("heading",{name:"Ready to explore"})).toBeVisible();
-  await page.getByRole("button",{name:"See my map"}).click();
+  await page.getByRole("button",{name:"Preview my map"}).click();
+  await expect(page.getByRole("region",{name:"Unsaved map preview"})).toBeVisible();
+  await page.getByRole("button",{name:"Keep this map"}).click();
   const loops=page.getByRole("complementary",{name:"Feedback loops"});
   await expect(loops).toContainText("Feedback loops · 4");
   await expect(page.locator(".ml-key-links")).toContainText("+ more leads to more");
