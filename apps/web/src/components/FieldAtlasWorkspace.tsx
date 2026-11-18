@@ -583,6 +583,14 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
   const funderName = funderId ? graph.nodes.find(n => n.id === funderId)?.label : "";
   const closeMenu = () => { if (menuRef.current) menuRef.current.open = false; };
   const closeShare = () => { if (shareRef.current) shareRef.current.open = false; };
+  // Reloading or closing an unsaved map must not silently discard edited data.
+  // Browsers may show their own standard confirmation rather than this text.
+  useEffect(()=>{
+    if(!preview)return;
+    const guard=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue="";};
+    window.addEventListener("beforeunload",guard);
+    return ()=>window.removeEventListener("beforeunload",guard);
+  },[!!preview]);
   const [previewSaving,setPreviewSaving]=useState(false);
   const [previewError,setPreviewError]=useState("");
   const keepPreview=async()=>{
