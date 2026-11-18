@@ -48,7 +48,7 @@ test("one way in: grants, register and Kumu files join on identifiers into a new
   const atlas=page.locator(".ml-atlas:not(.ml-home):not(.ml-add)");
   await expect(atlas).toBeVisible();
   await expect(page.locator(".ml-dataset summary strong")).toHaveText("Upper dale (test)");
-  await expect(page.locator(".ml-toast")).toContainText("Created ‘Upper dale (test)’");
+  await expect(page.locator(".ml-toast")).toContainText("Kept ‘Upper dale (test)’");
   await page.locator(".ml-search input").fill("Allendale Larder");
   await page.locator(".ml-data-toggle").click();
   await page.locator(".ml-data-table tbody .ml-data-locate").first().click();
