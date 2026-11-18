@@ -590,7 +590,7 @@ export function FieldAtlasWorkspace({ graph: imported, datasetId, mapId, onBack,
     const guard=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue="";};
     window.addEventListener("beforeunload",guard);
     return ()=>window.removeEventListener("beforeunload",guard);
-  },[!!preview]);
+  },[preview]);
   const [previewSaving,setPreviewSaving]=useState(false);
   const [previewError,setPreviewError]=useState("");
   const keepPreview=async()=>{
